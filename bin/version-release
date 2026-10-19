@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Punkt wejścia wydania wersji z linii poleceń: tylko składa zależności i uruchamia polecenie.
+ *
+ * Celem wydania jest bieżący katalog albo katalog z opcji --root.
+ */
+
+use Simplysmart\Tools\Console\VersionReleaseCommand;
+use Simplysmart\Tools\Release\ReleaseClock;
+use Simplysmart\Tools\Release\ReleasePlanner;
+use Simplysmart\Tools\Release\VersionRelease;
+
+require $GLOBALS['_composer_autoload_path'] ?? dirname(__DIR__) . '/vendor/autoload.php';
+
+$command = new VersionReleaseCommand(new VersionRelease(new ReleasePlanner(), ReleaseClock::fromEnvironment()));
+
+exit($command->run(array_slice($_SERVER['argv'], 1), (string) getcwd(), STDOUT, STDERR));

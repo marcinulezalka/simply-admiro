@@ -1,0 +1,56 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "simplysmart/tools",
+    "type": "library",
+    "description": "Developer toolbox for simplysmart projects and packages: SemVer release from Keep a Changelog.",
+    "keywords": [
+        "simplysmart",
+        "tools",
+        "semver",
+        "changelog",
+        "release"
+    ],
+    "homepage": "https://github.com/marcinulezalka/tools",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcin Ulezalka",
+            "email": "marcin.ulezalka@simplysmart.pl",
+            "role": "Founder"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/marcinulezalka/tools/issues",
+        "source": "https://github.com/marcinulezalka/tools"
+    },
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.27",
+        "phpunit/phpunit": "^12.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simplysmart\\Tools\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Simplysmart\\Tools\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/version-release"
+    ],
+    "scripts": {
+        "test": "phpunit",
+        "lint": "pint --test",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
