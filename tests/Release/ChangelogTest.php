@@ -48,6 +48,15 @@ final class ChangelogTest extends TestCase
     }
 
     #[Test]
+    public function odrzuca_liczbowa_sekcje_bledem_wydania(): void
+    {
+        $this->expectException(ReleaseException::class);
+        $this->expectExceptionMessage('Nieznana sekcja „### 2026”');
+
+        $this->changelog("### 2026\n\n- Wpis.\n")->requiredBump();
+    }
+
+    #[Test]
     public function odrzuca_wpisy_bez_naglowka(): void
     {
         $this->expectException(ReleaseException::class);

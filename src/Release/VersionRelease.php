@@ -15,6 +15,20 @@ final readonly class VersionRelease
     ) {}
 
     /**
+     * Planuje wydanie bez zapisywania plików (podgląd dla --dry-run).
+     *
+     * @param  ReleaseFiles  $files  Pliki wydania w katalogu celu.
+     * @param  bool  $majorConfirmed  Czy użytkownik potwierdził podbicie MAJOR.
+     * @return ReleasePlan|null Zaplanowane wydanie albo null, gdy w „[Unreleased]” nie ma wpisów.
+     *
+     * @throws ReleaseException Gdy wydania nie da się zaplanować.
+     */
+    public function plan(ReleaseFiles $files, bool $majorConfirmed): ?ReleasePlan
+    {
+        return $this->planner->plan($files->changelog(), $files->version(), $this->clock->now(), $majorConfirmed);
+    }
+
+    /**
      * @param  ReleaseFiles  $files  Pliki wydania w katalogu celu.
      * @param  bool  $majorConfirmed  Czy użytkownik potwierdził podbicie MAJOR.
      * @return ReleasePlan|null Wykonane wydanie albo null, gdy w „[Unreleased]” nie ma wpisów.
@@ -23,7 +37,7 @@ final readonly class VersionRelease
      */
     public function release(ReleaseFiles $files, bool $majorConfirmed): ?ReleasePlan
     {
-        $plan = $this->planner->plan($files->changelog(), $files->version(), $this->clock->now(), $majorConfirmed);
+        $plan = $this->plan($files, $majorConfirmed);
 
         if ($plan !== null) {
             $files->save($plan);

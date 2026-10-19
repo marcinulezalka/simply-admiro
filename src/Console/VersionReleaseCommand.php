@@ -10,10 +10,13 @@ use Simplysmart\Tools\Release\ReleaseFiles;
 use Simplysmart\Tools\Release\VersionRelease;
 
 /**
- * Polecenie vendor/bin/version-release: zamienia argumenty na wydanie i wynik na komunikat.
+ * Polecenie vendor/bin/version-release: zamienia argumenty na wydanie (albo jego podgląd
+ * przy --dry-run) i wynik na komunikat.
  */
 final readonly class VersionReleaseCommand
 {
+    private const string DRY_RUN_NOTICE = 'Tryb --dry-run: pliki nie zostały zmienione.';
+
     public function __construct(
         private VersionRelease $release,
     ) {}
@@ -29,16 +32,24 @@ final readonly class VersionReleaseCommand
     {
         try {
             $options = ReleaseOptions::fromArguments($arguments, $workingDirectory);
-            $plan = $this->release->release(new ReleaseFiles($options->root), $options->majorConfirmed);
+            $files = new ReleaseFiles($options->root);
+            $plan = $options->dryRun
+                ? $this->release->plan($files, $options->majorConfirmed)
+                : $this->release->release($files, $options->majorConfirmed);
         } catch (ReleaseException $exception) {
             fwrite($stderr, $exception->getMessage() . "\n");
 
             return 1;
         }
 
-        fwrite($stdout, $plan === null
-            ? 'Sekcja ' . Changelog::UNRELEASED_TITLE . " nie ma wpisów — nic do wydania.\n"
-            : "Wersja {$plan->from} → {$plan->to} ({$plan->bump->value}).\n");
+        if ($plan === null) {
+            fwrite($stdout, 'Sekcja ' . Changelog::UNRELEASED_TITLE . " nie ma wpisów — nic do wydania.\n");
+
+            return 0;
+        }
+
+        $summary = "Wersja {$plan->from} → {$plan->to} ({$plan->bump->value}).";
+        fwrite($stdout, ($options->dryRun ? "{$summary} " . self::DRY_RUN_NOTICE : $summary) . "\n");
 
         return 0;
     }

@@ -35,10 +35,11 @@ final class ReleasePlannerTest extends TestCase
     public function potwierdzony_major_podbija_wersje(): void
     {
         $plan = $this->plan("### Removed\n\n- Usunięto X.\n", true);
+        $this->assertNotNull($plan);
 
-        $this->assertSame(ReleaseBump::Major, $plan?->bump);
-        $this->assertSame('2.0.0', (string) $plan?->to);
-        $this->assertStringContainsString('## [2.0.0] - 2026-10-19', (string) $plan?->changelog);
+        $this->assertSame(ReleaseBump::Major, $plan->bump);
+        $this->assertSame('2.0.0', (string) $plan->to);
+        $this->assertStringContainsString('## [2.0.0] - 2026-10-19', $plan->changelog);
     }
 
     private function plan(string $unreleased, bool $majorConfirmed): ?ReleasePlan

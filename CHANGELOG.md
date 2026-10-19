@@ -4,6 +4,16 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Opcja `--dry-run` w `vendor/bin/version-release`: pokazuje planowane wydanie (`Wersja x → y`) bez zmiany `CHANGELOG.md` i `VERSION`.
+- Analiza statyczna PHPStan na poziomie `max` (`phpstan.neon`, `composer analyse`); Pint wymusza `declare(strict_types=1);`.
+- `CLAUDE.md` z zasadami pakietu dla agentów AI.
+
+### Fixed
+
+- Liczbowy nagłówek sekcji w `[Unreleased]` (np. `### 2026`) kończy się czytelnym błędem „Nieznana sekcja” zamiast `TypeError`.
+
 ## [0.1.0] - 2026-10-19
 
 ### Added

@@ -11,19 +11,23 @@ use Simplysmart\Tools\Release\ReleaseException;
  */
 final readonly class ReleaseOptions
 {
-    public const string USAGE = 'Użycie: vendor/bin/version-release [--root=<katalog>] [--major-confirm]';
+    public const string USAGE = 'Użycie: vendor/bin/version-release [--root=<katalog>] [--major-confirm] [--dry-run]';
 
     private const string OPTION_ROOT = '--root=';
 
     private const string OPTION_MAJOR_CONFIRM = '--major-confirm';
 
+    private const string OPTION_DRY_RUN = '--dry-run';
+
     /**
      * @param  string  $root  Katalog celu wydania z plikami CHANGELOG.md i VERSION.
      * @param  bool  $majorConfirmed  Czy użytkownik potwierdził podbicie MAJOR.
+     * @param  bool  $dryRun  Czy tylko pokazać plan wydania bez zapisywania plików.
      */
     public function __construct(
         public string $root,
         public bool $majorConfirmed,
+        public bool $dryRun = false,
     ) {}
 
     /**
@@ -39,10 +43,13 @@ final readonly class ReleaseOptions
     {
         $root = $defaultRoot;
         $majorConfirmed = false;
+        $dryRun = false;
 
         foreach ($arguments as $argument) {
             if ($argument === self::OPTION_MAJOR_CONFIRM) {
                 $majorConfirmed = true;
+            } elseif ($argument === self::OPTION_DRY_RUN) {
+                $dryRun = true;
             } elseif (str_starts_with($argument, self::OPTION_ROOT)) {
                 $root = substr($argument, strlen(self::OPTION_ROOT));
             } else {
@@ -56,6 +63,6 @@ final readonly class ReleaseOptions
             throw new ReleaseException("Katalog celu wydania nie istnieje: „{$root}”. " . self::USAGE);
         }
 
-        return new self($resolved, $majorConfirmed);
+        return new self($resolved, $majorConfirmed, $dryRun);
     }
 }

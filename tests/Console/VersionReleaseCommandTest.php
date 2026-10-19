@@ -28,7 +28,7 @@ final class VersionReleaseCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        array_map('unlink', glob("{$this->root}/*"));
+        array_map('unlink', glob("{$this->root}/*") ?: []);
         rmdir($this->root);
     }
 
@@ -68,6 +68,20 @@ final class VersionReleaseCommandTest extends TestCase
     }
 
     #[Test]
+    public function dry_run_pokazuje_plan_bez_zmiany_plikow(): void
+    {
+        $this->writeProject('1.2.3', "### Added\n\n- Funkcja.\n");
+        $changelog = file_get_contents("{$this->root}/CHANGELOG.md");
+
+        [$exitCode, $stdout] = $this->runCommand(['--dry-run'], $this->root);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertSame("Wersja 1.2.3 → 1.3.0 (minor). Tryb --dry-run: pliki nie zostały zmienione.\n", $stdout);
+        $this->assertSame("1.2.3\n", file_get_contents("{$this->root}/VERSION"));
+        $this->assertSame($changelog, file_get_contents("{$this->root}/CHANGELOG.md"));
+    }
+
+    #[Test]
     public function nieznana_opcja_i_brak_katalogu_koncza_sie_bledem(): void
     {
         [$unknownCode, , $unknownError] = $this->runCommand(['--force'], $this->root);
@@ -96,13 +110,24 @@ final class VersionReleaseCommandTest extends TestCase
      */
     private function runCommand(array $arguments, string $workingDirectory): array
     {
-        $stdout = fopen('php://memory', 'w+');
-        $stderr = fopen('php://memory', 'w+');
+        $stdout = $this->memoryStream();
+        $stderr = $this->memoryStream();
         $command = new VersionReleaseCommand(new VersionRelease(new ReleasePlanner(), new ReleaseClock()));
 
         $exitCode = $command->run($arguments, $workingDirectory, $stdout, $stderr);
 
         return [$exitCode, (string) stream_get_contents($stdout, -1, 0), (string) stream_get_contents($stderr, -1, 0)];
+    }
+
+    /**
+     * @return resource
+     */
+    private function memoryStream()
+    {
+        $stream = fopen('php://memory', 'w+');
+        $this->assertNotFalse($stream);
+
+        return $stream;
     }
 
     private function writeProject(string $version, string $unreleased): void

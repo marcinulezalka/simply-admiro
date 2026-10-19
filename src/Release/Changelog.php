@@ -59,7 +59,7 @@ final readonly class Changelog
         $bump = null;
 
         foreach ($sections as $title => $body) {
-            $sectionBump = ReleaseBump::forSection($title) ?? throw new ReleaseException(
+            $sectionBump = ReleaseBump::forSection((string) $title) ?? throw new ReleaseException(
                 "Nieznana sekcja „### {$title}”. Dozwolone: " . implode(', ', array_keys(ReleaseBump::SECTIONS)) . '.',
             );
 
@@ -116,16 +116,18 @@ final readonly class Changelog
      *
      * @param  string  $markdown  Dzielony tekst.
      * @param  int  $level  Poziom nagłówka (2 dla „##”, 3 dla „###”).
-     * @return array{0: string, 1: array<string, string>} Tekst przed pierwszym nagłówkiem
-     *                                                    oraz mapa tytuł nagłówka → treść pod nim.
+     * @return array{0: string, 1: array<array-key, string>} Tekst przed pierwszym nagłówkiem
+     *                                                       oraz mapa tytuł nagłówka → treść pod nim
+     *                                                       (tytuł liczbowy PHP zamienia na klucz int).
      */
     private static function splitByHeading(string $markdown, int $level): array
     {
-        $parts = preg_split(self::headingPattern($level, '(.+?)'), $markdown, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split(self::headingPattern($level, '(.+?)'), $markdown, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [$markdown];
         $preamble = (string) array_shift($parts);
         $sections = [];
 
-        foreach (array_chunk($parts, 2) as [$title, $body]) {
+        foreach (array_chunk($parts, 2) as $pair) {
+            [$title, $body] = $pair + [1 => ''];
             $sections[$title] = ($sections[$title] ?? '') . $body;
         }
 

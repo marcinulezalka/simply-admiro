@@ -19,6 +19,7 @@ zapisuje nową wersję do `VERSION` i zamienia `[Unreleased]` na datowaną sekcj
 vendor/bin/version-release                                        # bieżący katalog
 vendor/bin/version-release --root=packages/simplysmart/mainboard  # inny projekt lub pakiet
 vendor/bin/version-release --major-confirm                        # gdy wymagany MAJOR
+vendor/bin/version-release --dry-run                              # podgląd: pokazuje wersję, nie zmienia plików
 ```
 
 | Sekcja w `[Unreleased]` | Podbicie |
@@ -33,13 +34,14 @@ Wygrywa najwyższe podbicie wśród niepustych sekcji. Inne nagłówki i wpisy b
 
 ## Rozwój
 
-PSR-4 (autoload: jedna klasa na plik, namespace odpowiada katalogowi) i styl PER Coding Style (następca PSR-12) pilnowany przez Laravel Pint z presetem `per` (`pint.json`).
+PSR-4 (autoload: jedna klasa na plik, namespace odpowiada katalogowi) i styl PER Coding Style (następca PSR-12) pilnowany przez Laravel Pint z presetem `per` (`pint.json`), który wymaga też `declare(strict_types=1);` w każdym pliku PHP.
 
 ```bash
 composer install
-composer test     # PHPUnit
-composer lint     # sprawdzenie stylu
-composer format   # poprawienie stylu
+composer test      # PHPUnit
+composer lint      # sprawdzenie stylu i strict types
+composer format    # poprawienie stylu
+composer analyse   # PHPStan, poziom max
 ```
 
 ## Licencja
