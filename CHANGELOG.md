@@ -9,6 +9,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - Opcja `--dry-run` w `vendor/bin/version-release`: pokazuje planowane wydanie (`Wersja x → y`) bez zmiany `CHANGELOG.md` i `VERSION`.
 - Analiza statyczna PHPStan na poziomie `max` (`phpstan.neon`, `composer analyse`); Pint wymusza `declare(strict_types=1);`.
 - `CLAUDE.md` z zasadami pakietu dla agentów AI.
+- Wspólne skille AI dla Laravel Boost w `resources/boost/skills/`: `solid-dry`, `docs-after-tests`, `changelog-before-commit` (podgląd wydania przez `--dry-run`, wydanie tylko na wyraźne polecenie).
 
 ### Fixed
 

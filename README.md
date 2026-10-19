@@ -32,6 +32,18 @@ Wygrywa najwyższe podbicie wśród niepustych sekcji. Inne nagłówki i wpisy b
 `### <sekcja>` są odrzucane. Datę wydania liczy strefa `RELEASE_TIMEZONE`
 (domyślnie `Europe/Warsaw`).
 
+## Skille AI
+
+Pakiet dostarcza wspólne skille dla agentów AI w `resources/boost/skills/`: `solid-dry` (SOLID, DRY, standardy PHP 8.4), `docs-after-tests` (dokumentacja po testach) i `changelog-before-commit` (CHANGELOG i wydania z `--dry-run`). W projekcie Laravel z [Laravel Boost](https://laravel.com/docs/boost) dopisz pakiet do `boost.json`, a Boost skopiuje skille do `.claude/skills/`:
+
+```json
+{ "packages": ["simplysmart/tools"] }
+```
+
+```bash
+php artisan boost:update
+```
+
 ## Rozwój
 
 PSR-4 (autoload: jedna klasa na plik, namespace odpowiada katalogowi) i styl PER Coding Style (następca PSR-12) pilnowany przez Laravel Pint z presetem `per` (`pint.json`), który wymaga też `declare(strict_types=1);` w każdym pliku PHP.
