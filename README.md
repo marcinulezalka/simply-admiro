@@ -58,4 +58,10 @@ composer analyse   # PHPStan, poziom max
 
 ## Licencja
 
-MIT — zob. [LICENSE](LICENSE).
+Simplysmart Restricted Source License 1.0 — © 2026 Marcin Ulezalka. Do celów niekomercyjnych
+kod możesz bezpłatnie przeglądać, kopiować, uruchamiać i modyfikować. Użycie komercyjne (także
+w projektach dla klientów) jest dozwolone po wpisaniu deklaracji do pliku `THIRD_PARTY.md` w
+Twoim projekcie — wzór wpisu jest w [THIRD_PARTY.md](THIRD_PARTY.md). Sprzedaż,
+sublicencjonowanie i komercyjna redystrybucja kodu jako produktu wymagają pisemnej zgody autora.
+Kopie muszą zachować informację o prawach autorskich i treść licencji. Wiążąca jest angielska
+treść pliku [LICENSE](LICENSE).

@@ -11,6 +11,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - `CLAUDE.md` z zasadami pakietu dla agentów AI.
 - Wspólne skille AI dla Laravel Boost w `resources/boost/skills/`: `solid-dry`, `docs-after-tests`, `changelog-before-commit` (podgląd wydania przez `--dry-run`, wydanie tylko na wyraźne polecenie).
 
+### Changed
+
+- Licencja zmieniona z MIT na Simplysmart Restricted Source License 1.0 (pliki `LICENSE` i `THIRD_PARTY.md`), w `composer.json` `"license": "proprietary"`; użycie niekomercyjne bez ograniczeń, komercyjne po deklaracji w pliku `THIRD_PARTY.md` projektu (wzór wpisu w `THIRD_PARTY.md`), sprzedaż i komercyjna redystrybucja kodu jako produktu za pisemną zgodą autora.
+
 ### Fixed
 
 - Liczbowy nagłówek sekcji w `[Unreleased]` (np. `### 2026`) kończy się czytelnym błędem „Nieznana sekcja” zamiast `TypeError`.
