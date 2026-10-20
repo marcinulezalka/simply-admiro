@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 /**
- * Helpery tłumaczeń (text_*) i formatowania regionalnego (local_*) dla kodu i widoków Blade.
+ * This file is part of simplysmart/mainboard.
  *
- * Cienkie nakładki na kontrakty TextTranslator i LocalFormatter; logika jest w ich implementacjach.
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
  */
 
 use Illuminate\Container\Container;

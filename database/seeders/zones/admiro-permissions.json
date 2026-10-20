@@ -1,0 +1,53 @@
+{
+  "guard": "admiro",
+  "permissions": [
+    "admiro.view-public",
+    "admiro.view-dashboard",
+    "zones.view",
+    "zones.configure",
+    "zones.assign-owner",
+    "system.settings",
+    "system.audit-logs",
+    "system.hero-control"
+  ],
+  "roles": {
+    "guest": {
+      "description": "Gość - dostęp tylko do publicznej strony logowania strefy admiro",
+      "permissions": [
+        "admiro.view-public"
+      ]
+    },
+    "support": {
+      "description": "Wsparcie techniczne administratorzy - podgląd stref i dashboardu",
+      "permissions": [
+        "admiro.view-public",
+        "admiro.view-dashboard",
+        "zones.view"
+      ]
+    },
+    "owner": {
+      "description": "Właściciel systemu - konfiguracja stref i przypisywanie właścicieli",
+      "permissions": [
+        "admiro.view-public",
+        "admiro.view-dashboard",
+        "zones.view",
+        "zones.configure",
+        "zones.assign-owner",
+        "system.settings"
+      ]
+    },
+    "hero": {
+      "description": "Super Admin - pełny, nieograniczony dostęp do całego ekosystemu",
+      "permissions": [
+        "admiro.view-public",
+        "admiro.view-dashboard",
+        "zones.view",
+        "zones.configure",
+        "zones.assign-owner",
+        "system.settings",
+        "system.audit-logs",
+        "system.hero-control"
+      ]
+    }
+  }
+}

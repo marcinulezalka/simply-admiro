@@ -2,11 +2,21 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
 namespace Simplysmart\Mainboard\Zones;
 
 use Illuminate\Routing\Router;
 use InvalidArgumentException;
 use LogicException;
+use Simplysmart\Mainboard\Http\SignInRoutes;
 use Simplysmart\Mainboard\Localization\LocaleRouting;
 
 /**
@@ -14,6 +24,7 @@ use Simplysmart\Mainboard\Localization\LocaleRouting;
  * strefy oraz middleware poziomu dostępu każdego pliku tras.
  *
  * Pliki tras strefy definiują ścieżki względne i krótkie nazwy; brakujący plik jest pomijany.
+ * Strefa z logowaniem dostaje też trasy logowania Core (Http\SignInRoutes).
  */
 final readonly class ZoneRouteRegistrar
 {
@@ -29,6 +40,7 @@ final readonly class ZoneRouteRegistrar
     public function __construct(
         private Router $router,
         private LocaleRouting $locales,
+        private SignInRoutes $signIn,
     ) {}
 
     /**
@@ -52,6 +64,10 @@ final readonly class ZoneRouteRegistrar
         }
 
         $this->router->group($attributes, function () use ($zone): void {
+            if ($zone->requiresLogin()) {
+                $this->signIn->register($zone);
+            }
+
             foreach (self::ROUTE_FILES as $file => $tier) {
                 $this->registerFile($zone, $zone->routesPath . '/' . $file, $tier);
             }

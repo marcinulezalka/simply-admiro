@@ -13,6 +13,8 @@ niezależnie od paczki, do której należy jej logika.
   `database/migrations/` i `database/seeders/` tej paczki, ładowane przez
   `MainboardServiceProvider` (`loadMigrationsFrom`). Paczki stref nie mają własnych migracji.
 - Szkielet zostaje stockowy: jego migracje Laravela (`users`, `cache`, `jobs`) się nie zmieniają.
+- Tabele strefy z logowaniem (konta, kody logowania, sesje) tworzy jedna migracja strefy w Core
+  przez `Database\ZoneTables` (`docs/strefy.md`), więc schemat jest identyczny w każdej strefie.
 - Nazwa pliku migracji zaczyna się od daty (kolejność) i mówi, czyja jest tabela:
   `2026_10_20_120000_create_dict_languages_table.php`.
 - Bezpieczeństwo:

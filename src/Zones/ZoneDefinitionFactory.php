@@ -2,17 +2,28 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
 namespace Simplysmart\Mainboard\Zones;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
 
 /**
  * Buduje ZoneDefinition z configu paczki strefy, uzupełniając go domyślnymi wartościami Core.
  *
- * Config strefy: name (wymagane), slug, guard, provider, model, session (klucze ZoneSessionSettings).
+ * Config strefy: name (wymagane), slug, guard, provider, model, session (klucze ZoneSessionSettings),
+ * auth (nadpisania `mainboard.auth`, tylko strefa z modelem).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -20,6 +31,7 @@ final readonly class ZoneDefinitionFactory
 
     public function __construct(
         private Repository $config,
+        private ZoneAuthSettingsFactory $authSettings,
     ) {}
 
     /**
@@ -44,10 +56,11 @@ final readonly class ZoneDefinitionFactory
             routeNamePrefix: $routeNamePrefix,
             slug: trim(Arr::string($config, 'slug', $name), '/'),
             guard: Arr::string($config, 'guard', $name),
-            provider: Arr::string($config, 'provider', $name . '_accounts'),
+            provider: Arr::string($config, 'provider', ZoneTable::Accounts->for($name)),
             model: $model,
             routesPath: rtrim($routesPath, '/'),
             session: $this->session($name, $model !== null, Arr::array($config, 'session', [])),
+            authSettings: $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null,
         );
     }
 
@@ -77,7 +90,7 @@ final readonly class ZoneDefinitionFactory
     {
         return new ZoneSessionSettings(
             cookie: Arr::string($session, 'cookie', $zone . '_session'),
-            table: $this->nullableString($session, 'table', $requiresLogin ? $zone . '_sessions' : null),
+            table: $this->nullableString($session, 'table', $requiresLogin ? ZoneTable::Sessions->for($zone) : null),
             lifetime: $this->nullableInt($session, 'lifetime', $requiresLogin ? $this->config->integer('mainboard.zones.session_lifetime') : null),
             expireOnClose: $this->nullableBool($session, 'expire_on_close', $requiresLogin ? true : null),
             sameSite: $this->nullableString($session, 'same_site', $requiresLogin ? 'strict' : 'lax'),

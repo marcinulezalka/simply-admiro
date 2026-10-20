@@ -2,10 +2,18 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
 namespace Simplysmart\Mainboard\Zones;
 
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Session\SessionManager;
 
 /**
  * Przełącza config sesji na strefę (przed StartSession) i przywraca go po odpowiedzi.
@@ -21,14 +29,13 @@ final readonly class ZoneSessionConfigurator
      */
     public function __construct(
         private Repository $config,
-        private SessionManager $session,
+        private ZoneSessionManager $session,
         private array $baseSessionConfig,
         private bool $forceSecure,
     ) {}
 
     /**
-     * Ustawia sesję strefy; utworzone wcześniej sterowniki są porzucane, żeby nowa nazwa
-     * ciasteczka, tabela i szyfrowanie zadziałały.
+     * Ustawia sesję strefy i jej własny magazyn (tworzony z tego configu przy pierwszym użyciu).
      */
     public function apply(ZoneDefinition $zone): void
     {
@@ -38,23 +45,16 @@ final readonly class ZoneSessionConfigurator
             $settings['secure'] = true;
         }
 
-        $this->use($settings);
+        $this->config->set('session', $settings);
+        $this->session->useZone($zone->name);
     }
 
     /**
-     * Przywraca sesję aplikacji.
+     * Przywraca sesję i magazyn aplikacji.
      */
     public function restore(): void
     {
-        $this->use($this->baseSessionConfig);
-    }
-
-    /**
-     * @param array<array-key, mixed> $settings
-     */
-    private function use(array $settings): void
-    {
-        $this->config->set('session', $settings);
-        $this->session->forgetDrivers();
+        $this->config->set('session', $this->baseSessionConfig);
+        $this->session->useZone(null);
     }
 }

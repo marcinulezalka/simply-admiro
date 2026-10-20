@@ -3,10 +3,14 @@
 declare(strict_types=1);
 
 /**
- * Komunikaty walidacji frameworka (klucze validation.*) w języku polskim.
+ * This file is part of simplysmart/mainboard.
  *
- * Zestaw kluczy odpowiada lang/en/validation.php z laravel/framework.
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
  */
+
 return [
 
     'accepted' => 'Pole :attribute musi zostać zaakceptowane.',

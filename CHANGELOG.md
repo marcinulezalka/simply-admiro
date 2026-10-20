@@ -6,6 +6,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Logowanie stref kodem z e-maila i PIN-em (etap 2, `docs/strefy.md`): trasy `<strefa>.auth.*`, wymienne kroki `Contracts\SignInStep` z kolejnością w `auth.steps` (domyślnie kod, ustawienie PIN-u, PIN), bez przeskakiwania kroków i z czasem ważności każdego kroku; wylogowanie tylko z bieżącej strefy.
+- Zabezpieczenia logowania: ta sama ścieżka i ten sam czas odpowiedzi dla każdego adresu (szyfrowany job `IssueSignInCode`), jeden ogólny komunikat porażki, kod tylko jako HMAC (ważny najnowszy, TTL, limit prób, odstęp wysyłek), PIN z regułą `StrongPin` i aktualizacją hasha, blokady 15 min → 1 h → 24 h z licznikiem zerowanym dopiero po udanym logowaniu i mailem do właściciela, limity per IP, per adres + IP i per adres z dowolnego IP, regeneracja sesji, epoka konta (`auth_epoch`) unieważniająca wszystkie sesje, wylogowanie kont nieaktywnych i zablokowanych, powrót do logowania po wygaśnięciu formularza (419).
+- Schemat tabel strefy `Database\ZoneTables` (`<strefa>_accounts` z szyfrowanym e-mailem i `email_hash`, `<strefa>_login_challenges`, `<strefa>_sessions`), modele `MainModel` (klucz trasy `token`), `MainAuthenticatable` i `ZoneAccount`, kontrakty konta (`SignInAccount`, `HasPinCredential`, `LockableAccount`, `RevocableAccess`), `AccountLocator`, `AccountStore`, `LoginChallengeRepository`, `BlindIndex`.
+- Zdarzenia `SignInSucceeded`, `SignInRejected`, `AccountLocked`, `SignedOut`; dziennik `sign_in` (`AUTH_LOG_CHANNEL`, bez adresów e-mail), komenda `mainboard:auth:prune` planowana co godzinę; teksty `sign_in.*` i e-maile `login_code`, `account_locked` (pl, en); `DB::prohibitDestructiveCommands()` na produkcji, migracje i widoki Core ładowane przez provider.
+- Osobny magazyn sesji każdej strefy (`ZoneSessionManager`): sesje stref nie mieszają się z sesją aplikacji ani ze sobą.
 - Mechanizm stref (etap 1, `docs/strefy.md`): rejestr `Contracts\ZoneRegistry`, strefa żądania `Contracts\CurrentZone` (`scoped`), `Zones\ZoneServiceProvider` dla paczek stref, registrary guardu, grupy middleware `zone.<strefa>` i tras (prefiks `{locale}`/slug, stały prefiks nazw, poziomy dostępu `AccessTier` według plików `public.php`/`account.php`/`zone.php`), klucze cache `ZoneCacheKey`.
 - Sesja per strefa (`UseZone`): ciasteczko `<strefa>_session`, poza `local` zawsze `secure`; strefa z logowaniem: tabela `<strefa>_sessions`, 30 min (`ZONE_SESSION_LIFETIME`), `SameSite=Strict`, szyfrowanie, wygaśnięcie po zamknięciu przeglądarki; po odpowiedzi stan aplikacji jest przywracany.
 - Wspólny middleware języka `SetLocale` i `LocaleRouting` (`APP_LOCALES`: jeden język bez prefiksu, kilka z `{locale}`).
@@ -35,6 +40,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Nagłówek PHPDoc z prawami autorskimi i licencją w każdym pliku PHP paczki, wymuszany przez Pint (`header_comment` w `pint.json`): `composer format` dopisuje go, `composer lint` zgłasza brak.
 - Zależności `illuminate/log`, `illuminate/mail`, `illuminate/support` i `illuminate/translation` zastąpione przez `laravel/framework` ^13.0 (CSRF, Vite i TrustProxies są tylko w pełnym frameworku).
 - Standardy kodu: PSR-4 i PER Coding Style pilnowany przez Laravel Pint z presetem `per` (`pint.json`, `composer lint` / `composer format`); `laravel/pint` w `require-dev`.
 - Mainboard jest paczką, a nie projektem: usunięto katalog `infrastructure/` (vhost Apache, pula PHP-FPM, certyfikaty SSL) i domenę lokalną `mainboard.local`; pakiet rozwijany jest w `packages/simplysmart/mainboard` projektu głównego i podpinany przez repozytorium Composera typu `path`.

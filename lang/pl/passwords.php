@@ -3,8 +3,14 @@
 declare(strict_types=1);
 
 /**
- * Komunikaty resetu hasła frameworka (klucze passwords.*) w języku polskim.
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
  */
+
 return [
 
     'reset' => 'Hasło zostało zresetowane.',

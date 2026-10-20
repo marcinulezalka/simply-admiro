@@ -2,7 +2,18 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
 namespace Simplysmart\Mainboard\Zones;
+
+use Simplysmart\Mainboard\Http\Middleware\EnsureAccountCanSignIn;
 
 /**
  * Poziomy dostępu do tras strefy; każdy wyższy zawiera niższe (public ⊂ authenticated ⊂ uprawnienie).
@@ -18,7 +29,7 @@ enum AccessTier
     /** Tylko niezalogowani w tej strefie (logowanie); zalogowany trafia na dashboard. */
     case GuestOnly;
 
-    /** Każde konto strefy, także z rolą bez uprawnień. */
+    /** Każde konto strefy, także z rolą bez uprawnień; sesja konta nieaktywnego lub unieważnionego jest wylogowywana. */
     case Authenticated;
 
     /**
@@ -31,7 +42,7 @@ enum AccessTier
         return match ($this) {
             self::Public => [],
             self::GuestOnly => ['guest:' . $zone->guard],
-            self::Authenticated => ['auth:' . $zone->guard],
+            self::Authenticated => ['auth:' . $zone->guard, EnsureAccountCanSignIn::class],
         };
     }
 

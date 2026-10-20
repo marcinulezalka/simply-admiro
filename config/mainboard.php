@@ -3,10 +3,14 @@
 declare(strict_types=1);
 
 /**
- * Konfiguracja Core (simplysmart/mainboard), łączona przez MainboardServiceProvider::register().
+ * This file is part of simplysmart/mainboard.
  *
- * Wartości nadpisuje się zmiennymi środowiska; pliku nie publikuje się do szkieletu.
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
  */
+
 return [
 
     'mail' => [
@@ -42,6 +46,60 @@ return [
          * kilka: prefiks {locale} zawsze obecny, ograniczony do tej listy (Localization\LocaleRouting).
          */
         'enabled' => array_values(array_filter(array_map(trim(...), explode(',', (string) env('APP_LOCALES', 'pl'))))),
+
+    ],
+
+    'auth' => [
+
+        /*
+         * Logowanie stref z kontami: e-mail → kod z e-maila → PIN (przy pierwszym logowaniu ustawienie PIN-u).
+         * Strefa nadpisuje dowolny klucz w swoim configu (`zone.auth`); listy `steps`
+         * i `pin.lockout_minutes` zastępuje w całości.
+         */
+        'steps' => [
+            Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep::class,
+            Simplysmart\Mainboard\Auth\SignIn\Steps\PinSetupStep::class,
+            Simplysmart\Mainboard\Auth\SignIn\Steps\PinStep::class,
+        ],
+
+        'code' => [
+            'length' => 6,
+            'ttl_minutes' => (int) env('AUTH_CODE_TTL', 10),
+            'max_attempts' => 5,
+            'resend_cooldown_seconds' => 60,
+        ],
+
+        'pin' => [
+            'length' => (int) env('AUTH_PIN_LENGTH', 6),
+            'stage_ttl_minutes' => 5,
+            'max_attempts' => 5,
+
+            /*
+             * Czas kolejnych blokad po błędnych PIN-ach (minuty); ostatni powtarza się. Licznik i poziom
+             * blokady zeruje dopiero udane logowanie, więc po blokadzie każdy błędny PIN blokuje dłużej.
+             */
+            'lockout_minutes' => [15, 60, 1440],
+        ],
+
+        /*
+         * Limity prób (max w decay_minutes), klucze cache z prefiksem strefy.
+         */
+        'limits' => [
+            'code_requests' => ['max' => 5, 'decay_minutes' => 15],
+            'account_code_requests' => ['max' => 10, 'decay_minutes' => 60],
+            'code_checks' => ['max' => 10, 'decay_minutes' => 1],
+            'account_code_checks' => ['max' => 20, 'decay_minutes' => 60],
+            'pin_checks' => ['max' => 10, 'decay_minutes' => 1],
+        ],
+
+        'route_throttle_per_minute' => 20,
+
+        'challenge_prune_hours' => 24,
+
+        /*
+         * Kanał dziennika logowań; Core tworzy go (storage/logs/sign-in.log), gdy aplikacja go nie zdefiniowała.
+         */
+        'log_channel' => env('AUTH_LOG_CHANNEL', 'sign_in'),
 
     ],
 

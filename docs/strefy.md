@@ -2,7 +2,7 @@
 
 Strefa to odizolowana część aplikacji, która ma własny guard, model kont, ciasteczko i tabelę sesji, prefiks URL i prefiks nazw tras. Core (mainboard) dostarcza mechanizm, a paczka strefy go konfiguruje. Mainboard i skeleton nie mają własnej strefy.
 
-Status: etap 1, czyli rejestracja stref, sesja, język, nagłówki i zaufane proxy. Logowanie (kod e-mail + PIN), zaufane urządzenia i uprawnienia dojdą w kolejnych etapach.
+Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i etap 2 (logowanie kodem z e-maila i PIN-em). Zaufane urządzenia i uprawnienia dojdą w kolejnych etapach.
 
 ## Jak dodać strefę
 
@@ -13,7 +13,8 @@ Status: etap 1, czyli rejestracja stref, sesja, język, nagłówki i zaufane pro
        'name' => 'shop',                 // nazwa: klucze cache, ciasteczko, grupa middleware
        'slug' => env('SHOP_SLUG', 'shop'), // segment URL; nie może być kodem języka
        'model' => ShopAccount::class,    // konta strefy; brak = strefa publiczna bez logowania
-       // opcjonalnie: 'guard', 'provider', 'session' => ['lifetime' => 15, ...]
+       // opcjonalnie: 'guard', 'provider', 'session' => ['lifetime' => 15, ...],
+       // 'auth' => ['pin' => ['length' => 8]] (nadpisania mainboard.auth)
    ],
    ```
 
@@ -30,6 +31,10 @@ Status: etap 1, czyli rejestracja stref, sesja, język, nagłówki i zaufane pro
    | `zone.php` | `Authenticated` | `auth:<guard>` plus `permission:<x>,<guard>` w samej trasie |
 
    Strefa bez `model` może mieć tylko `public.php`.
+
+4. Strefa z logowaniem:
+   - model kont dziedziczy po `Simplysmart\Mainboard\Models\ZoneAccount` i ustawia tylko `$table = '<strefa>_accounts'`;
+   - migracja w Core (`database/migrations/`) wywołuje `app(ZoneTables::class)->create('<strefa>')` w `up()` i `->drop('<strefa>')` w `down()`. Powstają tabele `<strefa>_accounts`, `<strefa>_login_challenges` i `<strefa>_sessions`.
 
 ## Co Core robi za strefę
 
@@ -55,6 +60,55 @@ Status: etap 1, czyli rejestracja stref, sesja, język, nagłówki i zaufane pro
 
 Rejestr (`Contracts\ZoneRegistry`) odrzuca strefy o tej samej nazwie, guardzie, prefiksie nazw tras lub slugu.
 
+## Logowanie: kod z e-maila i PIN
+
+Core rejestruje w każdej strefie z logowaniem trasy `Http\SignInRoutes` (pod `signin/`, poziom `GuestOnly`, każdy POST z limitem `mainboard.sign-in`):
+
+| Trasa | Znaczenie |
+| --- | --- |
+| `<strefa>.auth.login` | formularz adresu e-mail |
+| `<strefa>.auth.code` | kod z e-maila; `auth.code.resend` wysyła nowy |
+| `<strefa>.auth.pin-setup` | ustawienie PIN-u przy pierwszym logowaniu |
+| `<strefa>.auth.pin` | PIN |
+| `<strefa>.auth.logout` | wylogowanie (POST, poziom `Authenticated`) |
+
+**Kroki.** Każdy krok implementuje `Contracts\SignInStep`. Lista kroków i ich kolejność pochodzą z `auth.steps`, a domyślnie są to `EmailCodeStep`, `PinSetupStep`, `PinStep`.
+- `SignInFlow` wybiera pierwszy wymagany i niewykonany krok.
+- `EnsureSignInStep` wpuszcza tylko na ten krok i tylko w czasie jego ważności, więc kroków nie da się przeskoczyć.
+- Nowy krok (np. TOTP) to nowa klasa i wpis w configu, bez zmian w Core.
+
+**Zabezpieczenia:**
+- **Ta sama ścieżka dla każdego adresu.** Żądanie zawsze kolejkuje szyfrowany job `IssueSignInCode`, także dla nieznanego adresu. Dopiero job sprawdza konto i wysyła kod, więc odpowiedź ani jej czas nie zdradzają, czy konto istnieje. Na produkcji kolejka musi być asynchroniczna.
+- **Jeden komunikat.** Każda porażka daje ten sam tekst (`SignInFailure`).
+- **Kod:**
+  - losowanie przez `random_int`, w bazie tylko HMAC-SHA256 z `APP_KEY`, porównanie przez `hash_equals`;
+  - ważny tylko najnowszy kod, przez 10 minut, z 5 próbami;
+  - nowy kod najwcześniej po 60 s, a podwójne wysłanie formularza nie wysyła drugiego.
+- **PIN:**
+  - domyślnie 6 cyfr, reguła `StrongPin` (bez powtórzeń i kolejnych cyfr);
+  - przestarzały hash jest aktualizowany przy logowaniu.
+- **Blokady:**
+  - po 5 błędnych PIN-ach konto jest blokowane na 15 min, potem 60 min, potem 24 h;
+  - licznik i poziom blokady zeruje dopiero udane logowanie, więc po blokadzie każdy błędny PIN blokuje dłużej;
+  - o blokadzie dowiaduje się tylko właściciel (`AccountLockedMail`).
+- **Limity** (`auth.limits`, klucze `zone:<strefa>:auth:...`):
+  - per IP;
+  - per para adres + IP;
+  - per adres z dowolnego IP (rotacja adresów nie pomaga).
+- **Sesja:**
+  - regeneracja na starcie logowania, po kodzie i po zalogowaniu;
+  - przy logowaniu do sesji trafia epoka konta (`auth_epoch`);
+  - `EnsureAccountCanSignIn` (poziom `Authenticated`) wylogowuje sesję konta nieaktywnego, zablokowanego albo o innej epoce. `AccountStore::bumpAuthEpoch()` unieważnia więc wszystkie sesje konta.
+  - Laravelowe remember-me jest wyłączone.
+- **RODO:**
+  - e-mail, IP i user agent są zaszyfrowane;
+  - konto wyszukuje się po `email_hash` (HMAC, `Contracts\BlindIndex`);
+  - dziennik `sign_in` (`AUTH_LOG_CHANNEL`) zapisuje identyfikator konta, nigdy adres.
+- **Wygasły formularz (419)** w strefie z logowaniem wraca do logowania strefy.
+- **Czyszczenie kodów:** `mainboard:auth:prune` co godzinę usuwa kody starsze niż 24 h.
+
+**Rozszerzanie przez zdarzenia** (`Auth\Events`): `SignInSucceeded`, `SignInRejected`, `AccountLocked`, `SignedOut`. Core loguje je i wysyła mail o blokadzie; strefa dokłada własne listenery.
+
 ## Zmienne środowiska
 
 | Zmienna | Domyślnie | Znaczenie |
@@ -64,3 +118,6 @@ Rejestr (`Contracts\ZoneRegistry`) odrzuca strefy o tej samej nazwie, guardzie, 
 | `TRUSTED_PROXIES` | brak | `*` albo adresy/sieci proxy |
 | `SECURITY_HSTS`, `SECURITY_HSTS_MAX_AGE` | `true`, `31536000` | HSTS na HTTPS |
 | `SECURITY_CSP` | `true` | Content-Security-Policy z nonce |
+| `AUTH_CODE_TTL` | `10` | minuty ważności kodu z e-maila |
+| `AUTH_PIN_LENGTH` | `6` | długość PIN-u (minimum 4) |
+| `AUTH_LOG_CHANNEL` | `sign_in` | kanał dziennika logowań |
