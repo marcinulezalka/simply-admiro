@@ -13,6 +13,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Nagłówek PHPDoc z prawami autorskimi i licencją w każdym pliku PHP paczki (także `bin/version-release`), wymuszany przez Pint (`header_comment` w `pint.json`): `composer format` dopisuje go, `composer lint` zgłasza brak.
 - Licencja zmieniona z MIT na Simplysmart Restricted Source License 1.0 (pliki `LICENSE` i `THIRD_PARTY.md`), w `composer.json` `"license": "proprietary"`; użycie niekomercyjne bez ograniczeń, komercyjne po deklaracji w pliku `THIRD_PARTY.md` projektu (wzór wpisu w `THIRD_PARTY.md`), sprzedaż i komercyjna redystrybucja kodu jako produktu za pisemną zgodą autora.
 
 ### Fixed
