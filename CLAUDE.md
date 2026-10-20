@@ -1,7 +1,7 @@
 # Package: simplysmart/mainboard
 
 ## Context & Responsibility
-Standalone Laravel Composer package (`illuminate/support` ^13): the **Application Core** of simplysmart applications — everything shared by the zones (contracts, base classes, DTOs, layouts and UI components, the shared localization middleware and the common zone mechanisms), kept out of the skeleton so it stays stock Laravel. Mainboard is not a zone: it has no users table, guard or zone slug of its own; zone packages build on its contracts. Developed inside the skeleton at `packages/simplysmart/mainboard/` (symlinked into its `vendor/`), but it is its own Git repository and must work without the skeleton.
+Standalone Laravel Composer package (`laravel/framework` ^13): the **Application Core** of simplysmart applications — everything shared by the zones (contracts, base classes, DTOs, layouts and UI components, the shared localization middleware and the common zone mechanisms), kept out of the skeleton so it stays stock Laravel. Mainboard is not a zone: it has no users table, guard or zone slug of its own; zone packages build on its contracts. Developed inside the skeleton at `packages/simplysmart/mainboard/` (symlinked into its `vendor/`), but it is its own Git repository and must work without the skeleton.
 
 ## Architectural Boundaries
 - **No application coupling**: Never reference skeleton classes (`App\...`) or other packages' concrete classes. Depend on contracts; receive dependencies through constructor injection or the container.
@@ -17,7 +17,8 @@ Standalone Laravel Composer package (`illuminate/support` ^13): the **Applicatio
 Zones are isolated sandboxes (own users table, guard and session). The skeleton's `CLAUDE.md` section "Multi-Zone Isolation" is the source of truth. Core provides the shared mechanisms; zone packages configure them. In short:
 - **Isolated guards**: Core code never assumes a guard: it receives the zone's guard (from the zone's config or a contract) and always names it (`Auth::guard($guard)`, `auth:<zone-guard>`). Never rely on the default `Auth::user()` or `auth.defaults.guard`.
 - **Session isolation**: Core's session middleware sets the zone's cookie name (and path/domain where zones differ) before `StartSession`, so concurrent logins in different zones keep working.
-- **Cache isolation**: Prefix cache keys with the zone (`zone:<zone>:...`) while the store is `database`; use `Cache::tags(['zone:<zone>', ...])` only on `redis` (`database` and `file` stores do not support tags). Never call a global `Cache::flush()`.
+- **Zone mechanism** (`docs/strefy.md`): zone packages extend `Zones\ZoneServiceProvider`; Core registers the guard, the `zone.<zone>` middleware group (replaces `web`) and the routes per access tier (`public.php`, `account.php`, `zone.php`). Read the request's zone from `Contracts\CurrentZone`, never from static state.
+- **Cache isolation**: Build zone cache keys only with `Zones\ZoneCacheKey`. Prefix cache keys with the zone (`zone:<zone>:...`) while the store is `database`; use `Cache::tags(['zone:<zone>', ...])` only on `redis` (`database` and `file` stores do not support tags). Never call a global `Cache::flush()`.
 
 ## Database & Models
 `docs/baza-danych.md` is the source of truth (concept stage: mechanisms are not implemented yet). In short:

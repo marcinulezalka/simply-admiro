@@ -4,10 +4,7 @@
 
 | Pakiet | Wersja | Licencja | Sekcja | Do czego |
 | --- | --- | --- | --- | --- |
-| `illuminate/log` | `^13.0` | MIT | `require` | kanał logów poczty i zapis wysyłek (`LogManager`) |
-| `illuminate/mail` | `^13.0` | MIT | `require` | zdarzenie wysyłki `MessageSent` (listener `LogSentMail`) |
-| `illuminate/support` | `^13.0` | MIT | `require` | integracja z Laravelem: `ServiceProvider`, kontener |
-| `illuminate/translation` | `^13.0` | MIT | `require` | polskie tłumaczenia frameworka z `lang/` (`FileLoader`) |
+| `laravel/framework` | `^13.0` | MIT | `require` | integracja z Laravelem: `ServiceProvider`, kontener, poczta i logi, tłumaczenia, oraz klasy dostępne tylko w pełnym frameworku: CSRF (`PreventRequestForgery`), `Vite` (nonce CSP), `TrustProxies` |
 | `laravel/pint` | `^1.27` | MIT | `require-dev` | formatowanie kodu w stylu PER Coding Style i `declare(strict_types=1)` (`composer lint` / `composer format`) |
 | `phpstan/phpstan` | `^2.1` | MIT | `require-dev` | analiza statyczna na poziomie `max` (`composer analyse`) |
 

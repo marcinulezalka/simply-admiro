@@ -6,6 +6,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Mechanizm stref (etap 1, `docs/strefy.md`): rejestr `Contracts\ZoneRegistry`, strefa żądania `Contracts\CurrentZone` (`scoped`), `Zones\ZoneServiceProvider` dla paczek stref, registrary guardu, grupy middleware `zone.<strefa>` i tras (prefiks `{locale}`/slug, stały prefiks nazw, poziomy dostępu `AccessTier` według plików `public.php`/`account.php`/`zone.php`), klucze cache `ZoneCacheKey`.
+- Sesja per strefa (`UseZone`): ciasteczko `<strefa>_session`, poza `local` zawsze `secure`; strefa z logowaniem: tabela `<strefa>_sessions`, 30 min (`ZONE_SESSION_LIFETIME`), `SameSite=Strict`, szyfrowanie, wygaśnięcie po zamknięciu przeglądarki; po odpowiedzi stan aplikacji jest przywracany.
+- Wspólny middleware języka `SetLocale` i `LocaleRouting` (`APP_LOCALES`: jeden język bez prefiksu, kilka z `{locale}`).
+- `SecurityHeaders`: `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, COOP, HSTS na HTTPS (`SECURITY_HSTS`), CSP z nonce dla Vite (`SECURITY_CSP`); w strefach z logowaniem `no-store` i `X-Robots-Tag`.
+- CSRF bez współdzielonego ciasteczka `XSRF-TOKEN` (`PreventRequestForgeryWithoutCookie`), przekierowania auth/guest do tras bieżącej strefy (`ZoneRedirects`, bez globalnej trasy `login`), zaufane proxy z `TRUSTED_PROXIES`.
 - `CONTRIBUTING.md` z zasadami wpisów w `CHANGELOG.md` i wydawania wersji.
 - Licencja Simplysmart Restricted Source License 1.0: pliki `LICENSE` i `THIRD_PARTY.md`, sekcja „Licencja” w README, w `composer.json` `"license": "proprietary"`; użycie niekomercyjne bez ograniczeń, komercyjne po deklaracji w pliku `THIRD_PARTY.md` projektu (wzór wpisu w `THIRD_PARTY.md`), sprzedaż i komercyjna redystrybucja kodu jako produktu za pisemną zgodą autora.
 - Koncepcja bazy danych i modeli w `docs/baza-danych.md`: migracje i seedery wszystkich tabel w Core, makra pól, historia `history_*` na triggerach, `MainModel`, słowniki i tłumaczenia danych, RODO, tokeny w URL, checksum, mappery.
@@ -30,6 +35,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Zależności `illuminate/log`, `illuminate/mail`, `illuminate/support` i `illuminate/translation` zastąpione przez `laravel/framework` ^13.0 (CSRF, Vite i TrustProxies są tylko w pełnym frameworku).
 - Standardy kodu: PSR-4 i PER Coding Style pilnowany przez Laravel Pint z presetem `per` (`pint.json`, `composer lint` / `composer format`); `laravel/pint` w `require-dev`.
 - Mainboard jest paczką, a nie projektem: usunięto katalog `infrastructure/` (vhost Apache, pula PHP-FPM, certyfikaty SSL) i domenę lokalną `mainboard.local`; pakiet rozwijany jest w `packages/simplysmart/mainboard` projektu głównego i podpinany przez repozytorium Composera typu `path`.
 - Wersję pakietu wydaje wspólny przybornik `simplysmart/tools` (https://github.com/marcinulezalka/tools) z projektu głównego: `vendor/bin/version-release --root=packages/simplysmart/mainboard`; własny katalog `tools/` pakietu usunięty.
