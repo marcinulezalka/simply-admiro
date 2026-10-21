@@ -1,17 +1,22 @@
 # Baza danych i modele
 
-> **Status: koncepcja.** Dokument opisuje docelowe zasady. Mechanizmy Core wymienione niżej
-> (makra, `MainModel`, historia, mappery) nie są jeszcze zaimplementowane — powstają w kolejnych
-> krokach i wtedy ten dokument staje się ich opisem.
+> **Status:** zaimplementowane są kolumny standardowe (`Database\Columns`), `Models\DataModel`
+> (token, soft delete, casty, checksum, `active()`), historia zmian (`Database\History`, triggery
+> MySQL i SQLite, `Database\HistoryActor`), krótkie tłumaczenia `json_i18n` (`HasI18n`) i pierwsze
+> słowniki (lokalizacja, §14). Nadal koncepcją są: hierarchia `HasParent` (§3), tabele
+> `<tabela>_i18n`, RODO (`personalColumns()`, `AnonymizeRecord`, §8) i mappery (§12).
 
 Silnik: MySQL 8 (`DB_CONNECTION=mysql`). Wszystkie zasady obowiązują każdą tabelę aplikacji,
 niezależnie od paczki, do której należy jej logika.
 
 ## 1. Jedno miejsce schematu
 
-- Migracje i seedery **wszystkich** tabel (Core i stref) leżą w Core:
-  `database/migrations/` i `database/seeders/` tej paczki, ładowane przez
-  `MainboardServiceProvider` (`loadMigrationsFrom`). Paczki stref nie mają własnych migracji.
+- Migracje **wszystkich** tabel (Core i stref publicznych) leżą w Core: `database/migrations/`
+  tej paczki, ładowane przez `MainboardServiceProvider` (`loadMigrationsFrom`). Publiczne paczki
+  stref nie mają własnych migracji.
+- Wyjątek: paczka **prywatna** (prywatne repozytorium) trzyma własne migracje i seedery, zbudowane
+  publicznym API Core (`ZoneTables`, `Columns`, `History`), bo nic o niej nie może trafić do
+  publicznego Core (zob. „Private Packages” w CLAUDE.md skeletonu).
 - Szkielet zostaje stockowy: jego migracje Laravela (`users`, `cache`, `jobs`) się nie zmieniają.
 - Tabele strefy z logowaniem (konta, kody logowania, sesje) tworzy jedna migracja strefy w Core
   przez `Database\ZoneTables` (`docs/strefy.md`), więc schemat jest identyczny w każdej strefie.
@@ -20,34 +25,40 @@ niezależnie od paczki, do której należy jej logika.
 - Bezpieczeństwo:
   - Core wywołuje `DB::prohibitDestructiveCommands(app()->isProduction())`, więc na produkcji
     nie działają `migrate:fresh`, `migrate:refresh`, `migrate:reset`, `db:wipe`.
-  - Seedery dzielą się na **referencyjne** (słowniki: idempotentny `upsert` po `token` lub `code`,
-    wolno je uruchomić na produkcji) i **demo** (dane przykładowe, na produkcji odmawiają pracy).
+  - Seedery dzielą się na **referencyjne** (słowniki: idempotentne, rekord szukany po `code`, zapis
+    przez model, więc dostaje token, checksum i historię; wolno je uruchomić na produkcji) i **demo**
+    (dane przykładowe, na produkcji odmawiają pracy).
+  - Seedery to klasy w `src/Database/Seeders/` (`Simplysmart\Mainboard\Database\Seeders`, autoload
+    paczki), uruchamiane komendami Core (np. `mainboard:localization:seed`); szkieletowy
+    `DatabaseSeeder` zostaje stockowy.
   - Seedery nie zawierają sekretów ani prawdziwych danych osobowych.
 
-## 2. Builder pól (makra `Blueprint`)
+## 2. Kolumny standardowe (`Database\Columns`)
 
-Grupy pól powtarzające się w wielu tabelach definiuje Core jako makra `Blueprint`, więc są
-identyczne wszędzie. Nazwy kolumn każdej grupy są stałymi w Core — model, mapper i testy używają
-tych samych stałych, nie literałów.
+Grupy pól powtarzające się w wielu tabelach definiuje Core jako statyczne metody
+`Database\Columns`, więc są identyczne wszędzie. To zwykłe metody, nie makra `Blueprint`: PHPStan
+i Intelephense widzą ich typy. Nazwy kolumn są stałymi `Database\ColumnNames` — model, mapper
+i testy używają tych samych stałych, nie literałów.
 
 Kolejność kolumn w każdej tabeli:
 
 ```php
 Schema::create('dict_languages', function (Blueprint $table): void {
-    $table->baseColumns();       // początek tabeli
-    $table->string('code', 8)->unique();   // kolumny domenowe
-    $table->addressColumns('billing_');    // grupy domenowe (opcjonalnie)
-    $table->closingColumns();    // koniec tabeli
+    Columns::base($table);                  // początek tabeli
+    $table->string('code', 8)->unique();    // kolumny domenowe
+    Columns::closing($table, i18n: true);   // koniec tabeli
 });
 ```
 
-| Makro | Kolumny |
+| Metoda | Kolumny |
 | --- | --- |
-| `baseColumns()` | `id`, `token` (string 64, unique, not null), `parent_id` (FK do tej samej tabeli, nullable, `nullOnDelete`), `name`, `status` (string), `is_active` (boolean, domyślnie `false`), `sort_order` (integer, domyślnie 0) |
-| `addressColumns(?string $prefix)` | `street`, `building_number`, `apartment_number`, `postal_code`, `city`, `country_code` (2) — z prefiksem, gdy tabela ma kilka adresów (`billing_`, `shipping_`) |
-| `closingColumns(bool $i18n = false)` | `json_attributes`, `json_i18n` (tylko gdy `$i18n`), `json_migrations`, `checksum` (char 64, index), `json_archive`, `created_at`, `updated_at`, `deleted_at` |
+| `Columns::base()` | `id`, `token` (string 64, unique, not null), `parent_id` (FK do tej samej tabeli, nullable, `nullOnDelete`), `name`, `status` (string, nullable), `is_active` (boolean, domyślnie `false`), `sort_order` (integer, domyślnie 0) |
+| `Columns::closing(bool $i18n = false)` | `json_attributes`, `json_i18n` (tylko gdy `$i18n`), `json_migrations`, `checksum` (char 64, index), `json_archive`, `created_at`, `updated_at`, `deleted_at` |
+| `address(?string $prefix)` (koncepcja) | `street`, `building_number`, `apartment_number`, `postal_code`, `city`, `country_code` (2) — z prefiksem, gdy tabela ma kilka adresów (`billing_`, `shipping_`) |
 
-- Nowa grupa powstaje jako makro, gdy ten sam zestaw pól pojawia się w drugiej tabeli.
+- Nowa grupa powstaje jako metoda `Columns`, gdy ten sam zestaw pól pojawia się w drugiej tabeli.
+- **Tabele łączące** (np. `dict_country_language`: dwa klucze obce i atrybuty powiązania) nie mają
+  kolumn standardowych — tylko `id`, klucze, atrybuty i `timestamps` — ale mają historię.
 - `status` to zwykły `string`, nie MySQL `ENUM` — dozwolone wartości trzyma enum PHP (punkt 5),
   więc nowy status nie wymaga migracji.
 - **Flagi:** `$table->boolean('is_…')` tworzy w MySQL `TINYINT(1)`. Zawsze `boolean()` w migracji
@@ -80,13 +91,18 @@ Bez historii są tylko tabele techniczne (`cache*`, `sessions`, `jobs*`, `failed
 
 - Wiersz zapisany jako JSON, nie jako kopia kolumn: zmiana schematu tabeli nie wymaga `ALTER`
   na tabeli historii.
-- Tabelę historii i triggery tworzy helper migracji Core (`History::create('tabela')`). Każda
-  migracja zmieniająca kolumny tabeli kończy się `History::sync('tabela')`, który przebudowuje
-  triggery; test porównuje kolumny tabeli z kolumnami w triggerach.
-- **Kto zmienił:** trigger nie zna użytkownika aplikacji. Middleware Core ustawia na połączeniu
-  zmienne sesji MySQL `@actor_zone`, `@actor_id`, `@request_id` (użytkownik z **jawnie nazwanego
-  guarda strefy**), a trigger je odczytuje. Worker kolejki ustawia i czyści je na każde zadanie.
-  Jedno źródło historii — bez dodatkowego Observera Eloquenta.
+- Tabelę historii i triggery tworzy helper migracji Core: `app(History::class)->create('tabela')`
+  po `Schema::create()`, a `->drop('tabela')` w `down()`. Każda migracja zmieniająca kolumny tabeli
+  kończy się `->sync('tabela')`, który przebudowuje triggery; `->trackedColumns('tabela')` zwraca
+  kolumny zapisywane przez trigger, a test porównuje je z kolumnami tabeli.
+- Dialekty triggerów (`Contracts\HistoryTriggers`): `MysqlHistoryTriggers` (MySQL/MariaDB, aktor ze
+  zmiennych sesji) i `SqliteHistoryTriggers` (testy w SQLite, aktor `NULL`).
+- **Kto zmienił:** trigger nie zna użytkownika aplikacji. Middleware Core `RecordHistoryActor`
+  (w grupie `zone.<strefa>`, po `StartSession`) ustawia przez `Database\HistoryActor` zmienne sesji
+  MySQL `@actor_zone`, `@actor_id`, `@request_id` (konto z **jawnie nazwanego guarda strefy**,
+  losowy identyfikator żądania) i czyści je po odpowiedzi; trigger je odczytuje. Zadanie kolejki
+  działa jako „system” z identyfikatorem zadania (`Listeners\SetHistoryActorForJob`). Konsola
+  i SQL zapisują `NULL`. Jedno źródło historii — bez dodatkowego Observera Eloquenta.
 - Do sprawdzenia przed wdrożeniem: hosting musi dawać uprawnienie `TRIGGER`, a przy włączonym
   binlogu `log_bin_trust_function_creators` (zob. [wdrozenie.md](wdrozenie.md)).
 
@@ -94,13 +110,19 @@ Bez historii są tylko tabele techniczne (`cache*`, `sessions`, `jobs*`, `failed
 
 ```
 Illuminate\Database\Eloquent\Model
-  └─ Simplysmart\Mainboard\Models\MainModel            (abstract, Core)
-       ├─ Simplysmart\Mainboard\Models\MainAuthenticatable   (tabele użytkowników stref)
-       └─ modele paczek (Core i stref)
+  └─ Simplysmart\Mainboard\Models\MainModel            (abstract, Core: token jako klucz trasy)
+       ├─ Simplysmart\Mainboard\Models\MainAuthenticatable   (tabele kont stref, ZoneTables)
+       └─ Simplysmart\Mainboard\Models\DataModel             (abstract: tabele z kolumnami standardowymi)
+            └─ modele paczek (Core i stref), np. Models\Dictionaries\Country
 ```
 
-`MainModel` zapewnia: `SoftDeletes`, wiązanie tras po `token`, generowanie tokenu, checksum,
-casty kolumn z `baseColumns()`/`closingColumns()` i scope `active()`.
+`MainModel` generuje token i wiąże trasy po `token`. `DataModel` dokłada: `SoftDeletes`, casty
+kolumn z `Columns::base()`/`Columns::closing()`, checksum (`HasChecksum`) i scope `active()`;
+słownik z `json_i18n` dołącza `HasI18n` (`translatedName()`).
+
+- **Wartości domyślne:** kolumna z domyślną wartością w migracji ma tę samą wartość w `$attributes`
+  modelu (standardowe dodaje `HasStandardColumns`), więc nowy rekord ma przed zapisem te same dane co
+  po odczycie, a jego checksum się zgadza.
 
 **Model jest czysty:** mapuje tabelę, typy i relacje. Nie zawiera logiki biznesowej, zapytań
 wieloetapowych ani odwołań do `Auth`/`auth()`.
@@ -179,8 +201,9 @@ Kontroler → Form Request (walidacja) → Action (zapis) / Query (odczyt) → D
 
 - `checksum` = SHA-256 z kanonicznego JSON (posortowane klucze) **kolumn domenowych** rekordu.
 - Pomija kolumny techniczne: `id`, `token`, `checksum`, `json_migrations`, `json_archive`,
-  `created_at`, `updated_at`, `deleted_at` — inaczej każdy zapis zmieniałby sumę.
-- Liczy ją `MainModel` przy zapisie. Import porównuje checksumę zmapowanego payloadu z zapisaną i
+  `created_at`, `updated_at`, `deleted_at` — inaczej każdy zapis zmieniałby sumę. `null` liczy się
+  jak brak wartości.
+- Liczy ją `DataModel` przy zapisie (`computeChecksum()`). Import porównuje checksumę zmapowanego payloadu z zapisaną i
   pomija zapis, gdy są równe.
 
 ## 11. Kolumny `json_*`
@@ -223,14 +246,42 @@ final class ErpProductMapper extends FieldMapper
 
 ## 13. Lista kontrolna nowej tabeli
 
-1. Migracja w `database/migrations/` Core: `baseColumns()`, kolumny domenowe, grupy, `closingColumns()`.
-2. `History::create('tabela')` w tej samej migracji.
+1. Migracja w `database/migrations/` Core: `Columns::base()`, kolumny domenowe, grupy, `Columns::closing()`.
+2. `app(History::class)->create('tabela')` w tej samej migracji (i `->drop()` w `down()`).
 3. Słownik? Prefiks `dict_` i `closingColumns(i18n: true)`; treści tłumaczone dynamicznie —
    tabela `<tabela>_i18n`.
-4. Model dziedziczy `MainModel`, każda kolumna ma cast.
+4. Model dziedziczy `DataModel`, każda kolumna ma cast, a kolumny z wartością domyślną mają ją w `$attributes`.
 5. Etykiety kolumn w `lang/<locale>/data.php` dla każdego włączonego języka.
 6. Enum statusu w `Enums/` z etykietami.
 7. Relacje jako traity w `Models/Relations/`.
 8. Dane osobowe: cast `encrypted`, `<kolumna>_hash` do wyszukiwania, wpis w `personalColumns()`.
 9. Seeder referencyjny (idempotentny) lub demo (zablokowany na produkcji).
 10. Testy: casty, tłumaczenia, triggery historii zgodne z kolumnami.
+
+## 14. Słowniki lokalizacji
+
+Pierwsze słowniki Core: kraje, języki, waluty i stawki VAT. Wspólne dla
+wszystkich stref, więc tabele, modele (`Models\Dictionaries`) i odczyty (`Queries\Dictionaries`)
+są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
+
+| Tabela | Model | Kolumny domenowe |
+| --- | --- | --- |
+| `dict_currencies` | `Currency` | `code` (ISO 4217), `decimals`, `is_default` |
+| `dict_languages` | `Language` | `code` (ISO 639), `native_name`, `is_default`, `is_interface` |
+| `dict_countries` | `Country` | `code` (ISO 3166-1), `dial_code`, `currency_id`, `is_eu`, `is_default` |
+| `dict_country_language` | `CountryLanguage` (pivot) | `country_id`, `language_id`, `is_primary` |
+| `dict_tax_rates` | `TaxRate` | `country_id`, `type` (`Enums\TaxRateType`), `rate`, `valid_from`, `valid_to`, `note` |
+
+- `name` jest w języku aplikacji, `json_i18n` ma nazwy w językach interfejsu (`translatedName()`).
+- `is_active` — wpis do wyboru w treściach i dokumentach; `is_default` — kraj, język i waluta
+  aplikacji (po jednym). `Queries\Dictionaries\DefaultEntries` zwraca wpis `is_default`, a bez
+  niego wpis o kodzie z configu (`mainboard.localization.country`, `app.locale`,
+  `mainboard.locale.currency`).
+- `is_interface` — język interfejsu, zawsze w granicach `APP_LOCALES` (`docs/strefy.md`).
+- Stawki VAT obowiązują od `valid_from` do `valid_to` włącznie; `Queries\Dictionaries\TaxRatesInForce`
+  zwraca stawki kraju w danym dniu, podstawową i stawkę aplikacji (bez słownika:
+  `mainboard.localization.vat_percent`).
+- Dane startowe: `php artisan mainboard:localization:seed` (seedery w `src/Database/Seeders/`, nazwy
+  z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
+  wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.
+

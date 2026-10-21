@@ -9,7 +9,7 @@
         "modular",
         "modules"
     ],
-    "homepage": "https://github.com/marcinulezalka/mainboard",
+    "homepage": "https://github.com/marcinulezalka/simply-mainboard",
     "license": "proprietary",
     "authors": [
         {
@@ -19,8 +19,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/marcinulezalka/mainboard/issues",
-        "source": "https://github.com/marcinulezalka/mainboard"
+        "issues": "https://github.com/marcinulezalka/simply-mainboard/issues",
+        "source": "https://github.com/marcinulezalka/simply-mainboard"
     },
     "require": {
         "php": "^8.4",

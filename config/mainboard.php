@@ -49,6 +49,21 @@ return [
 
     ],
 
+    'localization' => [
+
+        /*
+         * Kraj aplikacji (ISO 3166-1 alpha-2), gdy słownik krajów nie ma jeszcze kraju domyślnego
+         * (is_default). Język i waluta domyślne biorą się z app.locale i locale.currency.
+         */
+        'country' => env('APP_COUNTRY', 'PL'),
+
+        /*
+         * Stawka VAT (procent), gdy kraj domyślny nie ma w słowniku stawki podstawowej na dany dzień.
+         */
+        'vat_percent' => (string) env('APP_DEFAULT_VAT', '23'),
+
+    ],
+
     'auth' => [
 
         /*

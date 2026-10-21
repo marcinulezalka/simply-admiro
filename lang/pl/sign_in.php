@@ -29,6 +29,7 @@ return [
     'pin_setup_intro' => 'PIN ma :length cyfr. Unikaj powtórzeń i kolejnych cyfr.',
     'pin_confirmation' => 'Powtórz PIN',
     'sign_out' => 'Wyloguj',
+    'signed_in_as' => 'Zalogowano jako :name.',
     'failure' => 'Nie udało się zalogować. Sprawdź dane i spróbuj ponownie.',
     'expired' => 'Sesja logowania wygasła. Zacznij od nowa.',
     'page_expired' => 'Strona wygasła. Zaloguj się ponownie.',

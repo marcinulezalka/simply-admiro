@@ -18,6 +18,20 @@ Jeśli panel wymusza stały katalog (np. `public_html/`), wyślij do niego **tyl
 | `.env*` | dane środowiska. Na serwerze tworzy się osobny plik |
 | `node_modules/`, `resources/css/`, `resources/js/` | źródła i narzędzia builda; serwer dostaje tylko wynik (zob. niżej) |
 
+## Baza danych
+
+Tabele danych mają historię zmian zapisywaną triggerami MySQL (`docs/baza-danych.md` §4), więc
+użytkownik bazy potrzebuje uprawnienia `TRIGGER`. Przy włączonym binlogu (replikacja) serwer wymaga
+też `log_bin_trust_function_creators = 1` albo uprawnienia `SUPER` — sprawdź to u dostawcy przed
+pierwszą migracją.
+
+Po wysłaniu kodu:
+
+```bash
+php artisan migrate --force              # migracje Core (destrukcyjne komendy są na produkcji zablokowane)
+php artisan mainboard:localization:seed  # słowniki lokalizacji; bezpieczne przy każdym wdrożeniu
+```
+
 ## Assety
 
 > **Koncepcja** — obowiązuje, gdy paczki dostaną własny Vite

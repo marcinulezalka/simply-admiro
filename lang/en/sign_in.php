@@ -29,6 +29,7 @@ return [
     'pin_setup_intro' => 'The PIN has :length digits. Avoid repeated and consecutive digits.',
     'pin_confirmation' => 'Repeat the PIN',
     'sign_out' => 'Sign out',
+    'signed_in_as' => 'Signed in as :name.',
     'failure' => 'Could not sign in. Check your details and try again.',
     'expired' => 'The sign-in session has expired. Start again.',
     'page_expired' => 'The page has expired. Sign in again.',

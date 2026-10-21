@@ -20,6 +20,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Simplysmart\Mainboard\Http\Middleware\PreventRequestForgeryWithoutCookie;
+use Simplysmart\Mainboard\Http\Middleware\RecordHistoryActor;
 use Simplysmart\Mainboard\Http\Middleware\SecurityHeaders;
 use Simplysmart\Mainboard\Http\Middleware\SetLocale;
 use Simplysmart\Mainboard\Http\Middleware\UseZone;
@@ -28,6 +29,7 @@ use Simplysmart\Mainboard\Http\Middleware\UseZone;
  * Rejestruje grupę middleware strefy (`zone.<nazwa>`), używaną zamiast grupy `web`.
  *
  * UseZone musi poprzedzać StartSession, a SetLocale — SubstituteBindings (zdejmuje parametr {locale}).
+ * RecordHistoryActor potrzebuje sesji (konto z guarda strefy), więc stoi po StartSession.
  */
 final readonly class ZoneMiddlewareRegistrar
 {
@@ -55,6 +57,7 @@ final readonly class ZoneMiddlewareRegistrar
             ShareErrorsFromSession::class,
             PreventRequestForgeryWithoutCookie::class,
             SetLocale::class,
+            RecordHistoryActor::class,
             SubstituteBindings::class,
             SecurityHeaders::class,
         ]);

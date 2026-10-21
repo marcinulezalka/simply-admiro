@@ -2,7 +2,11 @@
 
 Strefa to odizolowana część aplikacji, która ma własny guard, model kont, ciasteczko i tabelę sesji, prefiks URL i prefiks nazw tras. Core (mainboard) dostarcza mechanizm, a paczka strefy go konfiguruje. Mainboard i skeleton nie mają własnej strefy.
 
-Strefy: `admiro` — administratorzy (paczka `simplysmart/admiro`, migracja `create_admiro_tables`).
+Strefy publiczne (strefy z paczek prywatnych mają własne migracje i nie są tu wymieniane, zob. „Private Packages” w CLAUDE.md skeletonu):
+
+| Strefa | Paczka | Przeznaczenie | Migracja |
+| --- | --- | --- | --- |
+| `admiro` | `simplysmart/admiro` | administratorzy | `create_admiro_tables` |
 
 Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i etap 2 (logowanie kodem z e-maila i PIN-em). Zaufane urządzenia i uprawnienia dojdą w kolejnych etapach.
 
@@ -37,7 +41,9 @@ Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i e
 4. Strefa z logowaniem:
    - model kont dziedziczy po `Simplysmart\Mainboard\Models\ZoneAccount` i ustawia tylko `$table = '<strefa>_accounts'`;
    - migracja w Core (`database/migrations/`) wywołuje `app(ZoneTables::class)->create('<strefa>')` w `up()` i `->drop('<strefa>')` w `down()`. Powstają tabele `<strefa>_accounts`, `<strefa>_login_challenges` i `<strefa>_sessions`;
-   - strefa bez rejestracji zakłada konta akcją `Auth\CreateZoneAccount` (np. z komendy paczki, jak `admiro:account:create`): przy ustawionej `CurrentZone` tworzy aktywne konto bez PIN-u, a dla zajętego adresu rzuca `AccountAlreadyExists`. PIN właściciel ustawia przy pierwszym logowaniu.
+   - strefa bez rejestracji zakłada konta komendą `<strefa>:account:create {email} {name}`: klasa w paczce dziedziczy po `Console\CreateZoneAccountCommand` i podaje tylko `$name`, `$description` i `zoneName()`. Walidację, strefę żądania i komunikaty daje baza, a konto tworzy akcja `Auth\CreateZoneAccount` (aktywne, bez PIN-u; zajęty adres → `AccountAlreadyExists`). PIN właściciel ustawia przy pierwszym logowaniu.
+
+5. Widoki strefy budują się na layoucie Core `<x-mainboard::zone.layout :title="...">`. Core daje mu `$zone` i `$account` (konto zalogowane w guardzie strefy albo null): layout pokazuje „Zalogowano jako …” i „Wyloguj”, gdy konto jest. Proste strony to `Route::view(...)` bez kontrolera.
 
 ## Co Core robi za strefę
 
@@ -51,6 +57,7 @@ Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i e
 - **Język**: `SetLocale` i `Localization\LocaleRouting`, sterowane zmienną `APP_LOCALES`.
   - Jeden język: trasy bez prefiksu.
   - Kilka języków: prefiks `{locale}` zawsze obecny i ograniczony do listy. Parametr jest zdejmowany przed kontrolerem, a `route()` dostaje język bieżącego żądania.
+  - Słownik języków (`dict_languages.is_interface`, domyślny `is_default`) wybiera spośród `APP_LOCALES` języki włączone teraz (`Contracts\InterfaceLocales`, cache 5 min, `forget()` po zmianie). Język z adresu, który administrator wyłączył, przekierowuje GET na ten sam adres w języku domyślnym. `APP_LOCALES` pozostaje sufitem: trasy (i `route:cache`) nie zależą od bazy, więc nowy język wymaga wpisu w `.env` i tłumaczeń. Bez słownika albo bez języków interfejsu w jego granicach obowiązuje sam config.
 - **Przekierowania** (`ZoneRedirects`):
   - niezalogowany trafia na `<strefa>.auth.login`, a gdy tej trasy nie ma, dostaje 404;
   - zalogowany na trasie tylko dla gości trafia na `<strefa>.dashboard`;

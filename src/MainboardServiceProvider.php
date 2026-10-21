@@ -17,6 +17,7 @@ use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
@@ -36,7 +37,12 @@ use Simplysmart\Mainboard\Auth\Listeners\SendAccountLockedMail;
 use Simplysmart\Mainboard\Auth\SignIn\EloquentLoginChallengeRepository;
 use Simplysmart\Mainboard\Auth\SignIn\LoginCodeGenerator;
 use Simplysmart\Mainboard\Auth\SignInLogDefaults;
+use Simplysmart\Mainboard\Listeners\SetHistoryActorForJob;
+use Illuminate\Queue\Events\JobFailed;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 use Simplysmart\Mainboard\Console\PruneSignInChallenges;
+use Simplysmart\Mainboard\Console\SeedLocalization;
 use Simplysmart\Mainboard\Contracts\AccountLocator;
 use Simplysmart\Mainboard\Contracts\AccountStore;
 use Simplysmart\Mainboard\Contracts\BlindIndex;
@@ -55,6 +61,9 @@ use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\ServiceProvider;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\LocalFormatter;
+use Simplysmart\Mainboard\Contracts\InterfaceLocales;
+use Simplysmart\Mainboard\Localization\DictionaryInterfaceLocales;
+use Simplysmart\Mainboard\Contracts\SignInAccount;
 use Simplysmart\Mainboard\Contracts\TextTranslator;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Listeners\LogSentMail;
@@ -80,6 +89,8 @@ final class MainboardServiceProvider extends ServiceProvider
     private const int PAGE_EXPIRED = 419;
 
     private const string SIGN_IN_VIEWS = CascadeTextTranslator::CORE_NAMESPACE . '::auth.*';
+
+    private const string ZONE_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.zone.layout';
 
     /**
      * Łączy konfigurację Core, uzupełnia nią konfigurację poczty i logów frameworka,
@@ -107,6 +118,7 @@ final class MainboardServiceProvider extends ServiceProvider
 
         $this->app->bind(TextTranslator::class, CascadeTextTranslator::class);
         $this->app->bind(LocalFormatter::class, IntlLocalFormatter::class);
+        $this->app->bind(InterfaceLocales::class, DictionaryInterfaceLocales::class);
 
         $this->registerZones();
         $this->registerSignIn();
@@ -126,10 +138,13 @@ final class MainboardServiceProvider extends ServiceProvider
         $events->listen(MessageSent::class, LogSentMail::class);
         $events->listen([SignInSucceeded::class, SignInRejected::class, AccountLocked::class, SignedOut::class], LogSignInActivity::class);
         $events->listen(AccountLocked::class, SendAccountLockedMail::class);
+        $events->listen(JobProcessing::class, [SetHistoryActorForJob::class, 'start']);
+        $events->listen([JobProcessed::class, JobFailed::class], [SetHistoryActorForJob::class, 'finish']);
 
         $this->app->make(ViewFactory::class)->composer(self::SIGN_IN_VIEWS, function (View $view): void {
             $view->with('zone', $this->app->make(CurrentZone::class)->get());
         });
+        $this->app->make(ViewFactory::class)->composer(self::ZONE_LAYOUT_VIEW, $this->shareZoneWithLayout(...));
 
         $limiter->for(SignInRoutes::THROTTLE, fn(Request $request): Limit => $this->signInRouteLimit($request));
         $this->app->afterResolving(ExceptionHandler::class, $this->renderExpiredFormsAsSignIn(...));
@@ -139,7 +154,7 @@ final class MainboardServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([PruneSignInChallenges::class]);
+            $this->commands([PruneSignInChallenges::class, SeedLocalization::class]);
             $this->app->afterResolving(Schedule::class, static function (Schedule $schedule): void {
                 $schedule->command(PruneSignInChallenges::class)->hourly();
             });
@@ -149,6 +164,17 @@ final class MainboardServiceProvider extends ServiceProvider
 
         $this->useZoneRedirects();
         $this->app->afterResolving(HttpKernel::class, $this->useZoneRedirects(...));
+    }
+
+    /**
+     * Layout strefy dostaje strefę żądania i konto zalogowane w jej guardzie (albo null).
+     */
+    private function shareZoneWithLayout(View $view): void
+    {
+        $zone = $this->app->make(CurrentZone::class)->get();
+        $account = $zone->requiresLogin() ? $this->app->make(AuthFactory::class)->guard($zone->guard)->user() : null;
+
+        $view->with('zone', $zone)->with('account', $account instanceof SignInAccount ? $account : null);
     }
 
     /**

@@ -6,6 +6,12 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Fundament bazy danych (`docs/baza-danych.md`): kolumny standardowe `Database\Columns` (`base()`, `closing()`, nazwy w `ColumnNames`), `Models\DataModel` (token, soft delete, casty, checksum rekordu, scope `active()`), tłumaczenia `json_i18n` (`HasI18n::translatedName()` bez języka zapasowego), etykiety kolumn `lang/{pl,en}/data.php` i kontrakt `HasLabel`.
+- Historia zmian każdej tabeli danych w `history_<tabela>` zapisywana triggerami (`Database\History`: `create`, `sync`, `drop`, `trackedColumns`; dialekty MySQL i SQLite), z aktorem zmian (strefa, konto z guarda strefy, id żądania) ustawianym przez middleware `RecordHistoryActor` i dla zadań kolejki.
+- Słowniki lokalizacji: tabele `dict_currencies`, `dict_languages`, `dict_countries`, `dict_country_language`, `dict_tax_rates` z historią, modele `Models\Dictionaries\{Currency,Language,Country,CountryLanguage,TaxRate}`, relacje w `Models\Relations`, enum `TaxRateType` (etykiety pl, en), odczyty `DefaultEntries` (kraj, język, waluta aplikacji) i `TaxRatesInForce` (stawki w danym dniu); config `mainboard.localization` (`APP_COUNTRY`, `APP_DEFAULT_VAT`).
+- Komenda `mainboard:localization:seed`: waluty, języki i kraje z ICU (nazwy w językach interfejsu, numery kierunkowe, UE, waluty i języki urzędowe krajów) oraz stawki VAT państw UE (stan na 2025 r.); idempotentna, zachowuje wybory administratora.
+- Języki interfejsu ze słownika (`Contracts\InterfaceLocales`, `dict_languages.is_interface` w granicach `APP_LOCALES`): język wyłączony w słowniku przekierowuje na ten sam adres w języku domyślnym.
+- Baza komendy `Console\CreateZoneAccountCommand` (`<strefa>:account:create {email} {name}`: walidacja, strefa, komunikaty) i layout strefy `x-mainboard::zone.layout` (tytuł, zalogowane konto, wylogowanie; tekst `sign_in.signed_in_as`, pl, en).
 - Zakładanie kont stref bez rejestracji: akcja `Auth\CreateZoneAccount` (aktywne konto bez PIN-u, PIN ustawia właściciel przy pierwszym logowaniu; zajęty adres → `AccountAlreadyExists`) i `ZoneDefinition::accountModel()`.
 - Migracja `create_admiro_tables`: tabele strefy administratorów `admiro` (paczka `simplysmart/admiro`).
 - Logowanie stref kodem z e-maila i PIN-em (etap 2, `docs/strefy.md`): trasy `<strefa>.auth.*`, wymienne kroki `Contracts\SignInStep` z kolejnością w `auth.steps` (domyślnie kod, ustawienie PIN-u, PIN), bez przeskakiwania kroków i z czasem ważności każdego kroku; wylogowanie tylko z bieżącej strefy.
@@ -42,6 +48,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Repozytorium przeniesione do `https://github.com/marcinulezalka/simply-mainboard`: adresy `homepage` i `support` w `composer.json`.
 - Nagłówek PHPDoc z prawami autorskimi i licencją w każdym pliku PHP paczki, wymuszany przez Pint (`header_comment` w `pint.json`): `composer format` dopisuje go, `composer lint` zgłasza brak.
 - Zależności `illuminate/log`, `illuminate/mail`, `illuminate/support` i `illuminate/translation` zastąpione przez `laravel/framework` ^13.0 (CSRF, Vite i TrustProxies są tylko w pełnym frameworku).
 - Standardy kodu: PSR-4 i PER Coding Style pilnowany przez Laravel Pint z presetem `per` (`pint.json`, `composer lint` / `composer format`); `laravel/pint` w `require-dev`.
