@@ -14,6 +14,5 @@ declare(strict_types=1);
 return [
 
     'title' => 'Panel administratora',
-    'signed_in_as' => 'Zalogowano jako :name.',
 
 ];

@@ -9,7 +9,7 @@
         "zone",
         "administration"
     ],
-    "homepage": "https://github.com/marcinulezalka/admiro",
+    "homepage": "https://github.com/marcinulezalka/simply-admiro",
     "license": "proprietary",
     "authors": [
         {
@@ -19,8 +19,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/marcinulezalka/admiro/issues",
-        "source": "https://github.com/marcinulezalka/admiro"
+        "issues": "https://github.com/marcinulezalka/simply-admiro/issues",
+        "source": "https://github.com/marcinulezalka/simply-admiro"
     },
     "require": {
         "php": "^8.4",

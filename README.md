@@ -2,7 +2,7 @@
 
 Strefa administratorów aplikacji simplysmart: odizolowany panel z własnym guardem, kontami, sesją i adresem URL.
 
-Paczka Composer: `simplysmart/admiro`, namespace `Simplysmart\Admiro\`. Mechanizm stref, logowanie kodem z e-maila i PIN-em oraz tabele dostarcza Core [`simplysmart/mainboard`](https://github.com/marcinulezalka/mainboard) (`docs/strefy.md`).
+Paczka Composer: `simplysmart/admiro`, namespace `Simplysmart\Admiro\`. Mechanizm stref, logowanie kodem z e-maila i PIN-em oraz tabele dostarcza Core [`simplysmart/mainboard`](https://github.com/marcinulezalka/simply-mainboard) (`docs/strefy.md`).
 
 ## Wymagania
 

@@ -12,11 +12,10 @@ declare(strict_types=1);
  */
 
 use Illuminate\Support\Facades\Route;
-use Simplysmart\Admiro\Http\Controllers\DashboardController;
 
 /*
 | Trasy dla zalogowanych administratorów (poziom Authenticated: Core dodaje auth:<guard>).
 | Ścieżki względne, nazwy krótkie: prefiks URL, prefiks nazw "admiro." i middleware daje provider.
 */
 
-Route::get('/', DashboardController::class)->name('dashboard');
+Route::view('/', 'admiro::dashboard')->name('dashboard');
