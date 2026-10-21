@@ -52,7 +52,6 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Contracts\Translation\Loader;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Mail\Events\MessageSent;
-use Illuminate\Session\SessionManager;
 use Illuminate\Support\ServiceProvider;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\LocalFormatter;
@@ -233,7 +232,7 @@ final class MainboardServiceProvider extends ServiceProvider
         $this->app->singleton(ZoneRegistry::class, InMemoryZoneRegistry::class);
         $this->app->scoped(CurrentZone::class, RequestZone::class);
 
-        $this->app->extend('session', static fn(SessionManager $manager, Application $app): ZoneSessionManager => new ZoneSessionManager($app));
+        $this->app->extend('session', fn(): ZoneSessionManager => new ZoneSessionManager($this->app));
 
         $this->app->singleton(ZoneSessionConfigurator::class, fn(Application $app): ZoneSessionConfigurator => new ZoneSessionConfigurator(
             $app->make(Repository::class),

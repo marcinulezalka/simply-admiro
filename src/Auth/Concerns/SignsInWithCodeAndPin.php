@@ -26,6 +26,10 @@ use Simplysmart\Mainboard\Contracts\BlindIndex;
  * Laravelowe remember-me jest wyłączone (zastępują je zaufane urządzenia).
  *
  * @see \Simplysmart\Mainboard\Models\ZoneAccount
+ *
+ * @method static void saving(\Closure|string $callback) Metoda modelu Eloquent.
+ * @method bool isDirty(array<int, string>|string|null $attributes = null) Metoda modelu Eloquent.
+ * @method $this setAttribute(string $key, mixed $value) Metoda modelu Eloquent.
  */
 trait SignsInWithCodeAndPin
 {

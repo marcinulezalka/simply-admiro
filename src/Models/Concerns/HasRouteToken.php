@@ -18,6 +18,10 @@ use Simplysmart\Mainboard\Auth\AccountColumns;
 
 /**
  * Losowy `token` (64 znaki) jako klucz trasy: publiczne adresy nigdy nie zawierają sekwencyjnego `id`.
+ *
+ * @method static void creating(\Closure|string $callback) Metoda modelu Eloquent.
+ * @method mixed getAttribute(string $key) Metoda modelu Eloquent.
+ * @method $this setAttribute(string $key, mixed $value) Metoda modelu Eloquent.
  */
 trait HasRouteToken
 {

@@ -38,6 +38,7 @@ final readonly class EloquentAccountLocator implements AccountLocator
             throw new LogicException("Zone [{$this->zone->get()->name}] model must be an Eloquent model implementing " . CodeAndPinAccount::class . '.');
         }
 
+        /** @var class-string<Model&CodeAndPinAccount> $model */
         $account = $model::query()->where(AccountColumns::EMAIL_HASH, $this->index->hash(EmailAddress::normalize($email)))->first();
 
         return $account instanceof CodeAndPinAccount ? $account : null;
