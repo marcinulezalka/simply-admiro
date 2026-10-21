@@ -1,0 +1,48 @@
+# --- Composer ----------------------------------------------------------------
+/vendor
+# Paczka biblioteczna: lock trzymany tylko lokalnie, CI rozwiązuje zależności sam
+/composer.lock
+/auth.json
+
+# --- Testy, analiza, coverage ------------------------------------------------
+.phpunit.cache
+.phpunit.result.cache
+/build
+/coverage
+/.php-cs-fixer.cache
+/.pint.cache
+/phpstan.neon.local
+/phpunit.xml.local
+
+# --- Środowisko lokalne (localhost) ------------------------------------------
+.env
+.env.*
+!.env.example
+/infrastructure/
+Homestead.json
+Homestead.yaml
+/docker-compose.override.yml
+*.sqlite
+*.sqlite-journal
+*.log
+
+# --- Narzędzia AI / edytory / IDE --------------------------------------------
+# Tylko lokalne pliki sesji; skille (.claude/skills/) są w repozytorium
+/.claude/settings.local.json
+CLAUDE.local.md
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.vscode
+/.zed
+.phpactor.json
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# --- System operacyjny -------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*~

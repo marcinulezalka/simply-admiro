@@ -1,0 +1,65 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "simplysmart/admiro",
+    "type": "library",
+    "description": "Admiro: the administrators' zone of simplysmart applications.",
+    "keywords": [
+        "simplysmart",
+        "admiro",
+        "zone",
+        "administration"
+    ],
+    "homepage": "https://github.com/marcinulezalka/admiro",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Marcin Ulezalka",
+            "email": "marcin.ulezalka@simplysmart.pl",
+            "role": "Founder"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/marcinulezalka/admiro/issues",
+        "source": "https://github.com/marcinulezalka/admiro"
+    },
+    "require": {
+        "php": "^8.4",
+        "laravel/framework": "^13.0",
+        "simplysmart/mainboard": "@dev"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.27",
+        "phpstan/phpstan": "^2.1"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../mainboard",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Simplysmart\\Admiro\\": "src/"
+        }
+    },
+    "scripts": {
+        "lint": "pint --test",
+        "format": "pint",
+        "analyse": "phpstan analyse --memory-limit=512M"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Simplysmart\\Admiro\\AdmiroServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
