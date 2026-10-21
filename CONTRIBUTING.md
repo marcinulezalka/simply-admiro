@@ -20,7 +20,7 @@ Wpisy zmian dodawaj w `CHANGELOG.md` pod `## [Unreleased]`, w sekcjach
 Zmianę łamiącą oznacz na początku wpisu: `- **BREAKING** …`.
 
 Pakiet nie ma własnego skryptu wydań — używa wspólnego przybornika
-[`simplysmart/tools`](https://github.com/marcinulezalka/tools) zainstalowanego w projekcie
+[`simplysmart/tools`](https://github.com/marcinulezalka/simply-tools) zainstalowanego w projekcie
 głównym, w którym jest rozwijany (`packages/simplysmart/mainboard`). Z katalogu projektu głównego:
 
 ```bash
