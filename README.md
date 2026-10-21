@@ -32,6 +32,28 @@ Wygrywa najwyższe podbicie wśród niepustych sekcji. Inne nagłówki i wpisy b
 `### <sekcja>` są odrzucane. Datę wydania liczy strefa `RELEASE_TIMEZONE`
 (domyślnie `Europe/Warsaw`).
 
+## Paczki prywatne
+
+`vendor/bin/composer-private` instaluje paczki z prywatnych repozytoriów tak, żeby publiczny `composer.json` i `composer.lock` projektu ich nie wymieniały. Lista leży w `private-packages.json` w katalogu projektu (dodaj go do `.gitignore`):
+
+```json
+{
+    "require": {
+        "<vendor>/<paczka>": "@dev"
+    }
+}
+```
+
+Narzędzie zapisuje `composer.private.json` (= `composer.json` z dopisanymi paczkami), przy pierwszym uruchomieniu kopiuje `composer.lock` jako `composer.private.lock` (wersje publicznych paczek zostają) i uruchamia `composer update <paczki>` z `COMPOSER=composer.private.json`. Oba pliki dodaj do `.gitignore`.
+
+```bash
+vendor/bin/composer-private              # bieżący katalog
+vendor/bin/composer-private --dry-run    # pokazuje paczki; nie zapisuje plików i nie uruchamia composera
+vendor/bin/composer-private --root=<katalog>
+```
+
+Bez `private-packages.json` kończy się kodem 0 i nic nie robi (publiczny klon, CI). Zwykłe `composer install` / `update` usuwa paczki prywatne z `vendor/`, więc potem trzeba uruchomić narzędzie ponownie. W projekcie wygodnie podpiąć je jako skrypt: `"private:install": "@php vendor/bin/composer-private"`.
+
 ## Skille AI
 
 Pakiet dostarcza wspólne skille dla agentów AI w `resources/boost/skills/`: `solid-dry` (SOLID, DRY, standardy PHP 8.4), `docs-after-tests` (dokumentacja po testach) i `changelog-before-commit` (CHANGELOG i wydania z `--dry-run`). W projekcie Laravel z [Laravel Boost](https://laravel.com/docs/boost) dopisz pakiet do `boost.json`, a Boost skopiuje skille do `.claude/skills/`:

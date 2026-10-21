@@ -42,7 +42,8 @@
         }
     },
     "bin": [
-        "bin/version-release"
+        "bin/version-release",
+        "bin/composer-private"
     ],
     "scripts": {
         "test": "phpunit",
