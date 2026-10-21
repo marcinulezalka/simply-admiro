@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Auth;
 
 use Illuminate\Database\Eloquent\Model;
-use LogicException;
 use Simplysmart\Mainboard\Contracts\AccountLocator;
 use Simplysmart\Mainboard\Contracts\BlindIndex;
 use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
@@ -32,13 +31,7 @@ final readonly class EloquentAccountLocator implements AccountLocator
 
     public function findByEmail(string $email): (Model&CodeAndPinAccount)|null
     {
-        $model = $this->zone->get()->model;
-
-        if ($model === null || ! is_a($model, Model::class, true) || ! is_a($model, CodeAndPinAccount::class, true)) {
-            throw new LogicException("Zone [{$this->zone->get()->name}] model must be an Eloquent model implementing " . CodeAndPinAccount::class . '.');
-        }
-
-        /** @var class-string<Model&CodeAndPinAccount> $model */
+        $model = $this->zone->get()->accountModel();
         $account = $model::query()->where(AccountColumns::EMAIL_HASH, $this->index->hash(EmailAddress::normalize($email)))->first();
 
         return $account instanceof CodeAndPinAccount ? $account : null;

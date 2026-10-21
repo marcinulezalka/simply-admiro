@@ -2,6 +2,8 @@
 
 Strefa to odizolowana część aplikacji, która ma własny guard, model kont, ciasteczko i tabelę sesji, prefiks URL i prefiks nazw tras. Core (mainboard) dostarcza mechanizm, a paczka strefy go konfiguruje. Mainboard i skeleton nie mają własnej strefy.
 
+Strefy: `admiro` — administratorzy (paczka `simplysmart/admiro`, migracja `create_admiro_tables`).
+
 Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i etap 2 (logowanie kodem z e-maila i PIN-em). Zaufane urządzenia i uprawnienia dojdą w kolejnych etapach.
 
 ## Jak dodać strefę
@@ -34,7 +36,8 @@ Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i e
 
 4. Strefa z logowaniem:
    - model kont dziedziczy po `Simplysmart\Mainboard\Models\ZoneAccount` i ustawia tylko `$table = '<strefa>_accounts'`;
-   - migracja w Core (`database/migrations/`) wywołuje `app(ZoneTables::class)->create('<strefa>')` w `up()` i `->drop('<strefa>')` w `down()`. Powstają tabele `<strefa>_accounts`, `<strefa>_login_challenges` i `<strefa>_sessions`.
+   - migracja w Core (`database/migrations/`) wywołuje `app(ZoneTables::class)->create('<strefa>')` w `up()` i `->drop('<strefa>')` w `down()`. Powstają tabele `<strefa>_accounts`, `<strefa>_login_challenges` i `<strefa>_sessions`;
+   - strefa bez rejestracji zakłada konta akcją `Auth\CreateZoneAccount` (np. z komendy paczki, jak `admiro:account:create`): przy ustawionej `CurrentZone` tworzy aktywne konto bez PIN-u, a dla zajętego adresu rzuca `AccountAlreadyExists`. PIN właściciel ustawia przy pierwszym logowaniu.
 
 ## Co Core robi za strefę
 

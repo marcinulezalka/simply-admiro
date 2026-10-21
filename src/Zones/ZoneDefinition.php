@@ -14,8 +14,10 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Zones;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettings;
+use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
 
 /**
  * Niezmienna definicja jednej strefy (budowana przez ZoneDefinitionFactory z configu paczki strefy).
@@ -60,6 +62,24 @@ final readonly class ZoneDefinition
     public function auth(): ZoneAuthSettings
     {
         return $this->authSettings ?? throw new LogicException("Zone [{$this->name}] has no sign-in.");
+    }
+
+    /**
+     * Model kont strefy logującej się kodem i PIN-em.
+     *
+     * @return class-string<Model&CodeAndPinAccount>
+     *
+     * @throws LogicException Gdy strefa nie ma logowania albo model nie jest takim modelem Eloquent.
+     */
+    public function accountModel(): string
+    {
+        $model = $this->model;
+
+        if ($model === null || ! is_a($model, Model::class, true) || ! is_a($model, CodeAndPinAccount::class, true)) {
+            throw new LogicException("Zone [{$this->name}] model must be an Eloquent model implementing " . CodeAndPinAccount::class . '.');
+        }
+
+        return $model;
     }
 
     /**

@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Zakładanie kont stref bez rejestracji: akcja `Auth\CreateZoneAccount` (aktywne konto bez PIN-u, PIN ustawia właściciel przy pierwszym logowaniu; zajęty adres → `AccountAlreadyExists`) i `ZoneDefinition::accountModel()`.
+- Migracja `create_admiro_tables`: tabele strefy administratorów `admiro` (paczka `simplysmart/admiro`).
 - Logowanie stref kodem z e-maila i PIN-em (etap 2, `docs/strefy.md`): trasy `<strefa>.auth.*`, wymienne kroki `Contracts\SignInStep` z kolejnością w `auth.steps` (domyślnie kod, ustawienie PIN-u, PIN), bez przeskakiwania kroków i z czasem ważności każdego kroku; wylogowanie tylko z bieżącej strefy.
 - Zabezpieczenia logowania: ta sama ścieżka i ten sam czas odpowiedzi dla każdego adresu (szyfrowany job `IssueSignInCode`), jeden ogólny komunikat porażki, kod tylko jako HMAC (ważny najnowszy, TTL, limit prób, odstęp wysyłek), PIN z regułą `StrongPin` i aktualizacją hasha, blokady 15 min → 1 h → 24 h z licznikiem zerowanym dopiero po udanym logowaniu i mailem do właściciela, limity per IP, per adres + IP i per adres z dowolnego IP, regeneracja sesji, epoka konta (`auth_epoch`) unieważniająca wszystkie sesje, wylogowanie kont nieaktywnych i zablokowanych, powrót do logowania po wygaśnięciu formularza (419).
 - Schemat tabel strefy `Database\ZoneTables` (`<strefa>_accounts` z szyfrowanym e-mailem i `email_hash`, `<strefa>_login_challenges`, `<strefa>_sessions`), modele `MainModel` (klucz trasy `token`), `MainAuthenticatable` i `ZoneAccount`, kontrakty konta (`SignInAccount`, `HasPinCredential`, `LockableAccount`, `RevocableAccess`), `AccountLocator`, `AccountStore`, `LoginChallengeRepository`, `BlindIndex`.
