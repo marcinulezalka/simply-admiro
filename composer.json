@@ -10,7 +10,7 @@
         "changelog",
         "release"
     ],
-    "homepage": "https://github.com/marcinulezalka/tools",
+    "homepage": "https://github.com/marcinulezalka/simply-tools",
     "license": "proprietary",
     "authors": [
         {
@@ -20,8 +20,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/marcinulezalka/tools/issues",
-        "source": "https://github.com/marcinulezalka/tools"
+        "issues": "https://github.com/marcinulezalka/simply-tools/issues",
+        "source": "https://github.com/marcinulezalka/simply-tools"
     },
     "require": {
         "php": "^8.4"
