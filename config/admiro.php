@@ -22,6 +22,7 @@ return [
     |
     | Definicja strefy dla Core (docs/strefy.md w simplysmart/mainboard). Slug to tylko segment URL:
     | jego zmiana nie zmienia nazw tras (prefiks "admiro." jest stały) i nie może być kodem języka.
+    | Administratorzy domyślnie zawsze logują się kodem z e-maila i PIN-em (bez zaufanych urządzeń).
     |
     */
 
@@ -29,6 +30,9 @@ return [
         'name' => 'admiro',
         'slug' => env('ADMIRO_SLUG', 'admiro'),
         'model' => AdmiroAccount::class,
+        'auth' => [
+            'trusted_devices' => ['enabled' => (bool) env('ADMIRO_TRUSTED_DEVICES', false)],
+        ],
     ],
 
 ];

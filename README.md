@@ -25,13 +25,17 @@ Strefa nie ma rejestracji: konta zakłada tylko komenda `admiro:account:create {
 | --- | --- |
 | Nazwa strefy, guard | `admiro` |
 | Adres | `/<ADMIRO_SLUG>` (domyślnie `/admiro`; przy kilku językach `/{locale}/admiro`) |
-| Trasy | `admiro.dashboard` (panel, tylko po zalogowaniu), `admiro.auth.*` (logowanie z Core) |
-| Tabele | `admiro_accounts`, `admiro_login_challenges`, `admiro_sessions` |
+| Trasy | `admiro.dashboard` (panel, tylko po zalogowaniu), `admiro.auth.*` (logowanie z Core), `admiro.account.pin` (zmiana PIN-u z Core) |
+| Tabele | `admiro_accounts`, `admiro_login_challenges`, `admiro_sessions`, `admiro_trusted_devices` |
+| Logowanie | zawsze kod z e-maila i PIN; zaufane urządzenia wyłączone (`ADMIRO_TRUSTED_DEVICES=true` je włącza) |
 | Ciasteczko sesji | `admiro_session` |
 
 Zmiana `ADMIRO_SLUG` zmienia tylko adres; nazwy tras zostają `admiro.*`. Slug nie może być kodem języka.
 
-Role i uprawnienia administratorów (guest, support, owner, hero — szkic w `database/seeders/zones/admiro-permissions.json` w Core) dojdą w kolejnym etapie.
+Role administratorów (`Enums\Role`): `guest` (bez uprawnień), `support` (podgląd), `owner` (wszystko poza
+zarządzaniem superadministratorami i konserwacją systemu) i `hero` (wszystko). Uprawnienia są w
+`Enums\Permission`, a przypisania w pliku ról Core `database/seeders/permissions/admiro.json`, zapisywanym
+komendą `php artisan mainboard:permissions:sync`. Strefa działa w organizacji operatora aplikacji.
 
 ## Nadpisywanie
 
