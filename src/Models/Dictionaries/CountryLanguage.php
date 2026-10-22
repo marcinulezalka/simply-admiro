@@ -16,7 +16,7 @@ namespace Simplysmart\Mainboard\Models\Dictionaries;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * Język urzędowy kraju (tabela łącząca `dict_country_language`, bez kolumn standardowych).
+ * Język urzędowy kraju (tabela łącząca `locale_country_language`, bez kolumn standardowych).
  *
  * @property int $country_id
  * @property int $language_id
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 final class CountryLanguage extends Pivot
 {
-    public const string TABLE = 'dict_country_language';
+    public const string TABLE = 'locale_country_language';
 
     public const string IS_PRIMARY = 'is_primary';
 

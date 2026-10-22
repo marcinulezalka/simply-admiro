@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Database\Seeders;
 
+use Simplysmart\Mainboard\Database\CodeColumns;
+use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Dictionaries\Currency;
 
 /**
@@ -25,14 +27,15 @@ final class CurrenciesSeeder extends DictionarySeeder
     {
         $default = strtoupper($this->config->string('mainboard.locale.currency'));
         $active = array_values(array_unique([$default, ...LocalizationData::ACTIVE_CURRENCIES]));
-        $hasDefault = Currency::query()->where('is_default', true)->exists();
+        $hasDefault = Currency::query()->where(ColumnNames::IS_DEFAULT, true)->exists();
 
         foreach (array_values(array_unique([$default, ...LocalizationData::currencyCodes()])) as $code) {
-            $currency = self::byCode(Currency::class, $code);
+            $currency = $this->byCode(Currency::class, $code);
             $currency->forceFill([
                 'name' => LocalizationData::currencyName($code, $this->defaultLocale()),
                 'json_i18n' => $this->translations(static fn(string $locale): string => LocalizationData::currencyName($code, $locale)),
                 'decimals' => LocalizationData::currencyDecimals($code),
+                CodeColumns::NUMERIC => LocalizationData::currencyNumericCode($code),
             ]);
 
             if (! $currency->exists) {

@@ -18,7 +18,7 @@ use Simplysmart\Mainboard\Models\Dictionaries\Country;
 use Simplysmart\Mainboard\Models\Dictionaries\CountryLanguage;
 
 /**
- * Kraje, w których język jest urzędowy (`dict_country_language`).
+ * Kraje, w których język jest urzędowy (`locale_country_language`).
  */
 trait SpokenInCountries
 {

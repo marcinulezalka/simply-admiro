@@ -31,13 +31,13 @@ final readonly class CreateZoneAccount
     ) {}
 
     /**
-     * @throws AccountAlreadyExists Gdy strefa ma już konto z tym adresem.
+     * @throws AccountAlreadyExists Gdy strefa ma już konto z tym adresem (także usunięte).
      */
     public function handle(string $name, string $email): Model&CodeAndPinAccount
     {
         $zone = $this->zone->get();
 
-        if ($this->accounts->findByEmail($email) !== null) {
+        if ($this->accounts->isEmailTaken($email)) {
             throw AccountAlreadyExists::inZone($zone->name);
         }
 

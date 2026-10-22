@@ -25,6 +25,8 @@ return [
     'is_active' => 'Active',
     'sort_order' => 'Order',
     'json_attributes' => 'Additional attributes',
+    'json_default_settings' => 'Default settings',
+    'json_tags' => 'Tags',
     'json_i18n' => 'Translations',
     'json_migrations' => 'Integration data',
     'checksum' => 'Checksum',
@@ -37,7 +39,8 @@ return [
 
     'currency' => [
         'name' => 'Currency name',
-        'code' => 'Currency code (ISO 4217)',
+        'alpha_code_3' => 'Currency code (ISO 4217)',
+        'numeric_code' => 'Numeric code (ISO 4217)',
         'decimals' => 'Decimal places',
         'is_default' => 'Application currency',
     ],
@@ -48,15 +51,22 @@ return [
         'native_name' => 'Native name',
         'is_default' => 'Application language',
         'is_interface' => 'Interface language',
+        'flag_icon' => 'Flag icon',
     ],
 
     'country' => [
         'name' => 'Country name',
-        'code' => 'Country code (ISO 3166-1)',
+        'alpha_code_2' => 'Country code (ISO 3166-1 alpha-2)',
+        'alpha_code_3' => 'Country code (ISO 3166-1 alpha-3)',
+        'numeric_code' => 'Numeric code (ISO 3166-1)',
         'dial_code' => 'Dialling code',
         'currency_id' => 'Currency',
         'is_eu' => 'EU member',
         'is_default' => 'Application country',
+        'flag_icon' => 'Flag icon',
+        'continent' => 'Continent',
+        'region_code' => 'Region (UN M49)',
+        'population' => 'Population',
     ],
 
     'country_language' => [
@@ -74,5 +84,6 @@ return [
         'valid_to' => 'Valid to',
         'note' => 'Note',
     ],
+
 
 ];

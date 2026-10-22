@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Database\Seeders;
 
+use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Dictionaries\Language;
 
 /**
  * Słownik języków: języki urzędowe krajów z listy (dane ICU) z nazwą w językach interfejsu
- * i nazwą własną. Od startu: język aplikacji domyślny, języki z APP_LOCALES jako języki interfejsu,
- * włączone także ACTIVE_LANGUAGES.
+ * i nazwą własną; ikonę flagi (LocalizationData::languageFlagIcons()) dopisuje tylko wpisom bez niej.
+ * Od startu: język aplikacji domyślny, języki z APP_LOCALES jako języki interfejsu, włączone także
+ * ACTIVE_LANGUAGES.
  */
 final class LanguagesSeeder extends DictionarySeeder
 {
@@ -27,15 +29,22 @@ final class LanguagesSeeder extends DictionarySeeder
         $default = $this->defaultLocale();
         $interface = $this->interfaceLocales();
         $active = array_values(array_unique([...$interface, ...LocalizationData::ACTIVE_LANGUAGES]));
-        $hasDefault = Language::query()->where('is_default', true)->exists();
+        $hasDefault = Language::query()->where(ColumnNames::IS_DEFAULT, true)->exists();
 
-        foreach (array_values(array_unique([...$active, ...LocalizationData::languageCodes()])) as $code) {
-            $language = self::byCode(Language::class, $code);
+        $codes = array_values(array_unique([...$active, ...LocalizationData::languageCodes()]));
+        $flagIcons = LocalizationData::languageFlagIcons($codes);
+
+        foreach ($codes as $code) {
+            $language = $this->byCode(Language::class, $code);
             $language->forceFill([
                 'name' => LocalizationData::languageName($code, $default),
                 'native_name' => LocalizationData::languageName($code, $code),
                 'json_i18n' => $this->translations(static fn(string $locale): string => LocalizationData::languageName($code, $locale)),
             ]);
+
+            if ($language->flag_icon === null) {
+                $language->forceFill(['flag_icon' => $flagIcons[$code] ?? null]);
+            }
 
             if (! $language->exists) {
                 $language->forceFill([

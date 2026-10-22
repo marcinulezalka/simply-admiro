@@ -23,4 +23,14 @@ return [
         'exempt' => 'Exempt',
     ],
 
+    'continent' => [
+        'europe' => 'Europe',
+        'asia' => 'Asia',
+        'north-america' => 'North America',
+        'south-america' => 'South America',
+        'africa' => 'Africa',
+        'oceania' => 'Oceania',
+        'antarctica' => 'Antarctica',
+    ],
+
 ];

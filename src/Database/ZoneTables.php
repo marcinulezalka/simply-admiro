@@ -23,6 +23,8 @@ use Simplysmart\Mainboard\Zones\ZoneTable;
  * Schemat tabel strefy z logowaniem (konta, kody logowania, sesje), jednakowy dla każdej strefy.
  *
  * Migracja strefy w Core: `app(ZoneTables::class)->create('shop')` w up() i `->drop('shop')` w down().
+ * Konta mają pełny standard tabel danych: kolumny Columns::base()/closing() (soft delete, checksum,
+ * `json_default_settings`, `json_tags`), historię `<strefa>_accounts_history` i pulę id (od 1000).
  * E-mail, IP i user agent są szyfrowane (RODO); konto wyszukuje się po `email_hash`.
  */
 final readonly class ZoneTables
@@ -31,15 +33,20 @@ final readonly class ZoneTables
 
     public function __construct(
         private DatabaseManager $connections,
+        private History $history,
+        private IdSlots $idSlots,
     ) {}
 
     public function create(string $zone): void
     {
         $schema = $this->schema();
 
-        $schema->create(ZoneTable::Accounts->for($zone), static function (Blueprint $table): void {
+        $accounts = ZoneTable::Accounts->for($zone);
+        $schema->create($accounts, static function (Blueprint $table): void {
             self::accountColumns($table);
         });
+        $this->history->create($accounts);
+        $this->idSlots->reserve($accounts);
 
         $schema->create(ZoneTable::LoginChallenges->for($zone), static function (Blueprint $table) use ($zone): void {
             self::loginChallengeColumns($table, ZoneTable::Accounts->for($zone));
@@ -54,16 +61,23 @@ final readonly class ZoneTables
     {
         $schema = $this->schema();
 
-        foreach ([ZoneTable::Sessions, ZoneTable::LoginChallenges, ZoneTable::Accounts] as $table) {
-            $schema->dropIfExists($table->for($zone));
+        $schema->dropIfExists(ZoneTable::Sessions->for($zone));
+        $schema->dropIfExists(ZoneTable::LoginChallenges->for($zone));
+
+        if ($schema->hasTable(ZoneTable::Accounts->for($zone))) {
+            $this->history->drop(ZoneTable::Accounts->for($zone));
         }
+
+        $schema->dropIfExists(ZoneTable::Accounts->for($zone));
     }
 
+    /**
+     * Kolumny standardowe (Columns::base(), Columns::closing()) wokół kolumn logowania; `name` to imię
+     * i nazwisko właściciela, `is_active` włącza logowanie (nowe konto domyślnie wyłączone).
+     */
     public static function accountColumns(Blueprint $table): void
     {
-        $table->id();
-        $table->string(AccountColumns::TOKEN, 64)->unique();
-        $table->string(AccountColumns::NAME);
+        Columns::base($table);
         $table->text(AccountColumns::EMAIL);
         $table->string(AccountColumns::EMAIL_HASH, 64)->unique();
         $table->string(AccountColumns::PIN_HASH)->nullable();
@@ -72,10 +86,9 @@ final readonly class ZoneTables
         $table->unsignedTinyInteger(AccountColumns::LOCK_LEVEL)->default(0);
         $table->timestamp(AccountColumns::LOCKED_UNTIL)->nullable();
         $table->unsignedInteger(AccountColumns::AUTH_EPOCH)->default(0);
-        $table->boolean(AccountColumns::IS_ACTIVE)->default(true);
         $table->timestamp(AccountColumns::LAST_LOGIN_AT)->nullable();
         $table->text(AccountColumns::LAST_LOGIN_IP)->nullable();
-        $table->timestamps();
+        Columns::closing($table);
     }
 
     public static function loginChallengeColumns(Blueprint $table, string $accountsTable): void

@@ -16,24 +16,27 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Simplysmart\Mainboard\Database\Columns;
 use Simplysmart\Mainboard\Database\History;
+use Simplysmart\Mainboard\Database\IdSlots;
 
 /**
- * Słownik walut (ISO 4217): kod, liczba miejsc po przecinku, waluta domyślna aplikacji.
+ * Słownik języków (ISO 639): nazwa własna, ikona flagi i języki interfejsu (is_interface, w granicach APP_LOCALES).
  */
 return new class extends Migration {
-    private const string TABLE = 'dict_currencies';
+    private const string TABLE = 'locale_languages';
 
     public function up(): void
     {
         Schema::create(self::TABLE, static function (Blueprint $table): void {
             Columns::base($table);
-            $table->char('code', 3)->unique();
-            $table->unsignedTinyInteger('decimals')->default(2);
-            $table->boolean('is_default')->default(false);
+            $table->string('code', 8)->unique();
+            $table->string('native_name')->nullable();
+            $table->boolean('is_interface')->default(false);
+            $table->string('flag_icon', 16)->nullable();
             Columns::closing($table, i18n: true);
         });
 
         app(History::class)->create(self::TABLE);
+        app(IdSlots::class)->reserve(self::TABLE);
     }
 
     public function down(): void

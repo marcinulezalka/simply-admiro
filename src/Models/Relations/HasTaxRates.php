@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Simplysmart\Mainboard\Models\Dictionaries\TaxRate;
 
 /**
- * Stawki VAT kraju (`dict_tax_rates.country_id`).
+ * Stawki VAT kraju (`locale_tax_rates.country_id`).
  */
 trait HasTaxRates
 {

@@ -1,16 +1,9 @@
-{{-- Układ stron logowania stref (bez skryptów i stylów inline, zgodnie z CSP). --}}
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? text('sign_in.title') }}</title>
-</head>
-<body>
+{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page; strony logowania nie są indeksowane. --}}
+@props(['title' => null, 'description' => null])
+@php($pageTitle = $title ?? text('sign_in.title'))
+<x-mainboard::page :title="$pageTitle" :description="$description" robots="noindex, nofollow">
     <main>
-        <h1>{{ $title ?? text('sign_in.title') }}</h1>
+        <h1>{{ $pageTitle }}</h1>
 
         @if (session('status'))
             <p role="status">{{ session('status') }}</p>
@@ -18,5 +11,4 @@
 
         {{ $slot }}
     </main>
-</body>
-</html>
+</x-mainboard::page>

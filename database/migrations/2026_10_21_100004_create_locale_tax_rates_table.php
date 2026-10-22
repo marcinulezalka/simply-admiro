@@ -16,18 +16,19 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Simplysmart\Mainboard\Database\Columns;
 use Simplysmart\Mainboard\Database\History;
+use Simplysmart\Mainboard\Database\IdSlots;
 
 /**
  * Stawki VAT z okresem ważności (valid_from–valid_to włącznie, bez końca gdy null); kraj opcjonalny.
  */
 return new class extends Migration {
-    private const string TABLE = 'dict_tax_rates';
+    private const string TABLE = 'locale_tax_rates';
 
     public function up(): void
     {
         Schema::create(self::TABLE, static function (Blueprint $table): void {
             Columns::base($table);
-            $table->foreignId('country_id')->nullable()->constrained('dict_countries')->nullOnDelete();
+            $table->foreignId('country_id')->nullable()->constrained('locale_countries')->nullOnDelete();
             $table->string('type', 20);
             $table->decimal('rate', 5, 2)->nullable();
             $table->date('valid_from');
@@ -38,6 +39,7 @@ return new class extends Migration {
         });
 
         app(History::class)->create(self::TABLE);
+        app(IdSlots::class)->reserve(self::TABLE);
     }
 
     public function down(): void

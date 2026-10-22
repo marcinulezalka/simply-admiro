@@ -20,7 +20,7 @@ use Simplysmart\Mainboard\Models\MainModel;
  * Kolumny standardowe każdej tabeli danych (docs/baza-danych.md §2): base() na początku tabeli,
  * potem kolumny domenowe, closing() na końcu.
  *
- *     Schema::create('dict_units', function (Blueprint $table): void {
+ *     Schema::create('locale_units', function (Blueprint $table): void {
  *         Columns::base($table);
  *         $table->string('code', 20)->unique();
  *         Columns::closing($table, i18n: true);
@@ -38,6 +38,7 @@ final class Columns
         $table->string(ColumnNames::NAME);
         $table->string(ColumnNames::STATUS)->nullable();
         $table->boolean(ColumnNames::IS_ACTIVE)->default(false);
+        $table->boolean(ColumnNames::IS_DEFAULT)->default(false);
         $table->integer(ColumnNames::SORT_ORDER)->default(0);
     }
 
@@ -47,6 +48,8 @@ final class Columns
     public static function closing(Blueprint $table, bool $i18n = false): void
     {
         $table->json(ColumnNames::JSON_ATTRIBUTES)->nullable();
+        $table->json(ColumnNames::JSON_DEFAULT_SETTINGS)->nullable();
+        $table->json(ColumnNames::JSON_TAGS)->nullable();
 
         if ($i18n) {
             $table->json(ColumnNames::JSON_I18N)->nullable();

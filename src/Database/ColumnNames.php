@@ -31,9 +31,15 @@ final class ColumnNames
 
     public const string IS_ACTIVE = 'is_active';
 
+    public const string IS_DEFAULT = 'is_default';
+
     public const string SORT_ORDER = 'sort_order';
 
     public const string JSON_ATTRIBUTES = 'json_attributes';
+
+    public const string JSON_DEFAULT_SETTINGS = 'json_default_settings';
+
+    public const string JSON_TAGS = 'json_tags';
 
     public const string JSON_I18N = 'json_i18n';
 

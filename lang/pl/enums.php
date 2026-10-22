@@ -23,4 +23,14 @@ return [
         'exempt' => 'Zwolniona (zw)',
     ],
 
+    'continent' => [
+        'europe' => 'Europa',
+        'asia' => 'Azja',
+        'north-america' => 'Ameryka Północna',
+        'south-america' => 'Ameryka Południowa',
+        'africa' => 'Afryka',
+        'oceania' => 'Oceania',
+        'antarctica' => 'Antarktyda',
+    ],
+
 ];

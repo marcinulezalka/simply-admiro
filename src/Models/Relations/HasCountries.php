@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Simplysmart\Mainboard\Models\Dictionaries\Country;
 
 /**
- * Kraje, które używają tej waluty (`dict_countries.currency_id`).
+ * Kraje, które używają tej waluty (`locale_countries.currency_id`).
  */
 trait HasCountries
 {

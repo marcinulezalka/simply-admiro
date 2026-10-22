@@ -21,4 +21,9 @@ use Illuminate\Database\Eloquent\Model;
 interface AccountLocator
 {
     public function findByEmail(string $email): (Model&CodeAndPinAccount)|null;
+
+    /**
+     * Czy adres ma już konto w strefie, także usunięte (soft delete): adres zajęty nie może dostać drugiego konta.
+     */
+    public function isEmailTaken(string $email): bool;
 }

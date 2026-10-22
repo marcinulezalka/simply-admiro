@@ -13,32 +13,44 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Models\Dictionaries;
 
+use Simplysmart\Mainboard\Contracts\DictionaryEntry;
 use Simplysmart\Mainboard\Models\Concerns\HasI18n;
 use Simplysmart\Mainboard\Models\DataModel;
 use Simplysmart\Mainboard\Models\Relations\SpokenInCountries;
 
 /**
  * Język (ISO 639, małe litery). `is_active` — do wyboru w treściach i dokumentach, `is_interface` —
- * język interfejsu (tylko w granicach APP_LOCALES), `is_default` — język aplikacji (jeden).
+ * język interfejsu (tylko w granicach APP_LOCALES), `is_default` — język aplikacji (jeden), `flag_icon` —
+ * kod ikony flagi kraju kojarzonego z językiem (`en` → `gb`).
  *
  * @property string $code
  * @property string|null $native_name
- * @property bool $is_default
  * @property bool $is_interface
+ * @property string|null $flag_icon
  */
-final class Language extends DataModel
+final class Language extends DataModel implements DictionaryEntry
 {
     use HasI18n;
     use SpokenInCountries;
 
-    protected $table = 'dict_languages';
+    public const string CODE = 'code';
+
+    protected $table = 'locale_languages';
 
     /**
      * Wartości domyślne kolumn jak w migracji.
      *
      * @var array<string, mixed>
      */
-    protected $attributes = ['is_default' => false, 'is_interface' => false];
+    protected $attributes = ['is_interface' => false];
+
+    /**
+     * Kody języków mieszają ISO 639-1, -2 i -3 (`pl`, `gsw`, `fil`), więc kolumna to po prostu `code`.
+     */
+    public static function codeColumn(): string
+    {
+        return self::CODE;
+    }
 
     public function translationFallback(): string
     {
@@ -50,6 +62,6 @@ final class Language extends DataModel
      */
     protected function casts(): array
     {
-        return ['code' => 'string', 'native_name' => 'string', 'is_default' => 'boolean', 'is_interface' => 'boolean'];
+        return [self::CODE => 'string', 'native_name' => 'string', 'is_interface' => 'boolean', 'flag_icon' => 'string'];
     }
 }

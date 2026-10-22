@@ -19,7 +19,7 @@ use Simplysmart\Mainboard\Contracts\InterfaceLocales;
 use Simplysmart\Mainboard\Models\Dictionaries\Language;
 
 /**
- * Języki interfejsu ze słownika (`dict_languages.is_interface`, domyślny `is_default`), zawsze w granicach
+ * Języki interfejsu ze słownika (`locale_languages.is_interface`, domyślny `is_default`), zawsze w granicach
  * języków tras z configu — trasy (i route:cache) nie zależą od bazy. Bez słownika albo bez żadnego
  * języka interfejsu w granicach configu obowiązuje sam config. Wynik jest zapamiętany w cache.
  */

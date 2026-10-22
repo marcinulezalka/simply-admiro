@@ -112,12 +112,16 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 
 | Komponent | Warstwa |
 | --- | --- |
+| `page` | szablon bazowy (zaimplementowany): `<head>` z meta `title`, `description`, `keywords`, `tags` (`article:tag`, np. `json_tags` rekordu), `robots`; każdy layout (`auth.layout`, `zone.layout`) składa się z niego |
+| `logo`, `styles` | logo SVG inline (`currentColor`) i style Core inline z nonce CSP (zaimplementowane; do czasu builda z §8) |
+| `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem i panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny |
+| `flag` | flaga kraju lub języka z `flag_icon` (zaimplementowany; inline SVG 4:3, `.ss-flag`, dekoracyjna) |
 
 Strefy składają z nich swoje widoki. Aplikacja zmienia pojedynczy komponent plikiem w
 `resources/views/vendor/mainboard/` (odwrócone nadpisywanie, zob. `CLAUDE.md` szkieletu).

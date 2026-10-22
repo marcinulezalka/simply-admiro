@@ -28,7 +28,7 @@ final class TaxRatesSeeder extends DictionarySeeder
     {
         $withRates = TaxRate::withTrashed()->get()->map(static fn(TaxRate $rate): ?int => $rate->country_id)->all();
         $query = Country::query();
-        $query->whereIn('code', array_keys(LocalizationData::VAT_RATES));
+        $query->whereIn(Country::codeColumn(), array_keys(LocalizationData::VAT_RATES));
         $countries = $query->get();
 
         foreach ($countries as $country) {
@@ -36,7 +36,7 @@ final class TaxRatesSeeder extends DictionarySeeder
                 continue;
             }
 
-            $rates = LocalizationData::VAT_RATES[$country->code];
+            $rates = LocalizationData::VAT_RATES[$country->alpha_code_2];
             $from = $rates['from'] ?? LocalizationData::VAT_RATES_FROM;
 
             $this->add($country, TaxRateType::Standard, $rates['standard'], $from);
@@ -45,7 +45,7 @@ final class TaxRatesSeeder extends DictionarySeeder
                 $this->add($country, TaxRateType::forReducedPercentage((float) $rate), $rate, $from);
             }
 
-            if ($country->code === LocalizationData::VAT_VERIFIED_COUNTRY) {
+            if ($country->alpha_code_2 === LocalizationData::VAT_VERIFIED_COUNTRY) {
                 $this->add($country, TaxRateType::Exempt, null, $from);
             }
         }
@@ -57,7 +57,7 @@ final class TaxRatesSeeder extends DictionarySeeder
             ? text('enums.tax_rate_exempt_short', [], $locale)
             : LocalizationData::percentLabel($rate, $locale);
 
-        $taxRate = new TaxRate();
+        $taxRate = $this->withSeedId(new TaxRate());
         $taxRate->forceFill([
             'name' => $label($this->defaultLocale()),
             'json_i18n' => $this->translations($label),
@@ -66,7 +66,7 @@ final class TaxRatesSeeder extends DictionarySeeder
             'type' => $type,
             'rate' => $rate,
             'valid_from' => $from,
-            'note' => $country->code === LocalizationData::VAT_VERIFIED_COUNTRY ? null : LocalizationData::VAT_RATES_NOTE,
+            'note' => $country->alpha_code_2 === LocalizationData::VAT_VERIFIED_COUNTRY ? null : LocalizationData::VAT_RATES_NOTE,
         ])->save();
     }
 }

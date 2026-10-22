@@ -23,7 +23,8 @@ use Simplysmart\Mainboard\Contracts\BlindIndex;
  * Implementacja Contracts\CodeAndPinAccount dla modelu konta strefy (kolumny z Database\ZoneTables).
  *
  * E-mail jest szyfrowany, a przy zapisie normalizowany i indeksowany w `email_hash`.
- * Laravelowe remember-me jest wyłączone (zastępują je zaufane urządzenia).
+ * Laravelowe remember-me jest wyłączone (zastępują je zaufane urządzenia). Liczniki z wartością domyślną
+ * w bazie mają ją też w nowym modelu (checksum, docs/baza-danych.md §5).
  *
  * @see \Simplysmart\Mainboard\Models\ZoneAccount
  *
@@ -48,6 +49,7 @@ trait SignsInWithCodeAndPin
 
     public function initializeSignsInWithCodeAndPin(): void
     {
+        $this->attributes += [AccountColumns::PIN_FAILED_ATTEMPTS => 0, AccountColumns::LOCK_LEVEL => 0, AccountColumns::AUTH_EPOCH => 0];
         $this->mergeCasts([
             AccountColumns::EMAIL => 'encrypted',
             AccountColumns::PIN_SET_AT => 'datetime',

@@ -36,7 +36,7 @@ final class TaxRate extends DataModel
     use BelongsToCountry;
     use HasI18n;
 
-    protected $table = 'dict_tax_rates';
+    protected $table = 'locale_tax_rates';
 
     public function translationFallback(): string
     {

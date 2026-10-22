@@ -22,15 +22,15 @@ use Simplysmart\Mainboard\Database\History\MysqlHistoryTriggers;
 use Simplysmart\Mainboard\Database\History\SqliteHistoryTriggers;
 
 /**
- * Historia zmian tabeli w `history_<tabela>`, zapisywana triggerami bazy (docs/baza-danych.md §4),
+ * Historia zmian tabeli w `<tabela>_history`, zapisywana triggerami bazy (docs/baza-danych.md §4),
  * więc ślad zostaje także po zmianach z konsoli SQL.
  *
- * Migracja: `app(History::class)->create('dict_units')` po utworzeniu tabeli; każda migracja
- * zmieniająca kolumny kończy się `->sync('dict_units')`, a `down()` wywołuje `->drop(...)`.
+ * Migracja: `app(History::class)->create('locale_units')` po utworzeniu tabeli; każda migracja
+ * zmieniająca kolumny kończy się `->sync('locale_units')`, a `down()` wywołuje `->drop(...)`.
  */
 final readonly class History
 {
-    public const string TABLE_PREFIX = 'history_';
+    public const string TABLE_SUFFIX = '_history';
 
     public function __construct(
         private DatabaseManager $connections,
@@ -38,7 +38,7 @@ final readonly class History
 
     public static function tableFor(string $table): string
     {
-        return self::TABLE_PREFIX . $table;
+        return $table . self::TABLE_SUFFIX;
     }
 
     public function create(string $table): void

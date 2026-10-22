@@ -18,7 +18,7 @@ use Simplysmart\Mainboard\Models\Dictionaries\CountryLanguage;
 use Simplysmart\Mainboard\Models\Dictionaries\Language;
 
 /**
- * Języki urzędowe kraju, główny pierwszy (`dict_country_language.is_primary`).
+ * Języki urzędowe kraju, główny pierwszy (`locale_country_language.is_primary`).
  */
 trait HasOfficialLanguages
 {

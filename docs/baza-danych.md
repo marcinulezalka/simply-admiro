@@ -18,15 +18,20 @@ niezależnie od paczki, do której należy jej logika.
   publicznym API Core (`ZoneTables`, `Columns`, `History`), bo nic o niej nie może trafić do
   publicznego Core (zob. „Private Packages” w CLAUDE.md skeletonu).
 - Szkielet zostaje stockowy: jego migracje Laravela (`users`, `cache`, `jobs`) się nie zmieniają.
+  Tabelę `users` wyrównuje do standardu migracja Core `add_standard_columns_to_users_table`
+  (kolumny standardowe w tej samej kolejności, `users_history`, pula id); `token` jest tam nullable,
+  bo stockowy model aplikacji go nie nadaje.
 - Tabele strefy z logowaniem (konta, kody logowania, sesje) tworzy jedna migracja strefy w Core
   przez `Database\ZoneTables` (`docs/strefy.md`), więc schemat jest identyczny w każdej strefie.
+  Konta (`<strefa>_accounts`) mają pełny standard tabel danych: kolumny standardowe, historię
+  `<strefa>_accounts_history`, pulę id i soft delete (adres usuniętego konta zostaje zajęty).
 - Nazwa pliku migracji zaczyna się od daty (kolejność) i mówi, czyja jest tabela:
-  `2026_10_20_120000_create_dict_languages_table.php`.
+  `2026_10_20_120000_create_locale_languages_table.php`.
 - Bezpieczeństwo:
   - Core wywołuje `DB::prohibitDestructiveCommands(app()->isProduction())`, więc na produkcji
     nie działają `migrate:fresh`, `migrate:refresh`, `migrate:reset`, `db:wipe`.
-  - Seedery dzielą się na **referencyjne** (słowniki: idempotentne, rekord szukany po `code`, zapis
-    przez model, więc dostaje token, checksum i historię; wolno je uruchomić na produkcji) i **demo**
+  - Seedery dzielą się na **referencyjne** (słowniki: idempotentne, rekord szukany po kodzie z `codeColumn()`,
+    nowy dostaje id z puli seederów (§2), zapis przez model, więc dostaje token, checksum i historię; wolno je uruchomić na produkcji) i **demo**
     (dane przykładowe, na produkcji odmawiają pracy).
   - Seedery to klasy w `src/Database/Seeders/` (`Simplysmart\Mainboard\Database\Seeders`, autoload
     paczki), uruchamiane komendami Core (np. `mainboard:localization:seed`); szkieletowy
@@ -43,21 +48,28 @@ i testy używają tych samych stałych, nie literałów.
 Kolejność kolumn w każdej tabeli:
 
 ```php
-Schema::create('dict_languages', function (Blueprint $table): void {
+Schema::create('locale_languages', function (Blueprint $table): void {
     Columns::base($table);                  // początek tabeli
     $table->string('code', 8)->unique();    // kolumny domenowe
     Columns::closing($table, i18n: true);   // koniec tabeli
 });
+app(History::class)->create('locale_languages');   // locale_languages_history + triggery
+app(IdSlots::class)->reserve('locale_languages');   // AUTO_INCREMENT od 1000
 ```
 
 | Metoda | Kolumny |
 | --- | --- |
-| `Columns::base()` | `id`, `token` (string 64, unique, not null), `parent_id` (FK do tej samej tabeli, nullable, `nullOnDelete`), `name`, `status` (string, nullable), `is_active` (boolean, domyślnie `false`), `sort_order` (integer, domyślnie 0) |
-| `Columns::closing(bool $i18n = false)` | `json_attributes`, `json_i18n` (tylko gdy `$i18n`), `json_migrations`, `checksum` (char 64, index), `json_archive`, `created_at`, `updated_at`, `deleted_at` |
+| `Columns::base()` | `id`, `token` (string 64, unique, not null), `parent_id` (FK do tej samej tabeli, nullable, `nullOnDelete`), `name`, `status` (string, nullable), `is_active` (boolean, domyślnie `false`), `is_default` (boolean, domyślnie `false`), `sort_order` (integer, domyślnie 0) |
+| `Columns::closing(bool $i18n = false)` | `json_attributes`, `json_default_settings`, `json_tags`, `json_i18n` (tylko gdy `$i18n`), `json_migrations`, `checksum` (char 64, index), `json_archive`, `created_at`, `updated_at`, `deleted_at` |
 | `address(?string $prefix)` (koncepcja) | `street`, `building_number`, `apartment_number`, `postal_code`, `city`, `country_code` (2) — z prefiksem, gdy tabela ma kilka adresów (`billing_`, `shipping_`) |
 
 - Nowa grupa powstaje jako metoda `Columns`, gdy ten sam zestaw pól pojawia się w drugiej tabeli.
-- **Tabele łączące** (np. `dict_country_language`: dwa klucze obce i atrybuty powiązania) nie mają
+- **Pule id (`Database\IdSlots`):** id 1–999 to sloty rekordów z seederów i providerów paczek — stałe
+  id nadawane przez `IdSlots::next()` (kolejny wolny poniżej 1000; pełna pula to błąd). Rekordy
+  użytkowników dostają id od 1000: każda migracja tabeli z `Columns::base()` wywołuje
+  `IdSlots::reserve()` (MySQL `AUTO_INCREMENT = 1000`, SQLite `sqlite_sequence`). Pulę mają też konta stref
+  i `users`; tabele łączące, kody logowania i sesje stref jej nie mają.
+- **Tabele łączące** (np. `locale_country_language`: dwa klucze obce i atrybuty powiązania) nie mają
   kolumn standardowych — tylko `id`, klucze, atrybuty i `timestamps` — ale mają historię.
 - `status` to zwykły `string`, nie MySQL `ENUM` — dozwolone wartości trzyma enum PHP (punkt 5),
   więc nowy status nie wymaga migracji.
@@ -73,14 +85,15 @@ Schema::create('dict_languages', function (Blueprint $table): void {
 - Całe poddrzewo pobiera klasa zapytań przez `WITH RECURSIVE` (MySQL 8). Kolumn `path`/`depth`
   nie dodajemy, dopóki pomiar nie pokaże problemu z wydajnością.
 
-## 4. Historia zmian (`history_<tabela>`)
+## 4. Historia zmian (`<tabela>_history`)
 
 Każda tabela ma tabelę historii zapisywaną **triggerami MySQL** (`AFTER INSERT/UPDATE/DELETE`),
 więc ślad zostaje także po zmianach z konsoli SQL, Tinkera czy zewnętrznego narzędzia.
 Bez historii są tylko tabele techniczne (`cache*`, `sessions`, `jobs*`, `failed_jobs`,
-`migrations`) i same `history_*`.
+`migrations`) i same `*_history`. Nazwa z przyrostkiem układa historię obok jej tabeli
+(`locale_countries`, `locale_countries_history`).
 
-| Kolumna `history_<tabela>` | Znaczenie |
+| Kolumna `<tabela>_history` | Znaczenie |
 | --- | --- |
 | `id` | klucz wpisu historii |
 | `row_id` | `id` zmienionego rekordu (bez FK — rekord mógł zniknąć) |
@@ -111,13 +124,13 @@ Bez historii są tylko tabele techniczne (`cache*`, `sessions`, `jobs*`, `failed
 ```
 Illuminate\Database\Eloquent\Model
   └─ Simplysmart\Mainboard\Models\MainModel            (abstract, Core: token jako klucz trasy)
-       ├─ Simplysmart\Mainboard\Models\MainAuthenticatable   (tabele kont stref, ZoneTables)
+       ├─ Simplysmart\Mainboard\Models\MainAuthenticatable   (konta stref, ZoneTables: to samo co DataModel)
        └─ Simplysmart\Mainboard\Models\DataModel             (abstract: tabele z kolumnami standardowymi)
             └─ modele paczek (Core i stref), np. Models\Dictionaries\Country
 ```
 
 `MainModel` generuje token i wiąże trasy po `token`. `DataModel` dokłada: `SoftDeletes`, casty
-kolumn z `Columns::base()`/`Columns::closing()`, checksum (`HasChecksum`) i scope `active()`;
+kolumn z `Columns::base()`/`Columns::closing()`, checksum (`HasChecksum`) i scope'y `active()`, `default()`;
 słownik z `json_i18n` dołącza `HasI18n` (`translatedName()`).
 
 - **Wartości domyślne:** kolumna z domyślną wartością w migracji ma tę samą wartość w `$attributes`
@@ -157,12 +170,12 @@ Kontroler → Form Request (walidacja) → Action (zapis) / Query (odczyt) → D
   odpowiedź.
 - **Queries/** — odczyt danych (filtry, sortowanie, paginacja, `is_active` wg guarda).
 - **Actions/** — zmiany danych, transakcje, reguły biznesowe.
-- Scope'y w modelu to tylko słownik warunków (`active()`, `roots()`) używany przez Queries.
+- Scope'y w modelu to tylko słownik warunków (`active()`, `default()`, `roots()`) używany przez Queries.
 
 ## 7. Słowniki i tłumaczenia (i18n)
 
-- Każdy słownik to osobna tabela z prefiksem `dict_` (`dict_languages`, `dict_units`), z pełnym
-  standardem kolumn i historią. Jedna wspólna tabela słownikowa urosłaby za szybko.
+- Każdy słownik to osobna tabela z prefiksem tematu i nazwą zawartości (`locale_languages`, `locale_units`
+  dla słowników lokalizacji), z pełnym standardem kolumn i historią. Jedna wspólna tabela słownikowa urosłaby za szybko.
 - Trzy poziomy tłumaczeń, dobierane do rodzaju danych:
 
 | Dane | Gdzie | Odczyt |
@@ -179,14 +192,14 @@ Kontroler → Form Request (walidacja) → Action (zapis) / Query (odczyt) → D
 ## 8. Dane osobowe (RODO)
 
 - **Szyfrowanie:** kolumny z danymi osobowymi mają cast `encrypted` / `encrypted:array`
-  (AES-256, klucz `APP_KEY`; rotacja przez `APP_PREVIOUS_KEYS`). W bazie — i w `history_*` — leży
+  (AES-256, klucz `APP_KEY`; rotacja przez `APP_PREVIOUS_KEYS`). W bazie — i w `*_history` — leży
   szyfrogram, bo szyfruje Eloquent przed zapisem.
 - **Wyszukiwanie po zaszyfrowanym polu:** obok kolumny trzymamy blind index
   `<kolumna>_hash` = HMAC-SHA256 znormalizowanej wartości z osobnym kluczem z konfiguracji Core
   (nie `APP_KEY`), np. `email_hash`, `pesel_hash`. Logowanie po e-mailu szuka po `email_hash`.
 - **Anonimizacja (prawo do bycia zapomnianym):** model deklaruje swoje kolumny osobowe
   (`personalColumns()`); usuwa je akcja Core `AnonymizeRecord`, nie model. Rekord zostaje
-  (relacje i raporty się zgadzają), dane osobowe są nadpisane, a jego wpisy w `history_*` są
+  (relacje i raporty się zgadzają), dane osobowe są nadpisane, a jego wpisy w `*_history` są
   czyszczone z tych kolumn — to jedyny dozwolony wyjątek od niezmienności historii.
 
 ## 9. Token zamiast `id`
@@ -211,6 +224,8 @@ Kontroler → Form Request (walidacja) → Action (zapis) / Query (odczyt) → D
 | Kolumna | Przeznaczenie |
 | --- | --- |
 | `json_attributes` | dodatkowe atrybuty bez własnej kolumny |
+| `json_default_settings` | wartości domyślne, które rekord daje procesom aplikacji (np. kraj: termin płatności faktury); odczyt `defaultSetting('klucz.z.kropkami', $domyślna)`, nie stałe w kodzie |
+| `json_tags` | lista tagów rekordu (`["eu", "b2b"]`): wyszukiwanie `JSON_CONTAINS`, meta `article:tag` w `x-mainboard::page` |
 | `json_i18n` | tłumaczenia krótkich słowników (punkt 7) |
 | `json_migrations` | metadane integracji: źródło, `external_id`, czas synchronizacji, wersja |
 | `json_archive` | stare wartości i pola wycofane po migracjach danych |
@@ -247,15 +262,16 @@ final class ErpProductMapper extends FieldMapper
 ## 13. Lista kontrolna nowej tabeli
 
 1. Migracja w `database/migrations/` Core: `Columns::base()`, kolumny domenowe, grupy, `Columns::closing()`.
-2. `app(History::class)->create('tabela')` w tej samej migracji (i `->drop()` w `down()`).
-3. Słownik? Prefiks `dict_` i `closingColumns(i18n: true)`; treści tłumaczone dynamicznie —
+2. `app(History::class)->create('tabela')` i `app(IdSlots::class)->reserve('tabela')` w tej samej migracji (i `History::drop()` w `down()`).
+3. Słownik? Prefiks tematu (`locale_`), kody ISO w `alpha_code_2`/`alpha_code_3`/`numeric_code`
+   (`Database\CodeColumns`), model implementuje `Contracts\DictionaryEntry`, `Columns::closing($table, i18n: true)`; treści tłumaczone dynamicznie —
    tabela `<tabela>_i18n`.
 4. Model dziedziczy `DataModel`, każda kolumna ma cast, a kolumny z wartością domyślną mają ją w `$attributes`.
 5. Etykiety kolumn w `lang/<locale>/data.php` dla każdego włączonego języka.
 6. Enum statusu w `Enums/` z etykietami.
 7. Relacje jako traity w `Models/Relations/`.
 8. Dane osobowe: cast `encrypted`, `<kolumna>_hash` do wyszukiwania, wpis w `personalColumns()`.
-9. Seeder referencyjny (idempotentny) lub demo (zablokowany na produkcji).
+9. Seeder referencyjny (idempotentny, id z puli `IdSlots::next()`) lub demo (zablokowany na produkcji).
 10. Testy: casty, tłumaczenia, triggery historii zgodne z kolumnami.
 
 ## 14. Słowniki lokalizacji
@@ -266,22 +282,35 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 
 | Tabela | Model | Kolumny domenowe |
 | --- | --- | --- |
-| `dict_currencies` | `Currency` | `code` (ISO 4217), `decimals`, `is_default` |
-| `dict_languages` | `Language` | `code` (ISO 639), `native_name`, `is_default`, `is_interface` |
-| `dict_countries` | `Country` | `code` (ISO 3166-1), `dial_code`, `currency_id`, `is_eu`, `is_default` |
-| `dict_country_language` | `CountryLanguage` (pivot) | `country_id`, `language_id`, `is_primary` |
-| `dict_tax_rates` | `TaxRate` | `country_id`, `type` (`Enums\TaxRateType`), `rate`, `valid_from`, `valid_to`, `note` |
+| `locale_currencies` | `Currency` | `alpha_code_3` (ISO 4217: `PLN`), `numeric_code` (`985`), `decimals` |
+| `locale_languages` | `Language` | `code` (ISO 639-1/2/3: `pl`, `gsw`), `native_name`, `is_interface`, `flag_icon` |
+| `locale_countries` | `Country` | `alpha_code_2` (`PL`), `alpha_code_3` (`POL`), `numeric_code` (`616`), `dial_code`, `currency_id`, `is_eu`, `flag_icon` (`pl`), `continent` (`Enums\Continent`), `region_code` (UN M49), `population` |
+| `locale_country_language` | `CountryLanguage` (pivot) | `country_id`, `language_id`, `is_primary` |
+| `locale_tax_rates` | `TaxRate` | `country_id`, `type` (`Enums\TaxRateType`), `rate`, `valid_from`, `valid_to`, `note` |
 
 - `name` jest w języku aplikacji, `json_i18n` ma nazwy w językach interfejsu (`translatedName()`).
-- `is_active` — wpis do wyboru w treściach i dokumentach; `is_default` — kraj, język i waluta
-  aplikacji (po jednym). `Queries\Dictionaries\DefaultEntries` zwraca wpis `is_default`, a bez
-  niego wpis o kodzie z configu (`mainboard.localization.country`, `app.locale`,
+- `is_active` — wpis do wyboru w treściach i dokumentach; `is_default` (kolumna standardowa) — kraj,
+  język i waluta aplikacji (po jednym). `Queries\Dictionaries\DefaultEntries` zwraca wpis `is_default`, a bez
+  niego wpis o kodzie (`codeColumn()`) z configu (`mainboard.localization.country`, `app.locale`,
   `mainboard.locale.currency`).
+- Kody ISO mają jedną konwencję (`Database\CodeColumns`): `alpha_code_2`, `alpha_code_3` (wielkie
+  litery), `numeric_code` (trzy cyfry z zerami wiodącymi). Języki zostają przy `code`, bo ich kody
+  mieszają ISO 639-1, -2 i -3. Kolumnę kodu modelu zwraca `DictionaryEntry::codeColumn()`.
+- Dane terytorialne krajów z ICU: `continent` (Europa, Azja, Ameryka Płn. z Ameryką Środkową
+  i Karaibami, Ameryka Płd., Afryka, Oceania, Antarktyda), `region_code` (region UN M49, np. `151`
+  — Europa Wschodnia) i `population`. Współrzędnych i powierzchni ICU nie ma — dojdą z osobnego źródła.
+- Listy krajów są pogrupowane kontynentami: `sort_order` = blok kontynentu
+  (`LocalizationData::CONTINENT_ORDER`, po 1000 pozycji) + pozycja kraju z `LEADING_COUNTRIES`
+  (pozostałe na końcu bloku, dosortowane po nazwie: `orderBy('sort_order')->orderBy('name')`).
 - `is_interface` — język interfejsu, zawsze w granicach `APP_LOCALES` (`docs/strefy.md`).
+- `flag_icon` — kod ikony flagi w zestawie flag-icons (`pl`, `gb-eng`, `eu`; ten sam w Iconify jako
+  `flag:<kod>-4x3`). Kraj dostaje swój kod ISO, język — flagę kraju: wyjątek z
+  `LocalizationData::LANGUAGE_FLAGS` (`en` → `gb`, `ar` → `sa`), kraj o tym samym kodzie, w którym
+  język jest urzędowy, albo kraj z największą liczbą mówiących (ICU). Seeder nie nadpisuje ustawionej
+  ikony. Widok: `<x-mainboard::flag :icon="$country->flag_icon" />` (`docs/design-system.md` §7).
 - Stawki VAT obowiązują od `valid_from` do `valid_to` włącznie; `Queries\Dictionaries\TaxRatesInForce`
   zwraca stawki kraju w danym dniu, podstawową i stawkę aplikacji (bez słownika:
   `mainboard.localization.vat_percent`).
 - Dane startowe: `php artisan mainboard:localization:seed` (seedery w `src/Database/Seeders/`, nazwy
   z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
   wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.
-

@@ -24,3 +24,122 @@
 .ss-muted {
     color: var(--ss-color-muted);
 }
+
+/**
+ * .ss-flag — flaga kraju lub języka (x-mainboard::flag), 4:3 w wysokości tekstu obok.
+ */
+.ss-flag {
+    display: inline-block;
+    width: 1.333em;
+    height: 1em;
+    vertical-align: -0.125em;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-color-text) 15%, transparent);
+}
+
+/**
+ * .ss-welcome — domyślna strona startowa (app/welcome): karta na środku ekranu, treść obok panelu
+ * marki; na wąskim ekranie panel marki nad treścią. Panel ma odwrócone kolory motywu.
+ */
+.ss-welcome {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-4);
+}
+
+.ss-welcome__card {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    max-width: 56rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-color-text) 12%, transparent),
+        0 1rem 2.5rem -1.5rem color-mix(in srgb, var(--ss-color-text) 25%, transparent);
+}
+
+.ss-welcome__content {
+    flex: 1;
+    padding: var(--ss-space-8);
+    font-size: 0.9375rem;
+}
+
+.ss-welcome__title {
+    margin: 0 0 var(--ss-space-2);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.ss-welcome__heading {
+    margin: var(--ss-space-8) 0 var(--ss-space-2);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-welcome__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-welcome__list li {
+    position: relative;
+    padding: var(--ss-space-2) 0 var(--ss-space-2) var(--ss-space-8);
+    border-bottom: 1px solid color-mix(in srgb, var(--ss-color-text) 10%, transparent);
+}
+
+.ss-welcome__list li::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: var(--ss-space-2);
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--ss-color-text);
+    transform: translateY(-50%);
+}
+
+.ss-welcome__note {
+    margin: var(--ss-space-8) 0 0;
+    font-size: 0.8125rem;
+}
+
+.ss-welcome__brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--ss-space-4);
+    padding: var(--ss-space-16) var(--ss-space-8);
+    background: var(--ss-color-text);
+    color: var(--ss-color-bg);
+}
+
+.ss-welcome__brand .ss-logo {
+    width: 100%;
+    max-width: 18rem;
+    color: inherit;
+}
+
+.ss-welcome__tagline {
+    margin: 0;
+    opacity: 0.7;
+}
+
+@media (min-width: 64rem) {
+    .ss-welcome__card {
+        flex-direction: row;
+    }
+
+    .ss-welcome__content {
+        padding: var(--ss-space-16);
+    }
+
+    .ss-welcome__brand {
+        flex: 0 0 24rem;
+    }
+}

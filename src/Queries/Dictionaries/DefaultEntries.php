@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Queries\Dictionaries;
 
 use Illuminate\Config\Repository;
+use Simplysmart\Mainboard\Contracts\DictionaryEntry;
+use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\DataModel;
 use Simplysmart\Mainboard\Models\Dictionaries\Country;
 use Simplysmart\Mainboard\Models\Dictionaries\Currency;
@@ -25,8 +27,6 @@ use Simplysmart\Mainboard\Models\Dictionaries\Language;
  */
 final readonly class DefaultEntries
 {
-    private const string IS_DEFAULT = 'is_default';
-
     public function __construct(
         private Repository $config,
     ) {}
@@ -47,7 +47,7 @@ final readonly class DefaultEntries
     }
 
     /**
-     * @template TModel of DataModel
+     * @template TModel of DataModel&DictionaryEntry
      *
      * @param class-string<TModel> $model
      *
@@ -55,8 +55,8 @@ final readonly class DefaultEntries
      */
     private function find(string $model, string $code): ?DataModel
     {
-        return $model::query()->where(self::IS_DEFAULT, true)->first()
-            ?? $model::query()->where('code', $code)->first();
+        return $model::query()->where(ColumnNames::IS_DEFAULT, true)->first()
+            ?? $model::query()->where($model::codeColumn(), $code)->first();
     }
 
     private function configured(string $key): string

@@ -25,6 +25,8 @@ return [
     'is_active' => 'Aktywny',
     'sort_order' => 'Kolejność',
     'json_attributes' => 'Atrybuty dodatkowe',
+    'json_default_settings' => 'Ustawienia domyślne',
+    'json_tags' => 'Tagi',
     'json_i18n' => 'Tłumaczenia',
     'json_migrations' => 'Dane integracji',
     'checksum' => 'Suma kontrolna',
@@ -37,7 +39,8 @@ return [
 
     'currency' => [
         'name' => 'Nazwa waluty',
-        'code' => 'Kod waluty (ISO 4217)',
+        'alpha_code_3' => 'Kod waluty (ISO 4217)',
+        'numeric_code' => 'Kod numeryczny (ISO 4217)',
         'decimals' => 'Miejsca po przecinku',
         'is_default' => 'Waluta aplikacji',
     ],
@@ -48,15 +51,22 @@ return [
         'native_name' => 'Nazwa własna',
         'is_default' => 'Język aplikacji',
         'is_interface' => 'Język interfejsu',
+        'flag_icon' => 'Ikona flagi',
     ],
 
     'country' => [
         'name' => 'Nazwa kraju',
-        'code' => 'Kod kraju (ISO 3166-1)',
+        'alpha_code_2' => 'Kod kraju (ISO 3166-1 alpha-2)',
+        'alpha_code_3' => 'Kod kraju (ISO 3166-1 alpha-3)',
+        'numeric_code' => 'Kod numeryczny (ISO 3166-1)',
         'dial_code' => 'Numer kierunkowy',
         'currency_id' => 'Waluta',
         'is_eu' => 'Członek UE',
         'is_default' => 'Kraj aplikacji',
+        'flag_icon' => 'Ikona flagi',
+        'continent' => 'Kontynent',
+        'region_code' => 'Region (UN M49)',
+        'population' => 'Ludność',
     ],
 
     'country_language' => [
@@ -74,5 +84,6 @@ return [
         'valid_to' => 'Obowiązuje do',
         'note' => 'Uwagi',
     ],
+
 
 ];

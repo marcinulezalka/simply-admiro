@@ -5,6 +5,7 @@
 | Pakiet | Wersja | Licencja | Sekcja | Do czego |
 | --- | --- | --- | --- | --- |
 | `laravel/framework` | `^13.0` | MIT | `require` | integracja z Laravelem: `ServiceProvider`, kontener, poczta i logi, tłumaczenia, oraz klasy dostępne tylko w pełnym frameworku: CSRF (`PreventRequestForgery`), `Vite` (nonce CSP), `TrustProxies` |
+| `outhebox/blade-flags` | `^1.7` | MIT | `require` | flagi krajów i języków (`x-mainboard::flag`, wariant flat = SVG z lipis/flag-icons, MIT); wariant domyślny (Twemoji, CC-BY-4.0) nieużywany; ciągnie `blade-ui-kit/blade-icons` (MIT) |
 | `laravel/pint` | `^1.27` | MIT | `require-dev` | formatowanie kodu w stylu PER Coding Style i `declare(strict_types=1)` (`composer lint` / `composer format`) |
 | `phpstan/phpstan` | `^2.1` | MIT | `require-dev` | analiza statyczna na poziomie `max` (`composer analyse`) |
 

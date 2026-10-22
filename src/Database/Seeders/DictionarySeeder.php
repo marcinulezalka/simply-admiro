@@ -15,17 +15,22 @@ namespace Simplysmart\Mainboard\Database\Seeders;
 
 use Illuminate\Config\Repository;
 use Illuminate\Database\Seeder;
+use Simplysmart\Mainboard\Contracts\DictionaryEntry;
+use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Mainboard\Database\IdSlots;
 use Simplysmart\Mainboard\Models\DataModel;
 
 /**
  * Baza seederów referencyjnych słowników: idempotentne (rekord szukany po kodzie, także usunięty),
  * zapis przez model (token, checksum, historia), a wybory administratora (włączenie, domyślny)
- * ustawiane tylko przy pierwszym utworzeniu rekordu. Wolno je uruchomić na produkcji.
+ * ustawiane tylko przy pierwszym utworzeniu rekordu. Nowe rekordy dostają id z puli seederów (IdSlots, 1–999).
+ * Wolno je uruchomić na produkcji.
  */
 abstract class DictionarySeeder extends Seeder
 {
     public function __construct(
         protected readonly Repository $config,
+        private readonly IdSlots $idSlots,
     ) {}
 
     /**
@@ -67,17 +72,35 @@ abstract class DictionarySeeder extends Seeder
     }
 
     /**
-     * Rekord słownika o kodzie (także usunięty, żeby nie powstał duplikat) albo nowy z tym kodem.
+     * Rekord słownika o kodzie (także usunięty, żeby nie powstał duplikat) albo nowy z tym kodem i id z puli seederów.
      *
-     * @template TModel of DataModel
+     * @template TModel of DataModel&DictionaryEntry
      *
      * @param class-string<TModel> $model
      *
      * @return TModel
      */
-    protected static function byCode(string $model, string $code): DataModel
+    protected function byCode(string $model, string $code): DataModel
     {
-        return $model::withTrashed()->firstOrNew(['code' => $code]);
+        return $this->withSeedId($model::withTrashed()->firstOrNew([$model::codeColumn() => $code]));
+    }
+
+    /**
+     * Nowemu rekordowi nadaje kolejne id z puli seederów; istniejący zostaje bez zmian.
+     *
+     * @template TModel of DataModel
+     *
+     * @param TModel $record
+     *
+     * @return TModel
+     */
+    protected function withSeedId(DataModel $record): DataModel
+    {
+        if (! $record->exists) {
+            $record->setAttribute(ColumnNames::ID, $this->idSlots->next($record->getTable()));
+        }
+
+        return $record;
     }
 
     /**

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Database\Seeders;
 
 use Locale;
+use Simplysmart\Mainboard\Enums\Continent;
 use NumberFormatter;
 use ResourceBundle;
 
@@ -45,9 +46,28 @@ final class LocalizationData
     public const array LEADING_COUNTRIES = ['PL', 'DE', 'CZ', 'SK', 'UA', 'LT', 'GB', 'US', 'NL', 'FR', 'IT', 'ES', 'AT', 'IE', 'NO', 'SE'];
 
     /**
+     * Flagi języków wybrane zwyczajowo zamiast kraju z największą liczbą mówiących: język => kraj.
+     *
+     * @var array<string, string>
+     */
+    public const array LANGUAGE_FLAGS = ['en' => 'GB', 'ar' => 'SA'];
+
+    /**
      * sort_order wpisów spoza list ACTIVE_CURRENCIES i LEADING_COUNTRIES.
      */
     public const int OTHER_SORT_ORDER = 1000;
+
+    /**
+     * Kolejność kontynentów na listach krajów: każdy dostaje blok CONTINENT_SORT_BLOCK pozycji sort_order.
+     *
+     * @var list<Continent>
+     */
+    public const array CONTINENT_ORDER = [
+        Continent::Europe, Continent::Asia, Continent::NorthAmerica, Continent::SouthAmerica,
+        Continent::Africa, Continent::Oceania, Continent::Antarctica,
+    ];
+
+    public const int CONTINENT_SORT_BLOCK = 1000;
 
     /**
      * Państwa członkowskie Unii Europejskiej.
@@ -144,6 +164,11 @@ final class LocalizationData
     ];
 
     /**
+     * Korzeń drzewa obszarów UN M49 (świat).
+     */
+    private const string WORLD = '001';
+
+    /**
      * Nazwy, których ICU nie zna (kod XK nie jest jeszcze w ISO 3166-1).
      *
      * @var array<string, array<string, string>>
@@ -188,6 +213,82 @@ final class LocalizationData
     public static function currencyDecimals(string $currency): int
     {
         return (new NumberFormatter('en@currency=' . $currency, NumberFormatter::CURRENCY))->getAttribute(NumberFormatter::FRACTION_DIGITS);
+    }
+
+    /**
+     * Kod numeryczny waluty (ISO 4217, trzy cyfry: `985`).
+     */
+    public static function currencyNumericCode(string $currency): ?string
+    {
+        $codes = ResourceBundle::create('currencyNumericCodes', 'ICUDATA', false)?->get('codeMap');
+        $code = $codes instanceof ResourceBundle ? $codes->get($currency) : null;
+
+        return is_int($code) ? self::numeric($code) : null;
+    }
+
+    /**
+     * Kody kraju z ISO 3166-1 według ICU: alpha-3 (`POL`) i numeryczny (`616`).
+     *
+     * @return array{alpha3: string|null, numeric: string|null}
+     */
+    public static function countryCodesOf(string $country): array
+    {
+        $mappings = self::supplementalData()?->get('codeMappings');
+
+        foreach ($mappings instanceof ResourceBundle ? $mappings : [] as $mapping) {
+            $row = $mapping instanceof ResourceBundle ? array_values(array_filter(iterator_to_array($mapping), is_string(...))) : [];
+
+            if (($row[0] ?? null) === $country) {
+                return ['alpha3' => $row[2] ?? null, 'numeric' => isset($row[1]) && is_numeric($row[1]) ? self::numeric((int) $row[1]) : null];
+            }
+        }
+
+        return ['alpha3' => null, 'numeric' => null];
+    }
+
+    /**
+     * Położenie kraju według UN M49 w ICU: kontynent i region (np. `151` — Europa Wschodnia).
+     *
+     * @return array{continent: Continent|null, region: string|null}
+     */
+    public static function territoryOf(string $country): array
+    {
+        $containment = self::supplementalData()?->get('territoryContainment');
+
+        foreach (self::containedIn($containment, self::WORLD) as $area) {
+            foreach (self::containedIn($containment, $area) as $region) {
+                if (in_array($country, self::containedIn($containment, $region), true)) {
+                    return ['continent' => Continent::fromRegions($country, $area, $region), 'region' => $region];
+                }
+            }
+        }
+
+        return ['continent' => null, 'region' => null];
+    }
+
+    /**
+     * Ludność kraju według ICU (trzecia wartość `territoryF`), zaokrąglona; null bez danych.
+     */
+    public static function populationOf(string $country): ?int
+    {
+        $population = self::population($country);
+
+        return $population > 0 ? (int) round($population) : null;
+    }
+
+    /**
+     * sort_order kraju: blok kontynentu z CONTINENT_ORDER, w nim najpierw kraje z listy wyróżnionych
+     * (w jej kolejności), potem pozostałe z tą samą pozycją (listy dosortowują je po nazwie).
+     *
+     * @param list<string> $leading
+     */
+    public static function countrySortOrder(string $country, ?Continent $continent, array $leading): int
+    {
+        $block = array_search($continent, self::CONTINENT_ORDER, true);
+        $position = array_search($country, $leading, true);
+        $start = ($block === false ? count(self::CONTINENT_ORDER) : $block) * self::CONTINENT_SORT_BLOCK;
+
+        return $start + ($position === false ? self::CONTINENT_SORT_BLOCK - 1 : $position);
     }
 
     /**
@@ -237,27 +338,56 @@ final class LocalizationData
      */
     public static function officialLanguagesOf(string $country): array
     {
-        $territories = ResourceBundle::create('supplementalData', 'ICUDATA', false)?->get('territoryInfo');
-        $info = $territories instanceof ResourceBundle ? $territories->get($country) : null;
-        $languages = [];
-
-        if (! $info instanceof ResourceBundle) {
-            return [];
-        }
-
-        foreach ($info as $code => $entry) {
-            if (! $entry instanceof ResourceBundle || ! in_array($entry->get('officialStatus'), ['official', 'de_facto_official'], true)) {
-                continue;
-            }
-
-            $language = strtolower(explode('_', is_scalar($code) ? (string) $code : '')[0]);
-            $share = $entry->get('populationShareF');
-            $languages[$language] = max($languages[$language] ?? 0.0, is_numeric($share) ? (float) $share : 0.0);
-        }
-
+        $languages = self::officialLanguageShares($country);
         arsort($languages);
 
         return array_map(strval(...), array_keys($languages));
+    }
+
+    /**
+     * Kod ikony flagi kraju w zestawie flag-icons (ISO 3166-1 alpha-2 małymi literami).
+     */
+    public static function countryFlagIcon(string $country): string
+    {
+        return strtolower($country);
+    }
+
+    /**
+     * Ikony flag języków: LANGUAGE_FLAGS, potem kraj o tym samym kodzie, w którym język jest urzędowy,
+     * a na końcu kraj z listy, w którym najwięcej osób mówi tym językiem urzędowym (dane ICU).
+     * Język bez kraju na liście nie ma flagi.
+     *
+     * @param list<string> $languages
+     *
+     * @return array<string, string>
+     */
+    public static function languageFlagIcons(array $languages): array
+    {
+        $speakers = [];
+
+        foreach (self::countryCodes() as $country) {
+            $population = self::population($country);
+
+            foreach (self::officialLanguageShares($country) as $language => $share) {
+                $speakers[$language][$country] = $population * $share;
+            }
+        }
+
+        $icons = [];
+
+        foreach ($languages as $language) {
+            $countries = $speakers[$language] ?? [];
+            arsort($countries);
+            $sameCode = strtoupper($language);
+            $country = self::LANGUAGE_FLAGS[$language]
+                ?? (isset($countries[$sameCode]) ? $sameCode : array_key_first($countries));
+
+            if ($country !== null) {
+                $icons[$language] = self::countryFlagIcon($country);
+            }
+        }
+
+        return $icons;
     }
 
     /**
@@ -274,6 +404,89 @@ final class LocalizationData
         }
 
         return array_values(array_unique($codes));
+    }
+
+    /**
+     * Języki urzędowe (lub de facto urzędowe) kraju z odsetkiem mówiących (0–1); warianty pisma
+     * („sr_Latn”) liczą się jako jeden język.
+     *
+     * @return array<string, float>
+     */
+    private static function officialLanguageShares(string $country): array
+    {
+        $info = self::territoryInfo($country);
+        $languages = [];
+
+        if ($info === null) {
+            return [];
+        }
+
+        foreach ($info as $code => $entry) {
+            if (! $entry instanceof ResourceBundle || ! in_array($entry->get('officialStatus'), ['official', 'de_facto_official'], true)) {
+                continue;
+            }
+
+            $language = strtolower(explode('_', is_scalar($code) ? (string) $code : '')[0]);
+            $languages[$language] = max($languages[$language] ?? 0.0, self::icuFloat($entry->get('populationShareF')));
+        }
+
+        return $languages;
+    }
+
+    /**
+     * Ludność kraju według ICU (trzecia wartość `territoryF`).
+     */
+    private static function population(string $country): float
+    {
+        $figures = self::territoryInfo($country)?->get('territoryF');
+
+        return is_array($figures) ? self::icuFloat($figures[2] ?? null) : 0.0;
+    }
+
+    private static function territoryInfo(string $country): ?ResourceBundle
+    {
+        $territories = self::supplementalData()?->get('territoryInfo');
+        $info = $territories instanceof ResourceBundle ? $territories->get($country) : null;
+
+        return $info instanceof ResourceBundle ? $info : null;
+    }
+
+    private static function supplementalData(): ?ResourceBundle
+    {
+        return ResourceBundle::create('supplementalData', 'ICUDATA', false);
+    }
+
+    /**
+     * Kody obszarów i krajów bezpośrednio w obszarze `$code` (drzewo `territoryContainment`).
+     *
+     * @return list<string>
+     */
+    private static function containedIn(mixed $containment, string $code): array
+    {
+        $children = $containment instanceof ResourceBundle ? $containment->get($code) : null;
+
+        return $children instanceof ResourceBundle ? array_values(array_filter(iterator_to_array($children), is_string(...))) : [];
+    }
+
+    /**
+     * Kod numeryczny ISO jako trzy cyfry z zerami wiodącymi (4 → `004`).
+     */
+    private static function numeric(int $code): string
+    {
+        return str_pad((string) $code, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Liczba w kodowaniu ICU „F”: dwie pierwsze cyfry to wykładnik przesunięty o 50, sześć kolejnych
+     * to mantysa z jedną cyfrą przed przecinkiem (57387463 → 3,87463 · 10⁷).
+     */
+    private static function icuFloat(mixed $encoded): float
+    {
+        if (! is_int($encoded) || $encoded <= 0) {
+            return 0.0;
+        }
+
+        return ($encoded % 1_000_000) / 100_000 * 10 ** (intdiv($encoded, 1_000_000) - 50);
     }
 
     /**

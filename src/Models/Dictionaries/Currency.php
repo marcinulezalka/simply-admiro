@@ -13,35 +13,42 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Models\Dictionaries;
 
+use Simplysmart\Mainboard\Contracts\DictionaryEntry;
+use Simplysmart\Mainboard\Database\CodeColumns;
 use Simplysmart\Mainboard\Models\Concerns\HasI18n;
 use Simplysmart\Mainboard\Models\DataModel;
 use Simplysmart\Mainboard\Models\Relations\HasCountries;
 
 /**
- * Waluta (ISO 4217). `decimals` to liczba cyfr jednostki podrzędnej (2 → grosze); `is_default` —
+ * Waluta (ISO 4217: `alpha_code_3` `PLN`, `numeric_code` `985`). `decimals` to liczba cyfr jednostki podrzędnej (2 → grosze); `is_default` —
  * waluta aplikacji (jedna), `is_active` — do wyboru w cennikach i dokumentach.
  *
- * @property string $code
+ * @property string $alpha_code_3
+ * @property string|null $numeric_code
  * @property int $decimals
- * @property bool $is_default
  */
-final class Currency extends DataModel
+final class Currency extends DataModel implements DictionaryEntry
 {
     use HasCountries;
     use HasI18n;
 
-    protected $table = 'dict_currencies';
+    protected $table = 'locale_currencies';
 
     /**
      * Wartości domyślne kolumn jak w migracji.
      *
      * @var array<string, mixed>
      */
-    protected $attributes = ['decimals' => 2, 'is_default' => false];
+    protected $attributes = ['decimals' => 2];
+
+    public static function codeColumn(): string
+    {
+        return CodeColumns::ALPHA_3;
+    }
 
     public function translationFallback(): string
     {
-        return $this->code;
+        return $this->alpha_code_3;
     }
 
     /**
@@ -49,6 +56,6 @@ final class Currency extends DataModel
      */
     protected function casts(): array
     {
-        return ['code' => 'string', 'decimals' => 'integer', 'is_default' => 'boolean'];
+        return [CodeColumns::ALPHA_3 => 'string', CodeColumns::NUMERIC => 'string', 'decimals' => 'integer'];
     }
 }

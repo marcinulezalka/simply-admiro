@@ -20,14 +20,14 @@ use Simplysmart\Mainboard\Database\History;
  * Języki urzędowe krajów (jeden główny); tabela łącząca, bez kolumn standardowych, z historią.
  */
 return new class extends Migration {
-    private const string TABLE = 'dict_country_language';
+    private const string TABLE = 'locale_country_language';
 
     public function up(): void
     {
         Schema::create(self::TABLE, static function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('country_id')->constrained('dict_countries')->cascadeOnDelete();
-            $table->foreignId('language_id')->constrained('dict_languages')->cascadeOnDelete();
+            $table->foreignId('country_id')->constrained('locale_countries')->cascadeOnDelete();
+            $table->foreignId('language_id')->constrained('locale_languages')->cascadeOnDelete();
             $table->boolean('is_primary')->default(false);
             $table->timestamps();
             $table->unique(['country_id', 'language_id']);

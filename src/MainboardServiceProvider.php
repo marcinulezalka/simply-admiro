@@ -21,6 +21,7 @@ use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
+use Illuminate\View\Factory as ViewFinderFactory;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -90,6 +91,12 @@ final class MainboardServiceProvider extends ServiceProvider
 
     private const string SIGN_IN_VIEWS = CascadeTextTranslator::CORE_NAMESPACE . '::auth.*';
 
+    private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';
+
+    private const string BLADE_FLAGS_FALLBACK = 'country-xx';
+
+    private const string FLAT_FLAG_FALLBACK = 'flat-country-xx';
+
     private const string ZONE_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.zone.layout';
 
     /**
@@ -122,15 +129,21 @@ final class MainboardServiceProvider extends ServiceProvider
 
         $this->registerZones();
         $this->registerSignIn();
+        $this->useFlatFlagFallback();
     }
 
     /**
-     * Ładuje zasoby paczki po zarejestrowaniu wszystkich providerów.
+     * Ładuje zasoby paczki po zarejestrowaniu wszystkich providerów. Widoki z `resources/views/app/` są
+     * domyślnymi widokami aplikacji bez przestrzeni nazw (np. `welcome`): ten sam plik w `resources/views/`
+     * aplikacji wygrywa, bo jej katalog jest przeszukiwany pierwszy.
      */
     public function boot(Dispatcher $events, TrustedProxies $trustedProxies, RateLimiter $limiter): void
     {
         $this->loadTranslationsFrom(__DIR__ . '/../lang', CascadeTextTranslator::CORE_NAMESPACE);
         $this->loadViewsFrom(__DIR__ . '/../resources/views', CascadeTextTranslator::CORE_NAMESPACE);
+        $this->callAfterResolving('view', static function (ViewFinderFactory $views): void {
+            $views->addLocation(__DIR__ . '/../resources/views/app');
+        });
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         DB::prohibitDestructiveCommands($this->app->environment('production') === true);
@@ -164,6 +177,19 @@ final class MainboardServiceProvider extends ServiceProvider
 
         $this->useZoneRedirects();
         $this->app->afterResolving(HttpKernel::class, $this->useZoneRedirects(...));
+    }
+
+    /**
+     * Nieznana flaga (`x-mainboard::flag`) pokazuje flagę „xx” z wariantu flat (flag-icons, MIT) zamiast
+     * domyślnej blade-flags (Twemoji, CC-BY-4.0) — tylko gdy aplikacja nie ustawiła własnej.
+     */
+    private function useFlatFlagFallback(): void
+    {
+        $config = $this->app->make(Repository::class);
+
+        if ($config->get(self::FLAG_FALLBACK_KEY, self::BLADE_FLAGS_FALLBACK) === self::BLADE_FLAGS_FALLBACK) {
+            $config->set(self::FLAG_FALLBACK_KEY, self::FLAT_FLAG_FALLBACK);
+        }
     }
 
     /**

@@ -13,14 +13,17 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth;
 
+use Simplysmart\Mainboard\Database\ColumnNames;
+
 /**
- * Nazwy kolumn tabeli kont strefy; schemat, model i zapis stanu używają tych stałych.
+ * Nazwy kolumn tabeli kont strefy; schemat, model i zapis stanu używają tych stałych. `token`, `name`
+ * i `is_active` to kolumny standardowe (ColumnNames), tu powtórzone dla kodu logowania.
  */
 final class AccountColumns
 {
-    public const string TOKEN = 'token';
+    public const string TOKEN = ColumnNames::TOKEN;
 
-    public const string NAME = 'name';
+    public const string NAME = ColumnNames::NAME;
 
     public const string EMAIL = 'email';
 
@@ -38,7 +41,7 @@ final class AccountColumns
 
     public const string AUTH_EPOCH = 'auth_epoch';
 
-    public const string IS_ACTIVE = 'is_active';
+    public const string IS_ACTIVE = ColumnNames::IS_ACTIVE;
 
     public const string LAST_LOGIN_AT = 'last_login_at';
 
