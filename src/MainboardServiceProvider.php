@@ -46,7 +46,7 @@ use Simplysmart\Mainboard\Auth\Listeners\SendPinChangedMail;
 use Simplysmart\Mainboard\Auth\Listeners\SendTrustedDeviceMails;
 use Simplysmart\Mainboard\Auth\SignIn\EloquentLoginChallengeRepository;
 use Simplysmart\Mainboard\Auth\SignIn\LoginCodeGenerator;
-use Simplysmart\Mainboard\Auth\SignInLogDefaults;
+use Simplysmart\Mainboard\Logging\LogChannelDefaults;
 use Simplysmart\Mainboard\Listeners\SetHistoryActorForJob;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -55,6 +55,15 @@ use Simplysmart\Mainboard\Console\PruneSignInChallenges;
 use Simplysmart\Mainboard\Console\SeedLocalization;
 use Simplysmart\Mainboard\Console\SeedOrganizations;
 use Simplysmart\Mainboard\Console\SyncZonePermissions;
+use Simplysmart\Mainboard\Console\UnbanIp;
+use Simplysmart\Mainboard\Http\HoneypotRoutes;
+use Simplysmart\Mainboard\Http\Middleware\BlockBannedIps;
+use Simplysmart\Mainboard\Security\ErrorMasker;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Foundation\Http\Kernel as FoundationKernel;
+use Illuminate\Contracts\Foundation\CachesRoutes;
+use Illuminate\Config\Repository as ConfigRepository;
 use Simplysmart\Mainboard\Permissions\PermissionFiles;
 use Simplysmart\Mainboard\Permissions\ZoneOwnerProvisioners;
 use Simplysmart\Mainboard\Permissions\Events\ZoneRoleChanged;
@@ -136,10 +145,9 @@ final class MainboardServiceProvider extends ServiceProvider
             $this->app->storagePath(),
         ))->apply();
 
-        (new SignInLogDefaults(
-            $this->app->make(Repository::class),
-            $this->app->storagePath(),
-        ))->apply();
+        $logChannels = new LogChannelDefaults($this->app->make(Repository::class), $this->app->storagePath());
+        $logChannels->define('mainboard.auth.log_channel', 'logs/sign-in.log');
+        $logChannels->define('mainboard.honeypot.log_channel', 'logs/honeypot.log');
 
         $this->app->extend('translation.loader', fn(Loader $loader): Loader => (new CoreTranslationPath(
             $this->app->make(Filesystem::class),
@@ -199,14 +207,22 @@ final class MainboardServiceProvider extends ServiceProvider
 
         $this->app->make(Router::class)->aliasMiddleware(RequireZonePermission::ALIAS, RequireZonePermission::class);
         $limiter->for(SignInRoutes::THROTTLE, fn(Request $request): Limit => $this->signInRouteLimit($request));
+        $limiter->for(HoneypotRoutes::THROTTLE, fn(Request $request): Limit => Limit::perMinute($this->app->make(ConfigRepository::class)->integer('mainboard.honeypot.route_throttle_per_minute'))->by((string) $request->ip()));
+        $this->registerHoneypot();
         $this->app->afterResolving(ExceptionHandler::class, $this->renderExpiredFormsAsSignIn(...));
 
         if ($this->app->resolved(ExceptionHandler::class)) {
             $this->renderExpiredFormsAsSignIn($this->app->make(ExceptionHandler::class));
         }
 
+        $this->app->afterResolving(ExceptionHandler::class, $this->maskErrors(...));
+
+        if ($this->app->resolved(ExceptionHandler::class)) {
+            $this->maskErrors($this->app->make(ExceptionHandler::class));
+        }
+
         if ($this->app->runningInConsole()) {
-            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class, SyncZonePermissions::class]);
+            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class, SyncZonePermissions::class, UnbanIp::class]);
             $this->app->afterResolving(Schedule::class, static function (Schedule $schedule): void {
                 $schedule->command(PruneSignInChallenges::class)->hourly();
             });
@@ -338,6 +354,52 @@ final class MainboardServiceProvider extends ServiceProvider
     }
 
     /**
+     * Maskowanie błędów (Security\ErrorMasker): odpowiedź o maskowanym statusie zastępuje zwykła strona 404.
+     * Core ustawia callback respondUsing() handlera; aplikacja, która ustawi własny, wyłącza maskowanie Core.
+     */
+    private function maskErrors(ExceptionHandler $handler): void
+    {
+        if (! $handler instanceof Handler) {
+            return;
+        }
+
+        $handler->respondUsing(function (Response $response, \Throwable $exception, Request $request) use ($handler): Response {
+            if (! $this->app->make(ErrorMasker::class)->masks($response->getStatusCode())) {
+                return $response;
+            }
+
+            return $handler->render($request, new NotFoundHttpException(previous: $exception));
+        });
+    }
+
+    /**
+     * Pułapki na boty, gdy włączone w `mainboard.honeypot`: globalna blokada zbanowanych adresów i (dla `routes`)
+     * trasy pułapek rejestrowane po wszystkich providerach, żeby prawdziwe trasy wygrywały.
+     */
+    private function registerHoneypot(): void
+    {
+        $config = $this->app->make(ConfigRepository::class);
+
+        if (! $config->boolean('mainboard.honeypot.routes') && ! $config->boolean('mainboard.honeypot.forms')) {
+            return;
+        }
+
+        $kernel = $this->app->make(HttpKernel::class);
+
+        if ($kernel instanceof FoundationKernel) {
+            $kernel->prependMiddleware(BlockBannedIps::class);
+        }
+
+        if ($config->boolean('mainboard.honeypot.routes')) {
+            $this->app->booted(function (): void {
+                if (! ($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
+                    $this->app->make(HoneypotRoutes::class)->register();
+                }
+            });
+        }
+    }
+
+    /**
      * Wspólne mechanizmy stref: rejestr (singleton), strefa żądania (scoped) i przełącznik sesji
      * zapamiętujący bazowy config/session.php.
      */
@@ -345,6 +407,11 @@ final class MainboardServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ZoneRegistry::class, InMemoryZoneRegistry::class);
         $this->app->scoped(CurrentZone::class, RequestZone::class);
+        $this->app->bind(ErrorMasker::class, fn(Application $app): ErrorMasker => new ErrorMasker(
+            $app->make(ConfigRepository::class),
+            $app->make(CurrentZone::class),
+            $app->environment('production') === true,
+        ));
 
         $this->app->extend('session', fn(): ZoneSessionManager => new ZoneSessionManager($this->app));
 

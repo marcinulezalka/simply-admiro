@@ -33,6 +33,7 @@ final readonly class ZoneDefinition
      * @param class-string<Authenticatable>|null $model Model kont strefy; null = strefa bez logowania.
      * @param string $routesPath Katalog plików tras strefy (public.php, account.php, zone.php).
      * @param ZoneAuthSettings|null $authSettings Ustawienia logowania; null = strefa bez logowania.
+     * @param ZoneSecuritySettings $security Maskowanie błędów i blokada agentów AI.
      * @param bool $teams Konta działają w organizacjach (firmach klientów) wybieranych w żądaniu;
      *                    false = zawsze w organizacji operatora aplikacji.
      */
@@ -47,6 +48,7 @@ final readonly class ZoneDefinition
         public ZoneSessionSettings $session,
         public ?ZoneAuthSettings $authSettings = null,
         public bool $teams = false,
+        public ZoneSecuritySettings $security = new ZoneSecuritySettings(),
     ) {}
 
     /**

@@ -11,26 +11,28 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Mainboard\Logging;
 
 use Illuminate\Contracts\Config\Repository;
 
 /**
- * Tworzy dzienny kanał dziennika logowań (storage/logs/sign-in-RRRR-MM-DD.log), gdy aplikacja
- * nie zdefiniowała kanału o nazwie z `mainboard.auth.log_channel`.
+ * Tworzy dzienny kanał logów Core (np. dziennik logowań, honeypot), gdy aplikacja nie zdefiniowała kanału
+ * o nazwie z configu Core; plik `storage/<plik>-RRRR-MM-DD.log`, przechowywany tyle dni co logi poczty.
  */
-final readonly class SignInLogDefaults
+final readonly class LogChannelDefaults
 {
-    private const string LOG_FILE = 'logs/sign-in.log';
-
     public function __construct(
         private Repository $config,
         private string $storagePath,
     ) {}
 
-    public function apply(): void
+    /**
+     * @param string $channelKey Klucz configu Core z nazwą kanału (np. `mainboard.auth.log_channel`).
+     * @param string $file Ścieżka pliku względem storage (np. `logs/sign-in.log`).
+     */
+    public function define(string $channelKey, string $file): void
     {
-        $channel = $this->config->get('mainboard.auth.log_channel');
+        $channel = $this->config->get($channelKey);
 
         if (! is_string($channel) || $channel === '' || $this->config->has("logging.channels.{$channel}")) {
             return;
@@ -38,7 +40,7 @@ final readonly class SignInLogDefaults
 
         $this->config->set("logging.channels.{$channel}", [
             'driver' => 'daily',
-            'path' => $this->storagePath . '/' . self::LOG_FILE,
+            'path' => $this->storagePath . '/' . $file,
             'level' => 'info',
             'days' => $this->config->get('mainboard.mail.log_days'),
             'replace_placeholders' => true,

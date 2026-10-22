@@ -19,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Simplysmart\Mainboard\Http\Middleware\BlockAiAgents;
 use Simplysmart\Mainboard\Http\Middleware\PreventRequestForgeryWithoutCookie;
 use Simplysmart\Mainboard\Http\Middleware\RecordHistoryActor;
 use Simplysmart\Mainboard\Http\Middleware\SecurityHeaders;
@@ -30,6 +31,7 @@ use Simplysmart\Mainboard\Http\Middleware\UseZone;
  * Rejestruje grupę middleware strefy (`zone.<nazwa>`), używaną zamiast grupy `web`.
  *
  * UseZone musi poprzedzać StartSession, a SetLocale — SubstituteBindings (zdejmuje parametr {locale}).
+ * BlockAiAgents stoi tuż po UseZone, więc zablokowany agent nie dostaje sesji.
  * RecordHistoryActor i UseCurrentTeam potrzebują sesji (konto z guarda strefy), więc stoją po StartSession;
  * UseCurrentTeam przed SubstituteBindings, bo wiązania tras zawęża bieżąca organizacja.
  */
@@ -55,6 +57,7 @@ final readonly class ZoneMiddlewareRegistrar
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             UseZone::class . ':' . $zone->name,
+            BlockAiAgents::class,
             StartSession::class,
             ShareErrorsFromSession::class,
             PreventRequestForgeryWithoutCookie::class,

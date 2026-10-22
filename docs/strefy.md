@@ -8,7 +8,7 @@ Strefy publiczne (strefy z paczek prywatnych mają własne migracje i nie są tu
 | --- | --- | --- | --- |
 | `admiro` | `simplysmart/admiro` | administratorzy | `create_admiro_tables` |
 
-Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie kodem z e-maila i PIN-em z zaufanymi urządzeniami; zmiana PIN-u i akcje administracyjne na kontach; uprawnienia kont w organizacjach (role z plików JSON, bieżąca organizacja w żądaniu, trasy z uprawnieniem, nadawanie ról bez eskalacji, zakładanie właścicieli; `docs/baza-danych.md` §15). Maskowanie błędów i honeypot dojdą w kolejnym etapie.
+Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie kodem z e-maila i PIN-em z zaufanymi urządzeniami; zmiana PIN-u i akcje administracyjne na kontach; uprawnienia kont w organizacjach (role z plików JSON, bieżąca organizacja w żądaniu, trasy z uprawnieniem, nadawanie ról bez eskalacji, zakładanie właścicieli; `docs/baza-danych.md` §15). Do tego maskowanie błędów, blokada agentów AI i pułapki na boty.
 
 ## Jak dodać strefę
 
@@ -22,7 +22,9 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // opcjonalnie: 'guard', 'provider', 'session' => ['lifetime' => 15, ...],
        // 'auth' => ['pin' => ['length' => 8]] (nadpisania mainboard.auth),
        // 'auth' => ['trusted_devices' => ['enabled' => false]] (kod z e-maila przy każdym logowaniu),
-       // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora)
+       // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
+       // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
+       // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)
    ],
    ```
 
@@ -51,7 +53,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
 ## Co Core robi za strefę
 
 - **Guard i provider**: `ZoneGuardRegistrar` dopisuje do `config/auth` guard `session` i provider `eloquent`. Plik `config/auth.php` aplikacji zostaje bez zmian.
-- **Grupa middleware** `zone.<nazwa>` zastępuje grupę `web`. Kolejność: `EncryptCookies` → `AddQueuedCookiesToResponse` → `UseZone` → `StartSession` → `ShareErrorsFromSession` → CSRF bez ciasteczka `XSRF-TOKEN` → `SetLocale` → `RecordHistoryActor` → `UseCurrentTeam` → `SubstituteBindings` → `SecurityHeaders`.
+- **Grupa middleware** `zone.<nazwa>` zastępuje grupę `web`. Kolejność: `EncryptCookies` → `AddQueuedCookiesToResponse` → `UseZone` → `BlockAiAgents` → `StartSession` → `ShareErrorsFromSession` → CSRF bez ciasteczka `XSRF-TOKEN` → `SetLocale` → `RecordHistoryActor` → `UseCurrentTeam` → `SubstituteBindings` → `SecurityHeaders`.
 - **Sesja** (`UseZone`, `ZoneSessionConfigurator`): ciasteczko `<nazwa>_session`, poza środowiskiem `local` zawsze `secure`.
   - Strefa z logowaniem: tabela `<nazwa>_sessions`, czas życia `ZONE_SESSION_LIFETIME` (30 min), wygaśnięcie po zamknięciu przeglądarki, `SameSite=Strict`, szyfrowanie.
   - Strefa publiczna: `SameSite=Lax`, pozostałe ustawienia z `config/session.php`.
@@ -149,6 +151,29 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
 
 **Rozszerzanie przez zdarzenia** (`Auth\Events`): `SignInSucceeded`, `SignInRejected`, `AccountLocked`, `SignedOut`, `AccountAccessRevoked`, `PinChanged`, `TrustedDeviceRegistered`, `TrustedDevicesRevoked`, a z uprawnień `Permissions\Events\ZoneRoleChanged`. Core zapisuje je w dzienniku `sign_in`, wysyła maile i odwołuje urządzenia; strefa dokłada własne listenery.
 
+## Boty i maskowanie błędów
+
+- **Maskowanie błędów** (`Security\ErrorMasker`): odpowiedź o statusie z `mainboard.security.masked_statuses`
+  (401, 403, 405, 419, 429) dostaje zwykłą stronę 404, więc odwiedzający nie odróżni braku dostępu od braku
+  strony. Domyślnie tylko na produkcji (`SECURITY_MASK_ERRORS`), strefa nadpisuje to `security.mask_errors`.
+  Wygasły formularz w strefie z logowaniem dalej wraca do logowania, a 503 nie jest maskowany. Core ustawia
+  `respondUsing()` handlera wyjątków; aplikacja, która ustawi własny callback, wyłącza maskowanie Core.
+- **Agenci AI** (`Http\Middleware\BlockAiAgents`, lista `mainboard.security.ai_agents`): w strefie
+  z `security.block_ai_agents` (domyślnie strefy z logowaniem) dostają 403, zanim powstanie sesja.
+- **Pułapki na boty** (`mainboard.honeypot`, domyślnie wyłączone):
+  - `HONEYPOT_ROUTES`: pod adresami sprawdzanymi przez boty (`honeypot.paths`: `wp-login.php`, `admin`,
+    `.env`…) Core pokazuje fałszywe logowanie bez sesji i ciasteczek. Trasy pułapek są rejestrowane po
+    wszystkich providerach, więc prawdziwa trasa o tym samym adresie wygrywa;
+  - `HONEYPOT_FORMS`: formularz logowania ma ukryte pole i zaszyfrowany czas wyświetlenia
+    (`x-mainboard::honeypot`, `Security\Honeypot\FormHoneypot`). Bot (wypełnione pole, brak czasu, wysłanie
+    szybciej niż 2 s) dostaje tę samą odpowiedź co człowiek, ale bez kodu;
+  - **ban** (`IpBans`): od razu po POST na pułapkę albo po pułapce formularza, po GET dopiero po 5 wejściach
+    w 10 minut. Trwa `HONEYPOT_BAN_MINUTES`; zbanowany adres dostaje 403 (z maskowaniem 404) na każdej trasie.
+    W cache jest tylko hash IP, bez listy banów; `php artisan mainboard:honeypot:unban {ip}` zdejmuje ban.
+    Adresy z `HONEYPOT_WHITELIST` nigdy nie są banowane;
+  - trafienia i bany zapisuje dziennik `honeypot` (`HONEYPOT_LOG_CHANNEL`): IP, ścieżka, user agent, podany
+    login i tylko długość hasła.
+
 ## Zmienne środowiska
 
 | Zmienna | Domyślnie | Znaczenie |
@@ -162,6 +187,11 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
 | `AUTH_PIN_LENGTH` | `6` | długość PIN-u (minimum 4) |
 | `AUTH_TRUSTED_DEVICES` | `true` | zaufane urządzenia (strefa może je wyłączyć w configu) |
 | `AUTH_TRUSTED_DEVICE_DAYS` | `30` | dni zaufania urządzenia |
+| `SECURITY_MASK_ERRORS` | brak (produkcja) | maskowanie błędów jako 404 |
+| `HONEYPOT_ROUTES`, `HONEYPOT_FORMS` | `false` | pułapki pod adresami botów i w formularzu logowania |
+| `HONEYPOT_BAN_MINUTES` | `1440` | czas bana |
+| `HONEYPOT_WHITELIST` | brak | adresy i sieci (CIDR) nigdy nie banowane |
+| `HONEYPOT_LOG_CHANNEL` | `honeypot` | kanał dziennika pułapek |
 | `AUTH_LOG_CHANNEL` | `sign_in` | kanał dziennika logowań |
 
 ## Uprawnienia

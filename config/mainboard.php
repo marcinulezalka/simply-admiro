@@ -130,6 +130,39 @@ return [
 
     ],
 
+    'honeypot' => [
+
+        /*
+         * Pułapki na boty, domyślnie wyłączone. `routes`: fałszywe logowanie pod adresami sprawdzanymi przez
+         * boty (`paths`, bez sesji i ciasteczek; prawdziwe trasy zawsze wygrywają). `forms`: ukryte pole
+         * i zaszyfrowany czas wyświetlenia formularza logowania (wysłanie szybciej niż `form_min_seconds`
+         * to bot). Ban: od razu po POST na pułapkę albo wypełnionym ukrytym polu, po `get_hits_threshold`
+         * wejściach GET w `get_hits_window_minutes`; trwa `ban_minutes`. W cache tylko hash IP.
+         */
+        'routes' => (bool) env('HONEYPOT_ROUTES', false),
+        'forms' => (bool) env('HONEYPOT_FORMS', false),
+
+        'paths' => [
+            'login', 'admin', 'admin/{any}', 'administrator', 'administrator/{any}', 'wp-login.php', 'wp-admin',
+            'wp-admin/{any}', 'xmlrpc.php', 'phpmyadmin', 'phpmyadmin/{any}', 'pma', 'user/login', 'backend',
+            'cms', '.env', '.git/{any}', 'config.php',
+        ],
+
+        'form_min_seconds' => 2,
+        'ban_minutes' => (int) env('HONEYPOT_BAN_MINUTES', 1440),
+        'get_hits_threshold' => 5,
+        'get_hits_window_minutes' => 10,
+        'route_throttle_per_minute' => 60,
+
+        /*
+         * Adresy i sieci (CIDR), które nigdy nie są banowane, rozdzielone przecinkami.
+         */
+        'whitelist' => array_values(array_filter(array_map(trim(...), explode(',', (string) env('HONEYPOT_WHITELIST', ''))))),
+
+        'log_channel' => env('HONEYPOT_LOG_CHANNEL', 'honeypot'),
+
+    ],
+
     'zones' => [
 
         /*
@@ -175,6 +208,31 @@ return [
          * Permissions-Policy: funkcje przeglądarki wyłączone we wszystkich strefach.
          */
         'permissions_policy' => 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+
+        /*
+         * Maskowanie błędów: odpowiedzi o tych statusach wyglądają jak 404, więc odwiedzający nie dowie się,
+         * że strona istnieje albo że nie ma do niej dostępu. null = tylko na produkcji. Strefa może
+         * nadpisać `mask_errors` w swoim configu (`security.mask_errors`). 503 (konserwacja) nie jest maskowany.
+         */
+        'mask_errors' => env('SECURITY_MASK_ERRORS') === null || env('SECURITY_MASK_ERRORS') === ''
+            ? null
+            : (bool) env('SECURITY_MASK_ERRORS'),
+        'masked_statuses' => [401, 403, 405, 419, 429],
+
+        /*
+         * Agenci AI (fragmenty User-Agent), którzy dostają 403 w strefach z `security.block_ai_agents`
+         * (domyślnie strefy z logowaniem), niezależnie od X-Robots-Tag.
+         */
+        'ai_agents' => [
+            'GPTBot', 'ChatGPT-User', 'OAI-SearchBot',
+            'ClaudeBot', 'Claude-User', 'Claude-SearchBot', 'Claude-Web', 'anthropic-ai',
+            'GoogleOther', 'Google-Extended',
+            'PerplexityBot', 'Perplexity-User',
+            'meta-externalagent', 'meta-externalfetcher', 'FacebookBot',
+            'CCBot', 'Bytespider', 'Amazonbot', 'cohere-ai', 'cohere-training-data-crawler', 'Diffbot',
+            'DuckAssistBot', 'MistralAI-User', 'YouBot', 'AI2Bot', 'Ai2Bot-Dolma', 'ImagesiftBot',
+            'Timpibot', 'omgili', 'PanguBot', 'Kangaroo Bot', 'Webzio-Extended',
+        ],
 
     ],
 

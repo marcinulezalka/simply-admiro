@@ -20,13 +20,17 @@ use Simplysmart\Mainboard\Auth\Devices\RecognizeTrustedDevice;
 use Simplysmart\Mainboard\Auth\EmailAddress;
 use Simplysmart\Mainboard\Auth\SignInLimit;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Mainboard\Security\Honeypot\FormHoneypot;
+use Simplysmart\Mainboard\Security\Honeypot\HoneypotTracker;
+use Simplysmart\Mainboard\Security\Honeypot\HoneypotTrap;
 
 /**
  * Pierwszy krok: adres e-mail. Ta sama ścieżka dla każdego adresu (limity, stan w sesji, job
  * IssueSignInCode), więc ani odpowiedź, ani jej czas nie mówią, czy konto istnieje.
  *
  * Wyjątek dotyczy tylko przeglądarki z ciasteczkiem zaufanego urządzenia tego konta: kod nie jest wysyłany,
- * a logowanie przechodzi od razu do PIN-u.
+ * a logowanie przechodzi od razu do PIN-u. Formularz wysłany przez bota (pułapka formularza) dostaje tę samą
+ * odpowiedź, ale bez kodu, a jego adres IP jest banowany.
  */
 final readonly class StartSignIn
 {
@@ -36,6 +40,8 @@ final readonly class StartSignIn
         private CurrentZone $zone,
         private Dispatcher $bus,
         private RecognizeTrustedDevice $devices,
+        private FormHoneypot $honeypot,
+        private HoneypotTracker $tracker,
     ) {}
 
     /**
@@ -50,6 +56,12 @@ final readonly class StartSignIn
 
         $request->session()->regenerate();
         $this->state->begin($email);
+
+        if ($this->honeypot->isBot($request)) {
+            $this->tracker->record($request, HoneypotTrap::Form);
+
+            return;
+        }
 
         if ($this->devices->handle($email, $request)) {
             $this->state->trustDevice();

@@ -36,5 +36,6 @@ return [
     'too_many_attempts' => 'Too many attempts. Try again in :seconds s.',
     'weak_pin' => 'This PIN is too simple — avoid repeated and consecutive digits.',
     'remember_device' => 'Remember this device for :days days (no code next time, PIN still required)',
+    'honeypot_field' => 'Website',
 
 ];

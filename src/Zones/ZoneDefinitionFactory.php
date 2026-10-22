@@ -23,7 +23,8 @@ use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
  * Buduje ZoneDefinition z configu paczki strefy, uzupełniając go domyślnymi wartościami Core.
  *
  * Config strefy: name (wymagane), slug, guard, provider, model, session (klucze ZoneSessionSettings),
- * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem).
+ * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem),
+ * security (`mask_errors`, `block_ai_agents`; agenci AI domyślnie blokowani w strefach z logowaniem).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -62,6 +63,10 @@ final readonly class ZoneDefinitionFactory
             session: $this->session($name, $model !== null, Arr::array($config, 'session', [])),
             authSettings: $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null,
             teams: $model !== null && Arr::boolean($config, 'teams', false),
+            security: new ZoneSecuritySettings(
+                maskErrors: $this->nullableBool(Arr::array($config, 'security', []), 'mask_errors', null),
+                blockAiAgents: Arr::boolean(Arr::array($config, 'security', []), 'block_ai_agents', $model !== null),
+            ),
         );
     }
 
