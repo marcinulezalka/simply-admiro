@@ -42,4 +42,19 @@ interface AccountStore
      * Unieważnia wszystkie sesje konta (każda sesja z poprzednią epoką zostanie wylogowana).
      */
     public function bumpAuthEpoch(Model&CodeAndPinAccount $account): void;
+
+    /**
+     * Usuwa PIN: właściciel ustawi nowy przy najbliższym logowaniu (po kodzie z e-maila).
+     */
+    public function clearPin(Model&CodeAndPinAccount $account): void;
+
+    /**
+     * Zdejmuje blokadę i zeruje błędne PIN-y oraz poziom blokady.
+     */
+    public function unlock(Model&CodeAndPinAccount $account): void;
+
+    /**
+     * Wyłącza logowanie konta (`is_active`).
+     */
+    public function deactivate(Model&CodeAndPinAccount $account): void;
 }

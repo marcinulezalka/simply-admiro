@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Stan rozpoczętego logowania w sesji strefy: adres, wykonane kroki, czas wejścia w krok,
- * czas wysłania kodu i próby kodu bez konta (decoy).
+ * czas wysłania kodu, próby kodu bez konta (decoy), rozpoznane zaufane urządzenie i prośba o jego zapamiętanie.
  */
 final readonly class SignInFlowState
 {
@@ -39,7 +39,35 @@ final readonly class SignInFlowState
             'step_started_at' => $now,
             'code_issued_at' => $now,
             'decoy_attempts' => 0,
+            'trusted_device' => false,
+            'remember_device' => false,
         ]);
+    }
+
+    /**
+     * Przeglądarka jest zaufanym urządzeniem konta (logowanie pominie kod z e-maila).
+     */
+    public function trustDevice(): void
+    {
+        $this->merge(['trusted_device' => true]);
+    }
+
+    public function isDeviceTrusted(): bool
+    {
+        return $this->get('trusted_device') === true;
+    }
+
+    /**
+     * Po zalogowaniu zapamiętać przeglądarkę jako zaufane urządzenie (wybór na kroku kodu).
+     */
+    public function rememberDevice(): void
+    {
+        $this->merge(['remember_device' => true]);
+    }
+
+    public function shouldRememberDevice(): bool
+    {
+        return $this->get('remember_device') === true;
     }
 
     public function isStarted(): bool

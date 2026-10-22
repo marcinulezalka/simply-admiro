@@ -19,14 +19,17 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Simplysmart\Mainboard\Auth\Devices\RegisterTrustedDevice;
 use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
+use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
 use Simplysmart\Mainboard\Contracts\AccountStore;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Zones\ZoneRedirects;
 
 /**
  * Wszystkie kroki wykonane: logowanie w guardzie strefy, nowa sesja z epoką konta, zapis
- * udanego logowania (zeruje błędy i blokady) i powrót na zamierzoną stronę albo dashboard.
+ * udanego logowania (zeruje błędy i blokady), zapamiętanie urządzenia, jeśli konto o to poprosiło,
+ * i powrót na zamierzoną stronę albo dashboard.
  */
 final readonly class CompleteSignIn
 {
@@ -40,6 +43,7 @@ final readonly class CompleteSignIn
         private CurrentZone $zone,
         private Dispatcher $events,
         private Redirector $redirect,
+        private RegisterTrustedDevice $devices,
     ) {}
 
     public function handle(PendingSignIn $signIn, Request $request): RedirectResponse
@@ -57,6 +61,11 @@ final readonly class CompleteSignIn
         $request->session()->regenerate();
         $request->session()->put(self::EPOCH_SESSION_KEY, $account->authEpoch());
         $this->store->recordSignIn($account, $request->ip());
+
+        if ($zone->auth()->trustedDevicesEnabled && $signIn->wantsDeviceRemembered(EmailCodeStep::KEY)) {
+            $this->devices->handle($account, $request);
+        }
+
         $this->state->clear();
 
         $this->events->dispatch(new SignInSucceeded($zone->name, $account, $request->ip()));

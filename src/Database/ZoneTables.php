@@ -20,7 +20,7 @@ use Simplysmart\Mainboard\Auth\AccountColumns;
 use Simplysmart\Mainboard\Zones\ZoneTable;
 
 /**
- * Schemat tabel strefy z logowaniem (konta, kody logowania, sesje), jednakowy dla każdej strefy.
+ * Schemat tabel strefy z logowaniem (konta, kody logowania, sesje, zaufane urządzenia), jednakowy dla każdej strefy.
  *
  * Migracja strefy w Core: `app(ZoneTables::class)->create('shop')` w up() i `->drop('shop')` w down().
  * Konta mają pełny standard tabel danych: kolumny Columns::base()/closing() (soft delete, checksum,
@@ -55,12 +55,31 @@ final readonly class ZoneTables
         $schema->create(ZoneTable::Sessions->for($zone), static function (Blueprint $table): void {
             self::sessionColumns($table);
         });
+
+        $this->createTrustedDevices($zone);
+    }
+
+    /**
+     * Tabela zaufanych urządzeń strefy, gdy jej brakuje (strefa utworzona przed jej wprowadzeniem).
+     */
+    public function createTrustedDevices(string $zone): void
+    {
+        $schema = $this->schema();
+
+        if ($schema->hasTable(ZoneTable::TrustedDevices->for($zone))) {
+            return;
+        }
+
+        $schema->create(ZoneTable::TrustedDevices->for($zone), static function (Blueprint $table) use ($zone): void {
+            self::trustedDeviceColumns($table, ZoneTable::Accounts->for($zone));
+        });
     }
 
     public function drop(string $zone): void
     {
         $schema = $this->schema();
 
+        $schema->dropIfExists(ZoneTable::TrustedDevices->for($zone));
         $schema->dropIfExists(ZoneTable::Sessions->for($zone));
         $schema->dropIfExists(ZoneTable::LoginChallenges->for($zone));
 
@@ -104,6 +123,27 @@ final readonly class ZoneTables
         $table->text('user_agent')->nullable();
         $table->timestamp('created_at')->nullable();
         $table->index([self::ACCOUNT_FOREIGN_KEY, 'created_at']);
+    }
+
+    /**
+     * Zaufane urządzenia konta: `token` to klucz w URL panelu, `selector` wyszukuje urządzenie po ciasteczku,
+     * a z części tajnej (validator) w bazie jest tylko HMAC. IP i user agent są szyfrowane.
+     */
+    public static function trustedDeviceColumns(Blueprint $table, string $accountsTable): void
+    {
+        $table->ulid('id')->primary();
+        $table->string('token', 64)->unique();
+        $table->foreignId(self::ACCOUNT_FOREIGN_KEY)->constrained($accountsTable)->cascadeOnDelete();
+        $table->string('selector', 32)->unique();
+        $table->string('validator_hash', 64);
+        $table->string('name');
+        $table->text('ip')->nullable();
+        $table->text('user_agent')->nullable();
+        $table->timestamp('created_at')->nullable();
+        $table->timestamp('last_used_at')->nullable();
+        $table->timestamp('expires_at');
+        $table->timestamp('revoked_at')->nullable();
+        $table->index([self::ACCOUNT_FOREIGN_KEY, 'revoked_at']);
     }
 
     /**

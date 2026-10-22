@@ -54,16 +54,12 @@ abstract class CreateZoneAccountCommand extends Command
             return self::FAILURE;
         }
 
-        $current->set($zones->get($this->zoneName()));
-
         try {
-            $create->handle($input['name'], $input['email']);
+            $current->within($zones->get($this->zoneName()), static fn(): mixed => $create->handle($input['name'], $input['email']));
         } catch (AccountAlreadyExists) {
             $this->error('Konto z tym adresem e-mail już istnieje.');
 
             return self::FAILURE;
-        } finally {
-            $current->forget();
         }
 
         $this->info('Konto założone. PIN właściciel konta ustawi przy pierwszym logowaniu.');

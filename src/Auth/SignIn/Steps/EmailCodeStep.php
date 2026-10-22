@@ -26,10 +26,14 @@ use Simplysmart\Mainboard\Contracts\SignInStep;
 
 /**
  * Kod z e-maila (posiadanie skrzynki). Bez konta (decoy) zachowuje się tak samo, tylko nigdy nie przechodzi.
+ * Na zaufanym urządzeniu konta krok jest pomijany (czynnikiem posiadania jest urządzenie); tu konto może
+ * poprosić o zapamiętanie przeglądarki.
  */
 final readonly class EmailCodeStep implements SignInStep
 {
     public const string KEY = 'code';
+
+    public const string REMEMBER_FIELD = 'remember_device';
 
     public function __construct(
         private LoginChallengeService $challenges,
@@ -45,7 +49,7 @@ final readonly class EmailCodeStep implements SignInStep
 
     public function isRequired(PendingSignIn $signIn): bool
     {
-        return true;
+        return ! ($signIn->deviceTrusted && $signIn->account !== null);
     }
 
     public function ttlMinutes(): int
@@ -67,12 +71,16 @@ final readonly class EmailCodeStep implements SignInStep
             'codeLength' => $settings->codeLength,
             'validForMinutes' => $settings->codeTtlMinutes,
             'resendIn' => $this->state->resendCooldownRemaining($settings->codeResendCooldownSeconds),
+            'rememberDeviceDays' => $settings->trustedDevicesEnabled ? $settings->trustedDeviceLifetimeDays : null,
         ];
     }
 
     public function rules(): array
     {
-        return ['code' => ['required', 'string', 'digits:' . $this->zone->get()->auth()->codeLength]];
+        return [
+            'code' => ['required', 'string', 'digits:' . $this->zone->get()->auth()->codeLength],
+            self::REMEMBER_FIELD => ['nullable', 'boolean'],
+        ];
     }
 
     public function handle(PendingSignIn $signIn, array $input, Request $request): void
@@ -93,5 +101,9 @@ final readonly class EmailCodeStep implements SignInStep
         }
 
         $request->session()->regenerate();
+
+        if ($this->zone->get()->auth()->trustedDevicesEnabled && filter_var($input[self::REMEMBER_FIELD] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+            $this->state->rememberDevice();
+        }
     }
 }

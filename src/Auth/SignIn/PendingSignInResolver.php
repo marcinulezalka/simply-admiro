@@ -40,6 +40,8 @@ final readonly class PendingSignInResolver
             email: $email,
             account: $account !== null && $account->canSignIn() ? $account : null,
             completed: $this->state->completed(),
+            deviceTrusted: $this->state->isDeviceTrusted(),
+            rememberDevice: $this->state->shouldRememberDevice(),
         );
     }
 

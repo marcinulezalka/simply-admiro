@@ -60,4 +60,23 @@ final class EloquentAccountStore implements AccountStore
     {
         $account->forceFill([AccountColumns::AUTH_EPOCH => $account->authEpoch() + 1])->save();
     }
+
+    public function clearPin(Model&CodeAndPinAccount $account): void
+    {
+        $account->forceFill([AccountColumns::PIN_HASH => null, AccountColumns::PIN_SET_AT => null])->save();
+    }
+
+    public function unlock(Model&CodeAndPinAccount $account): void
+    {
+        $account->forceFill([
+            AccountColumns::PIN_FAILED_ATTEMPTS => 0,
+            AccountColumns::LOCK_LEVEL => 0,
+            AccountColumns::LOCKED_UNTIL => null,
+        ])->save();
+    }
+
+    public function deactivate(Model&CodeAndPinAccount $account): void
+    {
+        $account->forceFill([AccountColumns::IS_ACTIVE => false])->save();
+    }
 }

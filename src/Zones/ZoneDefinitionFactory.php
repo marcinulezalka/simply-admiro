@@ -23,7 +23,7 @@ use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
  * Buduje ZoneDefinition z configu paczki strefy, uzupełniając go domyślnymi wartościami Core.
  *
  * Config strefy: name (wymagane), slug, guard, provider, model, session (klucze ZoneSessionSettings),
- * auth (nadpisania `mainboard.auth`, tylko strefa z modelem).
+ * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -61,6 +61,7 @@ final readonly class ZoneDefinitionFactory
             routesPath: rtrim($routesPath, '/'),
             session: $this->session($name, $model !== null, Arr::array($config, 'session', [])),
             authSettings: $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null,
+            teams: $model !== null && Arr::boolean($config, 'teams', false),
         );
     }
 

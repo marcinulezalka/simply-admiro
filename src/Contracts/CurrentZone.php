@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Contracts;
 
+use Closure;
 use LogicException;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
@@ -44,4 +45,16 @@ interface CurrentZone
      * @throws LogicException Gdy żądanie nie przeszło przez UseZone.
      */
     public function get(): ZoneDefinition;
+
+    /**
+     * Wykonuje kod w podanej strefie i przywraca poprzednią (albo brak strefy), także po wyjątku.
+     * Dla jobów, komend i akcji administracyjnych działających na kontach innej strefy niż żądanie.
+     *
+     * @template TResult
+     *
+     * @param Closure(ZoneDefinition): TResult $callback
+     *
+     * @return TResult
+     */
+    public function within(ZoneDefinition $zone, Closure $callback): mixed;
 }

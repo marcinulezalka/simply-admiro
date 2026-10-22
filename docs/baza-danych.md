@@ -3,7 +3,7 @@
 > **Status:** zaimplementowane są kolumny standardowe (`Database\Columns`), `Models\DataModel`
 > (token, soft delete, casty, checksum, `active()`), historia zmian (`Database\History`, triggery
 > MySQL i SQLite, `Database\HistoryActor`), krótkie tłumaczenia `json_i18n` (`HasI18n`), pierwsze
-> słowniki (lokalizacja, §14) oraz organizacje i tabele uprawnień spatie (§15). Nadal koncepcją są: hierarchia `HasParent` (§3), tabele
+> słowniki (lokalizacja, §14) oraz organizacje, członkostwa, uprawnienia spatie i role stref z plików JSON (§15). Nadal koncepcją są: hierarchia `HasParent` (§3), tabele
 > `<tabela>_i18n`, RODO (`personalColumns()`, `AnonymizeRecord`, §8) i mappery (§12).
 
 Silnik: MySQL 8 (`DB_CONNECTION=mysql`). Wszystkie zasady obowiązują każdą tabelę aplikacji,
@@ -330,6 +330,7 @@ i kolumn są w `Permissions\PermissionTables`.
 | `model_has_roles`, `model_has_permissions` | — (spatie) | łącząca | `role_id`/`permission_id`, `model_type`, `model_id`, `organization_id` |
 | `role_has_permissions` | — (spatie) | łącząca | `permission_id`, `role_id` |
 | `permission_denials` | `Models\Permissions\PermissionDenial` | łącząca | `permission_id`, `model_type`, `model_id`, `organization_id` |
+| `organization_members` | `Models\Permissions\OrganizationMember` | łącząca | `organization_id`, `model_type`, `model_id` |
 
 - **Zakres:** definicja roli jest globalna dla guardu strefy. Przypisanie to konto + rola + organizacja,
   a sprawdzenie patrzy tylko na bieżącą organizację spatie (`PermissionRegistrar::setPermissionsTeamId()`).
@@ -351,3 +352,56 @@ i kolumn są w `Permissions\PermissionTables`.
   głównego. Złożony klucz zostaje unikalnym indeksem. Nie mają `timestamps`, bo spatie ich nie wypełnia.
 - Pula id: role, uprawnienia i organizacje z seederów mają id 1–999, a rekordy użytkowników od 1000.
 - Cache spatie ma wspólny klucz `zone:shared:spatie.permission` (`ZoneCacheKey`).
+- **Członkostwo** konta w organizacji jest niezależne od ról (`organization_members`, relacja
+  `ZoneAccount::organizations()`, aktywne przez `Queries\Organizations\ActiveMemberships`).
+  `Permissions\OrganizationMembership::add()` dodaje członka bez ról, a `remove()` usuwa razem z nim jego role,
+  uprawnienia bezpośrednie i odmowy w tej organizacji oraz unieważnia jego sesje. Bieżącą organizację
+  żądania wybiera strefa (`docs/strefy.md`, „Uprawnienia”).
+- **Dane organizacji:** model rekordów jednej organizacji dziedziczy po `Models\OrganizationDataModel`
+  (kolumna `organization_id` po `Columns::base()`, relacja `organization()`, wiązanie trasy tylko w bieżącej
+  organizacji).
+
+### Role stref z plików JSON
+
+Plik jednej strefy (strefa publiczna: `database/seeders/permissions/<strefa>.json` w Core; paczka prywatna:
+własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
+
+```json
+{
+    "zone": "shop",
+    "permissions": ["orders.view", "orders.manage", "reports.view"],
+    "roles": {
+        "guest": {"permissions": []},
+        "support": {"permissions": ["orders.view"]},
+        "clerk": {"permissions": ["orders.view", "orders.manage"]},
+        "manager": {"inherits": ["clerk"], "permissions": ["reports.view"]},
+        "owner": {"permissions": "*", "except": ["reports.view"]}
+    }
+}
+```
+
+- `zone` to nazwa strefy z logowaniem; guard pochodzi z rejestru stref. Role `guest`, `support` i `owner`
+  są obowiązkowe (`Permissions\RequiredRole`). Nazwy uprawnień mają postać `zasób.akcja` (kebab-case),
+  role kebab-case w liczbie pojedynczej.
+- `inherits` i `"*"` z `except` są spłaszczane przy zapisie, więc w bazie nie ma hierarchii ról.
+- Etykiet nie ma w pliku: dają je tłumaczenia `permissions.<strefa>.<zasób>.<akcja>` i `roles.<strefa>.<rola>`
+  (pl, en), dla stref publicznych w Core, dla paczki z własnym plikiem w jej `lang/`
+  (`text('<paczka>::permissions.<strefa>.…')`, kaskada sięga potem do Core). Paczka strefy ma enum
+  uprawnień i ról, a test sprawdza jego zgodność z plikiem.
+- `Permissions\PermissionFileParser` waliduje plik przed zapisem (nieznana strefa, brak roli obowiązkowej,
+  nieznane uprawnienie w roli lub `except`, zła nazwa, duplikat, nieznana rola w `inherits`, cykl).
+- `php artisan mainboard:permissions:sync [--zone=]` (oraz seeder `ZonePermissionsSeeder`) najpierw waliduje
+  wszystkie pliki, potem w jednej transakcji zapisuje uprawnienia i role globalne guardu strefy z id z puli
+  seederów, przywraca usunięte i synchronizuje uprawnienia ról. Jest idempotentna. Rekordy strefy spoza
+  pliku tylko raportuje; usuwa je (soft delete) `--prune` z potwierdzeniem, a na produkcji z `--force`.
+
+### Nadawanie ról i właściciele stref
+
+- `Permissions\ZoneRoleAssignment::assign()` / `revoke()` chronią przed eskalacją: nadający jest kontem tej
+  samej strefy, oba konta są członkami organizacji, a każde uprawnienie roli nadający ma sam w tej
+  organizacji (z odmowami). Odebranie roli unieważnia sesje konta. Każda zmiana trafia do dziennika
+  `sign_in` (`ZoneRoleChanged` z aktorem).
+- Właściciela strefy zakłada się przez kontrakt `Contracts\ZoneOwnerProvisioner` z rejestru
+  `Permissions\ZoneOwnerProvisioners` (paczka strefy dodaje `DefaultOwnerProvisioner` dla swojej strefy).
+  Konto powstaje w tabeli strefy docelowej (albo istniejące konto o tym adresie), dostaje członkostwo i rolę
+  `owner` w organizacji klienta; strefa bez `teams` używa organizacji operatora.

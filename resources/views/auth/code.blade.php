@@ -1,3 +1,4 @@
+{{-- $rememberDeviceDays: ?int — dni zaufania urządzenia; null = strefa bez zaufanych urządzeń (bez checkboxa). --}}
 <x-mainboard::auth.layout :title="text('sign_in.code_title')">
     <p>{{ text('sign_in.code_intro', ['email' => $email, 'length' => $codeLength, 'minutes' => $validForMinutes]) }}</p>
 
@@ -6,6 +7,12 @@
         <label for="code">{{ text('sign_in.code') }}</label>
         <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="{{ $codeLength }}" required autofocus>
         @error('code') <p role="alert">{{ $message }}</p> @enderror
+        @if ($rememberDeviceDays !== null)
+            <label for="remember_device">
+                <input id="remember_device" name="remember_device" type="checkbox" value="1">
+                {{ text('sign_in.remember_device', ['days' => $rememberDeviceDays]) }}
+            </label>
+        @endif
         <button type="submit">{{ text('sign_in.continue') }}</button>
     </form>
 

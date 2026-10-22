@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Zones;
 
+use Closure;
 use LogicException;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 
@@ -41,5 +42,17 @@ final class RequestZone implements CurrentZone
     public function get(): ZoneDefinition
     {
         return $this->zone ?? throw new LogicException('The request has no zone: route it through the zone middleware group.');
+    }
+
+    public function within(ZoneDefinition $zone, Closure $callback): mixed
+    {
+        $previous = $this->zone;
+        $this->zone = $zone;
+
+        try {
+            return $callback($zone);
+        } finally {
+            $this->zone = $previous;
+        }
     }
 }

@@ -19,7 +19,7 @@ use Simplysmart\Mainboard\Http\Middleware\EnsureAccountCanSignIn;
  * Poziomy dostępu do tras strefy; każdy wyższy zawiera niższe (public ⊂ authenticated ⊂ uprawnienie).
  *
  * Uprawnienie nie jest osobnym poziomem: trasa poziomu Authenticated dokłada własne
- * `permission:<x>,<guard>`.
+ * `ZonePermission::middleware(<uprawnienie>)` (guard i organizacja z żądania).
  */
 enum AccessTier
 {

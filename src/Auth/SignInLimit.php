@@ -32,4 +32,7 @@ enum SignInLimit: string
 
     /** Sprawdzenia PIN-u z jednego IP (konto ma własny licznik w bazie). */
     case PinChecks = 'pin_checks';
+
+    /** Próby zmiany PIN-u zalogowanego konta (niezależnie od IP). */
+    case PinChanges = 'pin_changes';
 }

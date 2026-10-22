@@ -56,6 +56,9 @@ final readonly class ZoneAuthSettingsFactory
             limits: $this->limits(Arr::array($settings, 'limits')),
             routeThrottlePerMinute: Arr::integer($settings, 'route_throttle_per_minute'),
             challengePruneHours: Arr::integer($settings, 'challenge_prune_hours'),
+            trustedDevicesEnabled: Arr::boolean($settings, 'trusted_devices.enabled'),
+            trustedDeviceLifetimeDays: max(1, Arr::integer($settings, 'trusted_devices.lifetime_days')),
+            trustedDevicesPerAccount: max(1, Arr::integer($settings, 'trusted_devices.max_per_account')),
         );
     }
 

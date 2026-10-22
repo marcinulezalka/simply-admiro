@@ -18,7 +18,7 @@ use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
 
 /**
  * Trwające logowanie: podany adres, konto (null = brak konta albo konto, które nie może się
- * zalogować, czyli decoy) i wykonane kroki.
+ * zalogować, czyli decoy), wykonane kroki, rozpoznane zaufane urządzenie i prośba o jego zapamiętanie.
  */
 final readonly class PendingSignIn
 {
@@ -29,7 +29,18 @@ final readonly class PendingSignIn
         public string $email,
         public (Model&CodeAndPinAccount)|null $account,
         public array $completed,
+        public bool $deviceTrusted = false,
+        public bool $rememberDevice = false,
     ) {}
+
+    /**
+     * Czy po zalogowaniu zapamiętać urządzenie: tylko na prośbę z kroku kodu z e-maila, nigdy na ścieżce
+     * zaufanego urządzenia (ono nie może dopisać kolejnego).
+     */
+    public function wantsDeviceRemembered(string $codeStep): bool
+    {
+        return $this->account !== null && $this->rememberDevice && ! $this->deviceTrusted && $this->hasCompleted($codeStep);
+    }
 
     public function hasCompleted(string $step): bool
     {

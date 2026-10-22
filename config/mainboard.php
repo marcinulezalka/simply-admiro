@@ -105,6 +105,18 @@ return [
             'code_checks' => ['max' => 10, 'decay_minutes' => 1],
             'account_code_checks' => ['max' => 20, 'decay_minutes' => 60],
             'pin_checks' => ['max' => 10, 'decay_minutes' => 1],
+            'pin_changes' => ['max' => 5, 'decay_minutes' => 15],
+        ],
+
+        /*
+         * Zaufane urządzenia: po kodzie z e-maila można zapamiętać przeglądarkę na `lifetime_days` dni.
+         * Wtedy logowanie pomija kod (czynnikiem posiadania jest urządzenie), ale zawsze wymaga PIN-u.
+         * Strefa wymagająca kodu zawsze ustawia `enabled` na false.
+         */
+        'trusted_devices' => [
+            'enabled' => (bool) env('AUTH_TRUSTED_DEVICES', true),
+            'lifetime_days' => (int) env('AUTH_TRUSTED_DEVICE_DAYS', 30),
+            'max_per_account' => 10,
         ],
 
         'route_throttle_per_minute' => 20,

@@ -38,6 +38,9 @@ final readonly class ZoneAuthSettings
         public array $limits,
         public int $routeThrottlePerMinute,
         public int $challengePruneHours,
+        public bool $trustedDevicesEnabled = false,
+        public int $trustedDeviceLifetimeDays = 30,
+        public int $trustedDevicesPerAccount = 10,
     ) {}
 
     /**

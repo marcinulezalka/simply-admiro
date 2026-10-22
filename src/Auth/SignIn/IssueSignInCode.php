@@ -22,6 +22,7 @@ use Simplysmart\Mainboard\Contracts\AccountLocator;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Mail\LoginCodeMail;
+use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
  * Wydaje i wysyła kod logowania w tle. Żądanie kolejkuje ten job zawsze, także dla nieznanego
@@ -44,11 +45,7 @@ final class IssueSignInCode implements ShouldQueue, ShouldBeEncrypted
 
     public function handle(ZoneRegistry $zones, CurrentZone $current, AccountLocator $accounts, LoginChallengeService $challenges, Mailer $mailer): void
     {
-        $zone = $zones->get($this->zone);
-        $previous = $current->has() ? $current->get() : null;
-        $current->set($zone);
-
-        try {
+        $current->within($zones->get($this->zone), function (ZoneDefinition $zone) use ($accounts, $challenges, $mailer): void {
             $account = $accounts->findByEmail($this->email);
 
             if ($account === null || ! $account->canSignIn()) {
@@ -62,8 +59,6 @@ final class IssueSignInCode implements ShouldQueue, ShouldBeEncrypted
             if ($code !== null) {
                 $mailer->to($account->emailAddress())->send(new LoginCodeMail($account->displayName(), $code, $zone->auth()->codeTtlMinutes));
             }
-        } finally {
-            $previous === null ? $current->forget() : $current->set($previous);
-        }
+        });
     }
 }

@@ -16,6 +16,7 @@ namespace Simplysmart\Mainboard\Models;
 use Simplysmart\Mainboard\Auth\Concerns\SignsInWithCodeAndPin;
 use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
 use Simplysmart\Mainboard\Contracts\HasZoneRoles;
+use Simplysmart\Mainboard\Models\Relations\HasOrganizations;
 use Simplysmart\Mainboard\Permissions\Concerns\HasZonePermissions;
 
 /**
@@ -30,6 +31,7 @@ use Simplysmart\Mainboard\Permissions\Concerns\HasZonePermissions;
  */
 abstract class ZoneAccount extends MainAuthenticatable implements CodeAndPinAccount, HasZoneRoles
 {
+    use HasOrganizations;
     use HasZonePermissions;
     use SignsInWithCodeAndPin;
 }

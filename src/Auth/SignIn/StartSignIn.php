@@ -16,6 +16,7 @@ namespace Simplysmart\Mainboard\Auth\SignIn;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Simplysmart\Mainboard\Auth\Devices\RecognizeTrustedDevice;
 use Simplysmart\Mainboard\Auth\EmailAddress;
 use Simplysmart\Mainboard\Auth\SignInLimit;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
@@ -23,6 +24,9 @@ use Simplysmart\Mainboard\Contracts\CurrentZone;
 /**
  * Pierwszy krok: adres e-mail. Ta sama ścieżka dla każdego adresu (limity, stan w sesji, job
  * IssueSignInCode), więc ani odpowiedź, ani jej czas nie mówią, czy konto istnieje.
+ *
+ * Wyjątek dotyczy tylko przeglądarki z ciasteczkiem zaufanego urządzenia tego konta: kod nie jest wysyłany,
+ * a logowanie przechodzi od razu do PIN-u.
  */
 final readonly class StartSignIn
 {
@@ -31,6 +35,7 @@ final readonly class StartSignIn
         private LoginAttemptLimiter $limiter,
         private CurrentZone $zone,
         private Dispatcher $bus,
+        private RecognizeTrustedDevice $devices,
     ) {}
 
     /**
@@ -45,6 +50,12 @@ final readonly class StartSignIn
 
         $request->session()->regenerate();
         $this->state->begin($email);
+
+        if ($this->devices->handle($email, $request)) {
+            $this->state->trustDevice();
+
+            return;
+        }
 
         $this->bus->dispatch(new IssueSignInCode($this->zone->get()->name, $email, $request->ip(), $request->userAgent()));
     }

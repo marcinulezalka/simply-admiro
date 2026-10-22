@@ -31,6 +31,8 @@ final class PermissionTables
 
     public const string PERMISSION_DENIALS = 'permission_denials';
 
+    public const string ORGANIZATION_MEMBERS = 'organization_members';
+
     public const string TEAM_FOREIGN_KEY = 'organization_id';
 
     public const string PERMISSION_FOREIGN_KEY = 'permission_id';

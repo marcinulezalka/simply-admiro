@@ -27,14 +27,23 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
+use Simplysmart\Mainboard\Auth\Devices\DeviceTokenIssuer;
+use Simplysmart\Mainboard\Auth\Devices\EloquentTrustedDeviceRepository;
 use Simplysmart\Mainboard\Auth\EloquentAccountLocator;
 use Simplysmart\Mainboard\Auth\EloquentAccountStore;
+use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
+use Simplysmart\Mainboard\Auth\Events\PinChanged;
+use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
+use Simplysmart\Mainboard\Auth\Events\TrustedDevicesRevoked;
 use Simplysmart\Mainboard\Auth\Events\SignedOut;
 use Simplysmart\Mainboard\Auth\Events\SignInRejected;
 use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
 use Simplysmart\Mainboard\Auth\Listeners\LogSignInActivity;
+use Simplysmart\Mainboard\Auth\Listeners\RevokeTrustedDevicesOfAccount;
 use Simplysmart\Mainboard\Auth\Listeners\SendAccountLockedMail;
+use Simplysmart\Mainboard\Auth\Listeners\SendPinChangedMail;
+use Simplysmart\Mainboard\Auth\Listeners\SendTrustedDeviceMails;
 use Simplysmart\Mainboard\Auth\SignIn\EloquentLoginChallengeRepository;
 use Simplysmart\Mainboard\Auth\SignIn\LoginCodeGenerator;
 use Simplysmart\Mainboard\Auth\SignInLogDefaults;
@@ -45,13 +54,22 @@ use Illuminate\Queue\Events\JobProcessing;
 use Simplysmart\Mainboard\Console\PruneSignInChallenges;
 use Simplysmart\Mainboard\Console\SeedLocalization;
 use Simplysmart\Mainboard\Console\SeedOrganizations;
+use Simplysmart\Mainboard\Console\SyncZonePermissions;
+use Simplysmart\Mainboard\Permissions\PermissionFiles;
+use Simplysmart\Mainboard\Permissions\ZoneOwnerProvisioners;
+use Simplysmart\Mainboard\Permissions\Events\ZoneRoleChanged;
+use Simplysmart\Mainboard\Contracts\CurrentOrganization;
 use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
+use Simplysmart\Mainboard\Http\Middleware\RequireZonePermission;
+use Simplysmart\Mainboard\Permissions\SpatieCurrentOrganization;
+use Illuminate\Routing\Router;
 use Simplysmart\Mainboard\Permissions\PermissionDefaults;
 use Simplysmart\Mainboard\Permissions\SpatiePermissionChecker;
 use Simplysmart\Mainboard\Contracts\AccountLocator;
 use Simplysmart\Mainboard\Contracts\AccountStore;
 use Simplysmart\Mainboard\Contracts\BlindIndex;
 use Simplysmart\Mainboard\Contracts\LoginChallengeRepository;
+use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
 use Simplysmart\Mainboard\Http\SignInRoutes;
 use Simplysmart\Mainboard\Security\HmacBlindIndex;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -94,6 +112,8 @@ final class MainboardServiceProvider extends ServiceProvider
     private const int PAGE_EXPIRED = 419;
 
     private const string SIGN_IN_VIEWS = CascadeTextTranslator::CORE_NAMESPACE . '::auth.*';
+
+    private const string ACCOUNT_VIEWS = CascadeTextTranslator::CORE_NAMESPACE . '::account.*';
 
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';
 
@@ -154,16 +174,30 @@ final class MainboardServiceProvider extends ServiceProvider
         DB::prohibitDestructiveCommands($this->app->environment('production') === true);
 
         $events->listen(MessageSent::class, LogSentMail::class);
-        $events->listen([SignInSucceeded::class, SignInRejected::class, AccountLocked::class, SignedOut::class], LogSignInActivity::class);
+        $events->listen([
+            SignInSucceeded::class,
+            SignInRejected::class,
+            AccountLocked::class,
+            SignedOut::class,
+            AccountAccessRevoked::class,
+            PinChanged::class,
+            TrustedDeviceRegistered::class,
+            TrustedDevicesRevoked::class,
+            ZoneRoleChanged::class,
+        ], LogSignInActivity::class);
         $events->listen(AccountLocked::class, SendAccountLockedMail::class);
+        $events->listen(PinChanged::class, SendPinChangedMail::class);
+        $events->listen([AccountAccessRevoked::class, AccountLocked::class], RevokeTrustedDevicesOfAccount::class);
+        $events->listen([TrustedDeviceRegistered::class, AccountAccessRevoked::class], SendTrustedDeviceMails::class);
         $events->listen(JobProcessing::class, [SetHistoryActorForJob::class, 'start']);
         $events->listen([JobProcessed::class, JobFailed::class], [SetHistoryActorForJob::class, 'finish']);
 
-        $this->app->make(ViewFactory::class)->composer(self::SIGN_IN_VIEWS, function (View $view): void {
+        $this->app->make(ViewFactory::class)->composer([self::SIGN_IN_VIEWS, self::ACCOUNT_VIEWS], function (View $view): void {
             $view->with('zone', $this->app->make(CurrentZone::class)->get());
         });
         $this->app->make(ViewFactory::class)->composer(self::ZONE_LAYOUT_VIEW, $this->shareZoneWithLayout(...));
 
+        $this->app->make(Router::class)->aliasMiddleware(RequireZonePermission::ALIAS, RequireZonePermission::class);
         $limiter->for(SignInRoutes::THROTTLE, fn(Request $request): Limit => $this->signInRouteLimit($request));
         $this->app->afterResolving(ExceptionHandler::class, $this->renderExpiredFormsAsSignIn(...));
 
@@ -172,7 +206,7 @@ final class MainboardServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class]);
+            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class, SyncZonePermissions::class]);
             $this->app->afterResolving(Schedule::class, static function (Schedule $schedule): void {
                 $schedule->command(PruneSignInChallenges::class)->hourly();
             });
@@ -219,25 +253,36 @@ final class MainboardServiceProvider extends ServiceProvider
     }
 
     /**
-     * Logowanie stref: konta, kody i stan logowania zapisywane w tabelach strefy, indeks e-maila
-     * i kody HMAC z kluczem aplikacji.
+     * Logowanie stref: konta, kody, zaufane urządzenia i stan logowania zapisywane w tabelach strefy,
+     * indeks e-maila oraz kody i tokeny urządzeń jako HMAC z kluczem aplikacji.
      */
     private function registerSignIn(): void
     {
         $this->app->bind(AccountLocator::class, EloquentAccountLocator::class);
         $this->app->bind(AccountStore::class, EloquentAccountStore::class);
         $this->app->bind(LoginChallengeRepository::class, EloquentLoginChallengeRepository::class);
+        $this->app->bind(TrustedDeviceRepository::class, EloquentTrustedDeviceRepository::class);
         $this->app->singleton(BlindIndex::class, fn(Application $app): BlindIndex => new HmacBlindIndex($this->appKey($app)));
         $this->app->singleton(LoginCodeGenerator::class, fn(Application $app): LoginCodeGenerator => new LoginCodeGenerator($this->appKey($app)));
+        $this->app->singleton(DeviceTokenIssuer::class, fn(Application $app): DeviceTokenIssuer => new DeviceTokenIssuer($this->appKey($app)));
     }
 
     /**
-     * Uprawnienia stref na spatie/laravel-permission: kontrakt sprawdzania i konfiguracja spatie ustawiana
-     * po register() wszystkich providerów (wtedy config spatie jest już scalony), przed ich boot().
+     * Uprawnienia stref na spatie/laravel-permission: kontrakty sprawdzania i bieżącej organizacji, rejestr
+     * plików ról (z katalogiem Core) i konfiguracja spatie ustawiana po register() wszystkich providerów
+     * (wtedy config spatie jest już scalony), przed ich boot().
      */
     private function registerPermissions(): void
     {
         $this->app->bind(ZonePermissionChecker::class, SpatiePermissionChecker::class);
+        $this->app->bind(CurrentOrganization::class, SpatieCurrentOrganization::class);
+        $this->app->singleton(ZoneOwnerProvisioners::class);
+        $this->app->singleton(PermissionFiles::class, static function (): PermissionFiles {
+            $files = new PermissionFiles();
+            $files->add(__DIR__ . '/../database/seeders/permissions');
+
+            return $files;
+        });
         $this->app->booting(function (): void {
             $this->app->make(PermissionDefaults::class)->apply();
         });

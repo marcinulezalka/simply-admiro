@@ -31,6 +31,7 @@ Po wysłaniu kodu:
 php artisan migrate --force              # migracje Core (destrukcyjne komendy są na produkcji zablokowane)
 php artisan mainboard:localization:seed  # słowniki lokalizacji; bezpieczne przy każdym wdrożeniu
 php artisan mainboard:organizations:seed # organizacja operatora (zakres ról stref bez firm); bezpieczne przy każdym wdrożeniu
+php artisan mainboard:permissions:sync   # role i uprawnienia stref z plików JSON; idempotentna, bez --prune nic nie usuwa
 php artisan icons:cache                  # manifest ikon blade-icons (flagi), bez skanowania SVG przy każdym żądaniu
 ```
 

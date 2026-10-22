@@ -24,6 +24,8 @@ enum ZoneTable: string
 
     case Sessions = 'sessions';
 
+    case TrustedDevices = 'trusted_devices';
+
     public function for(ZoneDefinition|string $zone): string
     {
         return ($zone instanceof ZoneDefinition ? $zone->name : $zone) . '_' . $this->value;
