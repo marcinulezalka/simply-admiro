@@ -2,8 +2,8 @@
 
 > **Status:** zaimplementowane są kolumny standardowe (`Database\Columns`), `Models\DataModel`
 > (token, soft delete, casty, checksum, `active()`), historia zmian (`Database\History`, triggery
-> MySQL i SQLite, `Database\HistoryActor`), krótkie tłumaczenia `json_i18n` (`HasI18n`) i pierwsze
-> słowniki (lokalizacja, §14). Nadal koncepcją są: hierarchia `HasParent` (§3), tabele
+> MySQL i SQLite, `Database\HistoryActor`), krótkie tłumaczenia `json_i18n` (`HasI18n`), pierwsze
+> słowniki (lokalizacja, §14) oraz organizacje i tabele uprawnień spatie (§15). Nadal koncepcją są: hierarchia `HasParent` (§3), tabele
 > `<tabela>_i18n`, RODO (`personalColumns()`, `AnonymizeRecord`, §8) i mappery (§12).
 
 Silnik: MySQL 8 (`DB_CONNECTION=mysql`). Wszystkie zasady obowiązują każdą tabelę aplikacji,
@@ -314,3 +314,40 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 - Dane startowe: `php artisan mainboard:localization:seed` (seedery w `src/Database/Seeders/`, nazwy
   z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
   wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.
+
+## 15. Organizacje i uprawnienia
+
+Uprawnienia stref działają na `spatie/laravel-permission` z włączonymi zespołami. Zespołem jest
+**organizacja**, czyli firma korzystająca z aplikacji. Konfigurację spatie ustawia Core
+(`Permissions\PermissionDefaults`), a skeleton nie publikuje `config/permission.php`. Nazwy tabel
+i kolumn są w `Permissions\PermissionTables`.
+
+| Tabela | Model | Standard | Kolumny domenowe |
+| --- | --- | --- | --- |
+| `organizations` | `Models\Organization` | pełny, drzewo przez `parent_id` | — |
+| `permissions` | `Models\Permissions\Permission` | pełny | `guard_name` |
+| `roles` | `Models\Permissions\Role` | pełny | `organization_id` (null = rola globalna), `guard_name` |
+| `model_has_roles`, `model_has_permissions` | — (spatie) | łącząca | `role_id`/`permission_id`, `model_type`, `model_id`, `organization_id` |
+| `role_has_permissions` | — (spatie) | łącząca | `permission_id`, `role_id` |
+| `permission_denials` | `Models\Permissions\PermissionDenial` | łącząca | `permission_id`, `model_type`, `model_id`, `organization_id` |
+
+- **Zakres:** definicja roli jest globalna dla guardu strefy. Przypisanie to konto + rola + organizacja,
+  a sprawdzenie patrzy tylko na bieżącą organizację spatie (`PermissionRegistrar::setPermissionsTeamId()`).
+  Rola z `organization_id` to własna rola jednej organizacji. `Role::create()` spatie wpisuje bieżącą
+  organizację, więc rola globalna wymaga jawnego `organization_id => null`.
+- **Bez bieżącej organizacji nic nie działa (fail closed):** domyślnej organizacji nie ma. Przypisanie
+  roli odrzuca baza (`organization_id` NOT NULL), a sprawdzenie uprawnienia daje `false`.
+- **Organizacja operatora** (`Organization::OPERATOR_ID` = 1, nazwa z `app.name`) jest zakresem stref
+  bez firm klientów. Tworzy ją idempotentnie `php artisan mainboard:organizations:seed`.
+- **Usunięcie organizacji** (fizyczne) kasuje jej role i przypisania (`cascadeOnDelete`), więc rola
+  organizacji nigdy nie staje się globalna. Zwykle organizację usuwa się miękko.
+- **Odmowy:** wpis w `permission_denials` wygrywa z uprawnieniem z ról i bezpośrednim w tej samej
+  organizacji (trait `Permissions\Concerns\HasZonePermissions` nadpisuje `hasPermissionTo()`,
+  więc działa też w middleware `permission:` i w Gate).
+- **Soft delete i nazwy:** usunięta rola lub uprawnienie dalej zajmuje nazwę w guardzie (unikalny
+  indeks), jak e-mail usuniętego konta. Spatie nie widzi rekordów w koszu, więc seeder szuka przez
+  `withTrashed()` i przywraca rekord.
+- **Tabele łączące spatie** mają kolumnę `id` (potrzebną triggerom historii) zamiast złożonego klucza
+  głównego. Złożony klucz zostaje unikalnym indeksem. Nie mają `timestamps`, bo spatie ich nie wypełnia.
+- Pula id: role, uprawnienia i organizacje z seederów mają id 1–999, a rekordy użytkowników od 1000.
+- Cache spatie ma wspólny klucz `zone:shared:spatie.permission` (`ZoneCacheKey`).

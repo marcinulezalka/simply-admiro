@@ -8,7 +8,7 @@ Strefy publiczne (strefy z paczek prywatnych mają własne migracje i nie są tu
 | --- | --- | --- | --- |
 | `admiro` | `simplysmart/admiro` | administratorzy | `create_admiro_tables` |
 
-Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i etap 2 (logowanie kodem z e-maila i PIN-em). Zaufane urządzenia i uprawnienia dojdą w kolejnych etapach.
+Status: etap 1 (rejestracja stref, sesja, język, nagłówki, zaufane proxy) i etap 2 (logowanie kodem z e-maila i PIN-em). Uprawnienia: modele i tabele spatie, role na kontach stref, odmowy i kontrakt sprawdzania (`docs/baza-danych.md` §15). Seeder ról z JSON, wybór bieżącej organizacji w żądaniu i zaufane urządzenia dojdą w kolejnych etapach.
 
 ## Jak dodać strefę
 
@@ -131,3 +131,14 @@ Core rejestruje w każdej strefie z logowaniem trasy `Http\SignInRoutes` (pod `s
 | `AUTH_CODE_TTL` | `10` | minuty ważności kodu z e-maila |
 | `AUTH_PIN_LENGTH` | `6` | długość PIN-u (minimum 4) |
 | `AUTH_LOG_CHANNEL` | `sign_in` | kanał dziennika logowań |
+
+## Uprawnienia
+
+- Model kont strefy (`ZoneAccount`) ma role i uprawnienia spatie w guardzie strefy oraz odmowy
+  (`Permissions\Concerns\HasZonePermissions`, kontrakt `Contracts\HasZoneRoles`). Guard spatie
+  wykrywa z providera strefy, więc model nie ustawia `$guard_name`.
+- Kod strefy sprawdza uprawnienie przez `Contracts\ZonePermissionChecker::allows($zone, $account, $permission)`.
+  Guard pochodzi zawsze z `ZoneDefinition`, a nieznane uprawnienie oznacza brak dostępu. Trasy
+  poziomu `zone.php` używają `permission:<x>,<guard>`.
+- Przed sprawdzeniem strefa ustawia bieżącą organizację spatie. Strefa bez firm klientów ustawia
+  organizację operatora. Schemat, zakres i odmowy opisuje `docs/baza-danych.md` §15.

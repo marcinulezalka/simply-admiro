@@ -85,5 +85,27 @@ return [
         'note' => 'Uwagi',
     ],
 
+    'organization' => [
+        'name' => 'Nazwa organizacji',
+        'parent_id' => 'Organizacja nadrzędna',
+    ],
+
+    'role' => [
+        'name' => 'Nazwa roli',
+        'guard_name' => 'Strefa (guard)',
+        'organization_id' => 'Organizacja (rola własna)',
+    ],
+
+    'permission' => [
+        'name' => 'Nazwa uprawnienia',
+        'guard_name' => 'Strefa (guard)',
+    ],
+
+    'permission_denial' => [
+        'permission_id' => 'Uprawnienie',
+        'model_type' => 'Rodzaj konta',
+        'model_id' => 'Konto',
+        'organization_id' => 'Organizacja',
+    ],
 
 ];

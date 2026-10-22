@@ -85,5 +85,27 @@ return [
         'note' => 'Note',
     ],
 
+    'organization' => [
+        'name' => 'Organization name',
+        'parent_id' => 'Parent organization',
+    ],
+
+    'role' => [
+        'name' => 'Role name',
+        'guard_name' => 'Zone (guard)',
+        'organization_id' => 'Organization (own role)',
+    ],
+
+    'permission' => [
+        'name' => 'Permission name',
+        'guard_name' => 'Zone (guard)',
+    ],
+
+    'permission_denial' => [
+        'permission_id' => 'Permission',
+        'model_type' => 'Account type',
+        'model_id' => 'Account',
+        'organization_id' => 'Organization',
+    ],
 
 ];

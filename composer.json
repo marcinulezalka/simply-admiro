@@ -25,7 +25,8 @@
     "require": {
         "php": "^8.4",
         "laravel/framework": "^13.0",
-        "outhebox/blade-flags": "^1.7"
+        "outhebox/blade-flags": "^1.7",
+        "spatie/laravel-permission": "^8.3"
     },
     "require-dev": {
         "laravel/pint": "^1.27",

@@ -44,6 +44,10 @@ use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Simplysmart\Mainboard\Console\PruneSignInChallenges;
 use Simplysmart\Mainboard\Console\SeedLocalization;
+use Simplysmart\Mainboard\Console\SeedOrganizations;
+use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
+use Simplysmart\Mainboard\Permissions\PermissionDefaults;
+use Simplysmart\Mainboard\Permissions\SpatiePermissionChecker;
 use Simplysmart\Mainboard\Contracts\AccountLocator;
 use Simplysmart\Mainboard\Contracts\AccountStore;
 use Simplysmart\Mainboard\Contracts\BlindIndex;
@@ -129,6 +133,7 @@ final class MainboardServiceProvider extends ServiceProvider
 
         $this->registerZones();
         $this->registerSignIn();
+        $this->registerPermissions();
         $this->useFlatFlagFallback();
     }
 
@@ -167,7 +172,7 @@ final class MainboardServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([PruneSignInChallenges::class, SeedLocalization::class]);
+            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class]);
             $this->app->afterResolving(Schedule::class, static function (Schedule $schedule): void {
                 $schedule->command(PruneSignInChallenges::class)->hourly();
             });
@@ -224,6 +229,18 @@ final class MainboardServiceProvider extends ServiceProvider
         $this->app->bind(LoginChallengeRepository::class, EloquentLoginChallengeRepository::class);
         $this->app->singleton(BlindIndex::class, fn(Application $app): BlindIndex => new HmacBlindIndex($this->appKey($app)));
         $this->app->singleton(LoginCodeGenerator::class, fn(Application $app): LoginCodeGenerator => new LoginCodeGenerator($this->appKey($app)));
+    }
+
+    /**
+     * Uprawnienia stref na spatie/laravel-permission: kontrakt sprawdzania i konfiguracja spatie ustawiana
+     * po register() wszystkich providerów (wtedy config spatie jest już scalony), przed ich boot().
+     */
+    private function registerPermissions(): void
+    {
+        $this->app->bind(ZonePermissionChecker::class, SpatiePermissionChecker::class);
+        $this->app->booting(function (): void {
+            $this->app->make(PermissionDefaults::class)->apply();
+        });
     }
 
     /**
