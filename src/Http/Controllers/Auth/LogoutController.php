@@ -21,7 +21,7 @@ use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Zones\ZoneRedirects;
 
 /**
- * Wylogowanie z bieżącej strefy i powrót do jej logowania.
+ * Wylogowanie z bieżącej strefy i powrót do jej logowania z komunikatem „Wylogowano”.
  */
 final readonly class LogoutController
 {
@@ -29,6 +29,6 @@ final readonly class LogoutController
     {
         $signOut->handle($request);
 
-        return $redirect->route($zone->get()->routeName(ZoneRedirects::LOGIN_ROUTE));
+        return $redirect->route($zone->get()->routeName(ZoneRedirects::LOGIN_ROUTE))->with('status', text('sign_in.signed_out'));
     }
 }

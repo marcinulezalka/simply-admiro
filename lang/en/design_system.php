@@ -236,17 +236,5 @@ return [
         ],
     ],
 
-    'forgot_pin' => [
-        'title' => 'Forgot your PIN?',
-        'lead' => 'A PIN cannot be recovered — nobody knows it, not even the administrator. It can only be set again.',
-        'steps_title' => 'How to set a new PIN',
-        'steps' => [
-            'admin' => 'Ask the administrator of this part of the application to reset your PIN.',
-            'revoked' => 'The reset signs you out on all devices and revokes trusted devices.',
-            'sign_in' => 'Sign in with your e-mail address and the code we send you.',
-            'set' => 'Set a new PIN and repeat it to confirm.',
-        ],
-        'back' => 'Back to sign-in',
-    ],
 
 ];

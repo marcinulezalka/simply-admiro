@@ -9,4 +9,8 @@
         </div>
         <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ text('sign_in.continue') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
     </form>
+
+    <x-slot:actions>
+        <a class="ss-link" href="{{ route($zone->routeName('auth.forgot-pin')) }}">{{ text('sign_in.forgot_pin_link') }}</a>
+    </x-slot:actions>
 </x-mainboard::auth.layout>

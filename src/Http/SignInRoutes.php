@@ -34,6 +34,11 @@ final readonly class SignInRoutes
 
     private const string PREFIX = 'signin';
 
+    /** Strona „Nie pamiętam PIN-u” (nazwa względem prefiksu `auth.`): jak ustawić nowy PIN po resecie. */
+    public const string FORGOT_PIN = 'forgot-pin';
+
+    private const string FORGOT_PIN_PATH = 'forgot-pin';
+
     public function __construct(
         private Router $router,
         private SignInFlow $flow,
@@ -54,6 +59,7 @@ final readonly class SignInRoutes
         $this->router->middleware(AccessTier::GuestOnly->middleware($zone))->prefix(self::PREFIX)->name('auth.')->group(function () use ($zone, $throttle): void {
             $this->router->get('/', [LoginController::class, 'create'])->name('login');
             $this->router->post('/', [LoginController::class, 'store'])->middleware($throttle)->name('login.store');
+            $this->router->view(self::FORGOT_PIN_PATH, 'mainboard::auth.forgot-pin')->name(self::FORGOT_PIN);
 
             foreach ($this->flow->steps($zone->auth()) as $step) {
                 $key = $step->key();

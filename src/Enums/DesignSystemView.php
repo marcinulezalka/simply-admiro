@@ -56,6 +56,7 @@ enum DesignSystemView: string
             self::SignInPin, self::SignInPinLimit => 'mainboard::auth.pin',
             self::SignInPinSetup => 'mainboard::auth.pin-setup',
             self::SignInExpired => 'mainboard::auth.login',
+            self::ForgotPin => 'mainboard::auth.forgot-pin',
             default => $this->errorCode() !== null ? 'mainboard::app.errors.' . $this->errorCode() : 'mainboard::design-system.views.' . $this->value,
         };
     }

@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Strona „Nie pamiętam PIN-u” w każdej strefie z logowaniem (`<strefa>.auth.forgot-pin`, link na ekranie PIN-u; teksty `sign_in.forgot_pin.*` zamiast `design_system.forgot_pin.*`) i komunikat „Wylogowano” na ekranie logowania po wylogowaniu (`sign_in.signed_out`).
 - Kolor awatara konta (`Enums\AvatarColor`, 8 kolorów z tokenami `--ss-avatar-<kolor>-bg/-fg` dla obu motywów): każde nowe konto strefy dostaje go automatycznie (z adresu e-mail, stały) w `json_attributes.avatar_color` (`Models\Concerns\HasAvatarColor`, przed sumą kontrolną), odczyt `avatarColor()`; zmiana w profilu konta `account.profile` (`ProfileController`, akcja `Profile\ChangeAvatarColor`, wybór `x-mainboard::avatar-colors`, tylko kolory palety); awatar z prop `color` i rozmiarem `xs`, awatary nakładające się `.ss-avatars`; konto w menu bocznym w swoim kolorze (`account.color`).
 - Dostępność w siatkach: `.ss-cell--open` (bardzo lekkie tło akcentu) i `.ss-cell--closed` (subtelne kreskowanie), legenda `.ss-legend`, kilka pozycji w komórce `.ss-cell__item`, ikony w zakładkach `.ss-tabs__icon`, grupa przełączników `.ss-period__switches`.
 - Elementy kalendarza i okresów: nagłówek okresu `.ss-period` (zakładki zakresu, poprzedni/następny, nazwa okresu), kalendarz miesiąca `.ss-calendar` (dziś z `aria-current="date"`, dni spoza miesiąca i nieczynne), wskaźnik obłożenia `.ss-meter` na natywnym `<meter>` (niskie akcent, wysokie ostrzeżenie, pełne błąd) i wyróżnienie dzisiejszej kolumny `.ss-table__today`.

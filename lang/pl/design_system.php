@@ -236,17 +236,5 @@ return [
         ],
     ],
 
-    'forgot_pin' => [
-        'title' => 'Nie pamiętasz PIN-u?',
-        'lead' => 'PIN-u nie da się odzyskać — nie zna go nikt, także administrator. Można go tylko ustawić od nowa.',
-        'steps_title' => 'Jak ustawić nowy PIN',
-        'steps' => [
-            'admin' => 'Poproś administratora tej części aplikacji o reset PIN-u.',
-            'revoked' => 'Reset wyloguje Cię ze wszystkich urządzeń i odwoła zaufane urządzenia.',
-            'sign_in' => 'Zaloguj się adresem e-mail i kodem, który do Ciebie wyślemy.',
-            'set' => 'Ustaw nowy PIN i powtórz go, żeby potwierdzić.',
-        ],
-        'back' => 'Wróć do logowania',
-    ],
 
 ];
