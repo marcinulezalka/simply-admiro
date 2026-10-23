@@ -19,7 +19,6 @@ use Simplysmart\Mainboard\Auth\AccessRevocationReason;
 use Simplysmart\Mainboard\Auth\AccountActor;
 use Simplysmart\Mainboard\Auth\RevokeAccountAccess;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
 use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Organization;
 use Simplysmart\Mainboard\Models\Permissions\Role;
@@ -31,8 +30,9 @@ use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
  * Nadawanie i odbieranie ról kont strefy w organizacji bez eskalacji uprawnień: nadający działa w tej samej
- * strefie, oba konta są członkami organizacji, a wszystkie uprawnienia roli (po spłaszczeniu, z odmowami)
- * nadający ma sam w tej organizacji. Np. właściciel nie nada roli z uprawnieniem, którego mu odjęto.
+ * strefie, oba konta są członkami organizacji (w strefie bez `teams`: organizacja operatora, członkostwo
+ * dopisywane przy nadaniu), a wszystkie uprawnienia roli (po spłaszczeniu, z odmowami) nadający ma sam
+ * w tej organizacji. Np. właściciel nie nada roli z uprawnieniem, którego mu odjęto.
  * Odebranie roli unieważnia sesje konta (uprawnienia maleją).
  */
 final readonly class ZoneRoleAssignment
@@ -41,9 +41,10 @@ final readonly class ZoneRoleAssignment
         private AccountZone $zones,
         private ActiveMemberships $memberships,
         private CurrentOrganization $organization,
-        private ZonePermissionChecker $permissions,
+        private PermissionCoverage $coverage,
         private RevokeAccountAccess $revoke,
         private Dispatcher $events,
+        private OrganizationMembership $membership,
     ) {}
 
     /**
@@ -52,6 +53,10 @@ final readonly class ZoneRoleAssignment
     public function assign(ZoneAccount $assigner, ZoneAccount $account, string $role, Organization $organization): void
     {
         [$zone, $definition] = $this->authorize($assigner, $account, $role, $organization);
+
+        if (! $zone->teams) {
+            $this->membership->add($account, $organization);
+        }
 
         $this->organization->within($organization->id, static function () use ($account, $definition): void {
             $account->assignRole($definition);
@@ -89,7 +94,11 @@ final readonly class ZoneRoleAssignment
             throw RoleAssignmentDenied::because('the assigner belongs to another zone.');
         }
 
-        foreach ([$assigner, $account] as $member) {
+        if (! $zone->teams && $organization->id !== Organization::OPERATOR_ID) {
+            throw RoleAssignmentDenied::because("zone [{$zone->name}] has roles only in the operator organization.");
+        }
+
+        foreach ($zone->teams ? [$assigner, $account] : [] as $member) {
             if (! $this->memberships->includes($member, $organization->id)) {
                 throw RoleAssignmentDenied::because('both accounts must be members of the organization.');
             }
@@ -101,15 +110,9 @@ final readonly class ZoneRoleAssignment
             ->where(static fn($query) => $query->whereNull(PermissionTables::TEAM_FOREIGN_KEY)->orWhere(PermissionTables::TEAM_FOREIGN_KEY, $organization->id))
             ->first() ?? throw RoleAssignmentDenied::because("the role [{$role}] does not exist in zone [{$zone->name}].");
 
-        $this->organization->within($organization->id, function () use ($assigner, $definition, $zone, $role): void {
-            $assigner->unsetRelation('roles')->unsetRelation('permissions')->unsetRelation('permissionDenials');
-
-            foreach ($definition->permissions()->pluck(ColumnNames::NAME) as $permission) {
-                if (! is_string($permission) || ! $this->permissions->allows($zone, $assigner, $permission)) {
-                    throw RoleAssignmentDenied::because("the role [{$role}] grants more than the assigner has.");
-                }
-            }
-        });
+        if (! $this->coverage->covers($zone, $assigner, $definition->permissions()->pluck(ColumnNames::NAME), $organization->id)) {
+            throw RoleAssignmentDenied::because("the role [{$role}] grants more than the assigner has.");
+        }
 
         return [$zone, $definition];
     }

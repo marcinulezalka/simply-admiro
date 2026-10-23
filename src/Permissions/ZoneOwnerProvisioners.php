@@ -13,23 +13,41 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Permissions;
 
+use Closure;
+use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use Simplysmart\Mainboard\Contracts\ZoneOwnerProvisioner;
 
 /**
- * Rejestr kontraktów zakładania właścicieli; paczka strefy dodaje swój w providerze
- * (najczęściej `DefaultOwnerProvisioner` dla swojej strefy).
+ * Rejestr zakładania właścicieli stref; paczka strefy dodaje swój w providerze, najczęściej
+ * `addDefault('<strefa>')` (DefaultOwnerProvisioner). Przechowuje fabryki, a provisioner powstaje dopiero przy
+ * użyciu: w boot() providera zależności innych paczek (np. singleton rejestru spatie) mogą jeszcze nie istnieć.
  */
 final class ZoneOwnerProvisioners
 {
     /**
-     * @var array<string, ZoneOwnerProvisioner>
+     * @var array<string, Closure(): ZoneOwnerProvisioner>
      */
-    private array $provisioners = [];
+    private array $factories = [];
 
-    public function add(ZoneOwnerProvisioner $provisioner): void
+    public function __construct(
+        private readonly Container $container,
+    ) {}
+
+    /**
+     * @param Closure(): ZoneOwnerProvisioner $factory
+     */
+    public function add(string $zone, Closure $factory): void
     {
-        $this->provisioners[$provisioner->zone()] = $provisioner;
+        $this->factories[$zone] = $factory;
+    }
+
+    /**
+     * Właściciel strefy z kontem Core (DefaultOwnerProvisioner).
+     */
+    public function addDefault(string $zone): void
+    {
+        $this->add($zone, fn(): ZoneOwnerProvisioner => $this->container->make(DefaultOwnerProvisioner::class, ['zone' => $zone]));
     }
 
     /**
@@ -37,7 +55,9 @@ final class ZoneOwnerProvisioners
      */
     public function for(string $zone): ZoneOwnerProvisioner
     {
-        return $this->provisioners[$zone] ?? throw new InvalidArgumentException("Zone [{$zone}] has no owner provisioner.");
+        $factory = $this->factories[$zone] ?? throw new InvalidArgumentException("Zone [{$zone}] has no owner provisioner.");
+
+        return $factory();
     }
 
     /**
@@ -47,6 +67,6 @@ final class ZoneOwnerProvisioners
      */
     public function zones(): array
     {
-        return array_keys($this->provisioners);
+        return array_keys($this->factories);
     }
 }

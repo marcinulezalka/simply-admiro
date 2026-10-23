@@ -398,10 +398,16 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
 ### Nadawanie ról i właściciele stref
 
 - `Permissions\ZoneRoleAssignment::assign()` / `revoke()` chronią przed eskalacją: nadający jest kontem tej
-  samej strefy, oba konta są członkami organizacji, a każde uprawnienie roli nadający ma sam w tej
-  organizacji (z odmowami). Odebranie roli unieważnia sesje konta. Każda zmiana trafia do dziennika
+  samej strefy, oba konta są członkami organizacji (strefa bez `teams`: tylko organizacja operatora,
+  członkostwo dopisywane przy nadaniu), a każde uprawnienie roli nadający ma sam w tej organizacji
+  (`Permissions\PermissionCoverage`, z odmowami). Bez sprawdzania eskalacji role nadaje tylko system
+  (`Permissions\SystemRoleGrant`: konsola, zakładanie właścicieli). Odebranie roli unieważnia sesje konta. Każda zmiana trafia do dziennika
   `sign_in` (`ZoneRoleChanged` z aktorem).
 - Właściciela strefy zakłada się przez kontrakt `Contracts\ZoneOwnerProvisioner` z rejestru
-  `Permissions\ZoneOwnerProvisioners` (paczka strefy dodaje `DefaultOwnerProvisioner` dla swojej strefy).
+  `Permissions\ZoneOwnerProvisioners` (paczka strefy wywołuje w providerze `addDefault('<strefa>')`; rejestr trzyma
+  fabryki i tworzy provisioner dopiero przy użyciu, bo w `boot()` zależności innych paczek mogą jeszcze nie istnieć).
   Konto powstaje w tabeli strefy docelowej (albo istniejące konto o tym adresie), dostaje członkostwo i rolę
   `owner` w organizacji klienta; strefa bez `teams` używa organizacji operatora.
+- Panele administracyjne czytają dane przez zapytania Core: `Queries\Accounts\ZoneAccounts` (strona kont strefy,
+  szukanie po dokładnym adresie przez `email_hash`, konto po tokenie), `Queries\Permissions\ZoneRoleNames`
+  (role strefy i role konta w organizacji), `Queries\Organizations\ActiveOrganizations`.

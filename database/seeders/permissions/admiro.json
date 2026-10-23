@@ -3,6 +3,7 @@
     "permissions": [
         "zones.view",
         "zones.configure",
+        "accounts.manage",
         "owners.view",
         "owners.assign",
         "settings.view",
