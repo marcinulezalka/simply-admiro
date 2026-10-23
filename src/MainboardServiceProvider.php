@@ -27,6 +27,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
 use Simplysmart\Mainboard\Auth\Devices\DeviceTokenIssuer;
 use Simplysmart\Mainboard\Auth\Devices\EloquentTrustedDeviceRepository;
 use Simplysmart\Mainboard\Auth\EloquentAccountLocator;
@@ -248,14 +250,21 @@ final class MainboardServiceProvider extends ServiceProvider
     }
 
     /**
-     * Layout strefy dostaje strefę żądania i konto zalogowane w jej guardzie (albo null).
+     * Layout strefy dostaje strefę żądania, konto zalogowane w jej guardzie (albo null), a w strefie z `teams`
+     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna) i id bieżącej organizacji.
      */
     private function shareZoneWithLayout(View $view): void
     {
         $zone = $this->app->make(CurrentZone::class)->get();
         $account = $zone->requiresLogin() ? $this->app->make(AuthFactory::class)->guard($zone->guard)->user() : null;
+        $organizations = $zone->teams && $account instanceof Model
+            ? $this->app->make(ActiveMemberships::class)->organizations($account)
+            : null;
 
-        $view->with('zone', $zone)->with('account', $account instanceof SignInAccount ? $account : null);
+        $view->with('zone', $zone)
+            ->with('account', $account instanceof SignInAccount ? $account : null)
+            ->with('organizations', $organizations !== null && $organizations->count() > 1 ? $organizations : null)
+            ->with('currentOrganizationId', $this->app->make(CurrentOrganization::class)->id());
     }
 
     /**

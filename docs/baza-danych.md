@@ -408,6 +408,13 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
   fabryki i tworzy provisioner dopiero przy użyciu, bo w `boot()` zależności innych paczek mogą jeszcze nie istnieć).
   Konto powstaje w tabeli strefy docelowej (albo istniejące konto o tym adresie), dostaje członkostwo i rolę
   `owner` w organizacji klienta; strefa bez `teams` używa organizacji operatora.
+- **Zarządzanie organizacjami** (`Organizations\OrganizationManagement`): zakładanie, zmiana nazwy i organizacji
+  nadrzędnej (drzewo bez cykli, nadrzędna musi być aktywna), włączanie i wyłączanie; organizacji operatora nie
+  wolno wyłączyć ani przenieść (`OrganizationChangeRejected`). Wyłączona organizacja znika z aktywnych członkostw.
+  `Organizations\EnrollMember` dopisuje osobę do organizacji w strefie (istniejące konto o tym adresie albo nowe,
+  bez ról); z niego korzysta też zakładanie właściciela.
 - Panele administracyjne czytają dane przez zapytania Core: `Queries\Accounts\ZoneAccounts` (strona kont strefy,
   szukanie po dokładnym adresie przez `email_hash`, konto po tokenie), `Queries\Permissions\ZoneRoleNames`
-  (role strefy i role konta w organizacji), `Queries\Organizations\ActiveOrganizations`.
+  (role strefy i role konta w organizacji), `Queries\Organizations\ActiveOrganizations`, `OrganizationList`
+  (także wyłączone) i `OrganizationMembers` (członkowie we wszystkich strefach albo w jednej, konto po tokenie
+  tylko z danej organizacji).

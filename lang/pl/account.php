@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 return [
 
+    'organization' => 'Organizacja',
+    'organization_switch' => 'Przełącz',
     'menu' => 'Konto',
     'pin_title' => 'Zmień PIN',
     'pin_intro' => 'Wyślij kod na swój adres e-mail, a potem wpisz obecny PIN, kod i nowy PIN (:length cyfr).',

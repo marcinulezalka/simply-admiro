@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 return [
 
+    'organization' => 'Organization',
+    'organization_switch' => 'Switch',
     'menu' => 'Account',
     'pin_title' => 'Change PIN',
     'pin_intro' => 'Send a code to your e-mail address, then enter your current PIN, the code and a new PIN (:length digits).',

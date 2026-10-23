@@ -4,6 +4,8 @@
         "zones.view",
         "zones.configure",
         "accounts.manage",
+        "organizations.view",
+        "organizations.manage",
         "owners.view",
         "owners.assign",
         "settings.view",
@@ -18,7 +20,7 @@
             "permissions": []
         },
         "support": {
-            "permissions": ["zones.view", "owners.view", "settings.view", "audit.view"]
+            "permissions": ["zones.view", "organizations.view", "owners.view", "settings.view", "audit.view"]
         },
         "owner": {
             "permissions": "*",

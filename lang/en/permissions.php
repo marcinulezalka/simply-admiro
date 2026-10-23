@@ -16,6 +16,7 @@ return [
     'admiro' => [
         'zones' => ['view' => 'View zones', 'configure' => 'Configure zones'],
         'accounts' => ['manage' => 'Manage zone accounts (PIN reset, unlock, deactivation)'],
+        'organizations' => ['view' => 'View organizations and their members', 'manage' => 'Manage organizations and memberships'],
         'owners' => ['view' => 'View zone owners', 'assign' => 'Assign zone owners'],
         'settings' => ['view' => 'View system settings', 'manage' => 'Change system settings'],
         'users' => ['manage' => 'Manage administrators'],

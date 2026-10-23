@@ -203,6 +203,8 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
   strefa bez `teams` działa w organizacji operatora; strefa z `teams` w organizacji wybranej przez konto
   (sesja strefy, `account.organization.switch`), o ile nadal jest jego aktywnym członkostwem, inaczej
   w pierwszej. Bez członkostwa nie ma organizacji, więc nie ma uprawnień. Po odpowiedzi organizacja jest czyszczona.
+  Layout strefy pokazuje przełącznik organizacji, gdy konto należy do więcej niż jednej (`$organizations`,
+  `$currentOrganizationId` daje Core).
 - **Trasa z uprawnieniem:** `ZonePermission::middleware(Permission::ReportsView)` daje middleware
   `zone.permission:<uprawnienie>`, który sprawdza konto z guardu strefy przez `ZonePermissionChecker`
   (z odmowami); brak uprawnienia to 403. W kodzie: `ZonePermissionChecker::allows($zone, $account, $permission)`.

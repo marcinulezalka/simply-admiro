@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Queries\Organizations;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Organization;
@@ -40,6 +41,20 @@ final class ActiveMemberships
             ->all();
 
         return array_values(array_map(intval(...), array_filter($ids, is_numeric(...))));
+    }
+
+    /**
+     * Aktywne organizacje konta (np. przełącznik organizacji w layoucie strefy), po nazwie.
+     *
+     * @return Collection<int, Organization>
+     */
+    public function organizations(Model $account): Collection
+    {
+        $query = Organization::query();
+        $query->whereIn(ColumnNames::ID, $this->ids($account));
+        $query->orderBy(ColumnNames::NAME);
+
+        return $query->get();
     }
 
     public function includes(Model $account, int $organizationId): bool
