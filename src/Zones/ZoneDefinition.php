@@ -36,6 +36,8 @@ final readonly class ZoneDefinition
      * @param ZoneSecuritySettings $security Maskowanie błędów i blokada agentów AI.
      * @param bool $teams Konta działają w organizacjach (firmach klientów) wybieranych w żądaniu;
      *                    false = zawsze w organizacji operatora aplikacji.
+     * @param list<string> $stylesheets Arkusze CSS strefy (ścieżki plików), dołączane po stylach Core na stronach
+     *                                  logowania i w layoucie aplikacji (x-mainboard::zone-styles).
      */
     public function __construct(
         public string $name,
@@ -49,6 +51,7 @@ final readonly class ZoneDefinition
         public ?ZoneAuthSettings $authSettings = null,
         public bool $teams = false,
         public ZoneSecuritySettings $security = new ZoneSecuritySettings(),
+        public array $stylesheets = [],
     ) {}
 
     /**

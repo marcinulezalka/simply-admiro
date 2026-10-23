@@ -23,7 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Nagłówki bezpieczeństwa każdej strefy: ramki, MIME, referrer, funkcje przeglądarki, COOP,
  * HSTS (tylko HTTPS) i CSP z nonce przekazanym do Vite. Strefy z logowaniem dostają dodatkowo
- * zakaz cache'owania i X-Robots-Tag.
+ * zakaz cache'owania (poza odpowiedziami, które same deklarują `Cache-Control: public`, np. baner logowania)
+ * i X-Robots-Tag.
  */
 final readonly class SecurityHeaders
 {
@@ -79,8 +80,10 @@ final readonly class SecurityHeaders
         }
 
         if ($isPrivate) {
-            foreach (self::PRIVATE_HEADERS as $name => $value) {
-                $headers->set($name, $value);
+            if (! $headers->hasCacheControlDirective('public')) {
+                foreach (self::PRIVATE_HEADERS as $name => $value) {
+                    $headers->set($name, $value);
+                }
             }
 
             $headers->set('X-Robots-Tag', $this->config->string('mainboard.zones.robots'));

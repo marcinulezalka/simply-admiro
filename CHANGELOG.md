@@ -6,6 +6,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Style strefy: `stylesheets` w configu strefy (pliki `.css`, `ZoneDefinition::$stylesheets`, brak pliku zatrzymuje start) dołączane po stylach Core na stronach logowania, w layoucie aplikacji i na stronie publicznej strefy (`x-mainboard::zone-styles`, inline z nonce CSP).
+- Baner logowania strefy: `auth.brand` (pliki `light`, opcjonalnie `dark`, tekst `alt`; `Auth\AuthBrand`, brak pliku zatrzymuje start) zastępuje logo w karcie marki układu dwóch kart (`<picture>` z wersją dla ciemnego motywu, prop `brand` komponentu); pliki serwuje trasa `<strefa>.auth.brand` z wersją w adresie i publicznym cache. `SecurityHeaders` nie nadpisuje `Cache-Control` odpowiedziom, które same deklarują `public`.
+- Menu stref: kontrakt `Contracts\ZoneNavigation` (pozycje, wyszukiwarka, druga linia pod nazwą konta) i rejestr `Zones\ZoneNavigations`; pozycje-formularze `View\Navigation\NavigationForm` w panelu kontekstu; wylogowanie formularzem w menu konta (`signOut` w `x-mainboard::app.layout`) i opis konta dla czytników (`account.label`).
 - Strona „Nie pamiętam PIN-u” w każdej strefie z logowaniem (`<strefa>.auth.forgot-pin`, link na ekranie PIN-u; teksty `sign_in.forgot_pin.*` zamiast `design_system.forgot_pin.*`) i komunikat „Wylogowano” na ekranie logowania po wylogowaniu (`sign_in.signed_out`).
 - Kolor awatara konta (`Enums\AvatarColor`, 8 kolorów z tokenami `--ss-avatar-<kolor>-bg/-fg` dla obu motywów): każde nowe konto strefy dostaje go automatycznie (z adresu e-mail, stały) w `json_attributes.avatar_color` (`Models\Concerns\HasAvatarColor`, przed sumą kontrolną), odczyt `avatarColor()`; zmiana w profilu konta `account.profile` (`ProfileController`, akcja `Profile\ChangeAvatarColor`, wybór `x-mainboard::avatar-colors`, tylko kolory palety); awatar z prop `color` i rozmiarem `xs`, awatary nakładające się `.ss-avatars`; konto w menu bocznym w swoim kolorze (`account.color`).
 - Dostępność w siatkach: `.ss-cell--open` (bardzo lekkie tło akcentu) i `.ss-cell--closed` (subtelne kreskowanie), legenda `.ss-legend`, kilka pozycji w komórce `.ss-cell__item`, ikony w zakładkach `.ss-tabs__icon`, grupa przełączników `.ss-period__switches`.
@@ -83,6 +86,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- `x-mainboard::zone.layout` dla zalogowanego konta to layout aplikacji z menu bocznym (awatar w kolorze konta, menu konta z profilem, PIN-em, urządzeniami i wylogowaniem, przełącznik organizacji jako formularze w panelu kontekstu zamiast listy wyboru, komunikaty `status` jako toasty, menu strefy z `ZoneNavigation`); strona publiczna strefy dla gościa jako prosta kolumna `.ss-page`. Widoki stref nie wymagają zmian.
 - Przyciski `.ss-button` będące linkami nie są podkreślone.
 - Menu boczne layoutu aplikacji: w lewym górnym rogu awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (`account.subtitle`), otwierający menu konta; pod nim zwijanie menu i dzwonek powiadomień; logo w lewym dolnym rogu, mniejsze i przygaszone; w top barze tylko wyszukiwarka (na telefonie także przycisk menu); przewija się tylko lista pozycji. Konto nie podaje już inicjałów (`account.initials` usunięte — liczy je awatar).
 - Pola tak/nie w formularzach to przełączniki `x-mainboard::switch` zamiast checkboxów (także „Zapamiętaj to urządzenie” przy logowaniu, ta sama nazwa i wartość pola); klasa `.ss-check` usunięta, switch w sekcji „Formularze” design systemu (włączony, wyłączony, niedostępny).

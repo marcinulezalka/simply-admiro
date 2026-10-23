@@ -154,7 +154,7 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`, logo) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie jedna pod drugą); wygląd wyłącznie z klas design systemu |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie jedna pod drugą); wygląd wyłącznie z klas design systemu |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
 

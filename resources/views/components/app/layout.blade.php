@@ -1,9 +1,10 @@
-{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej: u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (np. organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole subtelne logo. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, items?: list<View\Navigation\NavigationItem>} (bez koloru awatar w kolorze akcentu); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. widok i organizacja; bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo w stopce menu). Menu rozwijane działają bez skryptu (<details>). --}}
-@props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'search' => null, 'account' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'description' => null, 'stylesheets' => []])
+{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej: u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (np. organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole subtelne logo. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. widok i organizacja; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo w stopce menu). Menu rozwijane działają bez skryptu (<details>). --}}
+@props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => []])
 @php($toasts ??= \Simplysmart\Mainboard\View\Toast::fromSession(session(\Simplysmart\Mainboard\View\Toast::SESSION_KEY)))
 <x-mainboard::page :title="$title" :description="$description" robots="noindex, nofollow">
     <x-slot:head>
         <x-mainboard::styles :files="[...\Simplysmart\Mainboard\View\CoreAssets::STYLESHEETS, ...$stylesheets]" />
+        <x-mainboard::zone-styles :paths="$zoneStylesheets" />
         <x-mainboard::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js']" />
     </x-slot:head>
 
@@ -14,7 +15,7 @@
             <div class="ss-sidebar__header">
                 @if ($account !== null)
                     @php($accountItems = $account['items'] ?? [])
-                    @if ($accountItems !== [])
+                    @if ($accountItems !== [] || $signOut !== null)
                         <details class="ss-account-menu ss-sidebar__account" data-ss-dropdown>
                             <summary class="ss-sidebar__identity" title="{{ $account['name'] }}">
                                 <x-mainboard::avatar :name="$account['name']" :image="$account['image'] ?? null" :color="$account['color'] ?? null" :accent="! isset($account['color'])" />
@@ -24,13 +25,21 @@
                                         <span class="ss-sidebar__identity-subtitle">{{ $account['subtitle'] }}</span>
                                     @endif
                                 </span>
-                                <span class="ss-sr-only">{{ text('account.menu') }}</span>
+                                <span class="ss-sr-only">{{ $account['label'] ?? text('account.menu') }}</span>
                             </summary>
                             <div class="ss-account-menu__panel ss-sidebar__panel">
                                 <ul class="ss-account-menu__list">
                                     @foreach ($accountItems as $item)
                                         <li><a class="ss-account-menu__link" href="{{ $item->url }}" @if ($item->current) aria-current="page" @endif><x-mainboard::icon :name="$item->icon" class="ss-account-menu__icon" />{{ $item->label }}</a></li>
                                     @endforeach
+                                    @if ($signOut !== null)
+                                        <li>
+                                            <form method="POST" action="{{ $signOut }}">
+                                                @csrf
+                                                <button class="ss-account-menu__link" type="submit"><x-mainboard::icon name="log-out" class="ss-account-menu__icon" />{{ text('sign_in.sign_out') }}</button>
+                                            </form>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </details>
@@ -67,13 +76,27 @@
                                     <ul class="ss-account-menu__list">
                                         @foreach ($group->items as $item)
                                             <li>
-                                                <a class="ss-account-menu__link" href="{{ $item->url }}" @if ($item->current) aria-current="true" @endif>
-                                                    <x-mainboard::icon :name="$item->icon" class="ss-account-menu__icon" />
-                                                    <span>{{ $item->label }}@if ($item->current)<span class="ss-sr-only"> ({{ text('layout.current') }})</span>@endif</span>
-                                                    @if ($item->current)
-                                                        <x-mainboard::icon name="check" class="ss-context-switch__check" />
-                                                    @endif
-                                                </a>
+                                                @if ($item instanceof \Simplysmart\Mainboard\View\Navigation\NavigationForm)
+                                                    <form method="POST" action="{{ $item->action }}">
+                                                        @csrf
+                                                        <input type="hidden" name="{{ $item->field }}" value="{{ $item->value }}">
+                                                        <button class="ss-account-menu__link" type="submit" @if ($item->current) aria-current="true" @endif>
+                                                            <x-mainboard::icon :name="$item->icon" class="ss-account-menu__icon" />
+                                                            <span>{{ $item->label }}@if ($item->current)<span class="ss-sr-only"> ({{ text('layout.current') }})</span>@endif</span>
+                                                            @if ($item->current)
+                                                                <x-mainboard::icon name="check" class="ss-context-switch__check" />
+                                                            @endif
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <a class="ss-account-menu__link" href="{{ $item->url }}" @if ($item->current) aria-current="true" @endif>
+                                                        <x-mainboard::icon :name="$item->icon" class="ss-account-menu__icon" />
+                                                        <span>{{ $item->label }}@if ($item->current)<span class="ss-sr-only"> ({{ text('layout.current') }})</span>@endif</span>
+                                                        @if ($item->current)
+                                                            <x-mainboard::icon name="check" class="ss-context-switch__check" />
+                                                        @endif
+                                                    </a>
+                                                @endif
                                             </li>
                                         @endforeach
                                     </ul>

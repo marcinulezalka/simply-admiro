@@ -43,6 +43,7 @@ final readonly class ZoneAuthSettings
         public int $trustedDeviceLifetimeDays = 30,
         public int $trustedDevicesPerAccount = 10,
         public AuthLayout $layout = AuthLayout::Centered,
+        public ?AuthBrand $brand = null,
     ) {}
 
     /**

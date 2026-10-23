@@ -33,9 +33,12 @@ use Simplysmart\Mainboard\Translation\CascadeTextTranslator;
 use Simplysmart\Mainboard\Zones\InMemoryZoneRegistry;
 use Simplysmart\Mainboard\Zones\RequestAccount;
 use Simplysmart\Mainboard\Zones\RequestZone;
+use Simplysmart\Mainboard\Zones\ZoneNavigations;
 use Simplysmart\Mainboard\Zones\ZoneRedirects;
 use Simplysmart\Mainboard\Zones\ZoneSessionConfigurator;
 use Simplysmart\Mainboard\Zones\ZoneSessionManager;
+use Simplysmart\Mainboard\Auth\AuthBrand;
+use Simplysmart\Mainboard\Http\SignInRoutes;
 
 /**
  * Mechanizm stref: rejestr (singleton), strefa i konto żądania, osobny magazyn sesji każdej strefy,
@@ -56,6 +59,7 @@ final class ZonesServiceProvider extends ServiceProvider
         $this->app->singleton(ZoneRegistry::class, InMemoryZoneRegistry::class);
         $this->app->scoped(CurrentZone::class, RequestZone::class);
         $this->app->bind(CurrentAccount::class, RequestAccount::class);
+        $this->app->singleton(ZoneNavigations::class);
 
         $this->app->extend('session', fn(): ZoneSessionManager => new ZoneSessionManager($this->app));
 
@@ -78,8 +82,9 @@ final class ZonesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Layout strefy dostaje strefę żądania, konto zalogowane w jej guardzie (albo null), a w strefie z `teams`
-     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna) i id bieżącej organizacji.
+     * Layout strefy dostaje strefę żądania, konto zalogowane w jej guardzie (albo null), w strefie z `teams`
+     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna), id i nazwę bieżącej organizacji oraz menu strefy
+     * z Zones\ZoneNavigations (dla zalogowanego konta).
      */
     private function shareZoneWithLayout(View $view): void
     {
@@ -88,11 +93,14 @@ final class ZonesServiceProvider extends ServiceProvider
         $organizations = $zone->teams && $account instanceof Model
             ? $this->app->make(ActiveMemberships::class)->organizations($account)
             : null;
+        $currentId = $this->app->make(CurrentOrganization::class)->id();
 
         $view->with('zone', $zone)
             ->with('account', $account)
             ->with('organizations', $organizations !== null && $organizations->count() > 1 ? $organizations : null)
-            ->with('currentOrganizationId', $this->app->make(CurrentOrganization::class)->id());
+            ->with('currentOrganizationId', $currentId)
+            ->with('currentOrganizationName', $organizations?->firstWhere('id', $currentId)?->name)
+            ->with('navigation', $account !== null ? $this->app->make(ZoneNavigations::class)->for($zone->name) : null);
     }
 
     /**
@@ -109,14 +117,24 @@ final class ZonesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Layout logowania dostaje układ strefy żądania (`auth.layout`); poza strefą z logowaniem (np. fałszywe
-     * logowanie pułapki, podgląd w design systemie) układ domyślny. Prop `layout` komponentu wygrywa.
+     * Layout logowania dostaje układ strefy żądania (`auth.layout`) i adresy jej banera (`auth.brand`, wersja
+     * w adresie); poza strefą z logowaniem (np. fałszywe logowanie pułapki, podgląd w design systemie) układ domyślny
+     * i logo. Prop `layout` komponentu wygrywa.
      */
     private function shareAuthLayout(View $view): void
     {
         $zone = $this->app->make(CurrentZone::class);
+        $settings = $zone->has() && $zone->get()->requiresLogin() ? $zone->get()->auth() : null;
+        $brand = $settings?->brand;
+        $brandUrl = static fn(string $variant): string => route($zone->get()->routeName('auth.' . SignInRoutes::BRAND), ['variant' => $variant, 'v' => $brand?->version($variant)]);
 
-        $view->with('zoneAuthLayout', $zone->has() && $zone->get()->requiresLogin() ? $zone->get()->auth()->layout : AuthLayout::Centered);
+        $view->with('zoneAuthLayout', $settings->layout ?? AuthLayout::Centered)
+            ->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : [])
+            ->with('zoneAuthBrand', $brand === null ? null : [
+                'light' => $brandUrl(AuthBrand::LIGHT),
+                'dark' => $brand->dark !== null ? $brandUrl(AuthBrand::DARK) : null,
+                'alt' => $brand->alt !== '' ? text($brand->alt) : '',
+            ]);
     }
 
     /**

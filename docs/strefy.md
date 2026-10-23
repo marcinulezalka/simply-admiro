@@ -23,6 +23,10 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'auth' => ['pin' => ['min_length' => 8]] (nadpisania mainboard.auth; zakres PIN-u w granicach 4–16),
        // 'auth' => ['trusted_devices' => ['enabled' => false]] (kod z e-maila przy każdym logowaniu),
        // 'auth' => ['layout' => 'split'] (ekrany logowania jako dwie karty: marka i formularz; domyślnie 'centered'),
+       // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
+       //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
+       // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout
+       //     aplikacji i strona publiczna; tylko tokeny --ss-*; brak pliku zatrzymuje start),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)
@@ -49,7 +53,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
    - role i uprawnienia strefy są w pliku JSON (`docs/baza-danych.md` §15): strefa publiczna w `database/seeders/permissions/<strefa>.json` Core, paczka prywatna we własnym repozytorium, rejestrowanym w jej providerze przez `PermissionFiles::add()`;
    - strefa bez rejestracji zakłada konta komendą `<strefa>:account:create {email} {name} [--role=…] [--organization=<token>]`: klasa w paczce dziedziczy po `Console\CreateZoneAccountCommand` i podaje tylko `$name`, `$description` i `zoneName()`. Walidację, strefę żądania i komunikaty daje baza, a konto tworzy akcja `Auth\CreateZoneAccount` (aktywne, bez PIN-u; zajęty adres → `AccountAlreadyExists`). PIN właściciel ustawia przy pierwszym logowaniu. `--role` nadaje role przez `Permissions\SystemRoleGrant` (bez sprawdzania eskalacji, tylko konsola i zakładanie właścicieli) w organizacji z `--organization`, a w strefie bez `teams` w organizacji operatora; nieznana rola cofa założenie konta.
 
-5. Widoki strefy budują się na layoucie Core `<x-mainboard::zone.layout :title="...">`. Core daje mu `$zone` i `$account` (konto zalogowane w guardzie strefy albo null): layout pokazuje „Zalogowano jako …” i „Wyloguj”, gdy konto jest. Proste strony to `Route::view(...)` bez kontrolera.
+5. Widoki strefy budują się na layoucie Core `<x-mainboard::zone.layout :title="...">` (opcjonalnie `meta`, `back` i slot `actions` nagłówka). Core daje mu `$zone`, `$account` (konto zalogowane w guardzie strefy albo null) i organizacje konta. Dla zalogowanego konta layout to layout aplikacji z menu bocznym (`x-mainboard::app.layout`): awatar w kolorze konta z drugą linią, menu konta (profil, PIN, urządzenia, wylogowanie), przełącznik organizacji (gdy konto ma kilka), komunikaty `status` jako toasty. Menu, globalną wyszukiwarkę i drugą linię podaje strefa: klasa `Contracts\ZoneNavigation` (pozycje według uprawnień konta, bieżąca przez `current`) zarejestrowana w providerze strefy przez `Zones\ZoneNavigations::add('<strefa>', Klasa::class)`; strefa bez niej ma layout bez pozycji menu. Gość (strona publiczna strefy) dostaje prostą kolumnę treści. Proste strony to `Route::view(...)` bez kontrolera.
 
 ## Co Core robi za strefę
 

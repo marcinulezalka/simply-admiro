@@ -19,7 +19,7 @@ namespace Simplysmart\Mainboard\View\Navigation;
 final readonly class NavigationGroup
 {
     /**
-     * @param list<NavigationItem> $items
+     * @param list<NavigationItem|NavigationForm> $items Pozycje: linki albo formularze POST (np. przełączenie organizacji).
      */
     public function __construct(
         public ?string $label,

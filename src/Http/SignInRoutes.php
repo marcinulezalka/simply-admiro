@@ -23,6 +23,8 @@ use Simplysmart\Mainboard\Http\Controllers\Auth\SignInStepController;
 use Simplysmart\Mainboard\Http\Middleware\EnsureSignInStep;
 use Simplysmart\Mainboard\Zones\AccessTier;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Mainboard\Auth\AuthBrand;
+use Simplysmart\Mainboard\Http\Controllers\Auth\AuthBrandController;
 
 /**
  * Trasy logowania strefy (wewnątrz grupy strefy): `auth.login`, `auth.<krok>` dla każdego kroku
@@ -38,6 +40,9 @@ final readonly class SignInRoutes
     public const string FORGOT_PIN = 'forgot-pin';
 
     private const string FORGOT_PIN_PATH = 'forgot-pin';
+
+    /** Plik banera logowania strefy (nazwa względem prefiksu `auth.`), gdy strefa ma `auth.brand`. */
+    public const string BRAND = 'brand';
 
     public function __construct(
         private Router $router,
@@ -60,6 +65,10 @@ final readonly class SignInRoutes
             $this->router->get('/', [LoginController::class, 'create'])->name('login');
             $this->router->post('/', [LoginController::class, 'store'])->middleware($throttle)->name('login.store');
             $this->router->view(self::FORGOT_PIN_PATH, 'mainboard::auth.forgot-pin')->name(self::FORGOT_PIN);
+
+            if ($zone->auth()->brand !== null) {
+                $this->router->get('brand/{variant}', AuthBrandController::class)->where('variant', AuthBrand::LIGHT . '|' . AuthBrand::DARK)->name(self::BRAND);
+            }
 
             foreach ($this->flow->steps($zone->auth()) as $step) {
                 $key = $step->key();

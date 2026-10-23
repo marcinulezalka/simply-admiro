@@ -67,6 +67,7 @@ final readonly class ZoneDefinitionFactory
                 maskErrors: $this->nullableBool(Arr::array($config, 'security', []), 'mask_errors', null),
                 blockAiAgents: Arr::boolean(Arr::array($config, 'security', []), 'block_ai_agents', $model !== null),
             ),
+            stylesheets: $this->stylesheets($name, Arr::array($config, 'stylesheets', [])),
         );
     }
 
@@ -126,5 +127,29 @@ final readonly class ZoneDefinitionFactory
     private function nullableBool(array $values, string $key, ?bool $default): ?bool
     {
         return array_key_exists($key, $values) && $values[$key] !== null ? Arr::boolean($values, $key) : $default;
+    }
+
+    /**
+     * Arkusze CSS strefy z `stylesheets` (ścieżki istniejących plików `.css`).
+     *
+     * @param array<array-key, mixed> $paths
+     *
+     * @return list<string>
+     *
+     * @throws InvalidArgumentException Gdy ścieżka nie wskazuje istniejącego pliku `.css`.
+     */
+    private function stylesheets(string $zone, array $paths): array
+    {
+        $stylesheets = [];
+
+        foreach ($paths as $path) {
+            if (! is_string($path) || ! is_file($path) || strtolower(pathinfo($path, PATHINFO_EXTENSION)) !== 'css') {
+                throw new InvalidArgumentException("Zone [{$zone}] stylesheet must be an existing .css file.");
+            }
+
+            $stylesheets[] = $path;
+        }
+
+        return $stylesheets;
     }
 }

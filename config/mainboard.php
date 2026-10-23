@@ -133,6 +133,12 @@ return [
          */
         'layout' => env('AUTH_LAYOUT', AuthLayout::Centered->value),
 
+        /*
+         * Baner w karcie marki układu dwóch kart zamiast logo (Auth\AuthBrand): strefa podaje w `auth.brand`
+         * ścieżki plików `light` (i opcjonalnie `dark`) oraz klucz tekstu `alt`; null = logo.
+         */
+        'brand' => null,
+
         'route_throttle_per_minute' => 20,
 
         'challenge_prune_hours' => 24,

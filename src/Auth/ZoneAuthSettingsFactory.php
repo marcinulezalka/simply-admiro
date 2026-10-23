@@ -61,6 +61,7 @@ final readonly class ZoneAuthSettingsFactory
             trustedDeviceLifetimeDays: max(1, Arr::integer($settings, 'trusted_devices.lifetime_days')),
             trustedDevicesPerAccount: max(1, Arr::integer($settings, 'trusted_devices.max_per_account')),
             layout: $this->layout(Arr::string($settings, 'layout')),
+            brand: $this->brand(Arr::get($settings, 'brand')),
         );
     }
 
@@ -82,6 +83,28 @@ final readonly class ZoneAuthSettingsFactory
         }
 
         return $classes === [] ? throw new InvalidArgumentException('A zone with sign-in needs at least one step.') : $classes;
+    }
+
+    /**
+     * Baner logowania z `auth.brand` (`light`, opcjonalnie `dark` i `alt`) albo null, gdy strefa go nie ma.
+     *
+     * @throws InvalidArgumentException Gdy baner nie ma pliku `light` albo plik nie istnieje.
+     */
+    private function brand(mixed $brand): ?AuthBrand
+    {
+        if (! is_array($brand) || ($brand['light'] ?? null) === null) {
+            return null;
+        }
+
+        $light = $brand['light'];
+        $dark = $brand['dark'] ?? null;
+        $alt = $brand['alt'] ?? '';
+
+        if (! is_string($light) || ($dark !== null && ! is_string($dark)) || ! is_string($alt)) {
+            throw new InvalidArgumentException('auth.brand needs a `light` image path, optionally `dark` and an `alt` text key.');
+        }
+
+        return new AuthBrand($light, $dark, $alt);
     }
 
     /**

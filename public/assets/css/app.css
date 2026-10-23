@@ -1672,6 +1672,20 @@ summary.ss-sidebar__identity:focus-visible {
     text-decoration: none;
 }
 
+button.ss-account-menu__link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ss-account-menu__list form {
+    margin: 0;
+}
+
 .ss-account-menu__link:hover,
 .ss-account-menu__link[aria-current="page"] {
     background: var(--ss-color-surface-muted);
@@ -2456,4 +2470,42 @@ a.ss-notification:focus-visible {
 .ss-cell__item .ss-avatar {
     vertical-align: -0.3em;
     margin-right: var(--ss-space-1);
+}
+
+.ss-page__logo {
+    width: 7rem;
+    margin-bottom: var(--ss-space-8);
+}
+
+.ss-page__title {
+    margin: 0 0 var(--ss-space-4);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/**
+ * .ss-auth__brand--image — karta marki z banerem strefy (auth.brand): obraz wypełnia kartę z zachowaniem
+ * proporcji (przycięcie do środka; na telefonie niski pasek z górną częścią banera).
+ */
+.ss-auth__brand--image {
+    position: relative;
+    min-height: 12rem;
+    padding: 0;
+    overflow: hidden;
+}
+
+.ss-auth__brand-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+@media (min-width: 56rem) {
+    .ss-auth__brand-image {
+        object-position: center;
+    }
 }
