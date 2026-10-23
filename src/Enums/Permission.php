@@ -21,6 +21,7 @@ enum Permission: string
 {
     case ZonesView = 'zones.view';
     case ZonesConfigure = 'zones.configure';
+    case AccountsManage = 'accounts.manage';
     case OwnersView = 'owners.view';
     case OwnersAssign = 'owners.assign';
     case SettingsView = 'settings.view';

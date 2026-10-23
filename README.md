@@ -13,11 +13,27 @@ Paczka Composer: `simplysmart/admiro`, namespace `Simplysmart\Admiro\`. Mechaniz
 
 ```bash
 composer require simplysmart/admiro
-php artisan migrate                                               # tabele admiro_* z migracji Core
-php artisan admiro:account:create ewa@example.com "Ewa Kowalska"  # pierwsze konto administratora
+php artisan migrate                                                            # tabele admiro_* z migracji Core
+php artisan mainboard:organizations:seed && php artisan mainboard:permissions:sync  # organizacja operatora i role
+php artisan admiro:account:create ewa@example.com "Ewa Kowalska" --role=hero    # pierwszy administrator
 ```
 
-Strefa nie ma rejestracji: konta zakłada tylko komenda `admiro:account:create {email} {name}`. Konto jest aktywne i nie ma PIN-u — administrator ustawia go sam przy pierwszym logowaniu (kod z e-maila, potem PIN). Komenda odrzuca błędny adres i adres, który ma już konto.
+Strefa nie ma rejestracji: konta zakłada tylko komenda `admiro:account:create {email} {name} [--role=…]`. Konto jest aktywne i nie ma PIN-u — administrator ustawia go sam przy pierwszym logowaniu (kod z e-maila, potem PIN). Komenda odrzuca błędny adres, adres, który ma już konto, i nieznaną rolę (wtedy konto nie powstaje).
+
+Pierwszy administrator dostaje rolę z komendy (`--role=hero`), kolejnym role nadaje się w panelu.
+
+## Panel
+
+| Sekcja | Trasa | Uprawnienie |
+| --- | --- | --- |
+| Pulpit z odnośnikami do dostępnych sekcji | `admiro.dashboard` | zalogowany administrator |
+| Strefy z kontami i konta strefy (szukanie po dokładnym adresie e-mail) | `admiro.zones.index`, `admiro.zones.accounts` | `zones.view` |
+| Reset PIN-u, odblokowanie, wyłączenie konta strefy | `admiro.zones.accounts.action` | `accounts.manage` |
+| Założenie właściciela strefy (strefy z `ZoneOwnerProvisioner` w Core) | `admiro.owners.create`, `admiro.owners.store` | `owners.assign` |
+| Administratorzy i ich role | `admiro.administrators.index`, `admiro.administrators.roles.*` | `users.manage` |
+
+- Konto innego administratora zmienia tylko ten, kto ma `users.manage` i wszystkie jego uprawnienia; roli nie nada się szerszej niż własne uprawnienia (np. `owner` nie nada `hero`). Własnego konta i własnych ról nie zmienia się w panelu.
+- Każda akcja trafia do dziennika logowań Core z aktorem (administrator i strefa).
 
 ## Strefa
 
@@ -32,7 +48,7 @@ Strefa nie ma rejestracji: konta zakłada tylko komenda `admiro:account:create {
 
 Zmiana `ADMIRO_SLUG` zmienia tylko adres; nazwy tras zostają `admiro.*`. Slug nie może być kodem języka.
 
-Role administratorów (`Enums\Role`): `guest` (bez uprawnień), `support` (podgląd), `owner` (wszystko poza
+Role administratorów (`Enums\Role`): `guest` (bez uprawnień), `support` (podgląd stref, kont i dziennika), `owner` (wszystko poza
 zarządzaniem superadministratorami i konserwacją systemu) i `hero` (wszystko). Uprawnienia są w
 `Enums\Permission`, a przypisania w pliku ról Core `database/seeders/permissions/admiro.json`, zapisywanym
 komendą `php artisan mainboard:permissions:sync`. Strefa działa w organizacji operatora aplikacji.

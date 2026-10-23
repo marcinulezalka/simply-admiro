@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Panel administratora: pulpit z sekcjami według uprawnień, strefy i ich konta (szukanie po adresie e-mail; `zones.view`), reset PIN-u, odblokowanie i wyłączenie konta strefy (nowe uprawnienie `accounts.manage`), zakładanie właścicieli stref przez kontrakt Core (`owners.assign`), administratorzy i ich role bez eskalacji (`users.manage`); konto innego administratora zmienia tylko ktoś z jego wszystkimi uprawnieniami, własnego konta nie zmienia się w panelu; teksty `admin.*` (pl, en).
+- Pierwszy administrator z komendy: `admiro:account:create {email} {name} --role=hero`.
 - Role administratorów `guest`, `support`, `owner`, `hero` (enumy `Enums\Role` i `Enums\Permission`, przypisania w pliku ról Core `admiro.json`, zapis `php artisan mainboard:permissions:sync`); strefa działa w organizacji operatora.
 - Administratorzy logują się zawsze kodem z e-maila i PIN-em: zaufane urządzenia z Core są w strefie wyłączone (`ADMIRO_TRUSTED_DEVICES=true` je włącza); zmiana PIN-u z Core pod `admiro.account.pin`.
 - Strefa administratorów `admiro` na mechanizmie stref Core: własny guard, konta (`AdmiroAccount`, tabela `admiro_accounts`), sesja (`admiro_session`) i adres `/<ADMIRO_SLUG>` (domyślnie `/admiro`); logowanie kodem z e-maila i PIN-em z Core.
