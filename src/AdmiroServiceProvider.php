@@ -20,6 +20,8 @@ use Simplysmart\Mainboard\Zones\ZoneGuardRegistrar;
 use Simplysmart\Mainboard\Zones\ZoneMiddlewareRegistrar;
 use Simplysmart\Mainboard\Zones\ZoneRouteRegistrar;
 use Simplysmart\Mainboard\Zones\ZoneServiceProvider;
+use Simplysmart\Admiro\Http\AdmiroNavigation;
+use Simplysmart\Mainboard\Zones\ZoneNavigations;
 
 /**
  * Strefa administratorów: config strefy, trasy, widoki, tłumaczenia i komenda zakładania kont.
@@ -47,6 +49,7 @@ final class AdmiroServiceProvider extends ZoneServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', self::NAMESPACE);
         $this->loadTranslationsFrom(__DIR__ . '/../lang', self::NAMESPACE);
+        $this->app->make(ZoneNavigations::class)->add(config()->string('admiro.zone.name'), AdmiroNavigation::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([CreateAdmiroAccount::class]);

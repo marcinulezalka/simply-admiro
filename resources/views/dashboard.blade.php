@@ -1,29 +1,27 @@
-{{-- Pulpit administratora. $canViewZones, $canViewOrganizations, $canAssignOwners, $canManageAdministrators, $canViewAudit, $canViewSettings: bool (uprawnienia administratora). --}}
+{{-- Pulpit administratora: skróty do sekcji, do których konto ma uprawnienia (karty-odnośniki z ikoną), albo informacja o braku uprawnień. $canViewZones, $canViewOrganizations, $canAssignOwners, $canManageAdministrators, $canViewAudit, $canViewSettings: bool (uprawnienia administratora). --}}
+@php
+    $shortcuts = array_filter([
+        $canViewZones ? ['admiro.zones.index', 'admiro::admin.zones_title', 'zones'] : null,
+        $canViewOrganizations ? ['admiro.organizations.index', 'admiro::admin.organizations_title', 'building'] : null,
+        $canAssignOwners ? ['admiro.owners.create', 'admiro::admin.owner_title', 'user-plus'] : null,
+        $canManageAdministrators ? ['admiro.administrators.index', 'admiro::admin.administrators_title', 'shield-check'] : null,
+        $canViewAudit ? ['admiro.audit.index', 'admiro::admin.audit_title', 'history'] : null,
+        $canViewSettings ? ['admiro.settings.show', 'admiro::admin.settings_title', 'settings'] : null,
+    ]);
+@endphp
 <x-mainboard::zone.layout :title="text('admiro::dashboard.title')">
-    <nav aria-label="{{ text('admiro::dashboard.title') }}">
-        <ul>
-            @if ($canViewZones)
-                <li><a href="{{ route('admiro.zones.index') }}">{{ text('admiro::admin.zones_title') }}</a></li>
-            @endif
-            @if ($canViewOrganizations)
-                <li><a href="{{ route('admiro.organizations.index') }}">{{ text('admiro::admin.organizations_title') }}</a></li>
-            @endif
-            @if ($canAssignOwners)
-                <li><a href="{{ route('admiro.owners.create') }}">{{ text('admiro::admin.owner_title') }}</a></li>
-            @endif
-            @if ($canManageAdministrators)
-                <li><a href="{{ route('admiro.administrators.index') }}">{{ text('admiro::admin.administrators_title') }}</a></li>
-            @endif
-            @if ($canViewAudit)
-                <li><a href="{{ route('admiro.audit.index') }}">{{ text('admiro::admin.audit_title') }}</a></li>
-            @endif
-            @if ($canViewSettings)
-                <li><a href="{{ route('admiro.settings.show') }}">{{ text('admiro::admin.settings_title') }}</a></li>
-            @endif
-        </ul>
-    </nav>
-
-    @if (! $canViewZones && ! $canViewOrganizations && ! $canAssignOwners && ! $canManageAdministrators && ! $canViewAudit && ! $canViewSettings)
-        <p>{{ text('admiro::admin.no_sections') }}</p>
+    @if ($shortcuts === [])
+        <p class="ss-notice">{{ text('admiro::admin.no_sections') }}</p>
+    @else
+        <nav aria-label="{{ text('admiro::dashboard.title') }}">
+            <div class="ss-grid ss-grid--3">
+                @foreach ($shortcuts as [$route, $label, $icon])
+                    <a class="ss-card ss-card--link" href="{{ route($route) }}">
+                        <x-mainboard::icon :name="$icon" class="ss-icon--tile" />
+                        <span>{{ text($label) }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </nav>
     @endif
 </x-mainboard::zone.layout>

@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Menu strefy administratorów `Http\AdmiroNavigation` (pulpit; strefy i konta, właściciel strefy, administratorzy; klienci; dziennik, ustawienia, słowniki — każda pozycja tylko z uprawnieniem; role administratora pod nazwą konta) i widoki panelu na design systemie: pulpit z kartami-skrótami, strefy, konta strefy z wyszukiwaniem i stronicowaniem, administratorzy z rolami jako plakietkami, właściciel strefy, organizacje, członkowie z rolami strefy, dziennik zdarzeń z czytelnymi nazwami i filtrami, ustawienia z zakładkami słowników i przełącznikami języków, słowniki i stawki VAT.
 - Nowy PIN administratora ma od 8 do 16 cyfr (minimum `ADMIRO_PIN_MIN_LENGTH`, domyślnie 8; maksimum z mainboard); istniejący krótszy PIN dalej działa przy logowaniu.
 - Słowniki krajów, języków i walut oraz stawki VAT kraju w panelu (`settings.view` podgląd, `settings.manage` zmiany, w dzienniku zdarzeń); członkowie organizacji w osobnym `OrganizationMemberController`.
 - Dziennik zdarzeń w panelu (`audit.view`): wpisy od najnowszych z filtrami strefy, zdarzenia i dat; akcje administratorów trafiają do dziennika Core (`AdminAudit` → `AdminActionPerformed`).
