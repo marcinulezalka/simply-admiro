@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Nowy PIN administratora ma od 8 do 16 cyfr (minimum `ADMIRO_PIN_MIN_LENGTH`, domyślnie 8; maksimum z mainboard); istniejący krótszy PIN dalej działa przy logowaniu.
 - Słowniki krajów, języków i walut oraz stawki VAT kraju w panelu (`settings.view` podgląd, `settings.manage` zmiany, w dzienniku zdarzeń); członkowie organizacji w osobnym `OrganizationMemberController`.
 - Dziennik zdarzeń w panelu (`audit.view`): wpisy od najnowszych z filtrami strefy, zdarzenia i dat; akcje administratorów trafiają do dziennika Core (`AdminAudit` → `AdminActionPerformed`).
 - Ustawienia systemu (`settings.view` podgląd, `settings.manage` zmiana): kraj, język i waluta domyślne oraz języki interfejsu.

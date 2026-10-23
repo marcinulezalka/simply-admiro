@@ -23,6 +23,7 @@ return [
     | Definicja strefy dla Core (docs/strefy.md w simplysmart/mainboard). Slug to tylko segment URL:
     | jego zmiana nie zmienia nazw tras (prefiks "admiro." jest stały) i nie może być kodem języka.
     | Administratorzy domyślnie zawsze logują się kodem z e-maila i PIN-em (bez zaufanych urządzeń).
+    | PIN administratorów ma co najmniej 8 cyfr zamiast 4 z mainboard (ADMIRO_PIN_MIN_LENGTH); maksimum 16 z mainboard.
     |
     */
 
@@ -32,6 +33,7 @@ return [
         'model' => AdmiroAccount::class,
         'auth' => [
             'trusted_devices' => ['enabled' => (bool) env('ADMIRO_TRUSTED_DEVICES', false)],
+            'pin' => ['min_length' => filter_var(env('ADMIRO_PIN_MIN_LENGTH'), FILTER_VALIDATE_INT, ['options' => ['default' => 8]])],
         ],
     ],
 
