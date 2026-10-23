@@ -40,7 +40,7 @@ final readonly class SendTrustedDeviceMails
         $account = $event->account;
 
         if ($event instanceof TrustedDeviceRegistered) {
-            $devices = $this->url->route($this->zones->get($event->zone)->routeName(AccountRoutes::DEVICES));
+            $devices = $this->url->route($this->zones->get($event->zone)->routeName(AccountRoutes::SECURITY)) . '#' . AccountRoutes::SECTION_DEVICES;
             $this->mailer->to($account->emailAddress())->queue(new NewTrustedDeviceMail($account->displayName(), $event->deviceName, Carbon::now(), $devices));
         } elseif ($event->reason === AccessRevocationReason::DeviceTokenReused) {
             $this->mailer->to($account->emailAddress())->queue(new DeviceTokenReusedMail($account->displayName()));

@@ -27,7 +27,7 @@ use Simplysmart\Mainboard\Enums\Palette;
  * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem),
  * security (`mask_errors`, `block_ai_agents`; agenci AI domyślnie blokowani w strefach z logowaniem), stylesheets
  * (arkusze CSS strefy), palettes (kolorystyki do wyboru: wartości Enums\Palette), favicon (ikony strony: `ico`, `svg`,
- * `apple` — ścieżki plików).
+ * `apple` — ścieżki plików), texts (namespace tekstów paczki strefy, np. etykiety ról).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -73,6 +73,7 @@ final readonly class ZoneDefinitionFactory
             stylesheets: $this->stylesheets($name, Arr::array($config, 'stylesheets', [])),
             palettes: $this->palettes($name, Arr::array($config, 'palettes', [])),
             favicon: $this->favicon($name, Arr::array($config, 'favicon', [])),
+            textNamespace: $this->nullableString($config, 'texts', null),
         );
     }
 

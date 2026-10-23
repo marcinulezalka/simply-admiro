@@ -15,20 +15,19 @@ namespace Simplysmart\Mainboard\Http\Controllers\Account;
 
 use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Simplysmart\Mainboard\Auth\Devices\DeviceCookie;
 use Simplysmart\Mainboard\Auth\Events\TrustedDevicesRevoked;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
 use Simplysmart\Mainboard\Http\AccountRoutes;
+use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Zaufane urządzenia zalogowanego konta: lista (z oznaczeniem bieżącej przeglądarki), odwołanie jednego
+ * Zaufane urządzenia zalogowanego konta (lista na stronie bezpieczeństwa, SecurityController): odwołanie jednego
  * (po tokenie; urządzenie innego konta to 404) i wszystkich. Odwołanie bieżącego usuwa też ciasteczko.
  */
 final readonly class TrustedDeviceController
@@ -43,16 +42,6 @@ final readonly class TrustedDeviceController
         private Dispatcher $events,
         private Redirector $redirect,
     ) {}
-
-    public function index(Request $request): View
-    {
-        $current = $this->cookie->read($this->zone->get(), $request);
-
-        return view('mainboard::account.devices', [
-            'devices' => $this->devices->activeFor($this->accountId()),
-            'currentSelector' => $current?->selector,
-        ]);
-    }
 
     public function destroy(Request $request, string $device): RedirectResponse
     {
@@ -90,6 +79,6 @@ final readonly class TrustedDeviceController
 
     private function back(): RedirectResponse
     {
-        return $this->redirect->route($this->zone->get()->routeName(AccountRoutes::DEVICES))->with('status', text('account.devices_revoked'));
+        return SecurityController::redirectTo($this->redirect, $this->zone, AccountRoutes::SECTION_DEVICES)->with('status', text('account.devices_revoked'));
     }
 }

@@ -24,12 +24,14 @@ use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
 use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
 use Simplysmart\Mainboard\Contracts\AccountStore;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Mainboard\Localization\LocaleRouting;
+use Simplysmart\Mainboard\Profile\AccountLocale;
 use Simplysmart\Mainboard\Zones\ZoneRedirects;
 
 /**
  * Wszystkie kroki wykonane: logowanie w guardzie strefy, nowa sesja z epoką konta, zapis
  * udanego logowania (zeruje błędy i blokady), zapamiętanie urządzenia, jeśli konto o to poprosiło,
- * i powrót na zamierzoną stronę albo dashboard.
+ * i powrót na zamierzoną stronę albo dashboard (w języku wybranym w profilu konta, Profile\AccountLocale).
  */
 final readonly class CompleteSignIn
 {
@@ -44,6 +46,7 @@ final readonly class CompleteSignIn
         private Dispatcher $events,
         private Redirector $redirect,
         private RegisterTrustedDevice $devices,
+        private AccountLocale $locale,
     ) {}
 
     public function handle(PendingSignIn $signIn, Request $request): RedirectResponse
@@ -70,6 +73,8 @@ final readonly class CompleteSignIn
 
         $this->events->dispatch(new SignInSucceeded($zone->name, $account, $request->ip()));
 
-        return $this->redirect->intended($this->redirect->getUrlGenerator()->route($zone->routeName(ZoneRedirects::HOME_ROUTE)));
+        $locale = $this->locale->of($account);
+
+        return $this->redirect->intended($this->redirect->getUrlGenerator()->route($zone->routeName(ZoneRedirects::HOME_ROUTE), $locale !== null ? [LocaleRouting::PARAMETER => $locale] : []));
     }
 }

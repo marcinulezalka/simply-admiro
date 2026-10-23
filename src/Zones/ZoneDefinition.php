@@ -42,6 +42,8 @@ final readonly class ZoneDefinition
      * @param list<Palette> $palettes Kolorystyki do wyboru w strefie (x-mainboard::palette-switch); pusta lista =
      *                               bez przełącznika, tylko kolory bazowe strefy.
      * @param ZoneFavicon|null $favicon Ikony strony strefy (trasa `<strefa>.favicon`); null = ikona aplikacji.
+     * @param string|null $textNamespace Namespace tekstów paczki strefy (`texts` w configu, np. etykiety ról
+     *                                   `<namespace>::roles.<strefa>.<rola>`); null = teksty Core.
      */
     public function __construct(
         public string $name,
@@ -58,11 +60,28 @@ final readonly class ZoneDefinition
         public array $stylesheets = [],
         public array $palettes = [],
         public ?ZoneFavicon $favicon = null,
+        public ?string $textNamespace = null,
     ) {}
 
     /**
      * Czy strefa ma konta i logowanie.
      */
+    /**
+     * Klucz tekstu w namespace paczki strefy (dla `text()`: bez tekstu w paczce kaskada sięga do Core).
+     */
+    public function textKey(string $key): string
+    {
+        return $this->textNamespace === null ? $key : $this->textNamespace . '::' . $key;
+    }
+
+    /**
+     * Etykieta roli strefy (`roles.<strefa>.<rola>` w tekstach paczki strefy albo Core).
+     */
+    public function roleLabel(string $role): string
+    {
+        return text($this->textKey('roles.' . $this->name . '.' . $role));
+    }
+
     public function requiresLogin(): bool
     {
         return $this->model !== null;

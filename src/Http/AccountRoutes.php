@@ -16,14 +16,16 @@ namespace Simplysmart\Mainboard\Http;
 use Illuminate\Routing\Router;
 use Simplysmart\Mainboard\Http\Controllers\Account\OrganizationSwitchController;
 use Simplysmart\Mainboard\Http\Controllers\Account\PinChangeController;
+use Simplysmart\Mainboard\Http\Controllers\Account\SecurityController;
 use Simplysmart\Mainboard\Http\Controllers\Account\TrustedDeviceController;
 use Simplysmart\Mainboard\Http\Controllers\Account\ProfileController;
 use Simplysmart\Mainboard\Zones\AccessTier;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
- * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (kolor awatara), zmiana PIN-u, w strefie z zaufanymi
- * urządzeniami ich lista i odwołanie, a w strefie z zespołami przełączenie organizacji. Każda zmiana ma limit
+ * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (imię i nazwisko, język, kolor
+ * awatara), strona bezpieczeństwa (zmiana PIN-u, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
+ * przekierowują do jej sekcji), w strefie z zaufanymi urządzeniami ich odwołanie, a w strefie z zespołami przełączenie organizacji. Każda zmiana ma limit
  * `mainboard.sign-in`.
  */
 final readonly class AccountRoutes
@@ -46,6 +48,16 @@ final readonly class AccountRoutes
 
     public const string PROFILE_UPDATE = 'account.profile.update';
 
+    /** Strona bezpieczeństwa: PIN, zaufane urządzenia, historia konta, wylogowanie wszędzie. */
+    public const string SECURITY = 'account.security';
+
+    public const string SIGN_OUT_EVERYWHERE = 'account.security.sign-out-everywhere';
+
+    /** Kotwice sekcji strony bezpieczeństwa (`#pin`, `#devices`). */
+    public const string SECTION_PIN = 'pin';
+
+    public const string SECTION_DEVICES = 'devices';
+
     private const string PREFIX = 'account';
 
     public function __construct(
@@ -59,12 +71,14 @@ final readonly class AccountRoutes
         $this->router->middleware(AccessTier::Authenticated->middleware($zone))->prefix(self::PREFIX)->group(function () use ($zone, $throttle): void {
             $this->router->get('profile', [ProfileController::class, 'show'])->name(self::PROFILE);
             $this->router->put('profile', [ProfileController::class, 'update'])->middleware($throttle)->name(self::PROFILE_UPDATE);
-            $this->router->get('pin', [PinChangeController::class, 'show'])->name(self::PIN);
+            $this->router->get('security', [SecurityController::class, 'show'])->name(self::SECURITY);
+            $this->router->delete('security/sessions', [SecurityController::class, 'signOutEverywhere'])->middleware($throttle)->name(self::SIGN_OUT_EVERYWHERE);
+            $this->router->get('pin', [SecurityController::class, 'section'])->defaults('section', self::SECTION_PIN)->name(self::PIN);
             $this->router->post('pin/code', [PinChangeController::class, 'sendCode'])->middleware($throttle)->name(self::PIN_CODE);
             $this->router->put('pin', [PinChangeController::class, 'update'])->middleware($throttle)->name(self::PIN_UPDATE);
 
             if ($zone->auth()->trustedDevicesEnabled) {
-                $this->router->get('devices', [TrustedDeviceController::class, 'index'])->name(self::DEVICES);
+                $this->router->get('devices', [SecurityController::class, 'section'])->defaults('section', self::SECTION_DEVICES)->name(self::DEVICES);
                 $this->router->delete('devices', [TrustedDeviceController::class, 'destroyAll'])->middleware($throttle)->name(self::DEVICES_REVOKE_ALL);
                 $this->router->delete('devices/{device}', [TrustedDeviceController::class, 'destroy'])->middleware($throttle)->name(self::DEVICES_REVOKE);
             }

@@ -101,11 +101,12 @@ Trasy konta (`Http\AccountRoutes`, pod `account/`, poziom `Authenticated`, zmian
 
 | Trasa | Znaczenie |
 | --- | --- |
-| `<strefa>.account.pin` | formularz zmiany PIN-u; `account.pin.code` wysyła kod, `account.pin.update` zapisuje |
-| `<strefa>.account.devices` | zaufane urządzenia konta; `account.devices.revoke` (jedno, po tokenie), `account.devices.revoke-all` |
+| `<strefa>.account.profile` | profil: imię i nazwisko, adres e-mail (tylko odczyt), język interfejsu (przy kilku włączonych; `json_attributes.locale`, `Profile\AccountLocale`, po logowaniu dashboard w tym języku), kolor awatara; w strefie z `teams` organizacje konta z rolami (`roleLabel()`: `<texts>::roles.<strefa>.<rola>`) i przełącznikiem; `account.profile.update` zapisuje (`Profile\UpdateProfile`) |
+| `<strefa>.account.security` | bezpieczeństwo: zmiana PIN-u (`#pin`; `account.pin.code` wysyła kod, `account.pin.update` zapisuje), zaufane urządzenia (`#devices`; `account.devices.revoke` po tokenie, `account.devices.revoke-all`), ostatnie zdarzenia konta (`Queries\Audit\AccountHistory`, bez IP), `account.security.sign-out-everywhere` (DELETE: `RevokeAccountAccess` z powodem `SignedOutEverywhere` i wylogowanie) |
+| `<strefa>.account.pin`, `<strefa>.account.devices` | dawne adresy sekcji: przekierowanie do `account.security#pin` / `#devices` |
 | `<strefa>.account.organization.switch` | przełączenie bieżącej organizacji (strefa z `teams`) |
 
-Trasy urządzeń istnieją tylko w strefie z zaufanymi urządzeniami. Layout strefy linkuje do zmiany PIN-u i urządzeń.
+Trasy urządzeń istnieją tylko w strefie z zaufanymi urządzeniami. Menu konta w layoucie strefy: profil, bezpieczeństwo, wylogowanie. Etykiety ról w profilu biorą teksty paczki strefy z `texts` w configu strefy (namespace, np. `'texts' => 'shop'`).
 
 **Kroki.** Każdy krok implementuje `Contracts\SignInStep`. Lista kroków i ich kolejność pochodzą z `auth.steps`, a domyślnie są to `EmailCodeStep`, `PinSetupStep`, `PinStep`.
 - `SignInFlow` wybiera pierwszy wymagany i niewykonany krok.

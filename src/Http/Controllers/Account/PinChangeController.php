@@ -16,12 +16,10 @@ namespace Simplysmart\Mainboard\Http\Controllers\Account;
 use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Simplysmart\Mainboard\Models\ZoneAccount;
 use Illuminate\Contracts\Bus\Dispatcher;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Simplysmart\Mainboard\Auth\ChangePin;
-use Simplysmart\Mainboard\Auth\PinLength;
 use Simplysmart\Mainboard\Auth\PinRules;
 use Simplysmart\Mainboard\Auth\SignIn\IssueSignInCode;
 use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
@@ -30,7 +28,8 @@ use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Http\AccountRoutes;
 
 /**
- * Zmiana PIN-u zalogowanego konta: formularz, wysłanie kodu na adres konta i zapis nowego PIN-u.
+ * Zmiana PIN-u zalogowanego konta (formularz na stronie bezpieczeństwa, SecurityController): wysłanie kodu na adres
+ * konta i zapis nowego PIN-u.
  */
 final readonly class PinChangeController
 {
@@ -39,13 +38,6 @@ final readonly class PinChangeController
         private CurrentAccount $current,
         private Redirector $redirect,
     ) {}
-
-    public function show(): View
-    {
-        $settings = $this->zone->get()->auth();
-
-        return view('mainboard::account.pin', ['currentPinLength' => PinLength::accepted(), 'pinLength' => $settings->pinLength, 'codeLength' => $settings->codeLength]);
-    }
 
     public function sendCode(Request $request, LoginAttemptLimiter $limiter, Dispatcher $bus): RedirectResponse
     {
@@ -84,6 +76,6 @@ final readonly class PinChangeController
 
     private function back(): RedirectResponse
     {
-        return $this->redirect->route($this->zone->get()->routeName(AccountRoutes::PIN));
+        return SecurityController::redirectTo($this->redirect, $this->zone, AccountRoutes::SECTION_PIN);
     }
 }

@@ -35,4 +35,7 @@ enum AccessRevocationReason: string
 
     /** Konto straciło rolę albo członkostwo w organizacji. */
     case PermissionsReduced = 'permissions_reduced';
+
+    /** Właściciel wylogował konto ze wszystkich urządzeń (strona „Bezpieczeństwo”). */
+    case SignedOutEverywhere = 'signed_out_everywhere';
 }
