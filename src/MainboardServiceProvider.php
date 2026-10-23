@@ -37,11 +37,10 @@ use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
 use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
-use Simplysmart\Mainboard\Auth\Events\TrustedDevicesRevoked;
-use Simplysmart\Mainboard\Auth\Events\SignedOut;
-use Simplysmart\Mainboard\Auth\Events\SignInRejected;
-use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
-use Simplysmart\Mainboard\Auth\Listeners\LogSignInActivity;
+use Simplysmart\Mainboard\Audit\AuditEntries;
+use Simplysmart\Mainboard\Audit\Listeners\StoreAuditEvent;
+use Simplysmart\Mainboard\Audit\Listeners\WriteAuditLog;
+use Simplysmart\Mainboard\Console\PruneAuditEvents;
 use Simplysmart\Mainboard\Auth\Listeners\RevokeTrustedDevicesOfAccount;
 use Simplysmart\Mainboard\Auth\Listeners\SendAccountLockedMail;
 use Simplysmart\Mainboard\Auth\Listeners\SendPinChangedMail;
@@ -68,7 +67,6 @@ use Illuminate\Contracts\Foundation\CachesRoutes;
 use Illuminate\Config\Repository as ConfigRepository;
 use Simplysmart\Mainboard\Permissions\PermissionFiles;
 use Simplysmart\Mainboard\Permissions\ZoneOwnerProvisioners;
-use Simplysmart\Mainboard\Permissions\Events\ZoneRoleChanged;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
 use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
 use Simplysmart\Mainboard\Http\Middleware\RequireZonePermission;
@@ -184,17 +182,8 @@ final class MainboardServiceProvider extends ServiceProvider
         DB::prohibitDestructiveCommands($this->app->environment('production') === true);
 
         $events->listen(MessageSent::class, LogSentMail::class);
-        $events->listen([
-            SignInSucceeded::class,
-            SignInRejected::class,
-            AccountLocked::class,
-            SignedOut::class,
-            AccountAccessRevoked::class,
-            PinChanged::class,
-            TrustedDeviceRegistered::class,
-            TrustedDevicesRevoked::class,
-            ZoneRoleChanged::class,
-        ], LogSignInActivity::class);
+        $events->listen(AuditEntries::EVENTS, WriteAuditLog::class);
+        $events->listen(AuditEntries::EVENTS, StoreAuditEvent::class);
         $events->listen(AccountLocked::class, SendAccountLockedMail::class);
         $events->listen(PinChanged::class, SendPinChangedMail::class);
         $events->listen([AccountAccessRevoked::class, AccountLocked::class], RevokeTrustedDevicesOfAccount::class);
@@ -224,9 +213,10 @@ final class MainboardServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class, SyncZonePermissions::class, UnbanIp::class]);
+            $this->commands([PruneSignInChallenges::class, SeedLocalization::class, SeedOrganizations::class, SyncZonePermissions::class, UnbanIp::class, PruneAuditEvents::class]);
             $this->app->afterResolving(Schedule::class, static function (Schedule $schedule): void {
                 $schedule->command(PruneSignInChallenges::class)->hourly();
+                $schedule->command(PruneAuditEvents::class)->daily();
             });
         }
 

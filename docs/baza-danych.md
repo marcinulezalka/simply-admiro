@@ -408,6 +408,12 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
   fabryki i tworzy provisioner dopiero przy użyciu, bo w `boot()` zależności innych paczek mogą jeszcze nie istnieć).
   Konto powstaje w tabeli strefy docelowej (albo istniejące konto o tym adresie), dostaje członkostwo i rolę
   `owner` w organizacji klienta; strefa bez `teams` używa organizacji operatora.
+- **Ustawienia lokalizacji** (`Localization\LocalizationSettings`): kraj, język i waluta domyślne (jeden wpis
+  `is_default` w słowniku) oraz języki interfejsu w granicach `APP_LOCALES`; język domyślny musi być językiem
+  interfejsu. Wybory daje `Queries\Dictionaries\LocalizationChoices`.
+- **Dziennik zdarzeń** (`audit_events`, `Models\AuditEvent`): wyjątek od standardu tabel danych — tylko
+  dopisywanie, bez kolumn standardowych i historii, konto i aktor jako identyfikator ze strefą (bez klucza obcego),
+  IP szyfrowane; odczyt `Queries\Audit\AuditLog`, czyszczenie `mainboard:audit:prune`.
 - **Zarządzanie organizacjami** (`Organizations\OrganizationManagement`): zakładanie, zmiana nazwy i organizacji
   nadrzędnej (drzewo bez cykli, nadrzędna musi być aktywna), włączanie i wyłączanie; organizacji operatora nie
   wolno wyłączyć ani przenieść (`OrganizationChangeRejected`). Wyłączona organizacja znika z aktywnych członkostw.

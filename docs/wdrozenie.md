@@ -35,6 +35,10 @@ php artisan mainboard:permissions:sync   # role i uprawnienia stref z plików JS
 php artisan icons:cache                  # manifest ikon blade-icons (flagi), bez skanowania SVG przy każdym żądaniu
 ```
 
+Harmonogram Laravela musi działać z crona (`* * * * * php /ścieżka/artisan schedule:run`): Core planuje
+`mainboard:auth:prune` (co godzinę: kody logowania, zaufane urządzenia) i `mainboard:audit:prune` (codziennie:
+dziennik zdarzeń).
+
 ## Assety
 
 > **Koncepcja** — obowiązuje, gdy paczki dostaną własny Vite

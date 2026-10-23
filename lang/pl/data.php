@@ -108,4 +108,17 @@ return [
         'organization_id' => 'Organizacja',
     ],
 
+    'audit_event' => [
+        'occurred_at' => 'Czas',
+        'event' => 'Zdarzenie',
+        'level' => 'Waga',
+        'zone' => 'Strefa',
+        'account_id' => 'Konto',
+        'actor_zone' => 'Strefa wykonującego',
+        'actor_id' => 'Wykonujący',
+        'organization_id' => 'Organizacja',
+        'ip' => 'Adres IP',
+        'context' => 'Szczegóły',
+    ],
+
 ];

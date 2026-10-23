@@ -149,7 +149,12 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
 - **Akcje administracyjne** (`Auth\AccountAdministration`, bez UI): `resetPin()` (właściciel ustawi PIN po kodzie przy logowaniu), `unlock()`, `deactivate()`. Działają w strefie konta (`Zones\AccountZone`), także gdy administrator jest w innej strefie, i zapisują aktora (`Auth\AccountActor`).
 - **Unieważnienie dostępu** (`Auth\RevokeAccountAccess`) to jedno miejsce dla wszystkich powyższych: nowa epoka konta, usunięcie zapisanych sesji z `<strefa>_sessions` i zdarzenie `AccountAccessRevoked` z powodem (`AccessRevocationReason`).
 
-**Rozszerzanie przez zdarzenia** (`Auth\Events`): `SignInSucceeded`, `SignInRejected`, `AccountLocked`, `SignedOut`, `AccountAccessRevoked`, `PinChanged`, `TrustedDeviceRegistered`, `TrustedDevicesRevoked`, a z uprawnień `Permissions\Events\ZoneRoleChanged`. Core zapisuje je w dzienniku `sign_in`, wysyła maile i odwołuje urządzenia; strefa dokłada własne listenery.
+**Rozszerzanie przez zdarzenia** (`Auth\Events`): `SignInSucceeded`, `SignInRejected`, `AccountLocked`, `SignedOut`, `AccountAccessRevoked`, `PinChanged`, `TrustedDeviceRegistered`, `TrustedDevicesRevoked`, a z uprawnień `Permissions\Events\ZoneRoleChanged`. Core zapisuje je w dzienniku zdarzeń, wysyła maile i odwołuje urządzenia; strefa dokłada własne listenery.
+
+**Dziennik zdarzeń** (`Audit\AuditEntries` to jedyne mapowanie zdarzenia na wpis): każde zdarzenie trafia do pliku
+(`AUTH_LOG_CHANNEL`) i do tabeli `audit_events` (podgląd w panelu administratora). Wpis ma strefę, konto, aktora
+(akcje administratorów: `Audit\Events\AdminActionPerformed`), organizację, szyfrowane IP i kontekst bez adresów
+e-mail. `mainboard:audit:prune` codziennie usuwa wpisy starsze niż `AUDIT_RETENTION_DAYS` (365 dni).
 
 ## Boty i maskowanie błędów
 
@@ -192,6 +197,7 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
 | `HONEYPOT_BAN_MINUTES` | `1440` | czas bana |
 | `HONEYPOT_WHITELIST` | brak | adresy i sieci (CIDR) nigdy nie banowane |
 | `HONEYPOT_LOG_CHANNEL` | `honeypot` | kanał dziennika pułapek |
+| `AUDIT_RETENTION_DAYS` | `365` | dni przechowywania wpisów `audit_events` |
 | `AUTH_LOG_CHANNEL` | `sign_in` | kanał dziennika logowań |
 
 ## Uprawnienia

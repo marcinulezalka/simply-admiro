@@ -130,6 +130,15 @@ return [
 
     ],
 
+    'audit' => [
+
+        /*
+         * Ile dni trzymać wpisy dziennika zdarzeń (`audit_events`); starsze usuwa codziennie `mainboard:audit:prune`.
+         */
+        'retention_days' => (int) env('AUDIT_RETENTION_DAYS', 365),
+
+    ],
+
     'honeypot' => [
 
         /*
