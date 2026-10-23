@@ -94,6 +94,9 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   na końcu `tokens.css` podmieniają wszystkie tokeny semantyczne na wartości o kontraście co najmniej 7:1 (ramki pełne,
   stany w odróżnialnych kolorach z tekstem lub ikoną). Stoją po kolorystykach, więc `data-palette` w nich nie działa.
   Strona design systemu pokazuje w tabeli tylko wartości jasne i ciemne.
+- **Wysoki kontrast** (motywy `contrast`, `contrast-yellow`): poza tokenami odnośniki są podkreślone, fokus to gruby
+  dwukolorowy pierścień (kolor tekstu z obwódką w kolorze tła), a karty, pola i przyciski mają pełne obramowanie zamiast
+  cieni; bez wyboru system z `prefers-contrast: more` dostaje kontrast czarno-biały.
 - **Elementy tylko dla jednego motywu** (np. dwa obrazy banera): klasy `.ss-theme-light` / `.ss-theme-dark`, zgodne
   z wyborem i z motywem systemu (kontrast czarno-biały liczy się jako jasny, żółto-czarny jako ciemny).
 - **Kolorystyka strefy (warstwa bazowa):** arkusz strefy (`stylesheets`) nadpisuje w `:root` tylko tokeny semantyczne

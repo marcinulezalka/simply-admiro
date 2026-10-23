@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Wysoki kontrast według WCAG 2.2 poza kolorami: odnośniki podkreślone, gruby dwukolorowy fokus widoczny na każdym tle, pełne obramowania kart, pól i przycisków zamiast cieni (motywy `contrast` i `contrast-yellow`); bez wyboru motywu system z `prefers-contrast: more` dostaje kontrast czarno-biały.
 - Motywy wysokiego kontrastu WCAG 2.2 (kontrast co najmniej 7:1): `contrast` (czerń na bieli) i `contrast-yellow` (żółty na czarnym) w `tokens.css`, `Enums\Theme`; ikony `contrast`, `eye`.
 - Strona treści `x-mainboard::content.layout` (pasek `x-mainboard::content.bar` z powrotem i przełącznikiem motywu, spis treści `.ss-toc`, treść `.ss-prose`, karta „Zobacz także” z odnośnikami `.ss-related`; teksty `layout.content.*`) i podgląd „Polityka prywatności” w nowym obszarze design systemu „Strony treści”.
 - Czytelny błąd migracji, gdy serwer MySQL z binlogiem odrzuca triggery historii (błąd 1419, brak uprawnienia `SUPER`): `Database\HistoryTriggersRejected` z instrukcją ustawienia `log_bin_trust_function_creators = 1`.

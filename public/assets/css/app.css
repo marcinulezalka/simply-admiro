@@ -2751,6 +2751,28 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * Wysoki kontrast (data-theme contrast i contrast-yellow): poza tokenami to, czego WCAG 2.2 wymaga od strony łatwej
+ * do zobaczenia — odnośniki podkreślone, nie tylko kolorem (1.4.1); gruby dwukolorowy fokus widoczny na każdym tle
+ * (2.4.7, 2.4.13: ramka w kolorze tekstu z obwódką w kolorze tła); pełne obramowania zamiast miękkich cieni, więc
+ * krawędź każdej kontrolki ma co najmniej 3:1 (1.4.11).
+ */
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) a:not(.ss-button, .ss-icon-button, .ss-sidebar__link, .ss-tabs__link, .ss-account-menu__link, .ss-card--link, .ss-ds__nav-link) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) :focus-visible {
+    outline: 3px solid var(--ss-color-text) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px var(--ss-color-bg) !important;
+}
+
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) :is(.ss-card, .ss-frame, .ss-account-menu__panel, .ss-notifications__panel, .ss-toast, .ss-input, .ss-button, .ss-icon-button) {
+    border: 2px solid var(--ss-color-border-strong);
+    box-shadow: none;
+}
+
+/**
  * .ss-content-page — strona treści (x-mainboard::content.layout): pasek z powrotem i przełącznikiem motywu nad i pod
  * treścią, spis treści (.ss-toc) w karcie obok karty dokumentu; na szerokim ekranie spis przyklejony przy przewijaniu.
  */
