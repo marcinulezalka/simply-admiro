@@ -17,7 +17,8 @@ use Simplysmart\Mainboard\Auth\AccountActor;
 
 /**
  * Konto otworzyło rekord z danymi osobowymi (np. kartotekę), opcjonalnie z danymi wrażliwymi (medycznymi):
- * trafia do dziennika zdarzeń organizacji (dziennik dostępu). Rekord jest wskazany typem i tokenem, bez treści.
+ * trafia do dziennika zdarzeń organizacji, która jest właścicielem rekordu (dziennik dostępu). Rekord jest wskazany
+ * typem i tokenem, bez treści; `viewerOrganizationId` to organizacja oglądającego, gdy jest inna niż właściciel.
  */
 final readonly class RecordAccessed
 {
@@ -28,5 +29,6 @@ final readonly class RecordAccessed
         public string $recordType,
         public string $recordToken,
         public bool $sensitive = false,
+        public ?int $viewerOrganizationId = null,
     ) {}
 }

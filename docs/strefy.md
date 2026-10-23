@@ -155,7 +155,8 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
 (`AUTH_LOG_CHANNEL`) i do tabeli `audit_events` (podgląd w panelu administratora). Wpis ma strefę, konto, aktora
 (akcje administratorów: `Audit\Events\AdminActionPerformed`), organizację, szyfrowane IP i kontekst bez adresów
 e-mail. Otwarcie rekordu z danymi osobowymi (np. kartoteki) zgłasza strefa zdarzeniem `Audit\Events\RecordAccessed`
-(typ i token rekordu, flaga danych wrażliwych), więc trafia do dziennika organizacji. Dziennik jednej organizacji
+(typ i token rekordu, flaga danych wrażliwych, opcjonalnie organizacja oglądającego `viewerOrganizationId`, gdy
+rekord należy do innej organizacji), więc trafia do dziennika organizacji, do której rekord należy. Dziennik jednej organizacji
 (jej zdarzenia i zdarzenia kont jej członków) daje `Queries\Audit\AuditLog::forOrganization()`. `mainboard:audit:prune` codziennie usuwa wpisy starsze niż `AUDIT_RETENTION_DAYS` (365 dni).
 
 ## Boty i maskowanie błędów

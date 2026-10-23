@@ -66,7 +66,7 @@ final class AuditEntries
             $event instanceof TrustedDevicesRevoked => new AuditEntry('trusted devices revoked', AuditLevel::Info, $event->zone, $event->accountId, context: ['count' => $event->count, 'cause' => $event->cause]),
             $event instanceof ZoneRoleChanged => new AuditEntry($event->assigned ? 'role assigned' : 'role revoked', AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: ['role' => $event->role]),
             $event instanceof AdminActionPerformed => new AuditEntry($event->action, AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: $event->context),
-            $event instanceof RecordAccessed => new AuditEntry('record accessed', $event->sensitive ? AuditLevel::Notice : AuditLevel::Info, $event->zone, null, $event->actor, $event->organizationId, context: ['record' => $event->recordType, 'token' => $event->recordToken, 'sensitive' => $event->sensitive]),
+            $event instanceof RecordAccessed => new AuditEntry('record accessed', $event->sensitive ? AuditLevel::Notice : AuditLevel::Info, $event->zone, null, $event->actor, $event->organizationId, context: ['record' => $event->recordType, 'token' => $event->recordToken, 'sensitive' => $event->sensitive, 'viewer_organization_id' => $event->viewerOrganizationId]),
         };
     }
 
