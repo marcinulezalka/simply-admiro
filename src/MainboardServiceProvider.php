@@ -22,7 +22,6 @@ use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Factory as ViewFinderFactory;
 use Simplysmart\Mainboard\Console\SeedLocalization;
 use Simplysmart\Mainboard\Contracts\InterfaceLocales;
 use Simplysmart\Mainboard\Contracts\LocalFormatter;
@@ -34,6 +33,8 @@ use Simplysmart\Mainboard\Localization\IntlLocalFormatter;
 use Simplysmart\Mainboard\Logging\LogChannelDefaults;
 use Simplysmart\Mainboard\Mail\MailLogDefaults;
 use Simplysmart\Mainboard\Providers\AuditServiceProvider;
+use Simplysmart\Mainboard\Providers\CoreRoutesServiceProvider;
+use Simplysmart\Mainboard\Providers\DesignSystemServiceProvider;
 use Simplysmart\Mainboard\Providers\PermissionsServiceProvider;
 use Simplysmart\Mainboard\Providers\SecurityServiceProvider;
 use Simplysmart\Mainboard\Providers\SignInServiceProvider;
@@ -44,7 +45,7 @@ use Simplysmart\Mainboard\Translation\CoreTranslationPath;
 /**
  * Punkt integracji paczki z aplikacją Laravel (auto-discovery przez extra.laravel.providers): config Core,
  * logi i poczta frameworka, teksty i lokalizacja, zasoby paczki (tłumaczenia, widoki, migracje), historia zmian
- * w jobach oraz providery obszarów (Providers\): strefy, logowanie, uprawnienia, dziennik zdarzeń, bezpieczeństwo.
+ * w jobach oraz providery obszarów (Providers\): strefy, logowanie, uprawnienia, dziennik zdarzeń, bezpieczeństwo, trasy Core, katalog design systemu.
  */
 final class MainboardServiceProvider extends ServiceProvider
 {
@@ -53,12 +54,20 @@ final class MainboardServiceProvider extends ServiceProvider
      *
      * @var list<class-string<ServiceProvider>>
      */
+    /**
+     * Domyślne widoki aplikacji (np. `welcome`) i strony błędów (`errors/<kod>`): ostatnia ścieżka `view.paths`, więc
+     * plik o tej samej nazwie w `resources/views/` aplikacji wygrywa, a Laravel znajduje tu strony błędów HTTP.
+     */
+    private const string APP_VIEWS = __DIR__ . '/../resources/views/app';
+
     private const array AREAS = [
         ZonesServiceProvider::class,
         SignInServiceProvider::class,
         PermissionsServiceProvider::class,
         AuditServiceProvider::class,
         SecurityServiceProvider::class,
+        CoreRoutesServiceProvider::class,
+        DesignSystemServiceProvider::class,
     ];
 
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';
@@ -76,6 +85,8 @@ final class MainboardServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/mainboard.php', 'mainboard');
 
         $config = $this->app->make(Repository::class);
+        $viewPaths = $config->get('view.paths', []);
+        $config->set('view.paths', [...(is_array($viewPaths) ? $viewPaths : []), self::APP_VIEWS]);
         (new MailLogDefaults($config, $this->app->storagePath()))->apply();
 
         $logChannels = new LogChannelDefaults($config, $this->app->storagePath());
@@ -99,17 +110,13 @@ final class MainboardServiceProvider extends ServiceProvider
     }
 
     /**
-     * Ładuje zasoby paczki po zarejestrowaniu wszystkich providerów. Widoki z `resources/views/app/` są
-     * domyślnymi widokami aplikacji bez przestrzeni nazw (np. `welcome`): ten sam plik w `resources/views/`
-     * aplikacji wygrywa, bo jej katalog jest przeszukiwany pierwszy.
+     * Ładuje zasoby paczki po zarejestrowaniu wszystkich providerów (domyślne widoki aplikacji i strony błędów
+     * dodaje register() przez `view.paths`, zob. APP_VIEWS).
      */
     public function boot(Dispatcher $events): void
     {
         $this->loadTranslationsFrom(__DIR__ . '/../lang', CascadeTextTranslator::CORE_NAMESPACE);
         $this->loadViewsFrom(__DIR__ . '/../resources/views', CascadeTextTranslator::CORE_NAMESPACE);
-        $this->callAfterResolving('view', static function (ViewFinderFactory $views): void {
-            $views->addLocation(__DIR__ . '/../resources/views/app');
-        });
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $events->listen(MessageSent::class, LogSentMail::class);

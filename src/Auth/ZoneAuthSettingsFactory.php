@@ -17,6 +17,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Mainboard\Contracts\SignInStep;
+use Simplysmart\Mainboard\Enums\AuthLayout;
 
 /**
  * Buduje ZoneAuthSettings: `mainboard.auth` scalone rekurencyjnie z kluczem `auth` configu strefy
@@ -49,7 +50,7 @@ final readonly class ZoneAuthSettingsFactory
             codeTtlMinutes: Arr::integer($settings, 'code.ttl_minutes'),
             codeMaxAttempts: Arr::integer($settings, 'code.max_attempts'),
             codeResendCooldownSeconds: Arr::integer($settings, 'code.resend_cooldown_seconds'),
-            pinLength: max(4, Arr::integer($settings, 'pin.length')),
+            pinLength: new PinLength(Arr::integer($settings, 'pin.min_length'), Arr::integer($settings, 'pin.max_length')),
             pinStageTtlMinutes: Arr::integer($settings, 'pin.stage_ttl_minutes'),
             pinMaxAttempts: Arr::integer($settings, 'pin.max_attempts'),
             lockoutMinutes: $this->lockoutMinutes(Arr::array($settings, 'pin.lockout_minutes')),
@@ -59,6 +60,7 @@ final readonly class ZoneAuthSettingsFactory
             trustedDevicesEnabled: Arr::boolean($settings, 'trusted_devices.enabled'),
             trustedDeviceLifetimeDays: max(1, Arr::integer($settings, 'trusted_devices.lifetime_days')),
             trustedDevicesPerAccount: max(1, Arr::integer($settings, 'trusted_devices.max_per_account')),
+            layout: $this->layout(Arr::string($settings, 'layout')),
         );
     }
 
@@ -80,6 +82,14 @@ final readonly class ZoneAuthSettingsFactory
         }
 
         return $classes === [] ? throw new InvalidArgumentException('A zone with sign-in needs at least one step.') : $classes;
+    }
+
+    /**
+     * @throws InvalidArgumentException Gdy układ nie jest przypadkiem AuthLayout.
+     */
+    private function layout(string $layout): AuthLayout
+    {
+        return AuthLayout::tryFrom($layout) ?? throw new InvalidArgumentException("auth.layout [{$layout}] must be one of: " . implode(', ', array_column(AuthLayout::cases(), 'value')) . '.');
     }
 
     /**

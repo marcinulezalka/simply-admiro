@@ -3,11 +3,7 @@
     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.login.store')) }}">
         @csrf
         <x-mainboard::honeypot />
-        <div class="ss-field">
-            <label class="ss-field__label" for="email">{{ text('sign_in.email') }}</label>
-            <input class="ss-input" id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required autofocus @error('email') aria-invalid="true" aria-describedby="email-error" @enderror>
-            @error('email') <p class="ss-field__error" id="email-error" role="alert">{{ $message }}</p> @enderror
-        </div>
-        <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ text('sign_in.continue') }}</button>
+        <x-mainboard::input id="email" :label="text('sign_in.email')" icon="mail" name="email" type="email" :value="old('email')" autocomplete="email" required autofocus :error="$errors->first('email')" />
+        <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ text('sign_in.continue') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
     </form>
 </x-mainboard::auth.layout>

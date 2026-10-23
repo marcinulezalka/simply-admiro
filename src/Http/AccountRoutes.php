@@ -17,11 +17,12 @@ use Illuminate\Routing\Router;
 use Simplysmart\Mainboard\Http\Controllers\Account\OrganizationSwitchController;
 use Simplysmart\Mainboard\Http\Controllers\Account\PinChangeController;
 use Simplysmart\Mainboard\Http\Controllers\Account\TrustedDeviceController;
+use Simplysmart\Mainboard\Http\Controllers\Account\ProfileController;
 use Simplysmart\Mainboard\Zones\AccessTier;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
- * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): zmiana PIN-u, w strefie z zaufanymi
+ * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (kolor awatara), zmiana PIN-u, w strefie z zaufanymi
  * urządzeniami ich lista i odwołanie, a w strefie z zespołami przełączenie organizacji. Każda zmiana ma limit
  * `mainboard.sign-in`.
  */
@@ -41,6 +42,10 @@ final readonly class AccountRoutes
 
     public const string ORGANIZATION_SWITCH = 'account.organization.switch';
 
+    public const string PROFILE = 'account.profile';
+
+    public const string PROFILE_UPDATE = 'account.profile.update';
+
     private const string PREFIX = 'account';
 
     public function __construct(
@@ -52,6 +57,8 @@ final readonly class AccountRoutes
         $throttle = 'throttle:' . SignInRoutes::THROTTLE;
 
         $this->router->middleware(AccessTier::Authenticated->middleware($zone))->prefix(self::PREFIX)->group(function () use ($zone, $throttle): void {
+            $this->router->get('profile', [ProfileController::class, 'show'])->name(self::PROFILE);
+            $this->router->put('profile', [ProfileController::class, 'update'])->middleware($throttle)->name(self::PROFILE_UPDATE);
             $this->router->get('pin', [PinChangeController::class, 'show'])->name(self::PIN);
             $this->router->post('pin/code', [PinChangeController::class, 'sendCode'])->middleware($throttle)->name(self::PIN_CODE);
             $this->router->put('pin', [PinChangeController::class, 'update'])->middleware($throttle)->name(self::PIN_UPDATE);

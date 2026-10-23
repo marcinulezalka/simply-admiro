@@ -16,7 +16,7 @@
                 <ul class="ss-welcome__features">
                     @foreach ($features as $feature => $icon)
                         <li class="ss-welcome__feature">
-                            <x-mainboard::icon :name="$icon" class="ss-welcome__feature-icon" />
+                            <x-mainboard::icon :name="$icon" class="ss-icon--tile" />
                             <span class="ss-welcome__feature-text">
                                 <span class="ss-welcome__feature-title">{{ text('welcome.features.' . $feature . '.title') }}</span>
                                 <span class="ss-muted">{{ text('welcome.features.' . $feature . '.description') }}</span>

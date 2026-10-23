@@ -5,6 +5,7 @@
         <header>
             <p>{{ text('sign_in.signed_in_as', ['name' => $account->displayName()]) }}</p>
             <nav aria-label="{{ text('account.menu') }}">
+                <a href="{{ route($zone->routeName('account.profile')) }}">{{ text('account.profile_title') }}</a>
                 <a href="{{ route($zone->routeName('account.pin')) }}">{{ text('account.pin_title') }}</a>
                 @if ($zone->auth()->trustedDevicesEnabled)
                     <a href="{{ route($zone->routeName('account.devices')) }}">{{ text('account.devices_title') }}</a>

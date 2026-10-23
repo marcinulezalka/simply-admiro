@@ -20,8 +20,9 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        'slug' => env('SHOP_SLUG', 'shop'), // segment URL; nie może być kodem języka
        'model' => ShopAccount::class,    // konta strefy; brak = strefa publiczna bez logowania
        // opcjonalnie: 'guard', 'provider', 'session' => ['lifetime' => 15, ...],
-       // 'auth' => ['pin' => ['length' => 8]] (nadpisania mainboard.auth),
+       // 'auth' => ['pin' => ['min_length' => 8]] (nadpisania mainboard.auth; zakres PIN-u w granicach 4–16),
        // 'auth' => ['trusted_devices' => ['enabled' => false]] (kod z e-maila przy każdym logowaniu),
+       // 'auth' => ['layout' => 'split'] (ekrany logowania jako dwie karty: marka i formularz; domyślnie 'centered'),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)
@@ -192,7 +193,9 @@ rekord należy do innej organizacji), więc trafia do dziennika organizacji, do 
 | `SECURITY_HSTS`, `SECURITY_HSTS_MAX_AGE` | `true`, `31536000` | HSTS na HTTPS |
 | `SECURITY_CSP` | `true` | Content-Security-Policy z nonce |
 | `AUTH_CODE_TTL` | `10` | minuty ważności kodu z e-maila |
-| `AUTH_PIN_LENGTH` | `6` | długość PIN-u (minimum 4) |
+| `AUTH_PIN_MIN_LENGTH` | `4` | najkrótszy nowy PIN (cyfry, nie mniej niż 4) |
+| `AUTH_PIN_MAX_LENGTH` | `16` | najdłuższy nowy PIN (cyfry, nie więcej niż 16); wpisany istniejący PIN jest sprawdzany w pełnym zakresie 4–16 |
+| `AUTH_LAYOUT` | `centered` | układ stron logowania: `centered` (jedna karta) albo `split` (dwie karty obok siebie); strefa nadpisuje w `auth.layout` |
 | `AUTH_TRUSTED_DEVICES` | `true` | zaufane urządzenia (strefa może je wyłączyć w configu) |
 | `AUTH_TRUSTED_DEVICE_DAYS` | `30` | dni zaufania urządzenia |
 | `SECURITY_MASK_ERRORS` | brak (produkcja) | maskowanie błędów jako 404 |

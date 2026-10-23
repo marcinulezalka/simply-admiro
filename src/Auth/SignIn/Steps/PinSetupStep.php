@@ -15,12 +15,12 @@ namespace Simplysmart\Mainboard\Auth\SignIn\Steps;
 
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
+use Simplysmart\Mainboard\Auth\PinRules;
 use Simplysmart\Mainboard\Auth\SignIn\PendingSignIn;
 use Simplysmart\Mainboard\Auth\SignIn\PendingSignInResolver;
 use Simplysmart\Mainboard\Contracts\AccountStore;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\SignInStep;
-use Simplysmart\Mainboard\Rules\StrongPin;
 
 /**
  * Ustawienie PIN-u przy pierwszym logowaniu (konto bez PIN-u, po kroku kodu).
@@ -63,7 +63,7 @@ final readonly class PinSetupStep implements SignInStep
 
     public function rules(): array
     {
-        return ['pin' => ['required', 'string', 'digits:' . $this->zone->get()->auth()->pinLength, 'confirmed', new StrongPin()]];
+        return ['pin' => PinRules::forNewPin($this->zone->get()->auth()->pinLength)];
     }
 
     public function handle(PendingSignIn $signIn, array $input, Request $request): void

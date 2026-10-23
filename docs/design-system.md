@@ -37,6 +37,14 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-radius-pill` | pigułki, awatar, wyszukiwarka | `9999px` | | `rounded-full` |
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
+| `--ss-color-surface-inverse` | karta odwrócona (wyróżniona kolorem) | `#171717` | `#f3f4f6` | `bg-neutral-900` |
+| `--ss-color-on-inverse` | tekst na karcie odwróconej | `#ffffff` | `#111827` | `text-white` |
+| `--ss-color-muted-inverse` | etykiety na karcie odwróconej (7,2:1 / 6,9:1) | `#a3a3a3` | `#4b5563` | `text-neutral-400` |
+| `--ss-radius-frame` | rama z kartami | `1.75rem` | | `rounded-[28px]` |
+| `--ss-frame-padding` | odstęp ramy i między kartami w ramie | `0.75rem` | | `p-3` |
+| `--ss-radius-nested` | karta w ramie: promień ramy minus odstęp | `1rem` | | `rounded-2xl` |
+| `--ss-shadow-frame` | miękki cień ramy | | | `shadow-sm` + rozmyty |
+| `--ss-shadow-elevated` | jedna wyróżniona, wyniesiona karta widoku | | | `shadow-2xl` |
 
 - **Logo Laravela** (`public/assets/img/vendor/laravel.svg`, z oficjalnego repozytorium
   `laravel/art`, znak towarowy Laravel Holdings) występuje tylko jako informacja „Zbudowane na”,
@@ -45,7 +53,16 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
   (zob. [brand/README.md](../brand/README.md)).
 - Kolory stanów (sukces, ostrzeżenie, błąd, informacja) dostają osobne tokeny semantyczne
   przy pierwszym komponencie, który ich potrzebuje; zawsze z tekstem lub ikoną, nie samym kolorem.
-  Istnieje `--ss-color-danger` (`#b91c1c` / ciemny `#f87171`): błędy pól formularza.
+  Tokeny stanów (tekst/ikona i tło; kontrast co najmniej 4,8:1 w obu motywach):
+
+  | Stan | Znaczenie | Tekst / ikona (jasny · ciemny) | Tło (jasny · ciemny) |
+  | --- | --- | --- | --- |
+  | `success` | akcja się udała | `#15803d` · `#4ade80` | `#f0fdf4` · `#052e16` |
+  | `info` | informacja, bez potrzeby działania | `#1d4ed8` · `#60a5fa` | `#eff6ff` · `#172554` |
+  | `warning` | wymaga uwagi, akcja wykonana | `#92400e` · `#fbbf24` | `#fffbeb` · `#451a03` |
+  | `danger` | błąd: akcja się nie udała (też błędy pól) | `#b91c1c` · `#f87171` | `#fef2f2` · `#450a0a` |
+
+  Tokeny: `--ss-color-<stan>` i `--ss-color-<stan>-surface`.
 - Logo i panel marki używają `--ss-color-brand` / `--ss-color-on-brand` (czerń albo biel), nie
   `--ss-color-text`, bo grafitowy tekst nie jest kolorem marki.
 - Typografia: `--ss-font-sans` (font systemowy, dopóki marka nie ma własnego). Skala:
@@ -71,6 +88,15 @@ przełączają tokeny (`prefers-color-scheme`, w Tailwind zmienne w `@theme`), w
 - **Karta w karcie:** bez ramki, tło `--ss-color-surface-muted`, mniejszy promień.
 - **Cień** tylko dla elementów nad płaszczyzną: rozwinięte menu, dropdown, modal, przyklejony
   pasek przy przewijaniu. Karta w siatce nigdy nie ma cienia.
+- **Rama z kartami** (`.ss-frame`, `.ss-frame--row`): kilka kart obok siebie na wspólnej ramie (tło
+  `surface`, odstęp `--ss-frame-padding`, promień `--ss-radius-frame`, cień `--ss-shadow-frame`). Karty
+  w ramie mają jednolite tło i różnią się kolorem (`.ss-card--tinted` jasna, `.ss-card--inverse`
+  odwrócona) oraz promień zagnieżdżony `--ss-radius-nested` (rama minus odstęp: krawędzie równoległe).
+  Jedna wyróżniona karta widoku może być wyniesiona (`.ss-card--elevated`, `--ss-shadow-elevated`) —
+  jedyny wyjątek od „karta bez cienia”.
+- **Przyciski z ikonami**: `x-mainboard::icon` z klasą `.ss-button__icon` przed tekstem (akcja, np. odśwież)
+  albo po nim (przejście dalej, strzałka); `.ss-button--pill` dla akcji w ramie. Na karcie odwróconej akcja
+  główna odwraca kolory sama. Plakietka może mieć ikonę `.ss-badge__icon` (np. stan „bezpieczne”).
 - Tabele tylko dla list wielu rekordów; pojedynczy rekord pokazujemy w kartach (punkt 5).
 
 ## 5. Warstwy layoutu
@@ -128,19 +154,120 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): karta na środku ekranu z logo, tytułem, wstępem `lead`, komunikatem stanu i slotem `actions` na akcje drugorzędne |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`, logo) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie jedna pod drugą); wygląd wyłącznie z klas design systemu |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
 
 Formularze (do czasu komponentów) składają się z klas statycznego CSS: `.ss-form`, `.ss-field` z
 `.ss-field__label` i `.ss-field__error` (z `id` wskazywanym przez `aria-describedby` pola i
-`aria-invalid="true"`), `.ss-input` (`.ss-input--code` dla kodu i PIN-u), `.ss-check`, `.ss-link`,
+`aria-invalid="true"`), `.ss-input` (`.ss-input--code` dla kodu i PIN-u), `.ss-link`,
 `.ss-notice` (komunikat `role="status"`).
 | `flag` | flaga kraju lub języka z `flag_icon` (zaimplementowany; inline SVG 4:3, `.ss-flag`, dekoracyjna) |
 
 Strefy składają z nich swoje widoki. Aplikacja zmienia pojedynczy komponent plikiem w
 `resources/views/vendor/mainboard/` (odwrócone nadpisywanie, zob. `CLAUDE.md` szkieletu).
 Teksty tylko przez `text_*` / `local_*`.
+
+### Strona design systemu
+
+`/design-system` (trasa `mainboard.design-system`, przy kilku językach `/{locale}/design-system`) pokazuje na
+żywo tokeny i komponenty: kolory (jasny i ciemny), typografię, promienie, cienie, odstępy, przyciski,
+formularze, komunikaty, karty, ikony i markę. Tokeny czyta `View\DesignTokens` wprost z `tokens.css`
+(rozwiązuje `var()` dla obu motywów), ikony to pliki z `img/icons/`, więc nowy token lub ikona pojawia się na
+stronie bez zmian w widoku; nowy komponent dopisujemy do `resources/views/design-system/index.blade.php`.
+Domyślnie działa tylko poza produkcją (`DESIGN_SYSTEM_PAGE`, sprawdzane przy żądaniu; wyłączona = 404) i nie
+jest indeksowana.
+
+Nawigacja (komponent `x-mainboard::design-system.nav`, karta po lewej) ma dwie grupy: **Fundamenty** (sekcje
+strony) i **Widoki** — gotowe ekrany aplikacji pod `/design-system/views/{widok}` (`mainboard.design-system.view`),
+pogrupowane w rozwijane obszary (`Enums\DesignSystemArea`, natywne `<details>`, obszar bieżącego widoku
+rozwinięty): **Autoryzacja** (logowanie klasyczne i na dwóch kartach, kod z e-maila, błędny kod, PIN, zbyt wiele
+prób, ustawienie i potwierdzenie PIN-u, wygasła sesja logowania, „Nie pamiętam PIN-u”), **Panel aplikacji** (pulpit,
+lista rekordów, szczegóły rekordu, formularz, menu boczne) i **Błędy** (401, 403, 404, 419, 429, 500, 503). Ekrany
+logowania i strony błędów to podglądy prawdziwych plików produkcyjnych (`mainboard::auth.*`, `app/errors/*`):
+logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól (`View\DesignSystem\SignInPreviews`).
+
+### Pola, maski i awatary
+
+- **Pole** `x-mainboard::input`: etykieta nad polem, subtelna ikona w tle po lewej (przygaszona, pełna przy
+  fokusie), podpowiedź i błąd powiązane przez `aria-describedby` (`aria-invalid` przy błędzie). Popularne pola
+  mają ikonę: e-mail `mail`, osoba `user`, firma `building`, adres `map-pin`, data `calendar`.
+- **Maski** `Enums\InputMask` (telefon, kod pocztowy, NIP, PESEL, numer rachunku): wzór (`9` cyfra, `A` litera),
+  klawiatura numeryczna, ikona, przykład w placeholderze i format w podpowiedzi. `js/input-mask.js` formatuje
+  w trakcie pisania i przy wklejaniu; bez skryptu pole przyjmuje tekst, a format podaje podpowiedź.
+- **Awatar** `x-mainboard::avatar`: zdjęcie albo inicjały (`View\Initials`: pierwsza i ostatnia część zaczynająca
+  się wielką literą, bez „dr” itp.), rozmiary `sm`, `md`, `lg`, `accent` dla bieżącego użytkownika. Jest
+  dekoracyjny — nazwę podaje tekst obok (`.ss-person`). Pokazujemy go wszędzie, gdzie prezentujemy osoby.
+- **Kolor awatara** (`Enums\AvatarColor`, tokeny `--ss-avatar-<kolor>-bg` / `-fg`, kontrast co najmniej 6,4:1):
+  nowe konto dostaje kolor z adresu e-mail (`json_attributes.avatar_color`), użytkownik zmienia go w profilu
+  (`x-mainboard::avatar-colors`); awatar przyjmuje `color`, a ta sama osoba ma ten sam kolor na każdym ekranie.
+- **Menu boczne**: u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) jako
+  menu konta, pod nim akcje (zwijanie, przełącznik kontekstu `contexts` — np. organizacja albo widok pracy, bieżący
+  z haczykiem — i powiadomienia), na dole subtelne logo (3rem).
+
+### Okresy i kalendarz
+
+- **Nagłówek okresu** `.ss-period`: zakładki zakresu (`.ss-tabs`, np. dzień / tydzień / miesiąc), przyciski
+  poprzedni i następny (`.ss-icon-button` z nazwą dla czytników), nazwa okresu (`aria-live="polite"`) i „Dziś”.
+- **Kalendarz miesiąca** `.ss-calendar` (tydzień od poniedziałku, nazwy dni z `local_day`): dzień z numerem,
+  treścią (np. liczba zamówień) i wskaźnikiem; dziś `aria-current="date"` z obwódką akcentu; dni spoza miesiąca
+  przygaszone; nieczynne z opisem tekstowym.
+- **Dostępność w siatce**: komórki w godzinach dostępności `.ss-cell--open` (bardzo lekkie tło akcentu), poza nimi
+  `.ss-cell--closed` (subtelne ukośne kreskowanie); zawsze z legendą `.ss-legend` i opisem tekstowym w pustej
+  komórce dla czytników ekranu.
+- **Wskaźnik obłożenia** `.ss-meter` na natywnym `<meter>` (`low`, `high`, `optimum="0"`): kolor akcentu,
+  ostrzeżenia albo błędu, zawsze z wartością liczbową obok w tekście.
+
+### Toasty i powiadomienia
+
+- **Toasty** (`x-mainboard::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji na środku
+  ekranu. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
+  (tytuł albo prefiks dla czytników). Błąd (`danger`) ma `role="alert"` i zostaje do zamknięcia; pozostałe mają
+  `role="status"` i znikają po 6 s (`js/toasts.js`; pauza przy najechaniu i fokusie). Toast może mieć jedną
+  akcję (link, np. „Zobacz”, „Cofnij”). Layout aplikacji pokazuje toasty z sesji: akcja flashuje
+  `Toast::SESSION_KEY` z listą `Toast::toArray()`. Wariant `inline` to próbki w treści strony.
+- **Powiadomienia** (`View\Notifications\NotificationPanel`, `NotificationItem`, `x-mainboard::notification`):
+  dzwonek w top barze z licznikiem nieprzeczytanych (liczba także w tekście dla czytników) i panelem
+  (`<details data-ss-dropdown>`, jak menu konta: otwarcie jednego zamyka drugie); pełna lista na osobnej stronie.
+- **Switch zamiast checkboxa**: w formularzach każde pole tak/nie to `x-mainboard::switch` (także „Zapamiętaj
+  to urządzenie” przy logowaniu); `name` i `value` zostają jak w checkboxie. Wybór jednej z kilku opcji to
+  `.ss-choices`.
+
+### Strony błędów
+
+`resources/views/app/errors/<kod>.blade.php` (komponent `x-mainboard::error.layout`, teksty `errors.*`): rama
+z kartą marki z dużym kodem i kartą z tytułem, opisem i akcjami (strona główna, powrót; dla 500 i 503 „Spróbuj
+ponownie”). Katalog `resources/views/app/` jest ostatnią ścieżką `view.paths`, więc Laravel sam używa tych stron,
+a aplikacja nadpisuje pojedynczą plikiem `resources/views/errors/<kod>.blade.php`. Bez sesji, bazy i skryptów;
+w produkcji maskowanie błędów pokazuje 404 zamiast 401/403/405/419/429. Lista widoków to enum `Enums\DesignSystemView` (nowy widok = nowy
+przypadek, jego obszar w `area()` i plik w `resources/views/design-system/views/`). Nawigacja i trasa czytają
+**katalog** `Contracts\DesignSystemCatalog` (singleton, `Providers\DesignSystemServiceProvider` wpisuje do niego
+widoki Core): paczka strefy dokłada własne obszary i widoki w swoim providerze
+(`callAfterResolving(DesignSystemCatalog::class, …)`, `addArea()`, `addView()` z leniwymi danymi), bez zmian
+w Core — np. makiety swoich ekranów; klucze są unikalne w aplikacji. Widoki na pełnym layoucie aplikacji mają nad
+sobą pasek `x-mainboard::design-system.strip` (powrót i widoki tego samego obszaru), powłoka aplikacji to
+`x-mainboard::design-system.shell`, a przykładowe dane (faktury, status jako enum sterujący stepperem) jedno
+źródło `View\Demo\DemoInvoices`.
+
+**Layout aplikacji z menu bocznym** `x-mainboard::app.layout`: menu po lewej (`View\Navigation\NavigationGroup`
+z `NavigationItem`: etykieta, adres, ikona, bieżąca pozycja przez `aria-current`, licznik), zwijane do ikon
+i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
+globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
+i Esc); nagłówek kontekstowy
+`x-mainboard::app.context` (też w powłoce widoków design systemu). Skrypt `public/assets/js/app-shell.js`
+osadza `x-mainboard::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
+`stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.
+
+Klasy ogólne do czasu komponentów: `.ss-card` i `.ss-card--muted` (§4), `.ss-icon--tile` (ikona w kafelku
+`surface-muted`), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
+i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
+`.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`),
+`.ss-grid` (`--3`, `--wide`), `.ss-stat`, `.ss-list`, `.ss-table`, `.ss-pairs`, `.ss-form-layout`,
+`.ss-form-actions`, `.ss-form-row`, `.ss-fieldset`, `.ss-choices` z `.ss-choice` (wybór jednej opcji jako
+pigułki), `.ss-grid--4`, `.ss-card__title--inset`, `.ss-table--grid`, `.ss-table__sub`, `.ss-icon-button`,
+`.ss-shell`, `.ss-sidebar`, `.ss-tabs` (zakładki sekcji, bieżąca przez `aria-current`), `.ss-card__footer`,
+`.ss-account-menu` oraz przełącznik `x-mainboard::switch` (`.ss-switch`: checkbox z `role="switch"`, opis
+i podpowiedź powiązana przez `aria-describedby`). Panele stref składają z nich swoje widoki, a widoki z `/design-system/views` są wzorem.
 
 ## 8. Build assetów: Vite w każdej paczce, uruchamiany ze szkieletu (docelowo)
 

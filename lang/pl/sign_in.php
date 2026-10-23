@@ -26,7 +26,7 @@ return [
     'pin_title' => 'Wpisz PIN',
     'pin' => 'PIN',
     'pin_setup_title' => 'Ustaw PIN',
-    'pin_setup_intro' => 'PIN ma :length cyfr. Unikaj powtórzeń i kolejnych cyfr.',
+    'pin_setup_intro' => 'PIN ma od :min do :max cyfr. Unikaj powtórzeń i kolejnych cyfr.',
     'pin_confirmation' => 'Powtórz PIN',
     'sign_out' => 'Wyloguj',
     'signed_in_as' => 'Zalogowano jako :name.',

@@ -17,7 +17,7 @@ return [
     'organization_switch' => 'Przełącz',
     'menu' => 'Konto',
     'pin_title' => 'Zmień PIN',
-    'pin_intro' => 'Wyślij kod na swój adres e-mail, a potem wpisz obecny PIN, kod i nowy PIN (:length cyfr).',
+    'pin_intro' => 'Wyślij kod na swój adres e-mail, a potem wpisz obecny PIN, kod i nowy PIN (od :min do :max cyfr).',
     'send_code' => 'Wyślij kod',
     'code_sent' => 'Wysłaliśmy kod na adres konta.',
     'current_pin' => 'Obecny PIN',
@@ -35,5 +35,18 @@ return [
     'device_revoke' => 'Odwołaj',
     'devices_revoke_all' => 'Odwołaj wszystkie',
     'devices_revoked' => 'Urządzenie nie jest już zaufane: logowanie na nim znowu wymaga kodu z e-maila.',
+    'profile_title' => 'Mój profil',
+    'avatar_color' => 'Kolor awatara',
+    'avatar_color_saved' => 'Kolor awatara zapisany.',
+    'avatar_colors' => [
+        'slate' => 'Grafitowy',
+        'red' => 'Czerwony',
+        'amber' => 'Bursztynowy',
+        'green' => 'Zielony',
+        'teal' => 'Morski',
+        'blue' => 'Niebieski',
+        'violet' => 'Fioletowy',
+        'pink' => 'Różowy',
+    ],
 
 ];

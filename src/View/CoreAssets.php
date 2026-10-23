@@ -24,6 +24,28 @@ final class CoreAssets
     private const string ROOT = __DIR__ . '/../../public/assets/';
 
     /**
+     * Arkusze Core każdej strony, w kolejności zależności (tokeny → baza → komponenty).
+     *
+     * @var list<string>
+     */
+    public const array STYLESHEETS = ['css/tokens.css', 'css/base.css', 'css/app.css'];
+
+    /**
+     * Nazwy plików (bez rozszerzenia) w katalogu assetów, posortowane, np. ikony z `img/icons`.
+     *
+     * @param string $directory Katalog względem `public/assets/`.
+     *
+     * @return list<string>
+     */
+    public static function names(string $directory, string $extension): array
+    {
+        $names = array_map(static fn(string $file): string => basename($file, '.' . $extension), glob(self::ROOT . $directory . '/*.' . $extension) ?: []);
+        sort($names);
+
+        return $names;
+    }
+
+    /**
      * @param string $path Ścieżka względem `public/assets/`, np. `img/brand/logo.svg`.
      */
     public static function contents(string $path): string

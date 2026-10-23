@@ -27,6 +27,7 @@ use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
+use Simplysmart\Mainboard\Enums\AuthLayout;
 use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
 use Simplysmart\Mainboard\Translation\CascadeTextTranslator;
 use Simplysmart\Mainboard\Zones\InMemoryZoneRegistry;
@@ -38,7 +39,7 @@ use Simplysmart\Mainboard\Zones\ZoneSessionManager;
 
 /**
  * Mechanizm stref: rejestr (singleton), strefa i konto żądania, osobny magazyn sesji każdej strefy,
- * przekierowania auth/guest według strefy oraz dane stref dla widoków (layout strefy, logowanie, konto).
+ * przekierowania auth/guest według strefy oraz dane stref dla widoków (layout strefy, logowanie i jego układ, konto).
  */
 final class ZonesServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,8 @@ final class ZonesServiceProvider extends ServiceProvider
     private const string ACCOUNT_VIEWS = CascadeTextTranslator::CORE_NAMESPACE . '::account.*';
 
     private const string ZONE_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.zone.layout';
+
+    private const string AUTH_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.auth.layout';
 
     public function register(): void
     {
@@ -66,10 +69,9 @@ final class ZonesServiceProvider extends ServiceProvider
 
     public function boot(ViewFactory $views): void
     {
-        $views->composer([self::SIGN_IN_VIEWS, self::ACCOUNT_VIEWS], function (View $view): void {
-            $view->with('zone', $this->app->make(CurrentZone::class)->get());
-        });
+        $views->composer([self::SIGN_IN_VIEWS, self::ACCOUNT_VIEWS], $this->shareRequestZone(...));
         $views->composer(self::ZONE_LAYOUT_VIEW, $this->shareZoneWithLayout(...));
+        $views->composer(self::AUTH_LAYOUT_VIEW, $this->shareAuthLayout(...));
 
         $this->useZoneRedirects();
         $this->app->afterResolving(HttpKernel::class, $this->useZoneRedirects(...));
@@ -91,6 +93,30 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('account', $account)
             ->with('organizations', $organizations !== null && $organizations->count() > 1 ? $organizations : null)
             ->with('currentOrganizationId', $this->app->make(CurrentOrganization::class)->id());
+    }
+
+    /**
+     * Widoki logowania i konta dostają strefę żądania; poza strefą (podgląd w design systemie) zostaje `$zone`
+     * przekazana w danych widoku.
+     */
+    private function shareRequestZone(View $view): void
+    {
+        $zone = $this->app->make(CurrentZone::class);
+
+        if ($zone->has()) {
+            $view->with('zone', $zone->get());
+        }
+    }
+
+    /**
+     * Layout logowania dostaje układ strefy żądania (`auth.layout`); poza strefą z logowaniem (np. fałszywe
+     * logowanie pułapki, podgląd w design systemie) układ domyślny. Prop `layout` komponentu wygrywa.
+     */
+    private function shareAuthLayout(View $view): void
+    {
+        $zone = $this->app->make(CurrentZone::class);
+
+        $view->with('zoneAuthLayout', $zone->has() && $zone->get()->requiresLogin() ? $zone->get()->auth()->layout : AuthLayout::Centered);
     }
 
     /**

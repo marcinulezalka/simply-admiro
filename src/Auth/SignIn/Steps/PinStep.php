@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Auth\SignIn\Steps;
 
 use Illuminate\Http\Request;
+use Simplysmart\Mainboard\Auth\PinLength;
+use Simplysmart\Mainboard\Auth\PinRules;
 use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
 use Simplysmart\Mainboard\Auth\SignIn\PendingSignIn;
 use Simplysmart\Mainboard\Auth\SignIn\PendingSignInResolver;
@@ -61,12 +63,12 @@ final readonly class PinStep implements SignInStep
 
     public function viewData(PendingSignIn $signIn): array
     {
-        return ['pinLength' => $this->zone->get()->auth()->pinLength];
+        return ['pinLength' => PinLength::accepted()];
     }
 
     public function rules(): array
     {
-        return ['pin' => ['required', 'string', 'digits:' . $this->zone->get()->auth()->pinLength]];
+        return ['pin' => PinRules::forEnteredPin()];
     }
 
     public function handle(PendingSignIn $signIn, array $input, Request $request): void

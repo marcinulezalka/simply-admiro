@@ -8,19 +8,16 @@
             @error('code') <p class="ss-field__error" id="code-error" role="alert">{{ $message }}</p> @enderror
         </div>
         @if ($rememberDeviceDays !== null)
-            <label class="ss-check" for="remember_device">
-                <input id="remember_device" name="remember_device" type="checkbox" value="1">
-                <span>{{ text('sign_in.remember_device', ['days' => $rememberDeviceDays]) }}</span>
-            </label>
+            <x-mainboard::switch id="remember_device" name="remember_device" value="1" :label="text('sign_in.remember_device', ['days' => $rememberDeviceDays])" />
         @endif
-        <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ text('sign_in.continue') }}</button>
+        <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ text('sign_in.continue') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
     </form>
 
     <x-slot:actions>
         <a class="ss-link" href="{{ route($zone->routeName('auth.login')) }}">{{ text('sign_in.change_email') }}</a>
         <form method="POST" action="{{ route($zone->routeName('auth.code.resend')) }}">
             @csrf
-            <button class="ss-button" type="submit" @if ($resendIn > 0) title="{{ text('sign_in.resend_wait', ['seconds' => $resendIn]) }}" @endif>{{ text('sign_in.resend') }}</button>
+            <button class="ss-button" type="submit" @if ($resendIn > 0) title="{{ text('sign_in.resend_wait', ['seconds' => $resendIn]) }}" @endif><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('sign_in.resend') }}</button>
         </form>
     </x-slot:actions>
 </x-mainboard::auth.layout>

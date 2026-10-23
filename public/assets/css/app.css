@@ -40,10 +40,111 @@
 }
 
 /**
+ * .ss-icon--tile — ikona w kafelku surface-muted (lista funkcji, próbki ikon).
+ */
+.ss-icon--tile {
+    flex: none;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+/**
+ * .ss-card — karta (docs/design-system.md §4): surface, ramka border, promień karty, bez cienia;
+ * .ss-card--muted — karta w karcie: surface-muted, bez ramki, mniejszy promień.
+ */
+.ss-card {
+    padding: var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+}
+
+.ss-card--muted {
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+@media (min-width: 40rem) {
+    .ss-card {
+        padding: var(--ss-space-6);
+    }
+}
+
+/**
+ * .ss-card--tinted — karta wyróżniona jednolitym tłem surface-muted z ramką border-strong (np. jasna karta w ramie).
+ * .ss-card--inverse — karta w kolorach odwróconych (surface-inverse); tekst, etykiety i akcja główna dopasowują się.
+ * .ss-card--elevated — karta wyniesiona nad płaszczyznę (--ss-shadow-elevated); wyjątek od zasady „karta bez cienia”,
+ * tylko dla jednej, wyróżnionej karty widoku.
+ */
+.ss-card--tinted {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-card--inverse {
+    border-color: transparent;
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
+}
+
+.ss-card--inverse .ss-muted,
+.ss-card--inverse .ss-field__label {
+    color: var(--ss-color-muted-inverse);
+}
+
+.ss-card--inverse .ss-logo {
+    color: var(--ss-color-on-brand);
+}
+
+.ss-card--inverse .ss-button--primary {
+    border-color: var(--ss-color-on-inverse);
+    background: var(--ss-color-on-inverse);
+    color: var(--ss-color-surface-inverse);
+}
+
+.ss-card--elevated {
+    box-shadow: var(--ss-shadow-elevated);
+}
+
+/**
+ * .ss-frame — rama grupująca karty (np. dwie karty obok siebie): tło surface, odstęp --ss-frame-padding,
+ * promień --ss-radius-frame i miękki cień; karty w ramie dostają promień zagnieżdżony (rama minus odstęp).
+ */
+.ss-frame {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-frame-padding);
+    padding: var(--ss-frame-padding);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-frame);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-frame);
+}
+
+.ss-frame > .ss-card {
+    border-radius: var(--ss-radius-nested);
+}
+
+/* Podwójna klasa: rama w wierszu wygrywa z układem kontenera, z którym jest połączona (np. .ss-auth__cards). */
+@media (min-width: 56rem) {
+    .ss-frame.ss-frame--row {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .ss-frame--row > .ss-card {
+        flex: 1;
+    }
+}
+
+/**
  * .ss-badge — plakietka (wersja, stan): pigułka surface-muted, drobny tekst.
  */
 .ss-badge {
     display: inline-flex;
+    gap: var(--ss-space-1);
     align-items: center;
     padding: var(--ss-space-1) var(--ss-space-3);
     border-radius: var(--ss-radius-pill);
@@ -148,13 +249,6 @@
 .ss-welcome__feature-title {
     font-size: 0.9375rem;
     font-weight: 600;
-}
-
-.ss-welcome__feature-icon {
-    flex: none;
-    padding: var(--ss-space-2);
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-surface-muted);
 }
 
 /**
@@ -271,24 +365,9 @@
  */
 .ss-input--code {
     font-family: var(--ss-font-mono);
-    font-size: 1.5rem;
-    letter-spacing: 0.4em;
+    font-size: 1.25rem;
+    letter-spacing: 0.25em;
     text-align: center;
-}
-
-.ss-check {
-    display: flex;
-    gap: var(--ss-space-2);
-    align-items: flex-start;
-    font-size: 0.875rem;
-}
-
-.ss-check input {
-    flex: none;
-    width: 1rem;
-    height: 1rem;
-    margin: 0.2rem 0 0;
-    accent-color: var(--ss-color-accent);
 }
 
 /**
@@ -297,6 +376,7 @@
  */
 .ss-button {
     display: inline-flex;
+    text-decoration: none;
     align-items: center;
     justify-content: center;
     padding: var(--ss-space-3) var(--ss-space-4);
@@ -310,8 +390,13 @@
     cursor: pointer;
 }
 
-.ss-button:hover {
+.ss-button:hover:not(:disabled) {
     background: var(--ss-color-surface-muted);
+}
+
+.ss-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .ss-button--primary {
@@ -320,13 +405,38 @@
     color: var(--ss-color-on-accent);
 }
 
-.ss-button--primary:hover {
+.ss-button--primary:hover:not(:disabled) {
     border-color: var(--ss-color-accent-hover);
     background: var(--ss-color-accent-hover);
 }
 
 .ss-button--block {
     width: 100%;
+}
+
+/**
+ * .ss-button__icon — ikona w przycisku (x-mainboard::icon) przed tekstem albo po nim; .ss-button--pill — przycisk
+ * w pigułce (np. akcje w ramie z kartami).
+ */
+.ss-button {
+    gap: var(--ss-space-2);
+}
+
+.ss-button__icon,
+.ss-badge__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-badge__icon {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.ss-button--pill {
+    border-radius: var(--ss-radius-pill);
+    padding-inline: var(--ss-space-6);
 }
 
 .ss-link {
@@ -337,7 +447,6 @@
 }
 
 .ss-input:focus-visible,
-.ss-check input:focus-visible,
 .ss-button:focus-visible,
 .ss-link:focus-visible {
     outline: 2px solid var(--ss-color-accent);
@@ -368,16 +477,15 @@
     padding: var(--ss-space-4);
 }
 
+/**
+ * .ss-auth__card — tylko układ karty z formularzem; wygląd daje .ss-card (i jej warianty w układzie split).
+ */
 .ss-auth__card {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-6);
     width: 100%;
     max-width: var(--ss-auth-width);
-    padding: var(--ss-space-4);
-    border: 1px solid var(--ss-color-border);
-    border-radius: var(--ss-radius-card);
-    background: var(--ss-color-surface);
 }
 
 .ss-auth__logo {
@@ -417,8 +525,1935 @@
     margin: 0;
 }
 
+/**
+ * .ss-auth__cards — kontener kart logowania; w wariancie centered jedna karta, w split dwie obok siebie.
+ */
+.ss-auth__cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    width: 100%;
+    max-width: var(--ss-auth-width);
+}
+
+/**
+ * .ss-auth--split — wariant AuthLayout::Split z klas design systemu: rama .ss-frame, w niej karta marki
+ * (.ss-card--inverse .ss-card--elevated, logo) i karta formularza (.ss-card--tinted); na telefonie karta
+ * marki jako niski pasek nad formularzem.
+ */
+.ss-auth--split .ss-auth__cards {
+    max-width: var(--ss-auth-split-width);
+    gap: var(--ss-frame-padding);
+}
+
+.ss-auth__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 8rem;
+}
+
+.ss-auth__brand-logo {
+    width: 100%;
+    max-width: 14rem;
+    color: inherit;
+}
+
 @media (min-width: 40rem) {
     .ss-auth__card {
         padding: var(--ss-space-8);
     }
+}
+
+@media (min-width: 56rem) {
+    .ss-auth--split .ss-auth__brand {
+        flex: 1;
+        min-height: 32rem;
+    }
+
+    .ss-auth--split .ss-auth__card {
+        flex: 0 0 var(--ss-auth-width);
+        justify-content: center;
+    }
+}
+
+/**
+ * .ss-sr-only — tekst tylko dla czytników ekranu (np. stan etapu steppera, etykieta wyszukiwarki).
+ */
+.ss-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.ss-field__hint {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+textarea.ss-input {
+    resize: vertical;
+}
+
+/**
+ * Warstwy layoutu aplikacji (docs/design-system.md §5): .ss-app (tło strony) → .ss-topbar → .ss-module-nav →
+ * .ss-main z nagłówkiem kontekstowym .ss-context, stepperem .ss-stepper i siatką kart .ss-grid.
+ */
+.ss-app {
+    background: var(--ss-color-bg);
+}
+
+.ss-topbar {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-bottom: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+}
+
+.ss-topbar__logo {
+    flex: none;
+    width: 7.5rem;
+}
+
+/**
+ * .ss-search — wyszukiwarka w pigułce surface-muted na środku top baru; na telefonie zwija się do ikony.
+ */
+.ss-search {
+    display: flex;
+    flex: 1;
+    gap: var(--ss-space-2);
+    align-items: center;
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+}
+
+.ss-search:focus-within {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-search__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ss-color-text);
+    font: inherit;
+    font-size: 0.875rem;
+    outline: none;
+}
+
+/**
+ * .ss-avatar — awatar (x-mainboard::avatar): inicjały albo zdjęcie w kółku; --sm, --md, --lg; --accent dla
+ * bieżącego użytkownika.
+ */
+.ss-avatar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    overflow: hidden;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.ss-avatar--xs {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.5625rem;
+}
+
+.ss-avatar--sm {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.6875rem;
+}
+
+.ss-avatar--lg {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.25rem;
+}
+
+.ss-avatar--slate {
+    background: var(--ss-avatar-slate-bg);
+    color: var(--ss-avatar-slate-fg);
+}
+
+.ss-avatar--red {
+    background: var(--ss-avatar-red-bg);
+    color: var(--ss-avatar-red-fg);
+}
+
+.ss-avatar--amber {
+    background: var(--ss-avatar-amber-bg);
+    color: var(--ss-avatar-amber-fg);
+}
+
+.ss-avatar--green {
+    background: var(--ss-avatar-green-bg);
+    color: var(--ss-avatar-green-fg);
+}
+
+.ss-avatar--teal {
+    background: var(--ss-avatar-teal-bg);
+    color: var(--ss-avatar-teal-fg);
+}
+
+.ss-avatar--blue {
+    background: var(--ss-avatar-blue-bg);
+    color: var(--ss-avatar-blue-fg);
+}
+
+.ss-avatar--violet {
+    background: var(--ss-avatar-violet-bg);
+    color: var(--ss-avatar-violet-fg);
+}
+
+.ss-avatar--pink {
+    background: var(--ss-avatar-pink-bg);
+    color: var(--ss-avatar-pink-fg);
+}
+
+.ss-avatar--accent {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-avatar__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/**
+ * .ss-person — awatar z imieniem i nazwiskiem (i opcjonalnie drugą linią) w tabelach i listach.
+ */
+.ss-person {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-person__text {
+    display: flex;
+    flex-direction: column;
+}
+
+/**
+ * .ss-module-nav — nawigacja modułowa: ikona + etykieta; aktywna (aria-current) jako pigułka surface-muted,
+ * pozostałe muted; na telefonie przewijanie poziome bez łamania wiersza.
+ */
+.ss-module-nav {
+    display: flex;
+    gap: var(--ss-space-1);
+    padding: var(--ss-space-2) var(--ss-space-4);
+    overflow-x: auto;
+    border-bottom: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+    white-space: nowrap;
+}
+
+.ss-module-nav__link {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-radius: var(--ss-radius-pill);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.ss-module-nav__link:hover,
+.ss-module-nav__link[aria-current="page"] {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-module-nav__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-module-nav__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    padding: var(--ss-space-6) var(--ss-space-4) var(--ss-space-8);
+}
+
+/**
+ * .ss-context — nagłówek kontekstowy: powrót, metadane, duży tytuł, akcje po prawej (na telefonie pod tytułem).
+ */
+.ss-context {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.ss-context__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+}
+
+.ss-context__back {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    align-self: flex-start;
+    margin-bottom: var(--ss-space-2);
+    color: var(--ss-color-muted);
+    text-decoration: none;
+}
+
+.ss-context__back-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-context__meta {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-context__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.ss-context__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+}
+
+/**
+ * .ss-stepper — etapy procesu z przypadków enuma statusu: zakończony (akcent, haczyk), bieżący (akcent,
+ * wyróżniony, aria-current="step"), przyszły (border-strong); stan zawsze też tekstem (.ss-sr-only).
+ */
+.ss-stepper {
+    display: flex;
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    list-style: none;
+}
+
+.ss-stepper__step {
+    display: flex;
+    flex: 1;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: max-content;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-stepper__step + .ss-stepper__step::before {
+    content: "";
+    flex: 1;
+    min-width: var(--ss-space-4);
+    height: 1px;
+    margin-right: var(--ss-space-2);
+    background: var(--ss-color-border-strong);
+}
+
+.ss-stepper__step--done + .ss-stepper__step::before {
+    background: var(--ss-color-accent);
+}
+
+.ss-stepper__marker {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ss-stepper__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-stepper__step--done .ss-stepper__marker,
+.ss-stepper__step--current .ss-stepper__marker {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-stepper__step--done,
+.ss-stepper__step--current {
+    color: var(--ss-color-text);
+}
+
+.ss-stepper__step--current .ss-stepper__label {
+    font-weight: 600;
+}
+
+.ss-stepper__step--current .ss-stepper__marker {
+    box-shadow: 0 0 0 4px var(--ss-color-surface-muted);
+}
+
+/**
+ * .ss-grid — siatka niezależnych kart; na telefonie jedna kolumna.
+ */
+.ss-grid {
+    display: grid;
+    gap: var(--ss-space-4);
+}
+
+.ss-card__title {
+    margin: 0 0 var(--ss-space-4);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-card__lead {
+    margin: calc(-1 * var(--ss-space-2)) 0 var(--ss-space-4);
+    font-size: 0.875rem;
+}
+
+.ss-card--flush {
+    padding: 0;
+    overflow: hidden;
+}
+
+.ss-stat__label {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ss-stat__value {
+    margin: var(--ss-space-2) 0 var(--ss-space-1);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.ss-stat__note {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-list__item {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ss-space-3) 0;
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+}
+
+.ss-list__item:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.ss-list__main {
+    display: flex;
+    flex-direction: column;
+}
+
+.ss-list__side {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+.ss-list__value {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/**
+ * .ss-table — lista wielu rekordów (pojedynczy rekord zawsze w kartach, §4); kwoty wyrównane do prawej.
+ */
+.ss-table-wrap {
+    overflow-x: auto;
+}
+
+.ss-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.ss-table th,
+.ss-table td {
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-bottom: 1px solid var(--ss-color-border-strong);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.ss-table thead th {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.ss-table tbody th {
+    font-weight: 500;
+}
+
+.ss-table tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.ss-table .ss-table__number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/**
+ * .ss-pairs — pary etykieta (muted, lewa) → wartość (text, prawa); na telefonie etykieta nad wartością.
+ */
+.ss-pairs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-pairs__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+}
+
+.ss-pairs dt {
+    color: var(--ss-color-muted);
+}
+
+.ss-pairs dd {
+    margin: 0;
+    font-weight: 500;
+}
+
+.ss-pairs__row--total {
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-pairs__row--total dd {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-form-layout {
+    display: grid;
+    gap: var(--ss-space-4);
+}
+
+.ss-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    justify-content: flex-end;
+}
+
+@media (max-width: 39.99rem) {
+    .ss-search {
+        flex: none;
+        margin-left: auto;
+        padding: var(--ss-space-2);
+    }
+
+    .ss-search__input {
+        display: none;
+    }
+}
+
+@media (min-width: 40rem) {
+    .ss-main {
+        padding: var(--ss-space-8) var(--ss-space-6);
+    }
+
+    .ss-pairs__row {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .ss-pairs dd {
+        text-align: right;
+    }
+
+    .ss-form-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 40rem) {
+    .ss-grid--4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 64rem) {
+    .ss-grid--4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .ss-grid--3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ss-grid--wide {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/**
+ * .ss-shell — layout aplikacji z menu bocznym (x-mainboard::app.layout). Szeroki ekran: menu przyklejone po lewej,
+ * zwijane do ikon (.ss-shell--collapsed, etykiety zostają dla czytników ekranu i w title). Telefon ze skryptem
+ * (.ss-shell--js): menu wysuwane z lewej (.ss-shell--open) nad przyciemnionym tłem; bez skryptu nad treścią.
+ */
+.ss-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--ss-color-bg);
+}
+
+.ss-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    padding: var(--ss-space-4) var(--ss-space-3);
+    border-right: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+}
+
+/**
+ * Nagłówek menu: tożsamość (awatar, imię i nazwisko albo nazwa, druga linia) otwierająca menu konta, pod nią akcje
+ * (zwijanie menu, powiadomienia). Stopka: subtelne logo w lewym dolnym rogu.
+ */
+.ss-sidebar__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+.ss-sidebar__account {
+    position: relative;
+}
+
+.ss-sidebar__identity {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    list-style: none;
+    cursor: pointer;
+}
+
+div.ss-sidebar__identity {
+    cursor: default;
+}
+
+.ss-sidebar__identity::-webkit-details-marker {
+    display: none;
+}
+
+summary.ss-sidebar__identity:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+summary.ss-sidebar__identity:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-sidebar__identity-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-sidebar__identity-name {
+    overflow: hidden;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-sidebar__identity-subtitle {
+    overflow: hidden;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-sidebar__actions {
+    display: flex;
+    gap: var(--ss-space-2);
+    padding: 0 var(--ss-space-2);
+}
+
+.ss-sidebar__panel {
+    top: calc(100% + var(--ss-space-1));
+    right: auto;
+    left: 0;
+}
+
+.ss-sidebar__brand {
+    margin-top: auto;
+    padding: var(--ss-space-3) var(--ss-space-3) 0;
+    opacity: 0.45;
+    transition: opacity 0.15s ease;
+}
+
+.ss-sidebar__brand:hover {
+    opacity: 0.8;
+}
+
+.ss-sidebar__logo {
+    width: 3rem;
+}
+
+.ss-sidebar__nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.ss-sidebar__group {
+    margin: var(--ss-space-4) 0 var(--ss-space-1);
+    padding: 0 var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-sidebar__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-sidebar__link {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.ss-sidebar__link:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__link[aria-current="page"] {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font-weight: 600;
+}
+
+.ss-sidebar__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-sidebar__icon {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-sidebar__label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ss-sidebar__badge {
+    padding: 0 var(--ss-space-2);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ss-shell__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-shell__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: var(--ss-color-backdrop);
+}
+
+.ss-shell__backdrop[hidden] {
+    display: none;
+}
+
+/**
+ * .ss-icon-button — przycisk z samą ikoną (np. zwijanie menu); nazwa w .ss-sr-only.
+ */
+.ss-icon-button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    cursor: pointer;
+}
+
+.ss-icon-button:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-icon-button:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-icon-button__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-search__kbd {
+    flex: none;
+    padding: 0 var(--ss-space-2);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: 0.375rem;
+    background: var(--ss-color-surface);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-shell .ss-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+@media (max-width: 63.99rem) {
+    .ss-shell--js .ss-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 30;
+        width: var(--ss-sidebar-width);
+        box-shadow: var(--ss-shadow-overlay);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.2s ease, visibility 0.2s;
+    }
+
+    .ss-shell--js.ss-shell--open .ss-sidebar {
+        transform: none;
+        visibility: visible;
+    }
+
+    .ss-search__kbd {
+        display: none;
+    }
+}
+
+@media (min-width: 64rem) {
+    .ss-shell {
+        flex-direction: row;
+    }
+
+    .ss-sidebar {
+        position: sticky;
+        top: 0;
+        flex: 0 0 var(--ss-sidebar-width);
+        height: 100vh;
+        transition: flex-basis 0.2s ease;
+    }
+
+    .ss-topbar__menu {
+        display: none;
+    }
+
+    .ss-shell--collapsed .ss-sidebar {
+        flex-basis: var(--ss-sidebar-collapsed-width);
+    }
+
+    .ss-shell--collapsed .ss-sidebar__brand,
+    .ss-shell--collapsed .ss-sidebar__group {
+        visibility: hidden;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__identity {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__identity-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__actions {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__group {
+        height: 1px;
+        margin: var(--ss-space-2) 0;
+        overflow: hidden;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__link {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__label,
+    .ss-shell--collapsed .ss-sidebar__badge {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-sidebar,
+    .ss-shell--js .ss-sidebar {
+        transition: none;
+    }
+}
+
+/**
+ * .ss-choices — wybór jednej opcji jako pigułki (np. wolne godziny): radio w .ss-choice, zaznaczona w kolorze akcentu.
+ */
+.ss-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.ss-choice {
+    position: relative;
+}
+
+.ss-choice input {
+    position: absolute;
+    opacity: 0;
+}
+
+.ss-choice span {
+    display: inline-flex;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+}
+
+.ss-choice input:checked + span {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-choice input:focus-visible + span {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-choice input:disabled + span {
+    color: var(--ss-color-muted);
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+.ss-table__sub {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+/**
+ * .ss-card__title--inset — tytuł karty bez wewnętrznego odstępu (.ss-card--flush, np. nad tabelą).
+ */
+.ss-card__title--inset {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+    padding: var(--ss-space-4) var(--ss-space-4) var(--ss-space-3);
+}
+
+/**
+ * .ss-table--grid — tabela-siatka (np. grafik: godziny × osoby): komórki od góry, pionowe linie między kolumnami.
+ */
+.ss-table--grid td,
+.ss-table--grid th {
+    vertical-align: top;
+}
+
+.ss-table--grid td + td,
+.ss-table--grid th + td,
+.ss-table--grid th + th {
+    border-left: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-table--grid td .ss-badge {
+    margin-top: var(--ss-space-1);
+}
+
+/**
+ * .ss-form-row — pola obok siebie (np. rodzaj i numer dokumentu z przyciskiem); na telefonie jedno pod drugim.
+ */
+.ss-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: flex-end;
+}
+
+.ss-form-row__grow {
+    flex: 1 1 12rem;
+}
+
+.ss-fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.ss-notice .ss-icon {
+    vertical-align: -0.15em;
+}
+
+.ss-notice--spaced {
+    margin-top: var(--ss-space-4);
+}
+
+/**
+ * .ss-account-menu — menu konta pod awatarem w top barze (<details>; skrypt zamyka je kliknięciem obok i Esc).
+ */
+.ss-account-menu {
+    position: relative;
+    flex: none;
+}
+
+.ss-account-menu__panel {
+    position: absolute;
+    top: calc(100% + var(--ss-space-2));
+    right: 0;
+    z-index: 40;
+    min-width: 15rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+}
+
+.ss-account-menu__name {
+    margin: 0;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-bottom: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-account-menu__list {
+    margin: var(--ss-space-1) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-account-menu__link {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+.ss-account-menu__link:hover,
+.ss-account-menu__link[aria-current="page"] {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-account-menu__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -2px;
+}
+
+.ss-account-menu__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/**
+ * .ss-tabs — zakładki sekcji widoku (np. ustawienia): pigułki, bieżąca przez aria-current, na telefonie
+ * przewijanie poziome.
+ */
+.ss-tabs {
+    display: flex;
+    gap: var(--ss-space-1);
+    margin: 0;
+    padding: var(--ss-space-1);
+    overflow-x: auto;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    list-style: none;
+    white-space: nowrap;
+}
+
+.ss-tabs__link {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border-radius: var(--ss-radius-pill);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.ss-tabs__link:hover {
+    color: var(--ss-color-text);
+}
+
+.ss-tabs__link[aria-current="page"],
+.ss-tabs__link[aria-current="true"] {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-tabs__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-switch — przełącznik włącz/wyłącz (checkbox z role="switch"): opis po lewej, tor po prawej; stan także
+ * w opisie i dla czytników ekranu (role, checked), nie samym kolorem.
+ */
+.ss-switch {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ss-space-3) 0;
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.ss-switch:first-child {
+    border-top: 0;
+}
+
+.ss-switch__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ss-switch__hint {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-switch input {
+    position: absolute;
+    opacity: 0;
+}
+
+.ss-switch__track {
+    position: relative;
+    flex: none;
+    width: 2.5rem;
+    height: 1.5rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-border-strong);
+    transition: background 0.15s ease;
+}
+
+.ss-switch__track::after {
+    content: "";
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-raised);
+    transition: transform 0.15s ease;
+}
+
+.ss-switch input:checked + .ss-switch__track {
+    background: var(--ss-color-accent);
+}
+
+.ss-switch input:checked + .ss-switch__track::after {
+    transform: translateX(1rem);
+}
+
+.ss-switch input:focus-visible + .ss-switch__track {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-switch__track,
+    .ss-switch__track::after {
+        transition: none;
+    }
+}
+
+/**
+ * .ss-card__footer — dolna część karty (akcja albo dodatkowe pole) z odstępem od treści powyżej.
+ */
+.ss-card__footer {
+    margin-top: var(--ss-space-4);
+}
+
+/**
+ * Strony błędów (x-mainboard::error.layout) na układzie logowania split: duży kod w karcie marki, akcje w pigułkach.
+ */
+.ss-error__brand {
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-error__code {
+    margin: 0;
+    font-family: var(--ss-font-mono);
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.ss-error__label {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-error__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+}
+
+@media (min-width: 56rem) {
+    .ss-error__code {
+        font-size: 6rem;
+    }
+}
+
+/**
+ * .ss-steps — numerowana lista kroków (np. instrukcja); numer w kółku w kolorze akcentu.
+ */
+.ss-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0;
+    padding: 0;
+    counter-reset: ss-step;
+    list-style: none;
+    font-size: 0.875rem;
+}
+
+.ss-steps li {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    counter-increment: ss-step;
+}
+
+.ss-steps li::before {
+    content: counter(ss-step);
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/**
+ * .ss-toasts — toasty (x-mainboard::toasts) na środku ekranu nad treścią; kontener nie przechwytuje kliknięć poza
+ * toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
+ * znaczenie niosą też ikona i nazwa typu.
+ */
+.ss-toasts {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-4);
+    pointer-events: none;
+}
+
+.ss-toast {
+    --ss-toast-color: var(--ss-color-info);
+    --ss-toast-surface: var(--ss-color-info-surface);
+
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--ss-space-4);
+    border: 1px solid color-mix(in srgb, var(--ss-toast-color) 35%, transparent);
+    border-left: 4px solid var(--ss-toast-color);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-toast-surface);
+    color: var(--ss-color-text);
+    box-shadow: var(--ss-shadow-elevated);
+    pointer-events: auto;
+    animation: ss-toast-in 0.2s ease-out;
+}
+
+.ss-toast--success {
+    --ss-toast-color: var(--ss-color-success);
+    --ss-toast-surface: var(--ss-color-success-surface);
+}
+
+.ss-toast--warning {
+    --ss-toast-color: var(--ss-color-warning);
+    --ss-toast-surface: var(--ss-color-warning-surface);
+}
+
+.ss-toast--danger {
+    --ss-toast-color: var(--ss-color-danger);
+    --ss-toast-surface: var(--ss-color-danger-surface);
+}
+
+.ss-toast--leaving {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ss-toast__icon {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--ss-toast-color);
+}
+
+.ss-toast__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-width: 0;
+}
+
+.ss-toast__title {
+    margin: 0;
+    color: var(--ss-toast-color);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.ss-toast__message {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-toast__action {
+    align-self: flex-start;
+    margin-top: var(--ss-space-1);
+    font-weight: 600;
+}
+
+.ss-toast__close {
+    display: inline-flex;
+    flex: none;
+    padding: var(--ss-space-1);
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: transparent;
+    color: var(--ss-color-muted);
+    cursor: pointer;
+}
+
+.ss-toast__close:hover {
+    background: color-mix(in srgb, var(--ss-toast-color) 12%, transparent);
+    color: var(--ss-color-text);
+}
+
+.ss-toast__close:focus-visible {
+    outline: 2px solid var(--ss-toast-color);
+    outline-offset: 2px;
+}
+
+.ss-toast__close-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/**
+ * .ss-toasts--inline — toasty w treści (próbki w design systemie), bez pozycjonowania nad stroną.
+ */
+.ss-toasts--inline {
+    position: static;
+    align-items: stretch;
+    padding: 0;
+}
+
+.ss-toasts--inline .ss-toast {
+    box-shadow: none;
+    animation: none;
+}
+
+@keyframes ss-toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem) scale(0.98);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-toast,
+    .ss-toast--leaving {
+        animation: none;
+        transition: none;
+    }
+}
+
+/**
+ * .ss-notifications — dzwonek w top barze (licznik nieprzeczytanych także w tekście dla czytników) z panelem;
+ * .ss-notification — pozycja panelu i listy powiadomień (nieprzeczytana: kropka akcentu i pogrubiony tytuł).
+ */
+.ss-notifications__toggle {
+    position: relative;
+    list-style: none;
+}
+
+.ss-notifications__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-notifications__count {
+    position: absolute;
+    top: -0.375rem;
+    right: -0.375rem;
+    min-width: 1.25rem;
+    padding: 0 0.3rem;
+    border: 2px solid var(--ss-color-surface);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-danger);
+    color: var(--ss-color-on-accent);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1rem;
+    text-align: center;
+}
+
+.ss-notifications__panel {
+    width: min(24rem, calc(100vw - 2rem));
+}
+
+.ss-notifications__list {
+    max-height: 22rem;
+    margin: var(--ss-space-1) 0 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.ss-notifications__empty {
+    margin: 0;
+    padding: var(--ss-space-4) var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-notifications__all {
+    display: block;
+    padding: var(--ss-space-2) var(--ss-space-3) var(--ss-space-1);
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.ss-notification {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    padding: var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+a.ss-notification:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+a.ss-notification:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -2px;
+}
+
+.ss-notification__icon {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.375rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+}
+
+.ss-notification--unread .ss-notification__icon {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-notification__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ss-notification--unread .ss-notification__title {
+    font-weight: 700;
+}
+
+.ss-notification__body {
+    color: var(--ss-color-muted);
+}
+
+.ss-notification__time {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-notification-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-notification-list > li + li {
+    border-top: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-switch:has(input:disabled) {
+    color: var(--ss-color-muted);
+    cursor: not-allowed;
+}
+
+.ss-switch input:disabled + .ss-switch__track {
+    opacity: 0.5;
+}
+
+/**
+ * .ss-input-wrap — pole z subtelną ikoną w tle po lewej (x-mainboard::input); ikona nie przechwytuje kliknięć.
+ */
+.ss-input-wrap {
+    position: relative;
+}
+
+.ss-input-wrap__icon {
+    position: absolute;
+    top: 50%;
+    left: var(--ss-space-3);
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--ss-color-muted);
+    opacity: 0.6;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.ss-input-wrap--icon .ss-input {
+    padding-left: 2.5rem;
+}
+
+.ss-input-wrap:focus-within .ss-input-wrap__icon {
+    opacity: 1;
+}
+
+/**
+ * .ss-context-switch — przełącznik kontekstu w rzędzie akcji menu (np. widok, organizacja): grupy z nagłówkami,
+ * bieżący kontekst oznaczony haczykiem i aria-current.
+ */
+.ss-context-switch__toggle {
+    list-style: none;
+}
+
+.ss-context-switch__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-context-switch__group {
+    margin: var(--ss-space-2) 0 0;
+    padding: 0 var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-context-switch__check {
+    width: 1rem;
+    height: 1rem;
+    margin-left: auto;
+}
+
+/**
+ * .ss-period — nagłówek okresu (np. grafik): zakładki zakresu, nawigacja poprzedni/następny i nazwa okresu.
+ */
+.ss-period {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-period__nav {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-period__label {
+    min-width: 12rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.ss-period__label::first-letter {
+    text-transform: uppercase;
+}
+
+/**
+ * .ss-meter — wskaźnik obłożenia (<meter>): niskie obłożenie w kolorze akcentu, wysokie ostrzeżenie, pełne błąd;
+ * wartość liczbowa zawsze obok w tekście.
+ */
+.ss-meter {
+    display: block;
+    width: 100%;
+    height: 0.375rem;
+    margin-top: var(--ss-space-1);
+    border: 0;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    appearance: none;
+}
+
+.ss-meter::-webkit-meter-bar {
+    height: 0.375rem;
+    border: 0;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-meter::-webkit-meter-optimum-value {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+}
+
+.ss-meter::-webkit-meter-suboptimum-value {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-warning);
+}
+
+.ss-meter::-webkit-meter-even-less-good-value {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-danger);
+}
+
+.ss-meter::-moz-meter-bar {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+}
+
+.ss-meter:-moz-meter-sub-optimum::-moz-meter-bar {
+    background: var(--ss-color-warning);
+}
+
+.ss-meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    background: var(--ss-color-danger);
+}
+
+.ss-table .ss-table__today {
+    background: color-mix(in srgb, var(--ss-color-accent) 6%, transparent);
+}
+
+/**
+ * .ss-calendar — kalendarz miesiąca (tydzień od poniedziałku): dzień z numerem, treścią i wskaźnikiem; dziś
+ * (aria-current="date") z obwódką akcentu, dni spoza miesiąca przygaszone, nieczynne z opisem.
+ */
+.ss-calendar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    overflow-x: auto;
+}
+
+.ss-calendar__row {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(5.5rem, 1fr));
+    gap: var(--ss-space-1);
+}
+
+.ss-calendar__weekday {
+    padding: var(--ss-space-1) var(--ss-space-2);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.ss-calendar__day {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-height: 5.5rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    font-size: 0.8125rem;
+}
+
+.ss-calendar__day--outside {
+    border-style: dashed;
+    background: transparent;
+    color: var(--ss-color-muted);
+}
+
+.ss-calendar__day--closed {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-calendar__day--today {
+    border: 2px solid var(--ss-color-accent);
+}
+
+.ss-calendar__date {
+    font-weight: 600;
+}
+
+.ss-calendar__day--today .ss-calendar__date {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-calendar__note {
+    color: var(--ss-color-muted);
+}
+
+.ss-calendar__link {
+    margin-top: auto;
+    font-variant-numeric: tabular-nums;
+}
+
+/**
+ * .ss-cell--open / .ss-cell--closed — dostępność w siatce (np. godziny przyjęć): bardzo lekkie tło akcentu albo
+ * subtelne ukośne kreskowanie; znaczenie także w legendzie (.ss-legend) i w tekście dla czytników ekranu.
+ */
+.ss-cell--open {
+    background: color-mix(in srgb, var(--ss-color-accent) 5%, transparent);
+}
+
+.ss-cell--closed {
+    background: repeating-linear-gradient(135deg, transparent 0 0.5rem, color-mix(in srgb, var(--ss-color-text) 5%, transparent) 0.5rem 0.5625rem);
+}
+
+.ss-cell__item + .ss-cell__item {
+    margin-top: var(--ss-space-2);
+    padding-top: var(--ss-space-2);
+    border-top: 1px dashed var(--ss-color-border-strong);
+}
+
+.ss-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-legend__item {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-legend__swatch {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: 0.25rem;
+}
+
+.ss-period__switches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+}
+
+.ss-tabs__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+/**
+ * .ss-avatars — nakładające się awatary (np. członkowie zespołu); .ss-choice--avatar — pigułka wyboru z awatarem.
+ */
+.ss-avatars {
+    display: inline-flex;
+}
+
+.ss-avatars .ss-avatar {
+    box-shadow: 0 0 0 2px var(--ss-color-surface);
+}
+
+.ss-avatars .ss-avatar + .ss-avatar {
+    margin-left: -0.375rem;
+}
+
+.ss-choice--avatar span {
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding-left: var(--ss-space-2);
+}
+
+.ss-cell__item .ss-avatar {
+    vertical-align: -0.3em;
+    margin-right: var(--ss-space-1);
 }

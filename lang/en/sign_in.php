@@ -26,7 +26,7 @@ return [
     'pin_title' => 'Enter your PIN',
     'pin' => 'PIN',
     'pin_setup_title' => 'Set your PIN',
-    'pin_setup_intro' => 'The PIN has :length digits. Avoid repeated and consecutive digits.',
+    'pin_setup_intro' => 'The PIN has :min to :max digits. Avoid repeated and consecutive digits.',
     'pin_confirmation' => 'Repeat the PIN',
     'sign_out' => 'Sign out',
     'signed_in_as' => 'Signed in as :name.',

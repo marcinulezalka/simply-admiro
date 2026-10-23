@@ -57,13 +57,10 @@ final readonly class ZoneRouteRegistrar
 
         $attributes = [
             'middleware' => [ZoneMiddlewareRegistrar::group($zone)],
-            'prefix' => $this->prefix($zone),
+            'prefix' => $this->locales->prefix($zone->slug),
             'as' => $zone->routeNamePrefix . '.',
+            'where' => $this->locales->where(),
         ];
-
-        if ($this->locales->isPrefixed()) {
-            $attributes['where'] = [LocaleRouting::PARAMETER => $this->locales->pattern()];
-        }
 
         $this->router->group($attributes, function () use ($zone): void {
             if ($zone->requiresLogin()) {
@@ -88,12 +85,5 @@ final readonly class ZoneRouteRegistrar
         }
 
         $this->router->middleware($tier->middleware($zone))->group($path);
-    }
-
-    private function prefix(ZoneDefinition $zone): string
-    {
-        $segments = [$this->locales->isPrefixed() ? '{' . LocaleRouting::PARAMETER . '}' : '', $zone->slug];
-
-        return implode('/', array_filter($segments, static fn(string $segment): bool => $segment !== ''));
     }
 }

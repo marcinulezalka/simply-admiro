@@ -23,9 +23,26 @@
     --ss-gray-200: #e5e7eb;
     --ss-gray-400: #9ca3af;
     --ss-gray-500: #6b7280;
+    --ss-gray-600: #4b5563;
     --ss-gray-800: #1f2937;
     --ss-gray-900: #111827;
+    --ss-neutral-400: #a3a3a3;
+    --ss-neutral-900: #171717;
+    --ss-red-50: #fef2f2;
     --ss-red-700: #b91c1c;
+    --ss-red-950: #450a0a;
+    --ss-green-50: #f0fdf4;
+    --ss-green-400: #4ade80;
+    --ss-green-700: #15803d;
+    --ss-green-950: #052e16;
+    --ss-amber-50: #fffbeb;
+    --ss-amber-400: #fbbf24;
+    --ss-amber-800: #92400e;
+    --ss-amber-950: #451a03;
+    --ss-blue-50: #eff6ff;
+    --ss-blue-400: #60a5fa;
+    --ss-blue-700: #1d4ed8;
+    --ss-blue-950: #172554;
     --ss-red-400: #f87171;
 
     /* Kolory semantyczne: motyw jasny (docs/design-system.md §2) */
@@ -41,16 +58,57 @@
     --ss-color-on-accent: var(--ss-white);
     --ss-color-danger: var(--ss-red-700);
 
+    /* Stany (toasty, komunikaty): kolor tekstu i ikony oraz tło; zawsze z tekstem lub ikoną, nie samym kolorem */
+    --ss-color-danger-surface: var(--ss-red-50);
+
+    /* Przyciemnienie pod wysuwanym panelem (menu na telefonie) */
+    --ss-color-backdrop: rgb(0 0 0 / 0.4);
+    --ss-color-success: var(--ss-green-700);
+    --ss-color-success-surface: var(--ss-green-50);
+    --ss-color-warning: var(--ss-amber-800);
+    --ss-color-warning-surface: var(--ss-amber-50);
+    --ss-color-info: var(--ss-blue-700);
+    --ss-color-info-surface: var(--ss-blue-50);
+
+    /* Karta odwrócona (wyróżniona kolorem, np. obok jasnej karty w ramie) */
+    --ss-color-surface-inverse: var(--ss-neutral-900);
+    --ss-color-on-inverse: var(--ss-white);
+    --ss-color-muted-inverse: var(--ss-neutral-400);
+
     /* Marka: logo i panel marki wyłącznie w czerni albo bieli (brand/README.md) */
     --ss-color-brand: var(--ss-black);
     --ss-color-on-brand: var(--ss-white);
+
+    /* Kolory awatarów (Enums\AvatarColor): tło i inicjały, kontrast co najmniej 6,4:1 */
+    --ss-avatar-slate-bg: #e2e8f0;
+    --ss-avatar-slate-fg: #1e293b;
+    --ss-avatar-red-bg: #fee2e2;
+    --ss-avatar-red-fg: #991b1b;
+    --ss-avatar-amber-bg: #fef3c7;
+    --ss-avatar-amber-fg: #92400e;
+    --ss-avatar-green-bg: #dcfce7;
+    --ss-avatar-green-fg: #166534;
+    --ss-avatar-teal-bg: #ccfbf1;
+    --ss-avatar-teal-fg: #115e59;
+    --ss-avatar-blue-bg: #dbeafe;
+    --ss-avatar-blue-fg: #1e40af;
+    --ss-avatar-violet-bg: #ede9fe;
+    --ss-avatar-violet-fg: #5b21b6;
+    --ss-avatar-pink-bg: #fce7f3;
+    --ss-avatar-pink-fg: #9d174d;
 
     /* Promienie i cienie */
     --ss-radius-card: 1rem;
     --ss-radius-control: 0.75rem;
     --ss-radius-pill: 9999px;
+    /* Rama z kartami: karta w ramie ma promień ramy minus jej odstęp, więc krawędzie są równoległe */
+    --ss-radius-frame: 1.75rem;
+    --ss-frame-padding: 0.75rem;
+    --ss-radius-nested: calc(var(--ss-radius-frame) - var(--ss-frame-padding));
     --ss-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --ss-shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --ss-shadow-frame: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 24px 48px -28px rgb(0 0 0 / 0.18);
+    --ss-shadow-elevated: 0 32px 64px -24px rgb(0 0 0 / 0.4), 0 12px 24px -12px rgb(0 0 0 / 0.2);
 
     /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/) */
     --ss-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -67,6 +125,9 @@
 
     --ss-content-width: 40rem;
     --ss-auth-width: 26rem;
+    --ss-auth-split-width: 60rem;
+    --ss-sidebar-width: 16rem;
+    --ss-sidebar-collapsed-width: 4.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -82,7 +143,36 @@
         --ss-color-accent-hover: var(--ss-white);
         --ss-color-on-accent: var(--ss-gray-900);
         --ss-color-danger: var(--ss-red-400);
+        --ss-color-danger-surface: var(--ss-red-950);
+        --ss-color-backdrop: rgb(0 0 0 / 0.6);
+        --ss-color-success: var(--ss-green-400);
+        --ss-color-success-surface: var(--ss-green-950);
+        --ss-color-warning: var(--ss-amber-400);
+        --ss-color-warning-surface: var(--ss-amber-950);
+        --ss-color-info: var(--ss-blue-400);
+        --ss-color-info-surface: var(--ss-blue-950);
+        --ss-color-surface-inverse: var(--ss-gray-100);
+        --ss-color-on-inverse: var(--ss-gray-900);
+        --ss-color-muted-inverse: var(--ss-gray-600);
+        --ss-shadow-frame: 0 1px 2px 0 rgb(0 0 0 / 0.3), 0 24px 48px -28px rgb(0 0 0 / 0.6);
+        --ss-shadow-elevated: 0 32px 64px -24px rgb(0 0 0 / 0.7), 0 12px 24px -12px rgb(0 0 0 / 0.5);
         --ss-color-brand: var(--ss-white);
         --ss-color-on-brand: var(--ss-black);
+        --ss-avatar-slate-bg: #334155;
+        --ss-avatar-slate-fg: #e2e8f0;
+        --ss-avatar-red-bg: #7f1d1d;
+        --ss-avatar-red-fg: #fecaca;
+        --ss-avatar-amber-bg: #78350f;
+        --ss-avatar-amber-fg: #fde68a;
+        --ss-avatar-green-bg: #14532d;
+        --ss-avatar-green-fg: #bbf7d0;
+        --ss-avatar-teal-bg: #134e4a;
+        --ss-avatar-teal-fg: #99f6e4;
+        --ss-avatar-blue-bg: #1e3a8a;
+        --ss-avatar-blue-fg: #bfdbfe;
+        --ss-avatar-violet-bg: #4c1d95;
+        --ss-avatar-violet-fg: #ddd6fe;
+        --ss-avatar-pink-bg: #831843;
+        --ss-avatar-pink-fg: #fbcfe8;
     }
 }

@@ -63,6 +63,26 @@ final readonly class LocaleRouting
     }
 
     /**
+     * Prefiks URL grupy tras: `{locale}` przy kilku językach, potem podane segmenty (np. slug strefy).
+     */
+    public function prefix(string ...$segments): string
+    {
+        $all = [$this->isPrefixed() ? '{' . self::PARAMETER . '}' : '', ...$segments];
+
+        return implode('/', array_filter($all, static fn(string $segment): bool => $segment !== ''));
+    }
+
+    /**
+     * Ograniczenie `where` grupy tras dla parametru {locale}; puste, gdy trasy nie mają prefiksu języka.
+     *
+     * @return array<string, string>
+     */
+    public function where(): array
+    {
+        return $this->isPrefixed() ? [self::PARAMETER => $this->pattern()] : [];
+    }
+
+    /**
      * Wzorzec `where` parametru {locale}.
      */
     public function pattern(): string

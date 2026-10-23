@@ -18,6 +18,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Simplysmart\Mainboard\Models\Concerns\HasAvatarColor;
 use Simplysmart\Mainboard\Models\Concerns\HasChecksum;
 use Simplysmart\Mainboard\Models\Concerns\HasStandardColumns;
 
@@ -48,6 +49,7 @@ abstract class MainAuthenticatable extends MainModel implements AuthenticatableC
 {
     use Authenticatable;
     use Authorizable;
+    use HasAvatarColor;
     use HasChecksum;
     use HasStandardColumns;
     use SoftDeletes;

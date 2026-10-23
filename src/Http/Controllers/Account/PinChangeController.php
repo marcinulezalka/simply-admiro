@@ -21,12 +21,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Simplysmart\Mainboard\Auth\ChangePin;
+use Simplysmart\Mainboard\Auth\PinLength;
+use Simplysmart\Mainboard\Auth\PinRules;
 use Simplysmart\Mainboard\Auth\SignIn\IssueSignInCode;
 use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
 use Simplysmart\Mainboard\Auth\SignInLimit;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Http\AccountRoutes;
-use Simplysmart\Mainboard\Rules\StrongPin;
 
 /**
  * Zmiana PIN-u zalogowanego konta: formularz, wysłanie kodu na adres konta i zapis nowego PIN-u.
@@ -43,7 +44,7 @@ final readonly class PinChangeController
     {
         $settings = $this->zone->get()->auth();
 
-        return view('mainboard::account.pin', ['pinLength' => $settings->pinLength, 'codeLength' => $settings->codeLength]);
+        return view('mainboard::account.pin', ['currentPinLength' => PinLength::accepted(), 'pinLength' => $settings->pinLength, 'codeLength' => $settings->codeLength]);
     }
 
     public function sendCode(Request $request, LoginAttemptLimiter $limiter, Dispatcher $bus): RedirectResponse
@@ -60,9 +61,9 @@ final readonly class PinChangeController
     {
         $settings = $this->zone->get()->auth();
         $validated = $request->validate([
-            'current_pin' => ['required', 'string', 'digits:' . $settings->pinLength],
+            'current_pin' => PinRules::forEnteredPin(),
             'code' => ['required', 'string', 'digits:' . $settings->codeLength],
-            'pin' => ['required', 'string', 'digits:' . $settings->pinLength, 'confirmed', new StrongPin()],
+            'pin' => PinRules::forNewPin($settings->pinLength),
         ]);
 
         $change->handle(

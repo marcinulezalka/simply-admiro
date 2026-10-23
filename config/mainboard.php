@@ -11,6 +11,9 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
+use Simplysmart\Mainboard\Auth\PinLength;
+use Simplysmart\Mainboard\Enums\AuthLayout;
+
 return [
 
     'mail' => [
@@ -85,7 +88,12 @@ return [
         ],
 
         'pin' => [
-            'length' => (int) env('AUTH_PIN_LENGTH', 6),
+            /*
+             * Dopuszczalna długość nowego PIN-u (cyfry), zakres w granicach 4–16 (Auth\PinLength).
+             * Wpisany istniejący PIN jest sprawdzany w pełnym zakresie 4–16, więc zmiana nikogo nie blokuje.
+             */
+            'min_length' => (int) env('AUTH_PIN_MIN_LENGTH', PinLength::MIN),
+            'max_length' => (int) env('AUTH_PIN_MAX_LENGTH', PinLength::MAX),
             'stage_ttl_minutes' => 5,
             'max_attempts' => 5,
 
@@ -118,6 +126,12 @@ return [
             'lifetime_days' => (int) env('AUTH_TRUSTED_DEVICE_DAYS', 30),
             'max_per_account' => 10,
         ],
+
+        /*
+         * Układ stron logowania (Enums\AuthLayout): `centered` — jedna karta na środku, `split` — dwie karty
+         * obok siebie (marka po lewej, nagłówek i formularz po prawej). Strefa może go nadpisać w `auth.layout`.
+         */
+        'layout' => env('AUTH_LAYOUT', AuthLayout::Centered->value),
 
         'route_throttle_per_minute' => 20,
 
@@ -184,6 +198,14 @@ return [
          */
         'robots' => 'noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai',
 
+    ],
+
+    /*
+     * Strona design systemu `/design-system` (trasa `mainboard.design-system`): tokeny i komponenty Core na żywo.
+     * Domyślnie włączona poza produkcją; wyłączona odpowiada 404.
+     */
+    'design_system' => [
+        'enabled' => (bool) env('DESIGN_SYSTEM_PAGE', env('APP_ENV', 'production') !== 'production'),
     ],
 
     'security' => [

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Auth;
 
 use Simplysmart\Mainboard\Contracts\SignInStep;
+use Simplysmart\Mainboard\Enums\AuthLayout;
 
 /**
  * Ustawienia logowania strefy: domyślne z `mainboard.auth`, nadpisane kluczem `auth` configu strefy.
@@ -31,7 +32,7 @@ final readonly class ZoneAuthSettings
         public int $codeTtlMinutes,
         public int $codeMaxAttempts,
         public int $codeResendCooldownSeconds,
-        public int $pinLength,
+        public PinLength $pinLength,
         public int $pinStageTtlMinutes,
         public int $pinMaxAttempts,
         public array $lockoutMinutes,
@@ -41,6 +42,7 @@ final readonly class ZoneAuthSettings
         public bool $trustedDevicesEnabled = false,
         public int $trustedDeviceLifetimeDays = 30,
         public int $trustedDevicesPerAccount = 10,
+        public AuthLayout $layout = AuthLayout::Centered,
     ) {}
 
     /**
