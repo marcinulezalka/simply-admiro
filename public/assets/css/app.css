@@ -18,11 +18,40 @@
  */
 .ss-logo {
     width: 16rem;
-    color: var(--ss-color-text);
+    color: var(--ss-color-brand);
 }
 
 .ss-muted {
     color: var(--ss-color-muted);
+}
+
+/**
+ * .ss-icon — ikona liniowa (x-mainboard::icon), kwadrat 2.5rem; SVG wypełnia kontener.
+ */
+.ss-icon {
+    display: inline-flex;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.ss-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/**
+ * .ss-badge — plakietka (wersja, stan): pigułka surface-muted, drobny tekst.
+ */
+.ss-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--ss-space-1) var(--ss-space-3);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
 /**
@@ -53,7 +82,7 @@
     display: flex;
     flex-direction: column-reverse;
     width: 100%;
-    max-width: 56rem;
+    max-width: 72rem;
     overflow: hidden;
     border-radius: 0.75rem;
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-color-text) 12%, transparent),
@@ -72,6 +101,19 @@
     font-weight: 600;
 }
 
+.ss-welcome__lead {
+    max-width: 40rem;
+    margin: 0;
+}
+
+/**
+ * .ss-brand-name — nazwa produktu simplysmart w tekście (View\BrandNames): pogrubiona, w kolorze tekstu.
+ */
+.ss-brand-name {
+    color: var(--ss-color-text);
+    font-weight: 600;
+}
+
 .ss-welcome__heading {
     margin: var(--ss-space-8) 0 var(--ss-space-2);
     font-size: 0.8125rem;
@@ -80,33 +122,66 @@
     text-transform: uppercase;
 }
 
-.ss-welcome__list {
+.ss-welcome__features {
+    display: grid;
+    gap: var(--ss-space-4);
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.ss-welcome__list li {
-    position: relative;
-    padding: var(--ss-space-2) 0 var(--ss-space-2) var(--ss-space-8);
-    border-bottom: 1px solid color-mix(in srgb, var(--ss-color-text) 10%, transparent);
+/**
+ * .ss-welcome__feature — funkcja Core: ikona w kafelku surface-muted, obok tytuł (text) i opis (muted).
+ */
+.ss-welcome__feature {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
 }
 
-.ss-welcome__list li::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: var(--ss-space-2);
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--ss-color-text);
-    transform: translateY(-50%);
+.ss-welcome__feature-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875rem;
 }
 
-.ss-welcome__note {
-    margin: var(--ss-space-8) 0 0;
+.ss-welcome__feature-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.ss-welcome__feature-icon {
+    flex: none;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+/**
+ * .ss-welcome__footer — stopka karty: „Zbudowane na” z logo Laravela (monochromatyczne, currentColor)
+ * i plakietka wersji Core.
+ */
+.ss-welcome__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--ss-space-8);
+    padding-top: var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border-strong);
     font-size: 0.8125rem;
+}
+
+.ss-welcome__built-on {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-welcome__laravel {
+    width: 5.5rem;
+    color: var(--ss-color-text);
 }
 
 .ss-welcome__brand {
@@ -115,8 +190,8 @@
     justify-content: center;
     gap: var(--ss-space-4);
     padding: var(--ss-space-16) var(--ss-space-8);
-    background: var(--ss-color-text);
-    color: var(--ss-color-bg);
+    background: var(--ss-color-brand);
+    color: var(--ss-color-on-brand);
 }
 
 .ss-welcome__brand .ss-logo {
@@ -140,6 +215,210 @@
     }
 
     .ss-welcome__brand {
-        flex: 0 0 24rem;
+        flex: 0 0 26rem;
+    }
+
+    .ss-welcome__features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: var(--ss-space-8);
+    }
+}
+
+/**
+ * Formularze (docs/design-system.md §6): pole z etykietą nad nim, błąd pod polem (tekst w kolorze
+ * --ss-color-danger, nigdy sam kolor), widoczny fokus w kolorze akcentu na każdym elemencie.
+ */
+.ss-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+}
+
+.ss-field__label {
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ss-field__error {
+    margin: 0;
+    color: var(--ss-color-danger);
+    font-size: 0.875rem;
+}
+
+.ss-input {
+    width: 100%;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font: inherit;
+}
+
+.ss-input[aria-invalid="true"] {
+    border-color: var(--ss-color-danger);
+}
+
+/**
+ * .ss-input--code — kod jednorazowy i PIN: duże, rozstrzelone cyfry, wyśrodkowane.
+ */
+.ss-input--code {
+    font-family: var(--ss-font-mono);
+    font-size: 1.5rem;
+    letter-spacing: 0.4em;
+    text-align: center;
+}
+
+.ss-check {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: flex-start;
+    font-size: 0.875rem;
+}
+
+.ss-check input {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.2rem 0 0;
+    accent-color: var(--ss-color-accent);
+}
+
+/**
+ * .ss-button — przycisk drugorzędny (ramka, tło karty); .ss-button--primary — jedyna akcja główna
+ * widoku w kolorze akcentu; .ss-button--block — na całą szerokość formularza.
+ */
+.ss-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ss-button:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-button--primary {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-button--primary:hover {
+    border-color: var(--ss-color-accent-hover);
+    background: var(--ss-color-accent-hover);
+}
+
+.ss-button--block {
+    width: 100%;
+}
+
+.ss-link {
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-underline-offset: 0.2em;
+}
+
+.ss-input:focus-visible,
+.ss-check input:focus-visible,
+.ss-button:focus-visible,
+.ss-link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-notice — komunikat stanu (role="status") w karcie: tło karty w karcie, bez ramki.
+ */
+.ss-notice {
+    margin: 0;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    font-size: 0.875rem;
+}
+
+/**
+ * .ss-auth — strony logowania stref (x-mainboard::auth.layout): wąska karta na środku ekranu,
+ * logo nad tytułem, pod formularzem akcje drugorzędne. Karta bez cienia (§4).
+ */
+.ss-auth {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-4);
+}
+
+.ss-auth__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    width: 100%;
+    max-width: var(--ss-auth-width);
+    padding: var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+}
+
+.ss-auth__logo {
+    width: 9rem;
+}
+
+.ss-auth__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+}
+
+.ss-auth__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.ss-auth__lead {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-auth__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-auth__actions form {
+    margin: 0;
+}
+
+@media (min-width: 40rem) {
+    .ss-auth__card {
+        padding: var(--ss-space-8);
     }
 }

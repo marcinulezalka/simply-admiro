@@ -13,18 +13,38 @@ declare(strict_types=1);
 
 return [
 
-    'title' => 'Twoja aplikacja simplysmart działa',
-    'lead' => 'Szkielet stoi na Laravelu i paczce simplysmart/mainboard — wspólnym rdzeniu wszystkich stref aplikacji.',
-    'inside' => 'Co jest w środku',
-    'override' => 'Tę stronę dostarcza Core. Aplikacja zastępuje ją własnym plikiem resources/views/welcome.blade.php.',
-    'tagline' => 'Aplikacje biznesowe na Laravelu',
+    'title' => 'System simplysmart został pomyślnie zainstalowany',
+    'lead' => 'Fundament Twojej nowej aplikacji biznesowej, zbudowany na Laravelu i pakiecie mainboard, jest w pełni gotowy do pracy. Wszystko, czego potrzebujesz na start, działa od pierwszego uruchomienia.',
+    'inside' => 'Co zyskujesz na starcie?',
+    'built_on' => 'Zbudowane na',
+    'mainboard_version' => 'mainboard :version',
+    'tagline' => 'Dopasowane aplikacje biznesowe na Laravelu',
 
     'features' => [
-        'zones' => 'Strefy z osobnym logowaniem, sesją i uprawnieniami',
-        'sign_in' => 'Logowanie kodem z e-maila i PIN-em',
-        'dictionaries' => 'Słowniki krajów, języków, walut i stawek VAT',
-        'history' => 'Historia zmian każdej tabeli zapisywana w bazie',
-        'locale' => 'Teksty, liczby i daty w języku użytkownika',
+        'zones' => [
+            'title' => 'Wydzielone strefy systemowe',
+            'description' => 'Odrębne logowanie, dedykowane sesje i zaawansowane zarządzanie uprawnieniami.',
+        ],
+        'sign_in' => [
+            'title' => 'Bezpieczne uwierzytelnianie',
+            'description' => 'Nowoczesne logowanie przy użyciu kodu z e-maila oraz kodu PIN.',
+        ],
+        'dictionaries' => [
+            'title' => 'Gotowe słowniki globalne',
+            'description' => 'Wbudowane bazy krajów, języków, walut oraz aktualnych stawek VAT.',
+        ],
+        'history' => [
+            'title' => 'Pełny audyt zmian (Audit Trail)',
+            'description' => 'Automatyczna historia zmian we wszystkich źródłach danych: kto, co i kiedy zmienił.',
+        ],
+        'locale' => [
+            'title' => 'Pełna lokalizacja (i18n)',
+            'description' => 'Precyzyjne formatowanie tekstów, liczb i dat dostosowane do języka użytkownika.',
+        ],
+        'standards' => [
+            'title' => 'Standardy i dokumentacja',
+            'description' => 'Spójne standardy kodu sprawdzane automatycznie, aktualna dokumentacja i kontrolowane wydania każdego pakietu.',
+        ],
     ],
 
 ];

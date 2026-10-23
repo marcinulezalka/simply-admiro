@@ -12,13 +12,45 @@
     /* Paleta bazowa */
     --ss-black: #000000;
     --ss-white: #ffffff;
-    --ss-gray-600: #5c5c5c;
-    --ss-gray-400: #a3a3a3;
+    --ss-slate-50: #f8fafc;
+    --ss-slate-100: #f1f5f9;
+    --ss-slate-700: #334155;
+    --ss-slate-800: #1e293b;
+    --ss-slate-900: #0f172a;
+    --ss-slate-950: #020617;
+    --ss-gray-50: #f9fafb;
+    --ss-gray-100: #f3f4f6;
+    --ss-gray-200: #e5e7eb;
+    --ss-gray-400: #9ca3af;
+    --ss-gray-500: #6b7280;
+    --ss-gray-800: #1f2937;
+    --ss-gray-900: #111827;
+    --ss-red-700: #b91c1c;
+    --ss-red-400: #f87171;
 
-    /* Kolory semantyczne: motyw jasny */
-    --ss-color-bg: var(--ss-white);
-    --ss-color-text: var(--ss-black);
-    --ss-color-muted: var(--ss-gray-600);
+    /* Kolory semantyczne: motyw jasny (docs/design-system.md §2) */
+    --ss-color-bg: var(--ss-slate-50);
+    --ss-color-surface: var(--ss-white);
+    --ss-color-surface-muted: var(--ss-slate-100);
+    --ss-color-border: var(--ss-gray-100);
+    --ss-color-border-strong: var(--ss-gray-200);
+    --ss-color-text: var(--ss-gray-900);
+    --ss-color-muted: var(--ss-gray-500);
+    --ss-color-accent: var(--ss-gray-800);
+    --ss-color-accent-hover: var(--ss-gray-900);
+    --ss-color-on-accent: var(--ss-white);
+    --ss-color-danger: var(--ss-red-700);
+
+    /* Marka: logo i panel marki wyłącznie w czerni albo bieli (brand/README.md) */
+    --ss-color-brand: var(--ss-black);
+    --ss-color-on-brand: var(--ss-white);
+
+    /* Promienie i cienie */
+    --ss-radius-card: 1rem;
+    --ss-radius-control: 0.75rem;
+    --ss-radius-pill: 9999px;
+    --ss-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --ss-shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
     /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/) */
     --ss-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -27,17 +59,30 @@
     /* Odstępy */
     --ss-space-1: 0.25rem;
     --ss-space-2: 0.5rem;
+    --ss-space-3: 0.75rem;
     --ss-space-4: 1rem;
+    --ss-space-6: 1.5rem;
     --ss-space-8: 2rem;
     --ss-space-16: 4rem;
 
     --ss-content-width: 40rem;
+    --ss-auth-width: 26rem;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --ss-color-bg: var(--ss-black);
-        --ss-color-text: var(--ss-white);
+        --ss-color-bg: var(--ss-slate-950);
+        --ss-color-surface: var(--ss-slate-900);
+        --ss-color-surface-muted: var(--ss-slate-800);
+        --ss-color-border: var(--ss-slate-800);
+        --ss-color-border-strong: var(--ss-slate-700);
+        --ss-color-text: var(--ss-gray-50);
         --ss-color-muted: var(--ss-gray-400);
+        --ss-color-accent: var(--ss-gray-100);
+        --ss-color-accent-hover: var(--ss-white);
+        --ss-color-on-accent: var(--ss-gray-900);
+        --ss-color-danger: var(--ss-red-400);
+        --ss-color-brand: var(--ss-white);
+        --ss-color-on-brand: var(--ss-black);
     }
 }

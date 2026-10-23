@@ -1,7 +1,7 @@
 # Design system
 
 > **Status: koncepcja.** Dziś obowiązuje statyczny CSS na tokenach (`public/assets/css/tokens.css`,
-> `base.css`, `app.css`). Dokument opisuje docelowy wygląd interfejsu i przejście paczek na
+> `base.css`, `app.css`); tokeny semantyczne z §2 i strony logowania już go używają. Dokument opisuje docelowy wygląd interfejsu i przejście paczek na
 > Tailwind 4 z własnym Vite. Tokeny, komponenty i build powstają w kolejnych krokach.
 
 ## 1. Filozofia: Clean & Soft Enterprise
@@ -38,10 +38,16 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
 
+- **Logo Laravela** (`public/assets/img/vendor/laravel.svg`, z oficjalnego repozytorium
+  `laravel/art`, znak towarowy Laravel Holdings) występuje tylko jako informacja „Zbudowane na”,
+  monochromatycznie przez `currentColor`, nigdy w czerwieni ani jako element marki simplysmart.
 - **Akcent to grafit**, spójny z czarno-białą marką. Logo zostaje wyłącznie czarne albo białe
   (zob. [brand/README.md](../brand/README.md)).
 - Kolory stanów (sukces, ostrzeżenie, błąd, informacja) dostają osobne tokeny semantyczne
   przy pierwszym komponencie, który ich potrzebuje; zawsze z tekstem lub ikoną, nie samym kolorem.
+  Istnieje `--ss-color-danger` (`#b91c1c` / ciemny `#f87171`): błędy pól formularza.
+- Logo i panel marki używają `--ss-color-brand` / `--ss-color-on-brand` (czerń albo biel), nie
+  `--ss-color-text`, bo grafitowy tekst nie jest kolorem marki.
 - Typografia: `--ss-font-sans` (font systemowy, dopóki marka nie ma własnego). Skala:
 
 | Element | Tailwind | Kolor |
@@ -114,13 +120,22 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | --- | --- |
 | `page` | szablon bazowy (zaimplementowany): `<head>` z meta `title`, `description`, `keywords`, `tags` (`article:tag`, np. `json_tags` rekordu), `robots`; każdy layout (`auth.layout`, `zone.layout`) składa się z niego |
 | `logo`, `styles` | logo SVG inline (`currentColor`) i style Core inline z nonce CSP (zaimplementowane; do czasu builda z §8) |
-| `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem i panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
+| `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem, funkcjami Core jako ikona, tytuł i opis, stopką z logo Laravela i plakietką wersji mainboard (`View\CoreVersion`, plik `VERSION`) oraz panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
+| `BrandNames::highlight()` | wyróżnienie nazw simplysmart i mainboard w tekście (`View\BrandNames`, klasa `.ss-brand-name`): najpierw escapuje, potem pogrubia; w treściach piszemy „mainboard”, nie `simplysmart/mainboard` ani „Core” |
+| `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); nowa ikona to nowy plik SVG 24×24 w tym samym stylu |
+| `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
+| `auth.layout` | strony logowania stref (zaimplementowany): karta na środku ekranu z logo, tytułem, wstępem `lead`, komunikatem stanu i slotem `actions` na akcje drugorzędne |
 | `card`, `field` | karta i para etykieta–wartość |
-| `button` | warianty: główny (akcent), drugorzędny |
+| `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
+
+Formularze (do czasu komponentów) składają się z klas statycznego CSS: `.ss-form`, `.ss-field` z
+`.ss-field__label` i `.ss-field__error` (z `id` wskazywanym przez `aria-describedby` pola i
+`aria-invalid="true"`), `.ss-input` (`.ss-input--code` dla kodu i PIN-u), `.ss-check`, `.ss-link`,
+`.ss-notice` (komunikat `role="status"`).
 | `flag` | flaga kraju lub języka z `flag_icon` (zaimplementowany; inline SVG 4:3, `.ss-flag`, dekoracyjna) |
 
 Strefy składają z nich swoje widoki. Aplikacja zmienia pojedynczy komponent plikiem w
