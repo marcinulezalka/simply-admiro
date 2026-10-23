@@ -67,7 +67,7 @@ final readonly class OwnerController
             return $this->redirect->back()->withInput()->withErrors(['organization' => text('admiro::admin.owner_organization_required')]);
         }
 
-        $audit->record('owner provisioned', ['zone' => $zone, 'account_token' => $account, 'organization_id' => $organization?->id]);
+        $audit->record('owner provisioned', $zone, organizationId: $organization?->id, context: ['account_token' => $account]);
 
         return $this->redirect->route($this->context->zone()->routeName('owners.create'))->with('status', text('admiro::admin.owner_created'));
     }

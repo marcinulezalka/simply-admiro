@@ -29,6 +29,8 @@ final readonly class DashboardController
             'canViewOrganizations' => $context->can(Permission::OrganizationsView),
             'canAssignOwners' => $context->can(Permission::OwnersAssign),
             'canManageAdministrators' => $context->can(Permission::UsersManage),
+            'canViewAudit' => $context->can(Permission::AuditView),
+            'canViewSettings' => $context->can(Permission::SettingsView),
         ]);
     }
 }

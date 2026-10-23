@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Dziennik zdarzeń w panelu (`audit.view`): wpisy od najnowszych z filtrami strefy, zdarzenia i dat; akcje administratorów trafiają do dziennika Core (`AdminAudit` → `AdminActionPerformed`).
+- Ustawienia systemu (`settings.view` podgląd, `settings.manage` zmiana): kraj, język i waluta domyślne oraz języki interfejsu.
 - Organizacje w panelu: lista z organizacją nadrzędną i członkowie we wszystkich strefach (`organizations.view`, ma je też `support`), zakładanie, zmiany, włączanie i wyłączanie organizacji oraz usuwanie członków (`organizations.manage`, z ochroną innych administratorów); każda akcja w dzienniku (`AdminAudit`).
 - Panel administratora: pulpit z sekcjami według uprawnień, strefy i ich konta (szukanie po adresie e-mail; `zones.view`), reset PIN-u, odblokowanie i wyłączenie konta strefy (nowe uprawnienie `accounts.manage`), zakładanie właścicieli stref przez kontrakt Core (`owners.assign`), administratorzy i ich role bez eskalacji (`users.manage`); konto innego administratora zmienia tylko ktoś z jego wszystkimi uprawnieniami, własnego konta nie zmienia się w panelu; teksty `admin.*` (pl, en).
 - Pierwszy administrator z komendy: `admiro:account:create {email} {name} --role=hero`.

@@ -74,7 +74,7 @@ final readonly class OrganizationController
             return $this->rejected();
         }
 
-        $this->audit->record('organization created', ['organization_id' => $organization->id]);
+        $this->audit->record('organization created', organizationId: $organization->id);
 
         return $this->toIndex('organization_created');
     }
@@ -100,7 +100,7 @@ final readonly class OrganizationController
             return $this->rejected();
         }
 
-        $this->audit->record('organization updated', ['organization_id' => $current->id]);
+        $this->audit->record('organization updated', organizationId: $current->id);
 
         return $this->toIndex('organization_updated');
     }
@@ -116,7 +116,7 @@ final readonly class OrganizationController
             return $this->rejected();
         }
 
-        $this->audit->record($active ? 'organization enabled' : 'organization disabled', ['organization_id' => $current->id]);
+        $this->audit->record($active ? 'organization enabled' : 'organization disabled', organizationId: $current->id);
 
         return $this->toIndex($active ? 'organization_enabled' : 'organization_disabled');
     }
@@ -160,7 +160,8 @@ final readonly class OrganizationController
         }
 
         $membership->remove($member, $current, $this->context->actor());
-        $this->audit->record('member removed', ['organization_id' => $current->id, 'zone' => $zone->name, 'account_id' => $member->getKey()]);
+        $memberId = $member->getKey();
+        $this->audit->record('member removed', $zone->name, is_int($memberId) || is_string($memberId) ? $memberId : null, $current->id);
 
         return $back->with('status', text('admiro::admin.member_removed'));
     }

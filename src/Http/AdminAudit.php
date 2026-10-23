@@ -13,26 +13,24 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Http;
 
-use Illuminate\Config\Repository;
-use Illuminate\Log\LogManager;
+use Illuminate\Contracts\Events\Dispatcher;
+use Simplysmart\Mainboard\Audit\Events\AdminActionPerformed;
 
 /**
- * Wpis akcji administratora w dzienniku logowań Core (`mainboard.auth.log_channel`), zawsze z aktorem.
+ * Akcja administratora w dzienniku zdarzeń Core (plik i tabela), zawsze z aktorem.
  */
 final readonly class AdminAudit
 {
     public function __construct(
-        private LogManager $logs,
-        private Repository $config,
+        private Dispatcher $events,
         private AdminContext $context,
     ) {}
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<string, scalar|null> $context Szczegóły bez danych osobowych.
      */
-    public function record(string $event, array $context): void
+    public function record(string $action, ?string $zone = null, int|string|null $accountId = null, ?int $organizationId = null, array $context = []): void
     {
-        $this->logs->channel($this->config->string('mainboard.auth.log_channel'))
-            ->notice($event, [...$context, 'actor' => $this->context->actor()->toLogContext()]);
+        $this->events->dispatch(new AdminActionPerformed($action, $this->context->actor(), $zone, $accountId, $organizationId, $context));
     }
 }

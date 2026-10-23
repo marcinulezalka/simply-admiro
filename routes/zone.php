@@ -16,6 +16,8 @@ use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Admiro\Http\AccountAction;
 use Simplysmart\Admiro\Http\Controllers\AccountActionController;
 use Simplysmart\Admiro\Http\Controllers\AdministratorController;
+use Simplysmart\Admiro\Http\Controllers\AuditController;
+use Simplysmart\Admiro\Http\Controllers\SettingsController;
 use Simplysmart\Admiro\Http\Controllers\OrganizationController;
 use Simplysmart\Admiro\Http\Controllers\OwnerController;
 use Simplysmart\Admiro\Http\Controllers\ZoneController;
@@ -60,3 +62,8 @@ Route::middleware(ZonePermission::middleware(Permission::OrganizationsView))->gr
     Route::get('organizations', [OrganizationController::class, 'index'])->name('organizations.index');
     Route::get('organizations/{organization}/members', [OrganizationController::class, 'members'])->name('organizations.members');
 });
+
+Route::get('audit', AuditController::class)->middleware(ZonePermission::middleware(Permission::AuditView))->name('audit.index');
+
+Route::get('settings', [SettingsController::class, 'show'])->middleware(ZonePermission::middleware(Permission::SettingsView))->name('settings.show');
+Route::put('settings', [SettingsController::class, 'update'])->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:mainboard.sign-in'])->name('settings.update');
