@@ -17,8 +17,11 @@ use Simplysmart\Admiro\Http\AccountAction;
 use Simplysmart\Admiro\Http\Controllers\AccountActionController;
 use Simplysmart\Admiro\Http\Controllers\AdministratorController;
 use Simplysmart\Admiro\Http\Controllers\AuditController;
+use Simplysmart\Admiro\Http\Controllers\DictionaryController;
+use Simplysmart\Admiro\Http\Controllers\TaxRateController;
 use Simplysmart\Admiro\Http\Controllers\SettingsController;
 use Simplysmart\Admiro\Http\Controllers\OrganizationController;
+use Simplysmart\Admiro\Http\Controllers\OrganizationMemberController;
 use Simplysmart\Admiro\Http\Controllers\OwnerController;
 use Simplysmart\Admiro\Http\Controllers\ZoneController;
 use Simplysmart\Mainboard\Zones\ZonePermission;
@@ -55,15 +58,26 @@ Route::middleware(ZonePermission::middleware(Permission::OrganizationsManage))->
     Route::get('organizations/{organization}/edit', [OrganizationController::class, 'edit'])->name('organizations.edit');
     Route::put('organizations/{organization}', [OrganizationController::class, 'update'])->middleware('throttle:mainboard.sign-in')->name('organizations.update');
     Route::post('organizations/{organization}/toggle', [OrganizationController::class, 'toggle'])->middleware('throttle:mainboard.sign-in')->name('organizations.toggle');
-    Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationController::class, 'removeMember'])->middleware('throttle:mainboard.sign-in')->name('organizations.members.remove');
+    Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationMemberController::class, 'remove'])->middleware('throttle:mainboard.sign-in')->name('organizations.members.remove');
 });
 
 Route::middleware(ZonePermission::middleware(Permission::OrganizationsView))->group(static function (): void {
     Route::get('organizations', [OrganizationController::class, 'index'])->name('organizations.index');
-    Route::get('organizations/{organization}/members', [OrganizationController::class, 'members'])->name('organizations.members');
+    Route::get('organizations/{organization}/members', [OrganizationMemberController::class, 'index'])->name('organizations.members');
 });
 
 Route::get('audit', AuditController::class)->middleware(ZonePermission::middleware(Permission::AuditView))->name('audit.index');
 
 Route::get('settings', [SettingsController::class, 'show'])->middleware(ZonePermission::middleware(Permission::SettingsView))->name('settings.show');
 Route::put('settings', [SettingsController::class, 'update'])->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:mainboard.sign-in'])->name('settings.update');
+
+Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(static function (): void {
+    Route::get('dictionaries/{dictionary}', [DictionaryController::class, 'index'])->name('dictionaries.index');
+    Route::get('tax-rates/{country}', [TaxRateController::class, 'index'])->name('tax-rates.index');
+});
+
+Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:mainboard.sign-in'])->group(static function (): void {
+    Route::post('dictionaries/{dictionary}/{code}/toggle', [DictionaryController::class, 'toggle'])->name('dictionaries.toggle');
+    Route::post('tax-rates/{country}', [TaxRateController::class, 'store'])->name('tax-rates.store');
+    Route::put('tax-rates/{country}/{rate}', [TaxRateController::class, 'end'])->name('tax-rates.end');
+});

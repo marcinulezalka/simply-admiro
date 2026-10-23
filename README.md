@@ -35,6 +35,8 @@ Pierwszy administrator dostaje rolę z komendy (`--role=hero`), kolejnym role na
 | Administratorzy i ich role | `admiro.administrators.index`, `admiro.administrators.roles.*` | `users.manage` |
 | Dziennik zdarzeń z filtrami (strefa, zdarzenie, daty) | `admiro.audit.index` | `audit.view` |
 | Ustawienia: kraj, język i waluta domyślne, języki interfejsu (w granicach `APP_LOCALES`) | `admiro.settings.show` / `admiro.settings.update` | `settings.view` / `settings.manage` |
+| Słowniki krajów, języków i walut (włączanie i wyłączanie wpisów) | `admiro.dictionaries.index` / `admiro.dictionaries.toggle` | `settings.view` / `settings.manage` |
+| Stawki VAT kraju (nowa stawka od daty, zakończenie stawki) | `admiro.tax-rates.index` / `admiro.tax-rates.store`, `admiro.tax-rates.end` | `settings.view` / `settings.manage` |
 
 - Organizacji operatora nie da się wyłączyć ani przenieść, a drzewo organizacji nie dopuszcza cykli.
 - Konto innego administratora (także usunięcie go z organizacji operatora) zmienia tylko ten, kto ma `users.manage` i wszystkie jego uprawnienia; roli nie nada się szerszej niż własne uprawnienia (np. `owner` nie nada `hero`). Własnego konta i własnych ról nie zmienia się w panelu.

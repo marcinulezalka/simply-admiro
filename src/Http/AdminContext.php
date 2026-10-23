@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Http;
 
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Admiro\Models\AdmiroAccount;
 use Simplysmart\Mainboard\Auth\AccountActor;
@@ -30,7 +30,7 @@ final readonly class AdminContext
 {
     public function __construct(
         private CurrentZone $zone,
-        private AuthFactory $auth,
+        private CurrentAccount $account,
         private ZonePermissionChecker $permissions,
     ) {}
 
@@ -44,7 +44,7 @@ final readonly class AdminContext
      */
     public function admin(): AdmiroAccount
     {
-        $account = $this->auth->guard($this->zone()->guard)->user();
+        $account = $this->account->get();
 
         return $account instanceof AdmiroAccount ? $account : throw new AccessDeniedHttpException();
     }

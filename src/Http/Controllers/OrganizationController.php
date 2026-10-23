@@ -20,23 +20,17 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Admiro\Http\AdminAudit;
 use Simplysmart\Admiro\Http\AdminContext;
-use Simplysmart\Admiro\Http\AdministratorGuard;
-use Simplysmart\Admiro\Http\ManagedAccounts;
 use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Organization;
 use Simplysmart\Mainboard\Organizations\OrganizationChangeRejected;
 use Simplysmart\Mainboard\Organizations\OrganizationManagement;
-use Simplysmart\Mainboard\Permissions\OrganizationMembership;
 use Simplysmart\Mainboard\Queries\Organizations\ActiveOrganizations;
 use Simplysmart\Mainboard\Queries\Organizations\OrganizationList;
-use Simplysmart\Mainboard\Queries\Organizations\OrganizationMembers;
-use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Organizacje (firmy i oddziały): lista i członkowie we wszystkich strefach (`organizations.view`), zakładanie,
- * zmiany, włączanie i wyłączanie oraz usuwanie członków (`organizations.manage`). Każda zmiana trafia do dziennika.
+ * Organizacje (firmy i oddziały): lista (`organizations.view`), zakładanie, zmiany, włączanie i wyłączanie
+ * (`organizations.manage`). Każda zmiana trafia do dziennika; członków obsługuje OrganizationMemberController.
  */
 final readonly class OrganizationController
 {
@@ -119,51 +113,6 @@ final readonly class OrganizationController
         $this->audit->record($active ? 'organization enabled' : 'organization disabled', organizationId: $current->id);
 
         return $this->toIndex($active ? 'organization_enabled' : 'organization_disabled');
-    }
-
-    public function members(string $organization, OrganizationMembers $members, ZoneRoleNames $roles): View
-    {
-        $current = $this->organization($organization);
-        $list = [];
-
-        foreach ($members->all($current) as $member) {
-            $list[] = [...$member, 'roles' => $roles->of($member['account'], $current->id)];
-        }
-
-        return view('admiro::organizations.members', [
-            'organization' => $current,
-            'members' => $list,
-            'canManage' => $this->context->can(Permission::OrganizationsManage),
-        ]);
-    }
-
-    public function removeMember(
-        string $organization,
-        string $managedZone,
-        string $account,
-        ManagedAccounts $managed,
-        OrganizationMembers $members,
-        OrganizationMembership $membership,
-        AdministratorGuard $guard,
-    ): RedirectResponse {
-        $current = $this->organization($organization);
-        $zone = $managed->zone($managedZone);
-        $member = $members->find($current, $zone, $account) ?? throw new NotFoundHttpException();
-        $back = $this->redirect->route($this->context->zone()->routeName('organizations.members'), ['organization' => $organization]);
-
-        if ($guard->isOwnAccount($member)) {
-            return $back->withErrors(['member' => text('admiro::admin.own_account')]);
-        }
-
-        if (! $guard->mayChange($zone, $member)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $membership->remove($member, $current, $this->context->actor());
-        $memberId = $member->getKey();
-        $this->audit->record('member removed', $zone->name, is_int($memberId) || is_string($memberId) ? $memberId : null, $current->id);
-
-        return $back->with('status', text('admiro::admin.member_removed'));
     }
 
     /**

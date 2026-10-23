@@ -1,5 +1,11 @@
 {{-- Ustawienia systemu. $countries, $currencies: Collection (aktywne), $languages: Collection<Language> (z APP_LOCALES), $country: ?Country, $currency: ?Currency, $language: string (kod języka domyślnego), $interface: list<string> (kody języków interfejsu), $canManage: bool. --}}
 <x-mainboard::zone.layout :title="text('admiro::admin.settings_title')">
+    <nav aria-label="{{ text('admiro::admin.dictionaries_title') }}">
+        @foreach (\Simplysmart\Mainboard\Localization\Dictionary::cases() as $dictionary)
+            <a href="{{ route('admiro.dictionaries.index', ['dictionary' => $dictionary->value]) }}">{{ text('admiro::admin.dictionary.' . $dictionary->value) }}</a>
+        @endforeach
+    </nav>
+
     @error('settings') <p role="alert">{{ $message }}</p> @enderror
 
     <form method="POST" action="{{ route('admiro.settings.update') }}">

@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Słowniki krajów, języków i walut oraz stawki VAT kraju w panelu (`settings.view` podgląd, `settings.manage` zmiany, w dzienniku zdarzeń); członkowie organizacji w osobnym `OrganizationMemberController`.
 - Dziennik zdarzeń w panelu (`audit.view`): wpisy od najnowszych z filtrami strefy, zdarzenia i dat; akcje administratorów trafiają do dziennika Core (`AdminAudit` → `AdminActionPerformed`).
 - Ustawienia systemu (`settings.view` podgląd, `settings.manage` zmiana): kraj, język i waluta domyślne oraz języki interfejsu.
 - Organizacje w panelu: lista z organizacją nadrzędną i członkowie we wszystkich strefach (`organizations.view`, ma je też `support`), zakładanie, zmiany, włączanie i wyłączanie organizacji oraz usuwanie członków (`organizations.manage`, z ochroną innych administratorów); każda akcja w dzienniku (`AdminAudit`).
