@@ -484,3 +484,9 @@
 .ss-ds__calendar .ss-calendar__day {
     min-height: 4rem;
 }
+
+/* Próbka karty odwróconej w sekcji kolorystyk */
+.ss-ds__palette-inverse {
+    padding: var(--ss-space-2) var(--ss-space-4);
+    font-size: 0.875rem;
+}

@@ -27,6 +27,11 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
        // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout
        //     aplikacji i strona publiczna; tylko tokeny --ss-*; brak pliku zatrzymuje start),
+       // 'palettes' => ['teal', 'blue'] (kolorystyki do wyboru, wartości Enums\Palette, nakładane na kolory bazowe
+       //     strefy; przełącznik obok motywu; nieznana lub powtórzona wartość zatrzymuje start),
+       // 'favicon' => ['ico' => __DIR__.'/../public/images/favicon.ico', 'svg' => ..., 'apple' => ...png]
+       //     (ikony strony strefy, każda opcjonalna; Core serwuje je trasą <strefa>.favicon z wersją w adresie
+       //     i publicznym cache, a x-mainboard::page w strefie dodaje znaczniki <link>; bez klucza ikona aplikacji),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)

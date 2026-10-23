@@ -36,5 +36,15 @@ return [
     'mask_format' => 'Format: :format',
     'switch_context' => 'Switch context',
     'current' => 'current',
+    'dark_theme' => 'Dark theme',
+    'palette' => 'Color scheme',
+    'palettes' => [
+        'default' => 'Default',
+        'teal' => 'Teal',
+        'indigo' => 'Indigo',
+        'blue' => 'Blue',
+        'emerald' => 'Emerald',
+        'violet' => 'Violet',
+    ],
 
 ];

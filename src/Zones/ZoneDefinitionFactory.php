@@ -18,13 +18,16 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
+use Simplysmart\Mainboard\Enums\Palette;
 
 /**
  * Buduje ZoneDefinition z configu paczki strefy, uzupełniając go domyślnymi wartościami Core.
  *
  * Config strefy: name (wymagane), slug, guard, provider, model, session (klucze ZoneSessionSettings),
  * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem),
- * security (`mask_errors`, `block_ai_agents`; agenci AI domyślnie blokowani w strefach z logowaniem).
+ * security (`mask_errors`, `block_ai_agents`; agenci AI domyślnie blokowani w strefach z logowaniem), stylesheets
+ * (arkusze CSS strefy), palettes (kolorystyki do wyboru: wartości Enums\Palette), favicon (ikony strony: `ico`, `svg`,
+ * `apple` — ścieżki plików).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -68,6 +71,8 @@ final readonly class ZoneDefinitionFactory
                 blockAiAgents: Arr::boolean(Arr::array($config, 'security', []), 'block_ai_agents', $model !== null),
             ),
             stylesheets: $this->stylesheets($name, Arr::array($config, 'stylesheets', [])),
+            palettes: $this->palettes($name, Arr::array($config, 'palettes', [])),
+            favicon: $this->favicon($name, Arr::array($config, 'favicon', [])),
         );
     }
 
@@ -151,5 +156,61 @@ final readonly class ZoneDefinitionFactory
         }
 
         return $stylesheets;
+    }
+
+    /**
+     * Kolorystyki strefy z `palettes` (wartości {@see Palette}, bez powtórzeń, w kolejności z configu).
+     *
+     * @param array<array-key, mixed> $values
+     *
+     * @return list<Palette>
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest znaną kolorystyką albo się powtarza.
+     */
+    private function palettes(string $zone, array $values): array
+    {
+        $palettes = [];
+
+        foreach ($values as $value) {
+            $palette = is_string($value) ? Palette::tryFrom($value) : null;
+
+            if ($palette === null || in_array($palette, $palettes, true)) {
+                throw new InvalidArgumentException("Zone [{$zone}] palettes must be unique values of " . Palette::class . '.');
+            }
+
+            $palettes[] = $palette;
+        }
+
+        return $palettes;
+    }
+
+    /**
+     * Ikony strony strefy z `favicon` (rodzaj Enums\FaviconType → ścieżka pliku); brak klucza = ikona aplikacji.
+     *
+     * @param array<array-key, mixed> $files
+     *
+     * @throws InvalidArgumentException Gdy rodzaj albo plik jest niepoprawny.
+     */
+    private function favicon(string $zone, array $files): ?ZoneFavicon
+    {
+        if ($files === []) {
+            return null;
+        }
+
+        $paths = [];
+
+        foreach ($files as $type => $path) {
+            if (! is_string($type) || ! is_string($path)) {
+                throw new InvalidArgumentException("Zone [{$zone}] favicon must map icon types to file paths.");
+            }
+
+            $paths[$type] = $path;
+        }
+
+        try {
+            return new ZoneFavicon($paths);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
+        }
     }
 }

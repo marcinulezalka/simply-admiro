@@ -1,7 +1,8 @@
 /**
  * Tokeny marki simplysmart: jedyne miejsce z wartościami kolorów, fontów i odstępów.
  * Komponenty używają tylko zmiennych semantycznych (--ss-color-bg, --ss-color-text…),
- * nigdy palety bazowej — wtedy motyw ciemny zmienia się w jednym miejscu.
+ * nigdy palety bazowej. Token z wariantem dla motywu ciemnego ma postać light-dark(jasny, ciemny): motyw wybiera
+ * color-scheme (system albo data-theme na <html>), więc obie wartości stoją w jednej linii.
  *
  * Paleta marki: czerń i biel z logotypu (zob. brand/README.md).
  */
@@ -46,56 +47,85 @@
     --ss-red-400: #f87171;
 
     /* Kolory semantyczne: motyw jasny (docs/design-system.md §2) */
-    --ss-color-bg: var(--ss-slate-50);
-    --ss-color-surface: var(--ss-white);
-    --ss-color-surface-muted: var(--ss-slate-100);
-    --ss-color-border: var(--ss-gray-100);
-    --ss-color-border-strong: var(--ss-gray-200);
-    --ss-color-text: var(--ss-gray-900);
-    --ss-color-muted: var(--ss-gray-500);
-    --ss-color-accent: var(--ss-gray-800);
-    --ss-color-accent-hover: var(--ss-gray-900);
-    --ss-color-on-accent: var(--ss-white);
-    --ss-color-danger: var(--ss-red-700);
+    --ss-color-bg: light-dark(var(--ss-slate-50), var(--ss-slate-950));
+    --ss-color-surface: light-dark(var(--ss-white), var(--ss-slate-900));
+    --ss-color-surface-muted: light-dark(var(--ss-slate-100), var(--ss-slate-800));
+    --ss-color-border: light-dark(var(--ss-gray-100), var(--ss-slate-800));
+    --ss-color-border-strong: light-dark(var(--ss-gray-200), var(--ss-slate-700));
+    --ss-color-text: light-dark(var(--ss-gray-900), var(--ss-gray-50));
+    --ss-color-muted: light-dark(var(--ss-gray-500), var(--ss-gray-400));
+    /* Akcent bazowy strefy: kolorystyka (data-palette) nadpisuje --ss-color-accent, baza zostaje (próbka „domyślna”) */
+    --ss-color-accent-base: light-dark(var(--ss-gray-800), var(--ss-gray-100));
+    --ss-color-accent: var(--ss-color-accent-base);
+    --ss-color-accent-hover: light-dark(var(--ss-gray-900), var(--ss-white));
+    --ss-color-on-accent: light-dark(var(--ss-white), var(--ss-gray-900));
+    --ss-color-danger: light-dark(var(--ss-red-700), var(--ss-red-400));
 
     /* Stany (toasty, komunikaty): kolor tekstu i ikony oraz tło; zawsze z tekstem lub ikoną, nie samym kolorem */
-    --ss-color-danger-surface: var(--ss-red-50);
+    --ss-color-danger-surface: light-dark(var(--ss-red-50), var(--ss-red-950));
 
     /* Przyciemnienie pod wysuwanym panelem (menu na telefonie) */
-    --ss-color-backdrop: rgb(0 0 0 / 0.4);
-    --ss-color-success: var(--ss-green-700);
-    --ss-color-success-surface: var(--ss-green-50);
-    --ss-color-warning: var(--ss-amber-800);
-    --ss-color-warning-surface: var(--ss-amber-50);
-    --ss-color-info: var(--ss-blue-700);
-    --ss-color-info-surface: var(--ss-blue-50);
+    --ss-color-backdrop: light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.6));
+    --ss-color-success: light-dark(var(--ss-green-700), var(--ss-green-400));
+    --ss-color-success-surface: light-dark(var(--ss-green-50), var(--ss-green-950));
+    --ss-color-warning: light-dark(var(--ss-amber-800), var(--ss-amber-400));
+    --ss-color-warning-surface: light-dark(var(--ss-amber-50), var(--ss-amber-950));
+    --ss-color-info: light-dark(var(--ss-blue-700), var(--ss-blue-400));
+    --ss-color-info-surface: light-dark(var(--ss-blue-50), var(--ss-blue-950));
 
     /* Karta odwrócona (wyróżniona kolorem, np. obok jasnej karty w ramie) */
-    --ss-color-surface-inverse: var(--ss-neutral-900);
-    --ss-color-on-inverse: var(--ss-white);
-    --ss-color-muted-inverse: var(--ss-neutral-400);
+    --ss-color-surface-inverse: light-dark(var(--ss-neutral-900), var(--ss-gray-100));
+    --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));
+    --ss-color-muted-inverse: light-dark(var(--ss-neutral-400), var(--ss-gray-600));
 
     /* Marka: logo i panel marki wyłącznie w czerni albo bieli (brand/README.md) */
-    --ss-color-brand: var(--ss-black);
-    --ss-color-on-brand: var(--ss-white);
+    --ss-color-brand: light-dark(var(--ss-black), var(--ss-white));
+    --ss-color-on-brand: light-dark(var(--ss-white), var(--ss-black));
 
     /* Kolory awatarów (Enums\AvatarColor): tło i inicjały, kontrast co najmniej 6,4:1 */
-    --ss-avatar-slate-bg: #e2e8f0;
-    --ss-avatar-slate-fg: #1e293b;
-    --ss-avatar-red-bg: #fee2e2;
-    --ss-avatar-red-fg: #991b1b;
-    --ss-avatar-amber-bg: #fef3c7;
-    --ss-avatar-amber-fg: #92400e;
-    --ss-avatar-green-bg: #dcfce7;
-    --ss-avatar-green-fg: #166534;
-    --ss-avatar-teal-bg: #ccfbf1;
-    --ss-avatar-teal-fg: #115e59;
-    --ss-avatar-blue-bg: #dbeafe;
-    --ss-avatar-blue-fg: #1e40af;
-    --ss-avatar-violet-bg: #ede9fe;
-    --ss-avatar-violet-fg: #5b21b6;
-    --ss-avatar-pink-bg: #fce7f3;
-    --ss-avatar-pink-fg: #9d174d;
+    --ss-avatar-slate-bg: light-dark(#e2e8f0, #334155);
+    --ss-avatar-slate-fg: light-dark(#1e293b, #e2e8f0);
+    --ss-avatar-red-bg: light-dark(#fee2e2, #7f1d1d);
+    --ss-avatar-red-fg: light-dark(#991b1b, #fecaca);
+    --ss-avatar-amber-bg: light-dark(#fef3c7, #78350f);
+    --ss-avatar-amber-fg: light-dark(#92400e, #fde68a);
+    --ss-avatar-green-bg: light-dark(#dcfce7, #14532d);
+    --ss-avatar-green-fg: light-dark(#166534, #bbf7d0);
+    --ss-avatar-teal-bg: light-dark(#ccfbf1, #134e4a);
+    --ss-avatar-teal-fg: light-dark(#115e59, #99f6e4);
+    --ss-avatar-blue-bg: light-dark(#dbeafe, #1e3a8a);
+    --ss-avatar-blue-fg: light-dark(#1e40af, #bfdbfe);
+    --ss-avatar-violet-bg: light-dark(#ede9fe, #4c1d95);
+    --ss-avatar-violet-fg: light-dark(#5b21b6, #ddd6fe);
+    --ss-avatar-pink-bg: light-dark(#fce7f3, #831843);
+    --ss-avatar-pink-fg: light-dark(#9d174d, #fbcfe8);
+
+    /* Kolorystyki (Enums\Palette, data-palette na <html>): akcent, jego hover, informacja i karta odwrócona */
+    --ss-palette-teal-accent: light-dark(#0f766e, #5eead4);
+    --ss-palette-teal-accent-hover: light-dark(#115e59, #99f6e4);
+    --ss-palette-teal-info: light-dark(#115e59, #5eead4);
+    --ss-palette-teal-info-surface: light-dark(#ccfbf1, #134e4a);
+    --ss-palette-teal-inverse: light-dark(#042f2e, #ccfbf1);
+    --ss-palette-indigo-accent: light-dark(#4f46e5, #a5b4fc);
+    --ss-palette-indigo-accent-hover: light-dark(#4338ca, #c7d2fe);
+    --ss-palette-indigo-info: light-dark(#4338ca, #a5b4fc);
+    --ss-palette-indigo-info-surface: light-dark(#e0e7ff, #312e81);
+    --ss-palette-indigo-inverse: light-dark(#1e1b4b, #e0e7ff);
+    --ss-palette-blue-accent: light-dark(#2563eb, #93c5fd);
+    --ss-palette-blue-accent-hover: light-dark(#1d4ed8, #bfdbfe);
+    --ss-palette-blue-info: light-dark(#1d4ed8, #93c5fd);
+    --ss-palette-blue-info-surface: light-dark(#dbeafe, #1e3a8a);
+    --ss-palette-blue-inverse: light-dark(#172554, #dbeafe);
+    --ss-palette-emerald-accent: light-dark(#047857, #6ee7b7);
+    --ss-palette-emerald-accent-hover: light-dark(#065f46, #a7f3d0);
+    --ss-palette-emerald-info: light-dark(#065f46, #6ee7b7);
+    --ss-palette-emerald-info-surface: light-dark(#d1fae5, #064e3b);
+    --ss-palette-emerald-inverse: light-dark(#022c22, #d1fae5);
+    --ss-palette-violet-accent: light-dark(#6d28d9, #c4b5fd);
+    --ss-palette-violet-accent-hover: light-dark(#5b21b6, #ddd6fe);
+    --ss-palette-violet-info: light-dark(#5b21b6, #c4b5fd);
+    --ss-palette-violet-info-surface: light-dark(#ede9fe, #4c1d95);
+    --ss-palette-violet-inverse: light-dark(#2e1065, #ede9fe);
 
     /* Promienie i cienie */
     --ss-radius-card: 1rem;
@@ -107,8 +137,8 @@
     --ss-radius-nested: calc(var(--ss-radius-frame) - var(--ss-frame-padding));
     --ss-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --ss-shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --ss-shadow-frame: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 24px 48px -28px rgb(0 0 0 / 0.18);
-    --ss-shadow-elevated: 0 32px 64px -24px rgb(0 0 0 / 0.4), 0 12px 24px -12px rgb(0 0 0 / 0.2);
+    --ss-shadow-frame: 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3)), 0 24px 48px -28px light-dark(rgb(0 0 0 / 0.18), rgb(0 0 0 / 0.6));
+    --ss-shadow-elevated: 0 32px 64px -24px light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.7)), 0 12px 24px -12px light-dark(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.5));
 
     /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/) */
     --ss-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -130,49 +160,60 @@
     --ss-sidebar-collapsed-width: 4.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --ss-color-bg: var(--ss-slate-950);
-        --ss-color-surface: var(--ss-slate-900);
-        --ss-color-surface-muted: var(--ss-slate-800);
-        --ss-color-border: var(--ss-slate-800);
-        --ss-color-border-strong: var(--ss-slate-700);
-        --ss-color-text: var(--ss-gray-50);
-        --ss-color-muted: var(--ss-gray-400);
-        --ss-color-accent: var(--ss-gray-100);
-        --ss-color-accent-hover: var(--ss-white);
-        --ss-color-on-accent: var(--ss-gray-900);
-        --ss-color-danger: var(--ss-red-400);
-        --ss-color-danger-surface: var(--ss-red-950);
-        --ss-color-backdrop: rgb(0 0 0 / 0.6);
-        --ss-color-success: var(--ss-green-400);
-        --ss-color-success-surface: var(--ss-green-950);
-        --ss-color-warning: var(--ss-amber-400);
-        --ss-color-warning-surface: var(--ss-amber-950);
-        --ss-color-info: var(--ss-blue-400);
-        --ss-color-info-surface: var(--ss-blue-950);
-        --ss-color-surface-inverse: var(--ss-gray-100);
-        --ss-color-on-inverse: var(--ss-gray-900);
-        --ss-color-muted-inverse: var(--ss-gray-600);
-        --ss-shadow-frame: 0 1px 2px 0 rgb(0 0 0 / 0.3), 0 24px 48px -28px rgb(0 0 0 / 0.6);
-        --ss-shadow-elevated: 0 32px 64px -24px rgb(0 0 0 / 0.7), 0 12px 24px -12px rgb(0 0 0 / 0.5);
-        --ss-color-brand: var(--ss-white);
-        --ss-color-on-brand: var(--ss-black);
-        --ss-avatar-slate-bg: #334155;
-        --ss-avatar-slate-fg: #e2e8f0;
-        --ss-avatar-red-bg: #7f1d1d;
-        --ss-avatar-red-fg: #fecaca;
-        --ss-avatar-amber-bg: #78350f;
-        --ss-avatar-amber-fg: #fde68a;
-        --ss-avatar-green-bg: #14532d;
-        --ss-avatar-green-fg: #bbf7d0;
-        --ss-avatar-teal-bg: #134e4a;
-        --ss-avatar-teal-fg: #99f6e4;
-        --ss-avatar-blue-bg: #1e3a8a;
-        --ss-avatar-blue-fg: #bfdbfe;
-        --ss-avatar-violet-bg: #4c1d95;
-        --ss-avatar-violet-fg: #ddd6fe;
-        --ss-avatar-pink-bg: #831843;
-        --ss-avatar-pink-fg: #fbcfe8;
-    }
+/**
+ * Wybór motywu (x-mainboard::theme-toggle, js/theme.js): atrybut data-theme na <html> wymusza schemat kolorów, więc
+ * light-dark() w tokenach wybiera wartość jasną albo ciemną; bez atrybutu obowiązuje motyw systemu.
+ */
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/**
+ * Kolorystyka strefy (x-mainboard::palette-switch, js/theme.js): data-palette na <html> podmienia akcent, informację
+ * i kartę odwróconą na kolory palety, w obu motywach. Selektor :root[...] wygrywa z nadpisaniami tokenów w arkuszu
+ * strefy (`stylesheets`, sam :root), więc strefa zmienia bazę, a wybrana kolorystyka i tak się nakłada.
+ */
+
+:root[data-palette="teal"] {
+    --ss-color-accent: var(--ss-palette-teal-accent);
+    --ss-color-accent-hover: var(--ss-palette-teal-accent-hover);
+    --ss-color-info: var(--ss-palette-teal-info);
+    --ss-color-info-surface: var(--ss-palette-teal-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-teal-inverse);
+}
+
+:root[data-palette="indigo"] {
+    --ss-color-accent: var(--ss-palette-indigo-accent);
+    --ss-color-accent-hover: var(--ss-palette-indigo-accent-hover);
+    --ss-color-info: var(--ss-palette-indigo-info);
+    --ss-color-info-surface: var(--ss-palette-indigo-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-indigo-inverse);
+}
+
+:root[data-palette="blue"] {
+    --ss-color-accent: var(--ss-palette-blue-accent);
+    --ss-color-accent-hover: var(--ss-palette-blue-accent-hover);
+    --ss-color-info: var(--ss-palette-blue-info);
+    --ss-color-info-surface: var(--ss-palette-blue-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-blue-inverse);
+}
+
+:root[data-palette="emerald"] {
+    --ss-color-accent: var(--ss-palette-emerald-accent);
+    --ss-color-accent-hover: var(--ss-palette-emerald-accent-hover);
+    --ss-color-info: var(--ss-palette-emerald-info);
+    --ss-color-info-surface: var(--ss-palette-emerald-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-emerald-inverse);
+}
+
+:root[data-palette="violet"] {
+    --ss-color-accent: var(--ss-palette-violet-accent);
+    --ss-color-accent-hover: var(--ss-palette-violet-accent-hover);
+    --ss-color-info: var(--ss-palette-violet-info);
+    --ss-color-info-surface: var(--ss-palette-violet-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-violet-inverse);
 }

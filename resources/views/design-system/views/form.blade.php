@@ -34,7 +34,7 @@
                 <x-mainboard::input id="demo-address" :label="text('design_system.demo.address')" icon="map-pin" :value="text('design_system.demo.address_value')" />
                 <div class="ss-field">
                     <label class="ss-field__label" for="demo-notes">{{ text('design_system.demo.notes') }}</label>
-                    <textarea class="ss-input" id="demo-notes" rows="3" aria-describedby="demo-notes-hint"></textarea>
+                    <textarea class="ss-input" id="demo-notes" rows="3" aria-describedby="demo-notes-hint" placeholder="{{ text('placeholders.note') }}"></textarea>
                     <p class="ss-field__hint" id="demo-notes-hint">{{ text('design_system.demo.notes_hint') }}</p>
                 </div>
             </div>

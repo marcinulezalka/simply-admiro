@@ -23,6 +23,8 @@ return [
     'sections' => [
         'colors' => 'Colors',
         'colors_lead' => 'Semantic tokens only; views never use the base palette or hard-coded values.',
+        'palettes' => 'Color schemes',
+        'palettes_lead' => 'A color scheme overlays the light and dark theme: it swaps the accent, info and the inverse card (contrast at least 4.5:1). A zone picks the schemes it offers in its config (`palettes`); the zone stylesheet changes only the base colors; the user\'s choice stays in the browser.',
         'typography' => 'Typography',
         'radius' => 'Radii',
         'shadow' => 'Shadows',
@@ -39,6 +41,8 @@ return [
     ],
 
     'sample' => [
+        'placeholder_hint' => 'The placeholder shows an example of the format (“e.g. …”) and disappears while typing — the label above the field stays.',
+        'palette_inverse' => 'Inverse card',
         'page_title' => 'Page title',
         'card_title' => 'Card title',
         'value' => 'Value, content',

@@ -77,9 +77,29 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 ## 3. Motyw ciemny
 
 Każdy token semantyczny ma wartość ciemną (tabela wyżej): tło prawie czarne, karty o stopień
-jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym tekstem). Motyw
-przełączają tokeny (`prefers-color-scheme`, w Tailwind zmienne w `@theme`), więc widoki
-**nie** powtarzają klas `dark:`.
+jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym tekstem). Widoki
+**nie** powtarzają klas `dark:` — motyw przełączają wyłącznie tokeny.
+
+- **Tokeny:** wartość z wariantem ciemnym to `light-dark(jasny, ciemny)` w jednej linii (w cieniu tylko kolor cienia).
+  O wariancie decyduje `color-scheme`: domyślnie motyw systemu, a wybór użytkownika ustawia `data-theme="light|dark"`
+  na `<html>` (`:root[data-theme=…] { color-scheme: … }` w `tokens.css`). W Tailwind te same tokeny trafią do `@theme`.
+- **Przełącznik** `x-mainboard::theme-toggle` (księżyc w jasnym, słońce w ciemnym; `aria-pressed` = motyw ciemny):
+  w layoucie aplikacji (rząd akcji pod awatarem), na stronach logowania (prawy górny róg) i na stronie design systemu.
+  Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony (`x-mainboard::page`) stosuje
+  go przed narysowaniem (bez błysku). Bez skryptu przycisk jest ukryty i obowiązuje motyw systemu.
+- **Elementy tylko dla jednego motywu** (np. dwa obrazy banera): klasy `.ss-theme-light` / `.ss-theme-dark`, zgodne
+  z wyborem i z motywem systemu.
+- **Kolorystyka strefy (warstwa bazowa):** arkusz strefy (`stylesheets`) nadpisuje w `:root` tylko tokeny semantyczne
+  (`light-dark()` dla obu motywów), np. tło, powierzchnie, tekst i akcent bazowy `--ss-color-accent-base`
+  (`--ss-color-accent` jest z niego liczony) — nigdy klas komponentów. Kontrast tekstu co najmniej 4,5:1.
+- **Kolorystyki do wyboru (warstwa nakładana):** `Enums\Palette` (teal, indigo, blue, emerald, violet) z tokenami
+  `--ss-palette-<paleta>-{accent,accent-hover,info,info-surface,inverse}` w `tokens.css`. Atrybut `data-palette` na
+  `<html>` (`:root[data-palette=…]`, wygrywa z `:root` arkusza strefy) podmienia akcent, informację i kartę odwróconą
+  w obu motywach; powierzchnie zostają ze strefy. Strefa wybiera oferowane kolorystyki w configu (`palettes`);
+  `x-mainboard::palette-switch` (obok przełącznika motywu: layout aplikacji, strony logowania, design system) pokazuje
+  „Domyślna” (kolory bazowe) i listę z próbkami. `x-mainboard::page` dostaje te same `palettes` i `paletteScope`
+  (meta `ss-palettes` przed `js/theme.js`), więc wybór — zapamiętany w przeglądarce osobno dla każdej strefy — działa
+  bez błysku; kolorystyka spoza listy strefy jest pomijana. Bez skryptu przełącznik jest ukryty.
 
 ## 4. Powierzchnie
 
@@ -192,6 +212,10 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 - **Pole** `x-mainboard::input`: etykieta nad polem, subtelna ikona w tle po lewej (przygaszona, pełna przy
   fokusie), podpowiedź i błąd powiązane przez `aria-describedby` (`aria-invalid` przy błędzie). Popularne pola
   mają ikonę: e-mail `mail`, osoba `user`, firma `building`, adres `map-pin`, data `calendar`.
+- **Podpowiedzi w polach** (placeholder): przykład formatu „np. …” na neutralnych, fikcyjnych danych, nigdy zamiast
+  etykiety ani instrukcji (znika przy pisaniu); kolor `--ss-color-muted` z pełnym kryciem (kontrast 4,8:1). Wspólne
+  teksty w grupie `placeholders.*` (e-mail, imię, nazwisko, imię i nazwisko, firma, adres, wyszukiwanie, notatka) i wzór
+  `placeholders.example`; maski biorą go przez `InputMask::placeholder()`. Pola kodu i PIN-u nie mają podpowiedzi.
 - **Maski** `Enums\InputMask` (telefon, kod pocztowy, NIP, PESEL, numer rachunku): wzór (`9` cyfra, `A` litera),
   klawiatura numeryczna, ikona, przykład w placeholderze i format w podpowiedzi. `js/input-mask.js` formatuje
   w trakcie pisania i przy wklejaniu; bez skryptu pole przyjmuje tekst, a format podaje podpowiedź.

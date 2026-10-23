@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\View;
 
 /**
- * Tokeny design systemu odczytane z CSS (`:root` i `:root` w `prefers-color-scheme: dark`), z rozwiązanymi
- * odwołaniami `var(--...)`. Strona design systemu pokazuje je bez własnej listy, więc `tokens.css` zostaje
+ * Tokeny design systemu odczytane z CSS (`:root`, wartości `light-dark(jasny, ciemny)` — także wewnątrz złożonych
+ * wartości jak cień — i dawny blok `:root` w `prefers-color-scheme: dark`), z rozwiązanymi odwołaniami `var(--...)`. Strona design systemu pokazuje je bez własnej listy, więc `tokens.css` zostaje
  * jedynym źródłem wartości.
  */
 final readonly class DesignTokens
@@ -57,7 +57,7 @@ final readonly class DesignTokens
 
         foreach (array_keys($this->light) as $name) {
             if (str_starts_with($name, $prefix)) {
-                $tokens[] = new DesignToken($name, substr($name, strlen($prefix)), $this->resolve($name, $this->light), $this->resolve($name, $this->dark));
+                $tokens[] = new DesignToken($name, substr($name, strlen($prefix)), $this->resolve($name, $this->light, 0), $this->resolve($name, $this->dark, 1));
             }
         }
 
@@ -85,14 +85,55 @@ final readonly class DesignTokens
     }
 
     /**
+     * Wartość tokenu w motywie: wariant `light-dark()` (0 jasny, 1 ciemny) i łańcuch `var()` aż do wartości końcowej.
+     *
      * @param array<string, string> $values
      */
-    private function resolve(string $name, array $values): string
+    private function resolve(string $name, array $values, int $variant): string
     {
-        $value = $values[$name] ?? '';
+        $value = self::variant($values[$name] ?? '', $variant);
 
         for ($depth = 0; $depth < self::MAX_REFERENCE_DEPTH && preg_match('~^var\(\s*(--[a-z0-9-]+)\s*\)$~i', $value, $match) === 1; $depth++) {
-            $value = $values[$match[1]] ?? $value;
+            $value = self::variant($values[$match[1]] ?? $value, $variant);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Zastępuje każde `light-dark(a, b)` w wartości wybranym argumentem (przecinek liczony poza nawiasami).
+     */
+    private static function variant(string $value, int $variant): string
+    {
+        $marker = 'light-dark(';
+
+        while (($start = stripos($value, $marker)) !== false) {
+            $depth = 0;
+            $split = null;
+            $end = null;
+
+            for ($i = $start + strlen($marker); $i < strlen($value); $i++) {
+                $char = $value[$i];
+
+                if ($char === '(') {
+                    $depth++;
+                } elseif ($char === ')' && $depth > 0) {
+                    $depth--;
+                } elseif ($char === ')') {
+                    $end = $i;
+                    break;
+                } elseif ($char === ',' && $depth === 0) {
+                    $split ??= $i;
+                }
+            }
+
+            if ($end === null || $split === null) {
+                return $value;
+            }
+
+            $inner = $start + strlen($marker);
+            $chosen = $variant === 0 ? substr($value, $inner, $split - $inner) : substr($value, $split + 1, $end - $split - 1);
+            $value = substr($value, 0, $start) . trim($chosen) . substr($value, $end + 1);
         }
 
         return $value;

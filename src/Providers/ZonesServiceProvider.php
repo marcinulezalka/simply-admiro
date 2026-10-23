@@ -35,14 +35,17 @@ use Simplysmart\Mainboard\Zones\RequestAccount;
 use Simplysmart\Mainboard\Zones\RequestZone;
 use Simplysmart\Mainboard\Zones\ZoneNavigations;
 use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Mainboard\Zones\ZoneRouteRegistrar;
 use Simplysmart\Mainboard\Zones\ZoneSessionConfigurator;
 use Simplysmart\Mainboard\Zones\ZoneSessionManager;
 use Simplysmart\Mainboard\Auth\AuthBrand;
+use Simplysmart\Mainboard\Enums\FaviconType;
 use Simplysmart\Mainboard\Http\SignInRoutes;
 
 /**
  * Mechanizm stref: rejestr (singleton), strefa i konto żądania, osobny magazyn sesji każdej strefy,
- * przekierowania auth/guest według strefy oraz dane stref dla widoków (layout strefy, logowanie i jego układ, konto).
+ * przekierowania auth/guest według strefy oraz dane stref dla widoków (layout strefy, logowanie i jego układ, konto,
+ * ikony strony w szablonie bazowym).
  */
 final class ZonesServiceProvider extends ServiceProvider
 {
@@ -53,6 +56,8 @@ final class ZonesServiceProvider extends ServiceProvider
     private const string ZONE_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.zone.layout';
 
     private const string AUTH_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.auth.layout';
+
+    private const string PAGE_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.page';
 
     public function register(): void
     {
@@ -76,6 +81,7 @@ final class ZonesServiceProvider extends ServiceProvider
         $views->composer([self::SIGN_IN_VIEWS, self::ACCOUNT_VIEWS], $this->shareRequestZone(...));
         $views->composer(self::ZONE_LAYOUT_VIEW, $this->shareZoneWithLayout(...));
         $views->composer(self::AUTH_LAYOUT_VIEW, $this->shareAuthLayout(...));
+        $views->composer(self::PAGE_VIEW, $this->shareFavicons(...));
 
         $this->useZoneRedirects();
         $this->app->afterResolving(HttpKernel::class, $this->useZoneRedirects(...));
@@ -119,7 +125,7 @@ final class ZonesServiceProvider extends ServiceProvider
     /**
      * Layout logowania dostaje układ strefy żądania (`auth.layout`) i adresy jej banera (`auth.brand`, wersja
      * w adresie); poza strefą z logowaniem (np. fałszywe logowanie pułapki, podgląd w design systemie) układ domyślny
-     * i logo. Prop `layout` komponentu wygrywa.
+     * i logo. Do tego arkusze (`stylesheets`) i kolorystyki (`palettes`) strefy żądania. Prop `layout` komponentu wygrywa.
      */
     private function shareAuthLayout(View $view): void
     {
@@ -130,11 +136,30 @@ final class ZonesServiceProvider extends ServiceProvider
 
         $view->with('zoneAuthLayout', $settings->layout ?? AuthLayout::Centered)
             ->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : [])
+            ->with('zonePalettes', $zone->has() ? $zone->get()->palettes : [])
+            ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
             ->with('zoneAuthBrand', $brand === null ? null : [
                 'light' => $brandUrl(AuthBrand::LIGHT),
                 'dark' => $brand->dark !== null ? $brandUrl(AuthBrand::DARK) : null,
                 'alt' => $brand->alt !== '' ? text($brand->alt) : '',
             ]);
+    }
+
+    /**
+     * Szablon bazowy strony dostaje znaczniki ikon strefy żądania (`favicon`, adresy z wersją); poza strefą albo bez
+     * `favicon` lista jest pusta (ikona aplikacji z `public/favicon.ico`).
+     */
+    private function shareFavicons(View $view): void
+    {
+        $zone = $this->app->make(CurrentZone::class);
+        $favicon = $zone->has() ? $zone->get()->favicon : null;
+
+        $view->with('zoneFavicons', $favicon === null ? [] : array_map(static fn(FaviconType $type): array => [
+            'rel' => $type->rel(),
+            'href' => route($zone->get()->routeName(ZoneRouteRegistrar::FAVICON), ['type' => $type->value, 'v' => $favicon->version($type)]),
+            'type' => $type->mediaType(),
+            'sizes' => $type->sizes(),
+        ], $favicon->types()));
     }
 
     /**

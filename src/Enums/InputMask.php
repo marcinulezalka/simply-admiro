@@ -53,8 +53,16 @@ enum InputMask: string
     }
 
     /**
-     * Przykładowa wartość w formacie maski (placeholder).
+     * Przykładowa wartość w formacie maski (np. do testów i dokumentacji).
      */
+    /**
+     * Podpowiedź w polu: przykład w formacie maski ze wspólnym wzorem `placeholders.example` („np. …”).
+     */
+    public function placeholder(): string
+    {
+        return text('placeholders.example', ['value' => $this->example()]);
+    }
+
     public function example(): string
     {
         return match ($this) {

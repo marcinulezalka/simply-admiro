@@ -1,15 +1,17 @@
-{{-- Strona design systemu (DesignSystemController, tylko poza produkcją): tokeny odczytane z tokens.css (View\DesignTokens) i komponenty Core na żywo. Próbki tokenów mają klasy generowane z tych samych tokenów w <style> z nonce CSP, więc strona nie ma własnej listy wartości. $tokens: DesignTokens, $icons: list<string>. --}}
+{{-- Strona design systemu (DesignSystemController, tylko poza produkcją): tokeny odczytane z tokens.css (View\DesignTokens) i komponenty Core na żywo. Próbki tokenów mają klasy generowane z tych samych tokenów w <style> z nonce CSP, więc strona nie ma własnej listy wartości. Sekcja kolorystyk ma żywy przełącznik (wszystkie Enums\Palette, zakres design-system). $tokens: DesignTokens, $icons: list<string>. --}}
 @php
     $colors = $tokens->group('color');
-    $sections = ['colors', 'typography', 'radius', 'shadow', 'space', 'buttons', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
+    $paletteTokens = $tokens->group('palette');
+    $palettes = \Simplysmart\Mainboard\Enums\Palette::cases();
+    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'buttons', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
     $highlight = \Simplysmart\Mainboard\View\BrandNames::highlight(...);
 @endphp
-<x-mainboard::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow">
+<x-mainboard::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow" :palettes="$palettes" palette-scope="design-system">
     <x-slot:head>
         <x-mainboard::styles :files="[...\Simplysmart\Mainboard\View\CoreAssets::STYLESHEETS, 'css/design-system.css']" />
         <x-mainboard::scripts :files="['js/input-mask.js']" />
         <style nonce="{{ \Illuminate\Support\Facades\Vite::cspNonce() }}">
-@foreach ($colors as $token)
+@foreach ([...$colors, ...$paletteTokens] as $token)
 .ss-ds-chip--{{ $token->key }}-light { background: {{ $token->light }}; }
 .ss-ds-chip--{{ $token->key }}-dark { background: {{ $token->dark }}; }
 @endforeach
@@ -31,6 +33,8 @@
             <div class="ss-ds__heading">
                 <h1 class="ss-ds__title">{{ text('design_system.title') }}</h1>
                 <span class="ss-badge">{{ text('design_system.not_for_production') }}</span>
+                <x-mainboard::theme-toggle />
+                <x-mainboard::palette-switch :palettes="$palettes" />
             </div>
             <p class="ss-ds__lead ss-muted">{{ text('design_system.lead') }}</p>
         </header>
@@ -53,6 +57,37 @@
                             </thead>
                             <tbody>
                                 @foreach ($colors as $token)
+                                    <tr>
+                                        <th scope="row"><code>{{ $token->name }}</code></th>
+                                        <td><span class="ss-ds__value"><span class="ss-ds-chip ss-ds-chip--{{ $token->key }}-light" aria-hidden="true"></span><code>{{ $token->light }}</code></span></td>
+                                        <td><span class="ss-ds__value"><span class="ss-ds-chip ss-ds-chip--{{ $token->key }}-dark" aria-hidden="true"></span><code>{{ $token->dark }}</code></span></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="ss-card" id="palettes" aria-labelledby="palettes-title">
+                    <h2 class="ss-ds__section-title" id="palettes-title">{{ text('design_system.sections.palettes') }}</h2>
+                    <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.palettes_lead') }}</p>
+                    <div class="ss-ds__row">
+                        <button class="ss-button ss-button--primary" type="button">{{ text('design_system.sample.primary') }}</button>
+                        <a class="ss-link" href="#palettes">{{ text('design_system.sample.link') }}</a>
+                        <span class="ss-card ss-card--inverse ss-ds__palette-inverse">{{ text('design_system.sample.palette_inverse') }}</span>
+                    </div>
+                    <p class="ss-ds__row"><code>&lt;html data-palette="…"&gt;</code> <code>palettes</code> <code>x-mainboard::palette-switch</code></p>
+                    <div class="ss-ds__table-wrap">
+                        <table class="ss-ds__table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ text('design_system.token') }}</th>
+                                    <th scope="col">{{ text('design_system.light') }}</th>
+                                    <th scope="col">{{ text('design_system.dark') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($paletteTokens as $token)
                                     <tr>
                                         <th scope="row"><code>{{ $token->name }}</code></th>
                                         <td><span class="ss-ds__value"><span class="ss-ds-chip ss-ds-chip--{{ $token->key }}-light" aria-hidden="true"></span><code>{{ $token->light }}</code></span></td>
@@ -140,9 +175,10 @@
                 <section class="ss-card" id="forms" aria-labelledby="forms-title">
                     <h2 class="ss-ds__section-title" id="forms-title">{{ text('design_system.sections.forms') }}</h2>
                     <div class="ss-form ss-ds__narrow">
-                        <x-mainboard::input id="ds-email" :label="text('design_system.sample.field')" icon="mail" type="email" :value="text('design_system.sample.field_value')" />
+                        <x-mainboard::input id="ds-email" :label="text('design_system.sample.field')" icon="mail" type="email" :placeholder="text('placeholders.email')" :hint="text('design_system.sample.placeholder_hint')" />
                         <x-mainboard::input id="ds-email-error" :label="text('design_system.sample.field_error')" icon="mail" type="email" value="jan@" :error="text('design_system.sample.error')" />
-                        <x-mainboard::input id="ds-name" :label="text('design_system.sample.person')" icon="user" autocomplete="off" />
+                        <x-mainboard::input id="ds-name" :label="text('design_system.sample.person')" icon="user" autocomplete="off" :placeholder="text('placeholders.full_name')" />
+                        <x-mainboard::input id="ds-company" :label="text('design_system.demo.client_name')" icon="building" autocomplete="off" :placeholder="text('placeholders.company')" />
                         <x-mainboard::input id="ds-date" :label="text('design_system.sample.date')" icon="calendar" type="date" />
                         @foreach (\Simplysmart\Mainboard\Enums\InputMask::cases() as $mask)
                             <x-mainboard::input :id="'ds-mask-' . $mask->value" :label="text('design_system.sample.masks.' . $mask->value)" :mask="$mask" />

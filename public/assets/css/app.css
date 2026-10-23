@@ -356,6 +356,16 @@
     font: inherit;
 }
 
+/**
+ * Podpowiedź w polu (placeholder): przykład formatu „np. …”, nigdy zamiast etykiety; kolor muted z pełnym kryciem
+ * (Firefox domyślnie przygasza placeholder poniżej kontrastu 4,5:1).
+ */
+.ss-input::placeholder,
+.ss-search__input::placeholder {
+    color: var(--ss-color-muted);
+    opacity: 1;
+}
+
 .ss-input[aria-invalid="true"] {
     border-color: var(--ss-color-danger);
 }
@@ -2507,5 +2517,120 @@ a.ss-notification:focus-visible {
 @media (min-width: 56rem) {
     .ss-auth__brand-image {
         object-position: center;
+    }
+}
+
+/**
+ * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): ikona motywu, na który przełączy; stan dla czytników
+ * w aria-pressed. .ss-auth__theme — przełączniki motywu i kolorystyki w prawym górnym rogu stron logowania.
+ */
+.ss-theme-toggle[hidden] {
+    display: none;
+}
+
+.ss-theme-toggle__sun,
+.ss-theme-toggle[aria-pressed="true"] .ss-theme-toggle__moon {
+    display: none;
+}
+
+.ss-theme-toggle[aria-pressed="true"] .ss-theme-toggle__sun {
+    display: inline-flex;
+}
+
+.ss-auth {
+    position: relative;
+}
+
+.ss-auth__theme {
+    display: flex;
+    position: absolute;
+    top: var(--ss-space-4);
+    right: var(--ss-space-4);
+    gap: var(--ss-space-2);
+}
+
+/**
+ * .ss-palette-switch — przełącznik kolorystyki (x-mainboard::palette-switch): próbka bieżącego akcentu na przycisku,
+ * w menu próbki kolorów bazowych strefy (--ss-color-accent-base) i kolorystyk (--ss-palette-<paleta>-accent);
+ * wybrana z haczykiem (aria-pressed).
+ */
+.ss-palette-switch[hidden] {
+    display: none;
+}
+
+.ss-palette-switch__toggle {
+    list-style: none;
+}
+
+.ss-palette-switch__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-palette-swatch {
+    display: inline-block;
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid var(--ss-color-surface);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    box-shadow: 0 0 0 1px var(--ss-color-border-strong);
+}
+
+.ss-palette-swatch--default {
+    background: var(--ss-color-accent-base);
+}
+
+.ss-palette-swatch--teal {
+    background: var(--ss-palette-teal-accent);
+}
+
+.ss-palette-swatch--indigo {
+    background: var(--ss-palette-indigo-accent);
+}
+
+.ss-palette-swatch--blue {
+    background: var(--ss-palette-blue-accent);
+}
+
+.ss-palette-swatch--emerald {
+    background: var(--ss-palette-emerald-accent);
+}
+
+.ss-palette-swatch--violet {
+    background: var(--ss-palette-violet-accent);
+}
+
+.ss-palette-switch__check {
+    visibility: hidden;
+}
+
+[aria-pressed="true"] > .ss-palette-switch__check {
+    visibility: visible;
+}
+
+/**
+ * .ss-theme-light / .ss-theme-dark — element tylko dla motywu jasnego albo ciemnego (np. dwa obrazy banera), zgodnie
+ * z wyborem w przełączniku (data-theme) albo z motywem systemu.
+ */
+.ss-theme-dark {
+    display: none;
+}
+
+:root[data-theme="dark"] .ss-theme-dark {
+    display: revert;
+}
+
+:root[data-theme="dark"] .ss-theme-light {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .ss-theme-dark {
+        display: revert;
+    }
+
+    :root:not([data-theme="light"]) .ss-theme-light {
+        display: none;
     }
 }

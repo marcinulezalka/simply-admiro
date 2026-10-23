@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettings;
 use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
+use Simplysmart\Mainboard\Enums\Palette;
 
 /**
  * Niezmienna definicja jednej strefy (budowana przez ZoneDefinitionFactory z configu paczki strefy).
@@ -38,6 +39,9 @@ final readonly class ZoneDefinition
      *                    false = zawsze w organizacji operatora aplikacji.
      * @param list<string> $stylesheets Arkusze CSS strefy (ścieżki plików), dołączane po stylach Core na stronach
      *                                  logowania i w layoucie aplikacji (x-mainboard::zone-styles).
+     * @param list<Palette> $palettes Kolorystyki do wyboru w strefie (x-mainboard::palette-switch); pusta lista =
+     *                               bez przełącznika, tylko kolory bazowe strefy.
+     * @param ZoneFavicon|null $favicon Ikony strony strefy (trasa `<strefa>.favicon`); null = ikona aplikacji.
      */
     public function __construct(
         public string $name,
@@ -52,6 +56,8 @@ final readonly class ZoneDefinition
         public bool $teams = false,
         public ZoneSecuritySettings $security = new ZoneSecuritySettings(),
         public array $stylesheets = [],
+        public array $palettes = [],
+        public ?ZoneFavicon $favicon = null,
     ) {}
 
     /**

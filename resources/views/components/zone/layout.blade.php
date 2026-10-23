@@ -1,4 +1,4 @@
-{{-- Układ stron strefy. Zalogowane konto: layout aplikacji (x-mainboard::app.layout) — awatar w kolorze konta z drugą linią (menu strefy albo bieżąca organizacja) i menu konta (profil, PIN, urządzenia, wylogowanie), przełącznik organizacji (formularze POST, gdy konto ma kilka), menu i wyszukiwarka strefy (Contracts\ZoneNavigation z Zones\ZoneNavigations), komunikat `status` i toasty z sesji jako toasty. Gość (strona publiczna strefy): prosta kolumna treści. $zone, $account, $organizations, $currentOrganizationId, $currentOrganizationName i $navigation daje Core; meta, back i slot actions trafiają do nagłówka. --}}
+{{-- Układ stron strefy. Zalogowane konto: layout aplikacji (x-mainboard::app.layout) — awatar w kolorze konta z drugą linią (menu strefy albo bieżąca organizacja) i menu konta (profil, PIN, urządzenia, wylogowanie), przełącznik organizacji (formularze POST, gdy konto ma kilka), menu i wyszukiwarka strefy (Contracts\ZoneNavigation z Zones\ZoneNavigations), komunikat `status` i toasty z sesji jako toasty, kolorystyki strefy (`palettes`) w przełączniku obok motywu. Gość (strona publiczna strefy): prosta kolumna treści. $zone, $account, $organizations, $currentOrganizationId, $currentOrganizationName i $navigation daje Core; meta, back i slot actions trafiają do nagłówka. --}}
 @props(['title', 'description' => null, 'keywords' => null, 'tags' => null, 'meta' => null, 'back' => null])
 @if ($account !== null)
     @php
@@ -36,6 +36,8 @@
         :contexts="$contexts"
         :toasts="$toasts"
         :zone-stylesheets="$zone->stylesheets"
+        :palettes="$zone->palettes"
+        :palette-scope="$zone->name"
     >
         @isset($actions)
             <x-slot:actions>{{ $actions }}</x-slot:actions>
@@ -44,7 +46,7 @@
         {{ $slot }}
     </x-mainboard::app.layout>
 @else
-    <x-mainboard::page :title="$title" :description="$description" :keywords="$keywords" :tags="$tags" :robots="$zone->requiresLogin() ? 'noindex, nofollow' : null">
+    <x-mainboard::page :title="$title" :description="$description" :keywords="$keywords" :tags="$tags" :robots="$zone->requiresLogin() ? 'noindex, nofollow' : null" :palettes="$zone->palettes" :palette-scope="$zone->name">
         <x-slot:head>
             <x-mainboard::styles />
             <x-mainboard::zone-styles :paths="$zone->stylesheets" />
