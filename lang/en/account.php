@@ -62,16 +62,6 @@ return [
         'event' => 'Event',
         'detail' => 'Details',
         'devices_count' => 'Devices: :count',
-        'events' => [
-            'sign_in' => 'Successful sign-in',
-            'pin_rejected' => 'Wrong PIN',
-            'account_locked' => 'Account locked',
-            'sign_out' => 'Sign-out',
-            'access_revoked' => 'Sessions ended',
-            'pin_changed' => 'PIN changed',
-            'trusted_device_registered' => 'New trusted device',
-            'trusted_devices_revoked' => 'Devices revoked',
-        ],
     ],
     'avatar_colors' => [
         'slate' => 'Graphite',

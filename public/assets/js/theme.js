@@ -1,7 +1,8 @@
 /**
- * Motyw jasny / ciemny: zapisany wybór (localStorage) ustawia data-theme na <html> od razu, w <head>, zanim strona
- * się narysuje (bez błysku); przyciski [data-ss-theme-toggle] (x-mainboard::theme-toggle) przełączają motyw
- * i pokazują stan w aria-pressed. Bez wyboru obowiązuje motyw systemu; bez skryptu przycisk zostaje ukryty.
+ * Motyw: jasny, ciemny i dwa motywy wysokiego kontrastu WCAG (czerń na bieli, żółty na czarnym). Zapisany wybór
+ * (localStorage) ustawia data-theme na <html> od razu, w <head>, zanim strona się narysuje (bez błysku); przyciski
+ * [data-ss-theme] w przełączniku [data-ss-theme-toggle] (x-mainboard::theme-toggle) ustawiają motyw, a wybrany ma
+ * aria-pressed="true". Bez wyboru obowiązuje motyw systemu (jasny albo ciemny); bez skryptu przełącznik zostaje ukryty.
  *
  * Kolorystyka: meta ss-palettes (x-mainboard::page; content: kolorystyki strony po spacji, data-scope: zakres
  * zapamiętania, np. strefa); zapisany wybór z tej listy ustawia data-palette na <html>, przyciski
@@ -11,6 +12,7 @@
 (() => {
     const STORAGE_KEY = 'ss-theme';
     const PALETTE_KEY = 'ss-palette';
+    const THEMES = ['light', 'dark', 'contrast', 'contrast-yellow'];
     const root = document.documentElement;
     const system = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -18,7 +20,7 @@
         try {
             const value = window.localStorage.getItem(STORAGE_KEY);
 
-            return value === 'light' || value === 'dark' ? value : null;
+            return THEMES.includes(value) ? value : null;
         } catch {
             return null;
         }
@@ -71,8 +73,8 @@
     const current = () => root.dataset.theme ?? (system.matches ? 'dark' : 'light');
 
     const sync = () => {
-        document.querySelectorAll('[data-ss-theme-toggle]').forEach((button) => {
-            button.setAttribute('aria-pressed', String(current() === 'dark'));
+        document.querySelectorAll('[data-ss-theme]').forEach((button) => {
+            button.setAttribute('aria-pressed', String(button.dataset.ssTheme === current()));
         });
         document.querySelectorAll('[data-ss-palette]').forEach((button) => {
             button.setAttribute('aria-pressed', String(button.dataset.ssPalette === (root.dataset.palette ?? '')));
@@ -80,14 +82,18 @@
     };
 
     const start = () => {
-        document.querySelectorAll('[data-ss-theme-toggle]').forEach((button) => {
-            button.hidden = false;
-            button.addEventListener('click', () => {
-                const next = current() === 'dark' ? 'light' : 'dark';
+        document.querySelectorAll('[data-ss-theme-toggle]').forEach((group) => {
+            group.hidden = false;
+            group.querySelectorAll('[data-ss-theme]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (!THEMES.includes(button.dataset.ssTheme)) {
+                        return;
+                    }
 
-                root.dataset.theme = next;
-                write(STORAGE_KEY, next);
-                sync();
+                    root.dataset.theme = button.dataset.ssTheme;
+                    write(STORAGE_KEY, button.dataset.ssTheme);
+                    sync();
+                });
             });
         });
 

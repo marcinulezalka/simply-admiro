@@ -53,9 +53,6 @@ enum InputMask: string
     }
 
     /**
-     * Przykładowa wartość w formacie maski (np. do testów i dokumentacji).
-     */
-    /**
      * Podpowiedź w polu: przykład w formacie maski ze wspólnym wzorem `placeholders.example` („np. …”).
      */
     public function placeholder(): string
@@ -63,6 +60,9 @@ enum InputMask: string
         return text('placeholders.example', ['value' => $this->example()]);
     }
 
+    /**
+     * Przykładowa wartość w formacie maski (np. do testów i dokumentacji).
+     */
     public function example(): string
     {
         return match ($this) {
@@ -72,5 +72,14 @@ enum InputMask: string
             self::Pesel => '88041512345',
             self::BankAccount => '61 1090 1014 0000 0712 1981 2874',
         };
+    }
+
+    /**
+     * Czy wartość ma wszystkie cyfry wzoru (separatory dowolne), np. do walidacji NIP-u albo kodu pocztowego.
+     */
+    public function isComplete(string $value): bool
+    {
+        return strlen((string) preg_replace('/\D/', '', $value)) === substr_count($this->pattern(), '9')
+            && preg_match('/^[\d\s+\-]+$/', $value) === 1;
     }
 }

@@ -17,6 +17,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Schema\Blueprint;
 use LogicException;
+use PDOException;
 use Simplysmart\Mainboard\Contracts\HistoryTriggers;
 use Simplysmart\Mainboard\Database\History\MysqlHistoryTriggers;
 use Simplysmart\Mainboard\Database\History\SqliteHistoryTriggers;
@@ -67,14 +68,14 @@ final readonly class History
         $triggers = $this->triggers($connection);
         $columns = $connection->getSchemaBuilder()->getColumnListing($table);
 
-        $this->execute($connection, [...$triggers->dropStatements($table), ...$triggers->createStatements($table, self::tableFor($table), $columns)]);
+        $this->execute($connection, $table, [...$triggers->dropStatements($table), ...$triggers->createStatements($table, self::tableFor($table), $columns)]);
     }
 
     public function drop(string $table): void
     {
         $connection = $this->connection();
 
-        $this->execute($connection, $this->triggers($connection)->dropStatements($table));
+        $this->execute($connection, $table, $this->triggers($connection)->dropStatements($table));
 
         $connection->getSchemaBuilder()->dropIfExists(self::tableFor($table));
     }
@@ -98,14 +99,19 @@ final readonly class History
     }
 
     /**
-     * DDL triggerów; nazwy tabel i kolumn są już cytowane przez gramatykę i PDO.
+     * DDL triggerów; nazwy tabel i kolumn są już cytowane przez gramatykę i PDO. Odmowę serwera z binlogiem bez
+     * zaufania do twórców triggerów zamienia na HistoryTriggersRejected z instrukcją naprawy.
      *
      * @param list<string> $statements
      */
-    private function execute(Connection $connection, array $statements): void
+    private function execute(Connection $connection, string $table, array $statements): void
     {
         foreach ($statements as $statement) {
-            $connection->getPdo()->exec($statement);
+            try {
+                $connection->getPdo()->exec($statement);
+            } catch (PDOException $exception) {
+                throw HistoryTriggersRejected::matches($exception) ? HistoryTriggersRejected::binlogNeedsTrust($table, $exception) : $exception;
+            }
         }
     }
 

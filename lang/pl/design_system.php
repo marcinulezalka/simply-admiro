@@ -104,6 +104,7 @@ return [
         'authorization' => 'Autoryzacja',
         'workspace' => 'Panel aplikacji',
         'errors' => 'Błędy',
+        'pages' => 'Strony treści',
     ],
 
     'strip_label' => 'Podgląd w design systemie',
@@ -131,9 +132,46 @@ return [
         'error-429' => '429 · Zbyt wiele żądań',
         'error-500' => '500 · Błąd serwera',
         'error-503' => '503 · Prace techniczne',
+        'content-page' => 'Polityka prywatności',
     ],
 
     'demo' => [
+        'content' => [
+            'eyebrow' => 'Dokumenty · aktualizacja 17 października 2026',
+            'title' => 'Polityka prywatności',
+            'lead' => 'Jak Biuro Rachunkowe Nowak przetwarza dane osobowe klientów i użytkowników serwisu.',
+            'sections' => [
+                'administrator' => [
+                    'title' => '1. Administrator danych',
+                    'body' => 'Administratorem danych osobowych jest Biuro Rachunkowe Nowak, ul. Przykładowa 1, 00-001 Warszawa, e-mail: kontakt@example.com.',
+                ],
+                'purposes' => [
+                    'title' => '2. Jakie dane przetwarzamy i w jakim celu',
+                    'body' => 'Przetwarzamy tylko dane potrzebne do świadczenia usług:',
+                    'items' => [
+                        'Dane konta (imię, nazwisko, adres e-mail) — w celu prowadzenia konta i logowania.',
+                        'Dane rozliczeniowe (faktury, płatności) — w celu wykonania umowy i obowiązków podatkowych.',
+                        'Dane bezpieczeństwa (historia logowań, adres IP) — w celu ochrony serwisu.',
+                    ],
+                ],
+                'retention' => [
+                    'title' => '3. Jak długo przechowujemy dane',
+                    'body' => 'Dane konta przechowujemy przez czas jego istnienia, dokumenty rozliczeniowe przez okres wymagany przepisami podatkowymi.',
+                ],
+                'rights' => [
+                    'title' => '4. Twoje prawa',
+                    'body' => 'Masz prawo do dostępu do swoich danych, ich sprostowania, usunięcia lub ograniczenia przetwarzania, przenoszenia danych i wniesienia sprzeciwu. Możesz też złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych.',
+                ],
+                'changes' => [
+                    'title' => '5. Zmiany polityki',
+                    'body' => 'O istotnych zmianach tej polityki poinformujemy w serwisie. Data ostatniej aktualizacji jest na górze dokumentu.',
+                ],
+            ],
+            'related' => [
+                'cookies' => ['title' => 'Polityka cookies', 'text' => 'Jakie pliki cookies wykorzystuje serwis i jak zarządzać zgodami.'],
+                'terms' => ['title' => 'Regulamin', 'text' => 'Zasady korzystania z serwisu i świadczenia usług.'],
+            ],
+        ],
         'search' => 'Szukaj faktur i klientów',
         'account' => 'Anna Nowak',
         'account_subtitle' => 'Księgowość · Biuro Rachunkowe Nowak',
@@ -181,9 +219,6 @@ return [
             'paid' => 'Opłacona',
             'closed' => 'Zamknięta',
         ],
-        'step_done' => 'zakończony',
-        'step_current' => 'bieżący',
-        'step_next' => 'przyszły',
         'details' => 'Dane faktury',
         'buyer' => 'Nabywca',
         'payment' => 'Płatność',

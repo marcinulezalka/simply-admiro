@@ -78,6 +78,10 @@
     --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));
     --ss-color-muted-inverse: light-dark(var(--ss-neutral-400), var(--ss-gray-600));
 
+    /* Tło stron logowania: delikatny gradient z tła strony w odcień powierzchni */
+    --ss-color-auth-from: light-dark(var(--ss-white), var(--ss-slate-900));
+    --ss-color-auth-to: light-dark(var(--ss-slate-100), var(--ss-slate-950));
+
     /* Marka: logo i panel marki wyłącznie w czerni albo bieli (brand/README.md) */
     --ss-color-brand: light-dark(var(--ss-black), var(--ss-white));
     --ss-color-on-brand: light-dark(var(--ss-white), var(--ss-black));
@@ -156,13 +160,15 @@
     --ss-content-width: 40rem;
     --ss-auth-width: 26rem;
     --ss-auth-split-width: 60rem;
+    --ss-content-page-width: 72rem;
     --ss-sidebar-width: 16rem;
     --ss-sidebar-collapsed-width: 4.5rem;
 }
 
 /**
  * Wybór motywu (x-mainboard::theme-toggle, js/theme.js): atrybut data-theme na <html> wymusza schemat kolorów, więc
- * light-dark() w tokenach wybiera wartość jasną albo ciemną; bez atrybutu obowiązuje motyw systemu.
+ * light-dark() w tokenach wybiera wartość jasną albo ciemną; bez atrybutu obowiązuje motyw systemu. Motywy
+ * wysokiego kontrastu (contrast, contrast-yellow) są na końcu pliku, po kolorystykach, bo je wyłączają.
  */
 :root[data-theme="light"] {
     color-scheme: light;
@@ -216,4 +222,69 @@
     --ss-color-info: var(--ss-palette-violet-info);
     --ss-color-info-surface: var(--ss-palette-violet-info-surface);
     --ss-color-surface-inverse: var(--ss-palette-violet-inverse);
+}
+
+/**
+ * Motywy wysokiego kontrastu WCAG 2.2 (x-mainboard::theme-toggle): contrast — czerń na bieli, contrast-yellow — żółty
+ * na czarnym (duży kontrast). Tekst, ramki i akcent mają kontrast co najmniej 7:1 (AAA), ramki są pełne, a
+ * kolorystyka strefy (data-palette) nie działa, bo te bloki stoją po niej i podmieniają te same tokeny.
+ */
+:root[data-theme="contrast"] {
+    color-scheme: light;
+    --ss-color-bg: var(--ss-white);
+    --ss-color-surface: var(--ss-white);
+    --ss-color-surface-muted: var(--ss-white);
+    --ss-color-border: var(--ss-black);
+    --ss-color-border-strong: var(--ss-black);
+    --ss-color-text: var(--ss-black);
+    --ss-color-muted: #262626;
+    --ss-color-accent-base: var(--ss-black);
+    --ss-color-accent: var(--ss-black);
+    --ss-color-accent-hover: #262626;
+    --ss-color-on-accent: var(--ss-white);
+    --ss-color-danger: #8b0000;
+    --ss-color-danger-surface: var(--ss-white);
+    --ss-color-success: #0b4f0b;
+    --ss-color-success-surface: var(--ss-white);
+    --ss-color-warning: #5c3300;
+    --ss-color-warning-surface: var(--ss-white);
+    --ss-color-info: #0a2f75;
+    --ss-color-info-surface: var(--ss-white);
+    --ss-color-surface-inverse: var(--ss-black);
+    --ss-color-on-inverse: var(--ss-white);
+    --ss-color-muted-inverse: var(--ss-white);
+    --ss-color-brand: var(--ss-black);
+    --ss-color-on-brand: var(--ss-white);
+    --ss-color-auth-from: var(--ss-white);
+    --ss-color-auth-to: #f0f0f0;
+}
+
+:root[data-theme="contrast-yellow"] {
+    color-scheme: dark;
+    --ss-color-bg: var(--ss-black);
+    --ss-color-surface: var(--ss-black);
+    --ss-color-surface-muted: var(--ss-black);
+    --ss-color-border: #ffff00;
+    --ss-color-border-strong: #ffff00;
+    --ss-color-text: #ffff00;
+    --ss-color-muted: #ffff00;
+    --ss-color-accent-base: #ffff00;
+    --ss-color-accent: #ffff00;
+    --ss-color-accent-hover: var(--ss-white);
+    --ss-color-on-accent: var(--ss-black);
+    --ss-color-danger: #ff8a8a;
+    --ss-color-danger-surface: var(--ss-black);
+    --ss-color-success: #7dff7d;
+    --ss-color-success-surface: var(--ss-black);
+    --ss-color-warning: #ffd24d;
+    --ss-color-warning-surface: var(--ss-black);
+    --ss-color-info: #8fd8ff;
+    --ss-color-info-surface: var(--ss-black);
+    --ss-color-surface-inverse: #ffff00;
+    --ss-color-on-inverse: var(--ss-black);
+    --ss-color-muted-inverse: var(--ss-black);
+    --ss-color-brand: var(--ss-white);
+    --ss-color-on-brand: var(--ss-black);
+    --ss-color-auth-from: var(--ss-black);
+    --ss-color-auth-to: #141400;
 }

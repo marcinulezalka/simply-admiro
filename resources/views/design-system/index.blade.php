@@ -1,4 +1,4 @@
-{{-- Strona design systemu (DesignSystemController, tylko poza produkcją): tokeny odczytane z tokens.css (View\DesignTokens) i komponenty Core na żywo. Próbki tokenów mają klasy generowane z tych samych tokenów w <style> z nonce CSP, więc strona nie ma własnej listy wartości. Sekcja kolorystyk ma żywy przełącznik (wszystkie Enums\Palette, zakres design-system). $tokens: DesignTokens, $icons: list<string>. --}}
+{{-- Strona design systemu (DesignSystemController, tylko poza produkcją): tokeny odczytane z tokens.css (View\DesignTokens) i komponenty Core na żywo. Próbki tokenów mają klasy generowane z tych samych tokenów w <style> z nonce CSP, więc strona nie ma własnej listy wartości. Sekcja kolorystyk ma żywy przełącznik (wszystkie Enums\Palette, zakres design-system) — jedyne miejsce z przełącznikiem kolorystyki, layouty go nie pokazują. $tokens: DesignTokens, $icons: list<string>. --}}
 @php
     $colors = $tokens->group('color');
     $paletteTokens = $tokens->group('palette');
@@ -34,7 +34,6 @@
                 <h1 class="ss-ds__title">{{ text('design_system.title') }}</h1>
                 <span class="ss-badge">{{ text('design_system.not_for_production') }}</span>
                 <x-mainboard::theme-toggle />
-                <x-mainboard::palette-switch :palettes="$palettes" />
             </div>
             <p class="ss-ds__lead ss-muted">{{ text('design_system.lead') }}</p>
         </header>
@@ -72,6 +71,7 @@
                     <h2 class="ss-ds__section-title" id="palettes-title">{{ text('design_system.sections.palettes') }}</h2>
                     <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.palettes_lead') }}</p>
                     <div class="ss-ds__row">
+                        <x-mainboard::palette-switch :palettes="$palettes" />
                         <button class="ss-button ss-button--primary" type="button">{{ text('design_system.sample.primary') }}</button>
                         <a class="ss-link" href="#palettes">{{ text('design_system.sample.link') }}</a>
                         <span class="ss-card ss-card--inverse ss-ds__palette-inverse">{{ text('design_system.sample.palette_inverse') }}</span>
@@ -156,6 +156,7 @@
                     <h2 class="ss-ds__section-title" id="buttons-title">{{ text('design_system.sections.buttons') }}</h2>
                     <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.buttons_lead') }}</p>
                     <div class="ss-ds__row">
+                        <x-mainboard::palette-switch :palettes="$palettes" />
                         <button class="ss-button ss-button--primary" type="button">{{ text('design_system.sample.primary') }}</button>
                         <button class="ss-button" type="button">{{ text('design_system.sample.secondary') }}</button>
                         <button class="ss-button" type="button" disabled>{{ text('design_system.sample.disabled') }}</button>

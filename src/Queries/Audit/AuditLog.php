@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Queries\Audit;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Simplysmart\Mainboard\Models\AuditEvent;
 
@@ -53,13 +54,47 @@ final class AuditLog
 
     /**
      * Dziennik jednej organizacji: zdarzenia z jej organizacją (role, członkostwa, dostęp do danych) i zdarzenia
-     * kont jej członków w strefie (logowania, PIN, urządzenia), od najnowszych.
+     * kont jej członków w strefie (logowania, PIN, urządzenia), od najnowszych; opcjonalnie tylko jedno zdarzenie.
      *
      * @param list<int|string> $accountIds Konta członków organizacji w strefie.
      *
      * @return LengthAwarePaginator<int, AuditEvent>
      */
-    public function forOrganization(int $organizationId, string $zone, array $accountIds, int $perPage): LengthAwarePaginator
+    public function forOrganization(int $organizationId, string $zone, array $accountIds, int $perPage, ?string $event = null): LengthAwarePaginator
+    {
+        $query = $this->organizationQuery($organizationId, $zone, $accountIds);
+
+        if ($event !== null && $event !== '') {
+            $query->where('event', $event);
+        }
+
+        $query->orderByDesc('id');
+
+        return $query->paginate($perPage)->withQueryString();
+    }
+
+    /**
+     * Nazwy zdarzeń w dzienniku organizacji (filtr dziennika organizacji).
+     *
+     * @param list<int|string> $accountIds Konta członków organizacji w strefie.
+     *
+     * @return list<string>
+     */
+    public function eventsForOrganization(int $organizationId, string $zone, array $accountIds): array
+    {
+        $query = $this->organizationQuery($organizationId, $zone, $accountIds);
+        $query->distinct();
+        $query->orderBy('event');
+
+        return array_values(array_filter($query->pluck('event')->all(), is_string(...)));
+    }
+
+    /**
+     * @param list<int|string> $accountIds
+     *
+     * @return Builder<AuditEvent>
+     */
+    private function organizationQuery(int $organizationId, string $zone, array $accountIds): Builder
     {
         $ids = array_map(strval(...), $accountIds);
         $query = AuditEvent::query();
@@ -67,9 +102,8 @@ final class AuditLog
             $scope->where('organization_id', $organizationId)
                 ->orWhere(static fn($members) => $members->where('zone', $zone)->whereIn('account_id', $ids));
         });
-        $query->orderByDesc('id');
 
-        return $query->paginate($perPage)->withQueryString();
+        return $query;
     }
 
     /**

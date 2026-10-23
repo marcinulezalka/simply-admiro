@@ -27,6 +27,7 @@ enum DesignSystemView: string
     case Form = 'form';
     case Sidebar = 'sidebar';
     case Notifications = 'notifications';
+    case ContentPage = 'content-page';
     case SignIn = 'sign-in';
     case SignInSplit = 'sign-in-split';
     case SignInCode = 'sign-in-code';
@@ -67,6 +68,7 @@ enum DesignSystemView: string
             self::SignIn, self::SignInSplit, self::SignInCode, self::SignInCodeInvalid, self::SignInPin, self::SignInPinLimit,
             self::SignInPinSetup, self::SignInExpired, self::ForgotPin => DesignSystemArea::Authorization,
             self::Dashboard, self::List, self::Record, self::Form, self::Sidebar, self::Notifications => DesignSystemArea::Workspace,
+            self::ContentPage => DesignSystemArea::Pages,
             self::Error401, self::Error403, self::Error404, self::Error419, self::Error429, self::Error500, self::Error503 => DesignSystemArea::Errors,
         };
     }

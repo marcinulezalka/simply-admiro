@@ -12,21 +12,7 @@
         <a class="ss-button ss-button--primary" href="{{ route('mainboard.design-system.view', DesignSystemView::Form) }}">{{ text_action('edit') }}</a>
     </x-slot:actions>
 
-    <ol class="ss-stepper">
-        @foreach (DemoInvoiceStatus::cases() as $step)
-            @php($state = $step->position() < $invoice->status->position() ? 'done' : ($step === $invoice->status ? 'current' : 'next'))
-            <li class="ss-stepper__step ss-stepper__step--{{ $state }}" @if ($state === 'current') aria-current="step" @endif>
-                <span class="ss-stepper__marker" aria-hidden="true">
-                    @if ($state === 'done')
-                        <x-mainboard::icon name="check" class="ss-stepper__icon" />
-                    @else
-                        {{ $step->position() + 1 }}
-                    @endif
-                </span>
-                <span class="ss-stepper__label">{{ $step->label() }}<span class="ss-sr-only"> ({{ text('design_system.demo.step_' . $state) }})</span></span>
-            </li>
-        @endforeach
-    </ol>
+    <x-mainboard::stepper :steps="array_map(static fn (DemoInvoiceStatus $step): string => $step->label(), DemoInvoiceStatus::cases())" :current="$invoice->status->position()" />
 
     <div class="ss-grid ss-grid--3">
         <section class="ss-card">

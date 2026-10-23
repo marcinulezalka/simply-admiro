@@ -36,7 +36,30 @@ return [
     'mask_format' => 'Format: :format',
     'switch_context' => 'Przełącz kontekst',
     'current' => 'bieżący',
-    'dark_theme' => 'Motyw ciemny',
+    'theme' => 'Motyw',
+    'themes' => [
+        'light' => 'Jasny',
+        'dark' => 'Ciemny',
+        'contrast' => 'Kontrast WCAG',
+        'contrast-yellow' => 'Duży kontrast WCAG',
+    ],
+    'pagination' => [
+        'label' => 'Strony listy',
+        'previous' => 'Poprzednia strona',
+        'next' => 'Następna strona',
+        'page' => 'Strona :page z :pages',
+        'total' => 'pozycji: :count',
+    ],
+    'steps' => [
+        'done' => 'zakończony',
+        'current' => 'bieżący',
+        'next' => 'przyszły',
+    ],
+    'content' => [
+        'toc' => 'Spis treści',
+        'see_also' => 'Zobacz także',
+        'back' => 'Wstecz',
+    ],
     'palette' => 'Kolorystyka',
     'palettes' => [
         'default' => 'Domyślna',

@@ -104,6 +104,7 @@ return [
         'authorization' => 'Authorization',
         'workspace' => 'Application panel',
         'errors' => 'Errors',
+        'pages' => 'Content pages',
     ],
 
     'strip_label' => 'Design system preview',
@@ -131,9 +132,46 @@ return [
         'error-429' => '429 · Too many requests',
         'error-500' => '500 · Server error',
         'error-503' => '503 · Maintenance',
+        'content-page' => 'Privacy policy',
     ],
 
     'demo' => [
+        'content' => [
+            'eyebrow' => 'Documents · updated 17 October 2026',
+            'title' => 'Privacy policy',
+            'lead' => 'How Nowak Accounting processes the personal data of its clients and the users of the service.',
+            'sections' => [
+                'administrator' => [
+                    'title' => '1. Data controller',
+                    'body' => 'The controller of personal data is Nowak Accounting, 1 Example Street, 00-001 Warsaw, e-mail: contact@example.com.',
+                ],
+                'purposes' => [
+                    'title' => '2. What data we process and why',
+                    'body' => 'We process only the data needed to provide our services:',
+                    'items' => [
+                        'Account data (first name, last name, e-mail address) — to run the account and sign-in.',
+                        'Billing data (invoices, payments) — to perform the contract and meet tax obligations.',
+                        'Security data (sign-in history, IP address) — to protect the service.',
+                    ],
+                ],
+                'retention' => [
+                    'title' => '3. How long we keep data',
+                    'body' => 'Account data is kept while the account exists, billing documents for the period required by tax law.',
+                ],
+                'rights' => [
+                    'title' => '4. Your rights',
+                    'body' => 'You have the right to access, rectify, erase or restrict the processing of your data, to data portability and to object. You may also lodge a complaint with the data protection authority.',
+                ],
+                'changes' => [
+                    'title' => '5. Changes to this policy',
+                    'body' => 'We will announce material changes to this policy in the service. The date of the last update is at the top of the document.',
+                ],
+            ],
+            'related' => [
+                'cookies' => ['title' => 'Cookie policy', 'text' => 'Which cookies the service uses and how to manage consents.'],
+                'terms' => ['title' => 'Terms of service', 'text' => 'Rules for using the service and providing the services.'],
+            ],
+        ],
         'search' => 'Search invoices and clients',
         'account' => 'Anna Nowak',
         'account_subtitle' => 'Accounting · Nowak Accounting Office',
@@ -181,9 +219,6 @@ return [
             'paid' => 'Paid',
             'closed' => 'Closed',
         ],
-        'step_done' => 'completed',
-        'step_current' => 'current',
-        'step_next' => 'upcoming',
         'details' => 'Invoice details',
         'buyer' => 'Buyer',
         'payment' => 'Payment',

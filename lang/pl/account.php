@@ -62,16 +62,6 @@ return [
         'event' => 'Zdarzenie',
         'detail' => 'Szczegóły',
         'devices_count' => 'Liczba urządzeń: :count',
-        'events' => [
-            'sign_in' => 'Udane logowanie',
-            'pin_rejected' => 'Błędny PIN',
-            'account_locked' => 'Konto zablokowane',
-            'sign_out' => 'Wylogowanie',
-            'access_revoked' => 'Sesje zakończone',
-            'pin_changed' => 'Zmiana PIN-u',
-            'trusted_device_registered' => 'Nowe zaufane urządzenie',
-            'trusted_devices_revoked' => 'Odwołane urządzenia',
-        ],
     ],
     'avatar_colors' => [
         'slate' => 'Grafitowy',

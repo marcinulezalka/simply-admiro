@@ -83,12 +83,19 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
 - **Tokeny:** wartość z wariantem ciemnym to `light-dark(jasny, ciemny)` w jednej linii (w cieniu tylko kolor cienia).
   O wariancie decyduje `color-scheme`: domyślnie motyw systemu, a wybór użytkownika ustawia `data-theme="light|dark"`
   na `<html>` (`:root[data-theme=…] { color-scheme: … }` w `tokens.css`). W Tailwind te same tokeny trafią do `@theme`.
-- **Przełącznik** `x-mainboard::theme-toggle` (księżyc w jasnym, słońce w ciemnym; `aria-pressed` = motyw ciemny):
-  w layoucie aplikacji (rząd akcji pod awatarem), na stronach logowania (prawy górny róg) i na stronie design systemu.
-  Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony (`x-mainboard::page`) stosuje
-  go przed narysowaniem (bez błysku). Bez skryptu przycisk jest ukryty i obowiązuje motyw systemu.
+- **Przełącznik** `x-mainboard::theme-toggle`: przełącznik segmentowy z czterema motywami (`Enums\Theme`) — jasny,
+  ciemny, kontrast WCAG (`contrast`: czerń na bieli) i duży kontrast WCAG (`contrast-yellow`: żółty na czarnym); wybrany
+  segment ma `aria-pressed="true"`, etykiety w `title` i dla czytników ekranu. Stoi w layoucie aplikacji (stopka menu nad
+  logo, w zwiniętym menu pionowo), na stronach logowania (prawy górny róg), na stronach treści i na stronie design
+  systemu. Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony
+  (`x-mainboard::page`) stosuje go przed narysowaniem (bez błysku). Bez skryptu przełącznik jest ukryty i obowiązuje
+  motyw systemu.
+- **Motywy wysokiego kontrastu (WCAG 2.2 AAA):** bloki `:root[data-theme="contrast"]` i `[data-theme="contrast-yellow"]`
+  na końcu `tokens.css` podmieniają wszystkie tokeny semantyczne na wartości o kontraście co najmniej 7:1 (ramki pełne,
+  stany w odróżnialnych kolorach z tekstem lub ikoną). Stoją po kolorystykach, więc `data-palette` w nich nie działa.
+  Strona design systemu pokazuje w tabeli tylko wartości jasne i ciemne.
 - **Elementy tylko dla jednego motywu** (np. dwa obrazy banera): klasy `.ss-theme-light` / `.ss-theme-dark`, zgodne
-  z wyborem i z motywem systemu.
+  z wyborem i z motywem systemu (kontrast czarno-biały liczy się jako jasny, żółto-czarny jako ciemny).
 - **Kolorystyka strefy (warstwa bazowa):** arkusz strefy (`stylesheets`) nadpisuje w `:root` tylko tokeny semantyczne
   (`light-dark()` dla obu motywów), np. tło, powierzchnie, tekst i akcent bazowy `--ss-color-accent-base`
   (`--ss-color-accent` jest z niego liczony) — nigdy klas komponentów. Kontrast tekstu co najmniej 4,5:1.
@@ -96,8 +103,8 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   `--ss-palette-<paleta>-{accent,accent-hover,info,info-surface,inverse}` w `tokens.css`. Atrybut `data-palette` na
   `<html>` (`:root[data-palette=…]`, wygrywa z `:root` arkusza strefy) podmienia akcent, informację i kartę odwróconą
   w obu motywach; powierzchnie zostają ze strefy. Strefa wybiera oferowane kolorystyki w configu (`palettes`);
-  `x-mainboard::palette-switch` (obok przełącznika motywu: layout aplikacji, strony logowania, design system) pokazuje
-  „Domyślna” (kolory bazowe) i listę z próbkami. `x-mainboard::page` dostaje te same `palettes` i `paletteScope`
+  `x-mainboard::palette-switch` pokazuje „Domyślna” (kolory bazowe) i listę z próbkami; layouty (aplikacja, logowanie)
+  go nie wyświetlają — przełącznik jest tylko w sekcji „Kolorystyki” design systemu, a strona stosuje zapisany wybór. `x-mainboard::page` dostaje te same `palettes` i `paletteScope`
   (meta `ss-palettes` przed `js/theme.js`), więc wybór — zapamiętany w przeglądarce osobno dla każdej strefy — działa
   bez błysku; kolorystyka spoza listy strefy jest pomijana. Bez skryptu przełącznik jest ukryty.
 
@@ -174,7 +181,8 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie jedna pod drugą); wygląd wyłącznie z klas design systemu |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie jedna pod drugą); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie; tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; wygląd wyłącznie z klas design systemu |
+| `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i przełącznikiem motywu nad i pod treścią, spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł, `lead`) i treścią w `.ss-prose`, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
 
@@ -203,7 +211,7 @@ strony) i **Widoki** — gotowe ekrany aplikacji pod `/design-system/views/{wido
 pogrupowane w rozwijane obszary (`Enums\DesignSystemArea`, natywne `<details>`, obszar bieżącego widoku
 rozwinięty): **Autoryzacja** (logowanie klasyczne i na dwóch kartach, kod z e-maila, błędny kod, PIN, zbyt wiele
 prób, ustawienie i potwierdzenie PIN-u, wygasła sesja logowania, „Nie pamiętam PIN-u”), **Panel aplikacji** (pulpit,
-lista rekordów, szczegóły rekordu, formularz, menu boczne) i **Błędy** (401, 403, 404, 419, 429, 500, 503). Ekrany
+lista rekordów, szczegóły rekordu, formularz, menu boczne), **Strony treści** (polityka prywatności na `content.layout`) i **Błędy** (401, 403, 404, 419, 429, 500, 503). Ekrany
 logowania i strony błędów to podglądy prawdziwych plików produkcyjnych (`mainboard::auth.*`, `app/errors/*`):
 logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól (`View\DesignSystem\SignInPreviews`).
 
@@ -282,10 +290,14 @@ i Esc); nagłówek kontekstowy
 osadza `x-mainboard::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.
 
-Klasy ogólne do czasu komponentów: `.ss-card` i `.ss-card--muted` (§4), `.ss-icon--tile` (ikona w kafelku
+Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
+do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
 `surface-muted`), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
-`.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`),
+`.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
+`x-mainboard::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie
+`x-mainboard::pagination` (poprzednia/następna, „Strona X z Y”; przy jednej stronie nic), plakietka jako przycisk
+(`button.ss-badge`, np. odebranie roli),
 `.ss-grid` (`--3`, `--wide`), `.ss-stat`, `.ss-list`, `.ss-table`, `.ss-pairs`, `.ss-form-layout`,
 `.ss-form-actions`, `.ss-form-row`, `.ss-fieldset`, `.ss-choices` z `.ss-choice` (wybór jednej opcji jako
 pigułki), `.ss-grid--4`, `.ss-card__title--inset`, `.ss-table--grid`, `.ss-table__sub`, `.ss-icon-button`,

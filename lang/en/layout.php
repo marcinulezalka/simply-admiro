@@ -36,7 +36,30 @@ return [
     'mask_format' => 'Format: :format',
     'switch_context' => 'Switch context',
     'current' => 'current',
-    'dark_theme' => 'Dark theme',
+    'theme' => 'Theme',
+    'themes' => [
+        'light' => 'Light',
+        'dark' => 'Dark',
+        'contrast' => 'WCAG contrast',
+        'contrast-yellow' => 'WCAG high contrast',
+    ],
+    'pagination' => [
+        'label' => 'List pages',
+        'previous' => 'Previous page',
+        'next' => 'Next page',
+        'page' => 'Page :page of :pages',
+        'total' => 'items: :count',
+    ],
+    'steps' => [
+        'done' => 'completed',
+        'current' => 'current',
+        'next' => 'upcoming',
+    ],
+    'content' => [
+        'toc' => 'Contents',
+        'see_also' => 'See also',
+        'back' => 'Back',
+    ],
     'palette' => 'Color scheme',
     'palettes' => [
         'default' => 'Default',

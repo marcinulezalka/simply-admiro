@@ -15,6 +15,7 @@ namespace Simplysmart\Mainboard\Queries\Audit;
 
 use Illuminate\Database\Eloquent\Collection;
 use Simplysmart\Mainboard\Models\AuditEvent;
+use Simplysmart\Mainboard\View\AuditEventLabel;
 
 /**
  * Historia bezpieczeństwa jednego konta strefy dla jego właściciela (strona „Bezpieczeństwo”): ostatnie logowania,
@@ -57,11 +58,11 @@ final class AccountHistory
     }
 
     /**
-     * Etykieta zdarzenia dla właściciela konta (`account.history.events.<zdarzenie>`).
+     * Etykieta zdarzenia dla właściciela konta (View\AuditEventLabel, `audit.events.*`).
      */
     public static function label(AuditEvent $event): string
     {
-        return text('account.history.events.' . str_replace([' ', '-'], '_', $event->event));
+        return AuditEventLabel::of($event->event);
     }
 
     /**

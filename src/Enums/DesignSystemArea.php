@@ -21,6 +21,7 @@ enum DesignSystemArea: string
 {
     case Authorization = 'authorization';
     case Workspace = 'workspace';
+    case Pages = 'pages';
     case Errors = 'errors';
 
     public function labelKey(): string

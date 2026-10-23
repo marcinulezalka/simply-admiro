@@ -66,6 +66,27 @@
     background: var(--ss-color-surface-muted);
 }
 
+/* .ss-card--link — cała karta jest odnośnikiem (skrót do sekcji): ikona w kafelku i etykieta w wierszu. */
+.ss-card--link {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    color: var(--ss-color-text);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ss-card--link:hover {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-card--link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
 @media (min-width: 40rem) {
     .ss-card {
         padding: var(--ss-space-6);
@@ -153,6 +174,21 @@
     font-family: var(--ss-font-mono);
     font-size: 0.75rem;
     font-weight: 500;
+}
+
+/* Plakietka jako przycisk (np. odebranie roli): bez ramki, z kursorem i widocznym fokusem. */
+button.ss-badge {
+    border: 0;
+    cursor: pointer;
+}
+
+button.ss-badge:hover {
+    background: var(--ss-color-border-strong);
+}
+
+button.ss-badge:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
 }
 
 /**
@@ -476,7 +512,8 @@
 
 /**
  * .ss-auth — strony logowania stref (x-mainboard::auth.layout): wąska karta na środku ekranu,
- * logo nad tytułem, pod formularzem akcje drugorzędne. Karta bez cienia (§4).
+ * logo nad tytułem, pod formularzem akcje drugorzędne. Karta bez cienia (§4). Tło: delikatny gradient
+ * (--ss-color-auth-from → --ss-color-auth-to, w rogu odrobina akcentu strefy) w każdym motywie.
  */
 .ss-auth {
     display: flex;
@@ -485,6 +522,9 @@
     align-items: center;
     justify-content: center;
     padding: var(--ss-space-4);
+    background:
+        radial-gradient(ellipse at top left, color-mix(in srgb, var(--ss-color-accent) 7%, transparent), transparent 60%),
+        linear-gradient(160deg, var(--ss-color-auth-from), var(--ss-color-auth-to));
 }
 
 /**
@@ -1266,11 +1306,21 @@ summary.ss-sidebar__identity:focus-visible {
     left: 0;
 }
 
+/* Przełącznik motywu w stopce menu, nad logo; w zwiniętym menu ułożony pionowo. */
+.ss-sidebar__theme {
+    align-self: flex-start;
+    margin: auto var(--ss-space-3) 0;
+}
+
 .ss-sidebar__brand {
     margin-top: auto;
     padding: var(--ss-space-3) var(--ss-space-3) 0;
     opacity: 0.45;
     transition: opacity 0.15s ease;
+}
+
+.ss-sidebar__theme ~ .ss-sidebar__brand {
+    margin-top: 0;
 }
 
 .ss-sidebar__brand:hover {
@@ -1492,6 +1542,12 @@ summary.ss-sidebar__identity:focus-visible {
         flex-direction: column;
         align-items: center;
         padding: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__theme {
+        flex-direction: column;
+        align-self: center;
+        margin-inline: 0;
     }
 
     .ss-shell--collapsed .ss-sidebar__group {
@@ -2495,13 +2551,33 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-auth__brand--image — karta marki z banerem strefy (auth.brand): obraz wypełnia kartę z zachowaniem
- * proporcji (przycięcie do środka; na telefonie niski pasek z górną częścią banera).
+ * proporcji (przycięcie do środka; na telefonie niski pasek z górną częścią banera), bez ramki i tła karty (tło
+ * odwrócone prześwitywało w ciemnym motywie jasną obwódką). .ss-auth--image łączy baner z kartą formularza.
  */
 .ss-auth__brand--image {
     position: relative;
     min-height: 12rem;
     padding: 0;
     overflow: hidden;
+    border: 0;
+    background: transparent;
+}
+
+/* Karta formularza nachodzi na baner o promień karty, więc zakrywa jego zaokrąglenie i obie karty są połączone. */
+.ss-auth--image .ss-auth__cards {
+    gap: 0;
+}
+
+.ss-auth--image .ss-auth__card {
+    position: relative;
+    margin-top: calc(-1 * var(--ss-radius-nested));
+}
+
+@media (min-width: 56rem) {
+    .ss-auth--image .ss-auth__card {
+        margin-top: 0;
+        margin-left: calc(-1 * var(--ss-radius-nested));
+    }
 }
 
 .ss-auth__brand-image {
@@ -2521,20 +2597,56 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): ikona motywu, na który przełączy; stan dla czytników
- * w aria-pressed. .ss-auth__theme — przełączniki motywu i kolorystyki w prawym górnym rogu stron logowania.
+ * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): przełącznik segmentowy z ikonami motywów
+ * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG); wybrany segment wypełniony akcentem (aria-pressed="true").
+ * .ss-auth__theme — przełącznik w prawym górnym rogu stron logowania.
  */
+.ss-theme-toggle {
+    display: inline-flex;
+    flex: none;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
 .ss-theme-toggle[hidden] {
     display: none;
 }
 
-.ss-theme-toggle__sun,
-.ss-theme-toggle[aria-pressed="true"] .ss-theme-toggle__moon {
-    display: none;
+.ss-theme-toggle__option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: calc(var(--ss-radius-control) - 3px);
+    background: transparent;
+    color: var(--ss-color-muted);
+    cursor: pointer;
 }
 
-.ss-theme-toggle[aria-pressed="true"] .ss-theme-toggle__sun {
-    display: inline-flex;
+.ss-theme-toggle__option:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-theme-toggle__option:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+.ss-theme-toggle__option[aria-pressed="true"] {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-theme-toggle__icon {
+    width: 1.125rem;
+    height: 1.125rem;
 }
 
 .ss-auth {
@@ -2611,26 +2723,266 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-theme-light / .ss-theme-dark — element tylko dla motywu jasnego albo ciemnego (np. dwa obrazy banera), zgodnie
- * z wyborem w przełączniku (data-theme) albo z motywem systemu.
+ * z wyborem w przełączniku (data-theme; kontrast czarno-biały liczy się jako jasny, żółto-czarny jako ciemny) albo
+ * z motywem systemu.
  */
 .ss-theme-dark {
     display: none;
 }
 
-:root[data-theme="dark"] .ss-theme-dark {
+:root[data-theme="dark"] .ss-theme-dark,
+:root[data-theme="contrast-yellow"] .ss-theme-dark {
     display: revert;
 }
 
-:root[data-theme="dark"] .ss-theme-light {
+:root[data-theme="dark"] .ss-theme-light,
+:root[data-theme="contrast-yellow"] .ss-theme-light {
     display: none;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .ss-theme-dark {
+    :root:not([data-theme="light"], [data-theme="contrast"]) .ss-theme-dark {
         display: revert;
     }
 
-    :root:not([data-theme="light"]) .ss-theme-light {
+    :root:not([data-theme="light"], [data-theme="contrast"]) .ss-theme-light {
         display: none;
     }
+}
+
+/**
+ * .ss-content-page — strona treści (x-mainboard::content.layout): pasek z powrotem i przełącznikiem motywu nad i pod
+ * treścią, spis treści (.ss-toc) w karcie obok karty dokumentu; na szerokim ekranie spis przyklejony przy przewijaniu.
+ */
+.ss-content-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    max-width: var(--ss-content-page-width);
+    margin: 0 auto;
+    padding: var(--ss-space-6) var(--ss-space-4) var(--ss-space-8);
+}
+
+.ss-content-page__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-content-page__back {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.ss-content-page__back-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-content-page__theme {
+    margin-left: auto;
+}
+
+.ss-content-page__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+}
+
+.ss-content-page__main {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+}
+
+.ss-content-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin-bottom: var(--ss-space-6);
+    padding-bottom: var(--ss-space-6);
+    border-bottom: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-content-page__eyebrow {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-content-page__title {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.ss-content-page__lead {
+    margin: 0;
+    color: var(--ss-color-muted);
+}
+
+@media (min-width: 40rem) {
+    .ss-content-page__card {
+        padding: var(--ss-space-8);
+    }
+}
+
+@media (min-width: 64rem) {
+    .ss-content-page__layout {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .ss-content-page__toc {
+        position: sticky;
+        top: var(--ss-space-6);
+        flex: 0 0 var(--ss-sidebar-width);
+    }
+}
+
+/**
+ * .ss-toc — spis treści strony: numerowana lista odnośników do nagłówków sekcji.
+ */
+.ss-toc__title {
+    margin: 0 0 var(--ss-space-3);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-toc__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-toc__link {
+    display: block;
+    padding: var(--ss-space-1) var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+.ss-toc__link:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-toc__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+/**
+ * .ss-prose — treść dokumentu (nagłówki h2/h3, akapity, listy, odnośniki) z wygodną długością wiersza; nagłówki
+ * sekcji zostawiają odstęp przy skoku ze spisu treści.
+ */
+.ss-prose {
+    max-width: 70ch;
+    line-height: 1.7;
+}
+
+.ss-prose > :first-child {
+    margin-top: 0;
+}
+
+.ss-prose h2 {
+    margin: var(--ss-space-8) 0 var(--ss-space-3);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    scroll-margin-top: var(--ss-space-6);
+}
+
+.ss-prose h3 {
+    margin: var(--ss-space-6) 0 var(--ss-space-2);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-prose p,
+.ss-prose ul,
+.ss-prose ol {
+    margin: 0 0 var(--ss-space-4);
+}
+
+.ss-prose ul,
+.ss-prose ol {
+    padding-left: var(--ss-space-6);
+}
+
+.ss-prose li + li {
+    margin-top: var(--ss-space-2);
+}
+
+.ss-prose a {
+    color: var(--ss-color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.ss-prose a:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-related — odnośnik do powiązanej strony (np. w karcie „Zobacz także”): ikona w kafelku, tytuł z opisem i strzałka.
+ */
+.ss-related {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    margin: 0 calc(-1 * var(--ss-space-3));
+    padding: var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    text-decoration: none;
+}
+
+.ss-related:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-related:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+.ss-related__body {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.ss-related__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-related__text {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-related__arrow {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
 }
