@@ -29,10 +29,13 @@ Pierwszy administrator dostaje rolę z komendy (`--role=hero`), kolejnym role na
 | Pulpit z odnośnikami do dostępnych sekcji | `admiro.dashboard` | zalogowany administrator |
 | Strefy z kontami i konta strefy (szukanie po dokładnym adresie e-mail) | `admiro.zones.index`, `admiro.zones.accounts` | `zones.view` |
 | Reset PIN-u, odblokowanie, wyłączenie konta strefy | `admiro.zones.accounts.action` | `accounts.manage` |
+| Organizacje (firmy i oddziały) i ich członkowie we wszystkich strefach | `admiro.organizations.index`, `admiro.organizations.members` | `organizations.view` |
+| Zakładanie, zmiany, włączanie i wyłączanie organizacji, usuwanie członków | `admiro.organizations.*` | `organizations.manage` |
 | Założenie właściciela strefy (strefy z `ZoneOwnerProvisioner` w Core) | `admiro.owners.create`, `admiro.owners.store` | `owners.assign` |
 | Administratorzy i ich role | `admiro.administrators.index`, `admiro.administrators.roles.*` | `users.manage` |
 
-- Konto innego administratora zmienia tylko ten, kto ma `users.manage` i wszystkie jego uprawnienia; roli nie nada się szerszej niż własne uprawnienia (np. `owner` nie nada `hero`). Własnego konta i własnych ról nie zmienia się w panelu.
+- Organizacji operatora nie da się wyłączyć ani przenieść, a drzewo organizacji nie dopuszcza cykli.
+- Konto innego administratora (także usunięcie go z organizacji operatora) zmienia tylko ten, kto ma `users.manage` i wszystkie jego uprawnienia; roli nie nada się szerszej niż własne uprawnienia (np. `owner` nie nada `hero`). Własnego konta i własnych ról nie zmienia się w panelu.
 - Każda akcja trafia do dziennika logowań Core z aktorem (administrator i strefa).
 
 ## Strefa

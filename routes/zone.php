@@ -16,6 +16,7 @@ use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Admiro\Http\AccountAction;
 use Simplysmart\Admiro\Http\Controllers\AccountActionController;
 use Simplysmart\Admiro\Http\Controllers\AdministratorController;
+use Simplysmart\Admiro\Http\Controllers\OrganizationController;
 use Simplysmart\Admiro\Http\Controllers\OwnerController;
 use Simplysmart\Admiro\Http\Controllers\ZoneController;
 use Simplysmart\Mainboard\Zones\ZonePermission;
@@ -44,4 +45,18 @@ Route::middleware(ZonePermission::middleware(Permission::UsersManage))->group(st
     Route::get('administrators', [AdministratorController::class, 'index'])->name('administrators.index');
     Route::post('administrators/{account}/roles', [AdministratorController::class, 'assign'])->middleware('throttle:mainboard.sign-in')->name('administrators.roles.assign');
     Route::delete('administrators/{account}/roles/{role}', [AdministratorController::class, 'revoke'])->middleware('throttle:mainboard.sign-in')->name('administrators.roles.revoke');
+});
+
+Route::middleware(ZonePermission::middleware(Permission::OrganizationsManage))->group(static function (): void {
+    Route::get('organizations/create', [OrganizationController::class, 'create'])->name('organizations.create');
+    Route::post('organizations', [OrganizationController::class, 'store'])->middleware('throttle:mainboard.sign-in')->name('organizations.store');
+    Route::get('organizations/{organization}/edit', [OrganizationController::class, 'edit'])->name('organizations.edit');
+    Route::put('organizations/{organization}', [OrganizationController::class, 'update'])->middleware('throttle:mainboard.sign-in')->name('organizations.update');
+    Route::post('organizations/{organization}/toggle', [OrganizationController::class, 'toggle'])->middleware('throttle:mainboard.sign-in')->name('organizations.toggle');
+    Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationController::class, 'removeMember'])->middleware('throttle:mainboard.sign-in')->name('organizations.members.remove');
+});
+
+Route::middleware(ZonePermission::middleware(Permission::OrganizationsView))->group(static function (): void {
+    Route::get('organizations', [OrganizationController::class, 'index'])->name('organizations.index');
+    Route::get('organizations/{organization}/members', [OrganizationController::class, 'members'])->name('organizations.members');
 });

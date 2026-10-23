@@ -13,14 +13,13 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Http\Controllers;
 
-use Illuminate\Config\Repository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Log\LogManager;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
 use LogicException;
+use Simplysmart\Admiro\Http\AdminAudit;
 use Simplysmart\Admiro\Http\AdminContext;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Permissions\OwnerData;
@@ -49,7 +48,7 @@ final readonly class OwnerController
         ]);
     }
 
-    public function store(Request $request, LogManager $logs, Repository $config): RedirectResponse
+    public function store(Request $request, AdminAudit $audit): RedirectResponse
     {
         $validated = $request->validate([
             'zone' => ['required', 'string', Rule::in($this->provisioners->zones())],
@@ -68,12 +67,7 @@ final readonly class OwnerController
             return $this->redirect->back()->withInput()->withErrors(['organization' => text('admiro::admin.owner_organization_required')]);
         }
 
-        $logs->channel($config->string('mainboard.auth.log_channel'))->notice('owner provisioned', [
-            'zone' => $zone,
-            'account_token' => $account,
-            'organization_id' => $organization?->id,
-            'actor' => $this->context->actor()->toLogContext(),
-        ]);
+        $audit->record('owner provisioned', ['zone' => $zone, 'account_token' => $account, 'organization_id' => $organization?->id]);
 
         return $this->redirect->route($this->context->zone()->routeName('owners.create'))->with('status', text('admiro::admin.owner_created'));
     }

@@ -26,6 +26,7 @@ final readonly class DashboardController
     {
         return view('admiro::dashboard', [
             'canViewZones' => $context->can(Permission::ZonesView),
+            'canViewOrganizations' => $context->can(Permission::OrganizationsView),
             'canAssignOwners' => $context->can(Permission::OwnersAssign),
             'canManageAdministrators' => $context->can(Permission::UsersManage),
         ]);

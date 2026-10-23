@@ -15,14 +15,11 @@ namespace Simplysmart\Admiro\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Admiro\Http\AccountAction;
 use Simplysmart\Admiro\Http\AdminContext;
+use Simplysmart\Admiro\Http\AdministratorGuard;
 use Simplysmart\Admiro\Http\ManagedAccounts;
 use Simplysmart\Mainboard\Auth\AccountAdministration;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Permissions\PermissionCoverage;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -34,8 +31,8 @@ final readonly class AccountActionController
     public function __construct(
         private ManagedAccounts $managed,
         private AdminContext $context,
+        private AdministratorGuard $guard,
         private AccountAdministration $administration,
-        private PermissionCoverage $coverage,
         private Redirector $redirect,
     ) {}
 
@@ -43,14 +40,13 @@ final readonly class AccountActionController
     {
         $zone = $this->managed->zone($managedZone);
         $target = $this->managed->account($zone, $account);
-        $admin = $this->context->admin();
         $back = $this->redirect->route($this->context->zone()->routeName('zones.accounts'), ['managedZone' => $zone->name]);
 
-        if ($target->is($admin)) {
+        if ($this->guard->isOwnAccount($target)) {
             return $back->withErrors(['account' => text('admiro::admin.own_account')]);
         }
 
-        if ($zone->name === $this->context->zone()->name && ! $this->canManageAdministrator($target)) {
+        if (! $this->guard->mayChange($zone, $target)) {
             throw new AccessDeniedHttpException();
         }
 
@@ -63,13 +59,5 @@ final readonly class AccountActionController
         };
 
         return $back->with('status', text('admiro::admin.action_done.' . $action));
-    }
-
-    private function canManageAdministrator(ZoneAccount $target): bool
-    {
-        $zone = $this->context->zone();
-
-        return $this->context->can(Permission::UsersManage)
-            && $this->coverage->covers($zone, $this->context->admin(), $this->coverage->of($target, Organization::OPERATOR_ID), Organization::OPERATOR_ID);
     }
 }
