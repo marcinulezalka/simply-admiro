@@ -34,11 +34,11 @@ final readonly class RevokeAccountAccess
 
     public function handle(ZoneDefinition $zone, Model&CodeAndPinAccount $account, AccessRevocationReason $reason, ?AccountActor $actor = null): void
     {
-        $id = $account->getAuthIdentifier();
+        $id = AccountKey::from($account->getAuthIdentifier());
 
         $this->store->bumpAuthEpoch($account);
 
-        if (is_int($id) || is_string($id)) {
+        if ($id !== null) {
             $this->sessions->forgetAccount($zone, $id);
         }
 

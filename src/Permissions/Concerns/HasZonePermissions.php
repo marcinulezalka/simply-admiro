@@ -28,6 +28,8 @@ use Spatie\Permission\Traits\HasRoles;
  * Odmowy konta są wczytywane raz na instancję modelu (relacja `permissionDenials`).
  *
  * @property-read Collection<int, PermissionDenial> $permissionDenials
+ *
+ * @method $this unsetRelation(string $relation) Metoda modelu Eloquent.
  */
 trait HasZonePermissions
 {
@@ -48,6 +50,15 @@ trait HasZonePermissions
         }
 
         return ! $this->isPermissionDenied($this->filterPermission($permission, $guardName));
+    }
+
+    /**
+     * Zapomina wczytane role, uprawnienia i odmowy konta (po zmianie bieżącej organizacji albo przypisań),
+     * więc kolejne sprawdzenie czyta je od nowa.
+     */
+    public function forgetZonePermissions(): static
+    {
+        return $this->unsetRelation('roles')->unsetRelation('permissions')->unsetRelation('permissionDenials');
     }
 
     /**

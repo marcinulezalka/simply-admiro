@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Middleware;
 
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Closure;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Http\Request;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\HasZoneRoles;
@@ -33,7 +33,7 @@ final readonly class RequireZonePermission
 
     public function __construct(
         private CurrentZone $zone,
-        private AuthFactory $auth,
+        private CurrentAccount $account,
         private ZonePermissionChecker $permissions,
     ) {}
 
@@ -43,7 +43,7 @@ final readonly class RequireZonePermission
     public function handle(Request $request, Closure $next, string $permission): Response
     {
         $zone = $this->zone->get();
-        $account = $zone->requiresLogin() ? $this->auth->guard($zone->guard)->user() : null;
+        $account = $this->account->get();
 
         if (! $account instanceof HasZoneRoles || ! $this->permissions->allows($zone, $account, $permission)) {
             throw new AccessDeniedHttpException();

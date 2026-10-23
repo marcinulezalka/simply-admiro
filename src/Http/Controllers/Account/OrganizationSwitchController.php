@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Controllers\Account;
 
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,10 +32,10 @@ final readonly class OrganizationSwitchController
 {
     public const string FIELD = 'organization';
 
-    public function __invoke(Request $request, CurrentZone $zone, AuthFactory $auth, OrganizationSelector $selector, ActiveOrganizations $organizations, Redirector $redirect): RedirectResponse
+    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, OrganizationSelector $selector, ActiveOrganizations $organizations, Redirector $redirect): RedirectResponse
     {
         $validated = $request->validate([self::FIELD => ['required', 'string', 'max:' . Organization::TOKEN_LENGTH]]);
-        $account = $auth->guard($zone->get()->guard)->user();
+        $account = $current->get();
         $organization = is_string($validated[self::FIELD]) ? $organizations->find($validated[self::FIELD]) : null;
 
         if (! $account instanceof Model || $organization === null || ! $selector->choose($account, $organization, $request->session())) {

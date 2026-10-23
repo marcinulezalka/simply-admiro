@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\Devices;
 
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -109,13 +110,13 @@ final readonly class EloquentTrustedDeviceRepository implements TrustedDeviceRep
         }
 
         $id = $device->getKey();
-        $accountId = $device->getAttribute(ZoneTables::ACCOUNT_FOREIGN_KEY);
+        $accountId = AccountKey::from($device->getAttribute(ZoneTables::ACCOUNT_FOREIGN_KEY));
         $userAgent = $device->getAttribute('user_agent');
         $createdAt = $device->getAttribute('created_at');
         $lastUsedAt = $device->getAttribute('last_used_at');
         $expiresAt = $device->getAttribute('expires_at');
 
-        if (! is_string($id) || ! (is_int($accountId) || is_string($accountId)) || ! $expiresAt instanceof CarbonImmutable) {
+        if (! is_string($id) || $accountId === null || ! $expiresAt instanceof CarbonImmutable) {
             return null;
         }
 

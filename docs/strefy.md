@@ -58,7 +58,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
   - Strefa z logowaniem: tabela `<nazwa>_sessions`, czas życia `ZONE_SESSION_LIFETIME` (30 min), wygaśnięcie po zamknięciu przeglądarki, `SameSite=Strict`, szyfrowanie.
   - Strefa publiczna: `SameSite=Lax`, pozostałe ustawienia z `config/session.php`.
   - Po odpowiedzi config sesji, domyślny guard i `CurrentZone` wracają do stanu aplikacji.
-- **Strefa żądania**: kontrakt `Contracts\CurrentZone` (wiązanie `scoped`).
+- **Strefa i konto żądania**: kontrakt `Contracts\CurrentZone` (wiązanie `scoped`) i `Contracts\CurrentAccount` (konto z guardu strefy żądania; `require()` daje 403 bez konta). Kod Core i stref nie szuka konta w guardzie sam; identyfikator konta daje `Auth\AccountKey`.
 - **Język**: `SetLocale` i `Localization\LocaleRouting`, sterowane zmienną `APP_LOCALES`.
   - Jeden język: trasy bez prefiksu.
   - Kilka języków: prefiks `{locale}` zawsze obecny i ograniczony do listy. Parametr jest zdejmowany przed kontrolerem, a `route()` dostaje język bieżącego żądania.
@@ -154,7 +154,9 @@ Na kroku kodu konto może zaznaczyć „Zapamiętaj to urządzenie” (`auth.tru
 **Dziennik zdarzeń** (`Audit\AuditEntries` to jedyne mapowanie zdarzenia na wpis): każde zdarzenie trafia do pliku
 (`AUTH_LOG_CHANNEL`) i do tabeli `audit_events` (podgląd w panelu administratora). Wpis ma strefę, konto, aktora
 (akcje administratorów: `Audit\Events\AdminActionPerformed`), organizację, szyfrowane IP i kontekst bez adresów
-e-mail. `mainboard:audit:prune` codziennie usuwa wpisy starsze niż `AUDIT_RETENTION_DAYS` (365 dni).
+e-mail. Otwarcie rekordu z danymi osobowymi (np. kartoteki) zgłasza strefa zdarzeniem `Audit\Events\RecordAccessed`
+(typ i token rekordu, flaga danych wrażliwych), więc trafia do dziennika organizacji. Dziennik jednej organizacji
+(jej zdarzenia i zdarzenia kont jej członków) daje `Queries\Audit\AuditLog::forOrganization()`. `mainboard:audit:prune` codziennie usuwa wpisy starsze niż `AUDIT_RETENTION_DAYS` (365 dni).
 
 ## Boty i maskowanie błędów
 

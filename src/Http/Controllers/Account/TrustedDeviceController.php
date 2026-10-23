@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Controllers\Account;
 
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -39,7 +39,7 @@ final readonly class TrustedDeviceController
         private TrustedDeviceRepository $devices,
         private DeviceCookie $cookie,
         private CurrentZone $zone,
-        private AuthFactory $auth,
+        private CurrentAccount $account,
         private Dispatcher $events,
         private Redirector $redirect,
     ) {}
@@ -85,9 +85,7 @@ final readonly class TrustedDeviceController
 
     private function accountId(): int|string
     {
-        $id = $this->auth->guard($this->zone->get()->guard)->id();
-
-        return is_int($id) || is_string($id) ? $id : throw new AccessDeniedHttpException();
+        return $this->account->id() ?? throw new AccessDeniedHttpException();
     }
 
     private function back(): RedirectResponse

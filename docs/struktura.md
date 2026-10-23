@@ -3,14 +3,32 @@
 ```
 mainboard/
 ├── brand/               źródła marki: logo, sygnet, kolory (zob. brand/README.md)
+├── config/mainboard.php konfiguracja Core (strefy, logowanie, bezpieczeństwo, dziennik, honeypot), tylko przez .env
+├── database/
+│   ├── migrations/      migracje wszystkich tabel Core i stref publicznych (zob. baza-danych.md)
+│   └── seeders/permissions/   pliki ról stref publicznych (JSON, baza-danych.md §15)
+├── lang/                tłumaczenia Core: lang/<locale>/<plik>.php (text_*, etykiety kolumn, e-maile)
 ├── public/              document root, punkt wejścia: public/index.php, assety (zob. niżej)
+├── resources/views/     widoki Core: logowanie, konto, maile, komponenty, layouty, domyślna strona startowa (app/)
 ├── src/                 kod paczki, namespace Simplysmart\Mainboard\ (PSR-4)
 │   ├── Contracts/       kontrakty (interfejsy) paczki — jedyne, od czego zależą inne pakiety i aplikacja
+│   ├── Providers/       providery obszarów: strefy, logowanie, uprawnienia, dziennik zdarzeń, bezpieczeństwo
+│   ├── Zones/           mechanizm stref: definicja, rejestr, registrary guardu, middleware i tras, sesja, strefa i konto żądania
+│   ├── Auth/            logowanie kodem i PIN-em (SignIn/), zaufane urządzenia (Devices/), zmiana PIN-u, akcje na kontach, zdarzenia i listenery
+│   ├── Permissions/     role i uprawnienia stref (spatie), pliki ról, nadawanie ról, członkostwa, właściciele stref
+│   ├── Organizations/   zarządzanie organizacjami i dopisywanie członków
+│   ├── Audit/           dziennik zdarzeń: mapowanie zdarzeń na wpisy, zapis do pliku i tabeli
+│   ├── Security/        maskowanie błędów, pułapki na boty (Honeypot/), indeks e-maila, zaufane proxy
+│   ├── Localization/    języki tras i interfejsu, formatowanie regionalne (local_*), ustawienia i słowniki lokalizacji
 │   ├── Translation/     kaskada tłumaczeń (text_*) i ścieżka tłumaczeń frameworka
-│   ├── Localization/    formatowanie regionalne (local_*)
+│   ├── Database/        kolumny standardowe, historia zmian, pule id, tabele stref, seedery referencyjne (Seeders/)
+│   ├── Models/          modele danych (DataModel, OrganizationDataModel), konta stref, słowniki, uprawnienia; relacje w Relations/
+│   ├── Queries/         odczyty dla paneli i usług (konta, organizacje, uprawnienia, słowniki, dziennik)
+│   ├── Http/            middleware, kontrolery Core (logowanie, konto), trasy logowania, konta i pułapek
+│   ├── Console/         komendy mainboard:* (seedy, synchronizacja ról, czyszczenie, honeypot)
+│   ├── Mail/, Logging/, Listeners/, Enums/, Rules/, View/   e-maile, kanały logów, listenery, enumy, reguły walidacji, komponenty widoków
 │   ├── helpers.php      helpery text_* i local_* (autoload "files")
-│   └── MainboardServiceProvider.php   wiązania kontraktów i ładowanie zasobów (auto-discovery)
-├── lang/                tłumaczenia Core: lang/<locale>/<plik>.php
+│   └── MainboardServiceProvider.php   config, teksty, zasoby paczki i rejestracja providerów obszarów (auto-discovery)
 ├── docs/                dokumentacja
 ├── .claude/skills/      skille AI tylko dla domeny paczki (wspólne dostarcza simplysmart/tools)
 ├── CHANGELOG.md         historia zmian (Keep a Changelog)

@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\Events;
 
+/**
+ * Konto wylogowało się ze strefy (null = sesja bez konta).
+ */
 final readonly class SignedOut
 {
     public function __construct(

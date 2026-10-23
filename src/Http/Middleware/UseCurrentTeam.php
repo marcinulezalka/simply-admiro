@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Middleware;
 
+use Simplysmart\Mainboard\Contracts\HasZoneRoles;
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Closure;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
@@ -30,7 +31,7 @@ final readonly class UseCurrentTeam
 {
     public function __construct(
         private CurrentZone $zone,
-        private AuthFactory $auth,
+        private CurrentAccount $account,
         private OrganizationSelector $selector,
         private CurrentOrganization $organization,
     ) {}
@@ -41,11 +42,13 @@ final readonly class UseCurrentTeam
     public function handle(Request $request, Closure $next): Response
     {
         $zone = $this->zone->get();
-        $account = $zone->requiresLogin() ? $this->auth->guard($zone->guard)->user() : null;
+        $account = $this->account->get();
         $account = $account instanceof Model ? $account : null;
 
         $this->organization->set($this->selector->select($zone, $account, $request->session()));
-        $account?->unsetRelation('roles')->unsetRelation('permissions')->unsetRelation('permissionDenials');
+        if ($account instanceof HasZoneRoles) {
+            $account->forgetZonePermissions();
+        }
 
         try {
             return $next($request);

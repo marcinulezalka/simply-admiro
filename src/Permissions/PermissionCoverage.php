@@ -35,7 +35,7 @@ final readonly class PermissionCoverage
     public function covers(ZoneDefinition $zone, ZoneAccount $account, iterable $permissions, int $organizationId): bool
     {
         return $this->organization->within($organizationId, function () use ($zone, $account, $permissions): bool {
-            $account->unsetRelation('roles')->unsetRelation('permissions')->unsetRelation('permissionDenials');
+            $account->forgetZonePermissions();
 
             foreach ($permissions as $permission) {
                 if (! is_string($permission) || ! $this->permissions->allows($zone, $account, $permission)) {
@@ -55,7 +55,7 @@ final readonly class PermissionCoverage
     public function of(ZoneAccount $account, int $organizationId): array
     {
         return $this->organization->within($organizationId, static function () use ($account): array {
-            $account->unsetRelation('roles')->unsetRelation('permissions');
+            $account->forgetZonePermissions();
             $names = $account->getAllPermissions()->pluck('name')->all();
 
             return array_values(array_filter($names, is_string(...)));

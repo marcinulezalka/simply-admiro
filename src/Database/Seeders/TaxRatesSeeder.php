@@ -13,7 +13,11 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Database\Seeders;
 
+use Illuminate\Config\Repository;
+use Simplysmart\Mainboard\Database\IdSlots;
 use Simplysmart\Mainboard\Enums\TaxRateType;
+use Simplysmart\Mainboard\Localization\DictionaryLocales;
+use Simplysmart\Mainboard\Localization\TaxRateLabels;
 use Simplysmart\Mainboard\Models\Dictionaries\Country;
 use Simplysmart\Mainboard\Models\Dictionaries\TaxRate;
 
@@ -24,6 +28,15 @@ use Simplysmart\Mainboard\Models\Dictionaries\TaxRate;
  */
 final class TaxRatesSeeder extends DictionarySeeder
 {
+    public function __construct(
+        Repository $config,
+        IdSlots $idSlots,
+        DictionaryLocales $locales,
+        private readonly TaxRateLabels $labels,
+    ) {
+        parent::__construct($config, $idSlots, $locales);
+    }
+
     public function run(): void
     {
         $withRates = TaxRate::withTrashed()->get()->map(static fn(TaxRate $rate): ?int => $rate->country_id)->all();
@@ -53,14 +66,9 @@ final class TaxRatesSeeder extends DictionarySeeder
 
     private function add(Country $country, TaxRateType $type, float|int|null $rate, string $from): void
     {
-        $label = static fn(string $locale): string => $rate === null
-            ? text('enums.tax_rate_exempt_short', [], $locale)
-            : LocalizationData::percentLabel($rate, $locale);
-
         $taxRate = $this->withSeedId(new TaxRate());
         $taxRate->forceFill([
-            'name' => $label($this->defaultLocale()),
-            'json_i18n' => $this->translations($label),
+            ...$this->labels->for($rate),
             'is_active' => true,
             'country_id' => $country->id,
             'type' => $type,

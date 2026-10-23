@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\SignIn;
 
+/**
+ * Wynik sprawdzenia kodu z e-maila: poprawny, błędny albo bez aktywnego kodu (wygasł, wyczerpał próby).
+ */
 enum CodeCheckResult
 {
     case Valid;

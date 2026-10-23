@@ -18,8 +18,8 @@ use Illuminate\Support\Carbon;
 use Simplysmart\Mainboard\Models\AuditEvent;
 
 /**
- * Dziennik zdarzeń dla paneli: strona wpisów od najnowszych z filtrami (strefa, zdarzenie, zakres dat)
- * i lista nazw zdarzeń do filtra.
+ * Dziennik zdarzeń dla paneli: strona wpisów od najnowszych z filtrami (strefa, zdarzenie, zakres dat),
+ * dziennik jednej organizacji i lista nazw zdarzeń do filtra.
  */
 final class AuditLog
 {
@@ -46,6 +46,27 @@ final class AuditLog
             $query->where('occurred_at', '<=', $to->copy()->endOfDay());
         }
 
+        $query->orderByDesc('id');
+
+        return $query->paginate($perPage)->withQueryString();
+    }
+
+    /**
+     * Dziennik jednej organizacji: zdarzenia z jej organizacją (role, członkostwa, dostęp do danych) i zdarzenia
+     * kont jej członków w strefie (logowania, PIN, urządzenia), od najnowszych.
+     *
+     * @param list<int|string> $accountIds Konta członków organizacji w strefie.
+     *
+     * @return LengthAwarePaginator<int, AuditEvent>
+     */
+    public function forOrganization(int $organizationId, string $zone, array $accountIds, int $perPage): LengthAwarePaginator
+    {
+        $ids = array_map(strval(...), $accountIds);
+        $query = AuditEvent::query();
+        $query->where(static function ($scope) use ($organizationId, $zone, $ids): void {
+            $scope->where('organization_id', $organizationId)
+                ->orWhere(static fn($members) => $members->where('zone', $zone)->whereIn('account_id', $ids));
+        });
         $query->orderByDesc('id');
 
         return $query->paginate($perPage)->withQueryString();

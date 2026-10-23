@@ -16,6 +16,9 @@ namespace Simplysmart\Mainboard\Auth\Events;
 use Carbon\CarbonInterface;
 use Simplysmart\Mainboard\Contracts\SignInAccount;
 
+/**
+ * Konto zablokowane do `until` po błędnych PIN-ach (Core wysyła e-mail i odwołuje zaufane urządzenia).
+ */
 final readonly class AccountLocked
 {
     public function __construct(

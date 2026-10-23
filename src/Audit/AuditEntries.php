@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Audit;
 
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Simplysmart\Mainboard\Audit\Events\AdminActionPerformed;
+use Simplysmart\Mainboard\Audit\Events\RecordAccessed;
 use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
@@ -47,10 +49,11 @@ final class AuditEntries
         TrustedDevicesRevoked::class,
         ZoneRoleChanged::class,
         AdminActionPerformed::class,
+        RecordAccessed::class,
     ];
 
     public function from(
-        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed $event,
+        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
     ): AuditEntry {
         return match (true) {
             $event instanceof SignInSucceeded => new AuditEntry('sign-in', AuditLevel::Info, $event->zone, $this->id($event->account), ip: $event->ip),
@@ -63,13 +66,12 @@ final class AuditEntries
             $event instanceof TrustedDevicesRevoked => new AuditEntry('trusted devices revoked', AuditLevel::Info, $event->zone, $event->accountId, context: ['count' => $event->count, 'cause' => $event->cause]),
             $event instanceof ZoneRoleChanged => new AuditEntry($event->assigned ? 'role assigned' : 'role revoked', AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: ['role' => $event->role]),
             $event instanceof AdminActionPerformed => new AuditEntry($event->action, AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: $event->context),
+            $event instanceof RecordAccessed => new AuditEntry('record accessed', $event->sensitive ? AuditLevel::Notice : AuditLevel::Info, $event->zone, null, $event->actor, $event->organizationId, context: ['record' => $event->recordType, 'token' => $event->recordToken, 'sensitive' => $event->sensitive]),
         };
     }
 
     private function id(SignInAccount $account): int|string|null
     {
-        $id = $account->getAuthIdentifier();
-
-        return is_int($id) || is_string($id) ? $id : null;
+        return AccountKey::from($account->getAuthIdentifier());
     }
 }

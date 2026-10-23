@@ -28,9 +28,7 @@ final readonly class AccountActor
 
     public static function of(ZoneDefinition $zone, SignInAccount $account): self
     {
-        $id = $account->getAuthIdentifier();
-
-        return new self($zone->name, is_int($id) || is_string($id) ? $id : throw new \LogicException('Account identifier must be an integer or a string.'));
+        return new self($zone->name, AccountKey::of($account));
     }
 
     /**

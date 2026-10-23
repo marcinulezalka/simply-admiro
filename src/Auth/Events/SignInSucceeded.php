@@ -15,6 +15,9 @@ namespace Simplysmart\Mainboard\Auth\Events;
 
 use Simplysmart\Mainboard\Contracts\SignInAccount;
 
+/**
+ * Konto zalogowało się w strefie (wszystkie kroki wykonane).
+ */
 final readonly class SignInSucceeded
 {
     public function __construct(

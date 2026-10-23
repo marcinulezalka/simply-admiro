@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\Listeners;
 
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Illuminate\Contracts\Events\Dispatcher;
 use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
@@ -38,9 +39,9 @@ final readonly class RevokeTrustedDevicesOfAccount
 
     public function handle(AccountAccessRevoked|AccountLocked $event): void
     {
-        $accountId = $event->account->getAuthIdentifier();
+        $accountId = AccountKey::from($event->account->getAuthIdentifier());
 
-        if (! is_int($accountId) && ! is_string($accountId)) {
+        if ($accountId === null) {
             return;
         }
 

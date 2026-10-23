@@ -48,7 +48,7 @@ final readonly class ZoneRoleNames
     public function of(ZoneAccount $account, int $organizationId): array
     {
         return $this->organization->within($organizationId, static function () use ($account): array {
-            $account->unsetRelation('roles');
+            $account->forgetZonePermissions();
 
             return array_values(array_filter($account->getRoleNames()->all(), is_string(...)));
         });

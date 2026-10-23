@@ -488,15 +488,4 @@ final class LocalizationData
 
         return ($encoded % 1_000_000) / 100_000 * 10 ** (intdiv($encoded, 1_000_000) - 50);
     }
-
-    /**
-     * Procent w zapisie danego języka: „5,5%” (pl), „5.5%” (en).
-     */
-    public static function percentLabel(float|int $rate, string $locale): string
-    {
-        $formatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
-        $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
-
-        return $formatter->format($rate) . '%';
-    }
 }

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Middleware;
 
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Closure;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
@@ -29,7 +29,7 @@ final readonly class RecordHistoryActor
 {
     public function __construct(
         private CurrentZone $zone,
-        private AuthFactory $auth,
+        private CurrentAccount $account,
         private HistoryActor $actor,
     ) {}
 
@@ -39,9 +39,8 @@ final readonly class RecordHistoryActor
     public function handle(Request $request, Closure $next): Response
     {
         $zone = $this->zone->get();
-        $accountId = $zone->requiresLogin() ? $this->auth->guard($zone->guard)->id() : null;
 
-        $this->actor->set($zone->name, is_int($accountId) || is_string($accountId) ? $accountId : null, (string) Str::uuid());
+        $this->actor->set($zone->name, $this->account->id(), (string) Str::uuid());
 
         try {
             return $next($request);

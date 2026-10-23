@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Middleware;
 
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Closure;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Simplysmart\Mainboard\Auth\SignIn\CompleteSignIn;
@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 final readonly class EnsureAccountCanSignIn
 {
     public function __construct(
-        private AuthManager $auth,
+        private CurrentAccount $account,
         private CurrentZone $zone,
         private SignOut $signOut,
         private Redirector $redirect,
@@ -44,7 +44,7 @@ final readonly class EnsureAccountCanSignIn
     public function handle(Request $request, Closure $next): Response
     {
         $zone = $this->zone->get();
-        $account = $this->auth->guard($zone->guard)->user();
+        $account = $this->account->get();
 
         if (! $account instanceof SignInAccount || $this->isValid($account, $request)) {
             return $next($request);

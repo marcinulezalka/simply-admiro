@@ -53,9 +53,7 @@ final readonly class ChangePin
     public function handle(Model&CodeAndPinAccount $account, string $currentPin, string $code, string $newPin, Request $request): void
     {
         $zone = $this->zone->get();
-        $id = $account->getAuthIdentifier();
-
-        $this->limiter->attempt(SignInLimit::PinChanges, is_int($id) || is_string($id) ? (string) $id : '', 'current_pin');
+        $this->limiter->attempt(SignInLimit::PinChanges, (string) AccountKey::of($account), 'current_pin');
 
         if ($this->pins->verify($account, $currentPin, $request->ip()) !== PinCheckResult::Valid) {
             throw ValidationException::withMessages(['current_pin' => text('account.pin_invalid')]);

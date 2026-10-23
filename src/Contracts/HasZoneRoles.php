@@ -26,4 +26,9 @@ interface HasZoneRoles
      * @throws \Spatie\Permission\Exceptions\PermissionDoesNotExist Gdy uprawnienia nie ma w guardzie.
      */
     public function hasPermissionTo(BackedEnum|string $permission, ?string $guardName = null): bool;
+
+    /**
+     * Zapomina wczytane role, uprawnienia i odmowy (np. po zmianie bieżącej organizacji).
+     */
+    public function forgetZonePermissions(): static;
 }

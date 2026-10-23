@@ -1,3 +1,4 @@
+{{-- Ustawienie PIN-u przy pierwszym logowaniu. $zone: ZoneDefinition (Core), $pinLength: int. --}}
 <x-mainboard::auth.layout :title="text('sign_in.pin_setup_title')">
     <p>{{ text('sign_in.pin_setup_intro', ['length' => $pinLength]) }}</p>
 

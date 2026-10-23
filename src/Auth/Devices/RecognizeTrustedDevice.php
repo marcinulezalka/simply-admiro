@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\Devices;
 
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Illuminate\Http\Request;
 use Simplysmart\Mainboard\Auth\AccessRevocationReason;
 use Simplysmart\Mainboard\Auth\RevokeAccountAccess;
@@ -52,9 +53,9 @@ final readonly class RecognizeTrustedDevice
 
         $device = $this->devices->findActiveBySelector($token->selector);
         $account = $this->accounts->findByEmail($email);
-        $accountId = $account?->getAuthIdentifier();
+        $accountId = $account === null ? null : AccountKey::from($account->getAuthIdentifier());
 
-        if ($device === null || $account === null || ! (is_int($accountId) || is_string($accountId)) || ! $device->belongsTo($accountId)) {
+        if ($device === null || $account === null || $accountId === null || ! $device->belongsTo($accountId)) {
             return false;
         }
 

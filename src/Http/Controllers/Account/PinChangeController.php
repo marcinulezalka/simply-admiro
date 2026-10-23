@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Http\Controllers\Account;
 
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Mainboard\Models\ZoneAccount;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -24,11 +24,9 @@ use Simplysmart\Mainboard\Auth\ChangePin;
 use Simplysmart\Mainboard\Auth\SignIn\IssueSignInCode;
 use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
 use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Http\AccountRoutes;
 use Simplysmart\Mainboard\Rules\StrongPin;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Zmiana PIN-u zalogowanego konta: formularz, wysłanie kodu na adres konta i zapis nowego PIN-u.
@@ -37,7 +35,7 @@ final readonly class PinChangeController
 {
     public function __construct(
         private CurrentZone $zone,
-        private AuthFactory $auth,
+        private CurrentAccount $current,
         private Redirector $redirect,
     ) {}
 
@@ -78,11 +76,9 @@ final readonly class PinChangeController
         return $this->back()->with('status', text('account.pin_changed'));
     }
 
-    private function account(): Model&CodeAndPinAccount
+    private function account(): ZoneAccount
     {
-        $account = $this->auth->guard($this->zone->get()->guard)->user();
-
-        return $account instanceof Model && $account instanceof CodeAndPinAccount ? $account : throw new AccessDeniedHttpException();
+        return $this->current->require();
     }
 
     private function back(): RedirectResponse

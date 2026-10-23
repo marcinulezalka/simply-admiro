@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Auth\SignIn;
 
 use Illuminate\Support\Carbon;
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\LoginChallengeRepository;
 use Simplysmart\Mainboard\Contracts\SignInAccount;
@@ -36,7 +37,7 @@ final readonly class LoginChallengeService
      */
     public function issueUnlessRecent(SignInAccount $account, ?string $ip, ?string $userAgent): ?string
     {
-        $recent = $this->challenges->latestActive($this->id($account));
+        $recent = $this->challenges->latestActive(AccountKey::of($account));
         $cooldown = $this->zone->get()->auth()->codeResendCooldownSeconds;
 
         if ($recent !== null && $recent->createdAt->diffInSeconds(Carbon::now()) < $cooldown) {
@@ -54,8 +55,8 @@ final readonly class LoginChallengeService
         $settings = $this->zone->get()->auth();
         $code = $this->codes->generate($settings->codeLength);
 
-        $this->challenges->consumeAll($this->id($account));
-        $this->challenges->create($this->id($account), $this->codes->hash($code), Carbon::now()->addMinutes($settings->codeTtlMinutes), $ip, $userAgent);
+        $this->challenges->consumeAll(AccountKey::of($account));
+        $this->challenges->create(AccountKey::of($account), $this->codes->hash($code), Carbon::now()->addMinutes($settings->codeTtlMinutes), $ip, $userAgent);
 
         return $code;
     }
@@ -63,7 +64,7 @@ final readonly class LoginChallengeService
     public function verify(SignInAccount $account, string $code): CodeCheckResult
     {
         $maxAttempts = $this->zone->get()->auth()->codeMaxAttempts;
-        $challenge = $this->challenges->latestActive($this->id($account));
+        $challenge = $this->challenges->latestActive(AccountKey::of($account));
 
         if ($challenge === null || ! $challenge->isUsable($maxAttempts)) {
             return CodeCheckResult::Exhausted;
@@ -78,12 +79,5 @@ final readonly class LoginChallengeService
         $this->challenges->recordFailedAttempt($challenge->id);
 
         return $challenge->attempts + 1 >= $maxAttempts ? CodeCheckResult::Exhausted : CodeCheckResult::Invalid;
-    }
-
-    private function id(SignInAccount $account): int|string
-    {
-        $id = $account->getAuthIdentifier();
-
-        return is_int($id) || is_string($id) ? $id : throw new \LogicException('Account identifier must be an integer or a string.');
     }
 }

@@ -20,6 +20,9 @@ use Simplysmart\Mainboard\Auth\SignIn\SignOut;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Zones\ZoneRedirects;
 
+/**
+ * Wylogowanie z bieżącej strefy i powrót do jej logowania.
+ */
 final readonly class LogoutController
 {
     public function __invoke(Request $request, SignOut $signOut, CurrentZone $zone, Redirector $redirect): RedirectResponse

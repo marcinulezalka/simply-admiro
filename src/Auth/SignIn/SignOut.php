@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\SignIn;
 
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -44,6 +45,6 @@ final readonly class SignOut
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        $this->events->dispatch(new SignedOut($zone->name, is_int($accountId) || is_string($accountId) ? $accountId : null));
+        $this->events->dispatch(new SignedOut($zone->name, AccountKey::from($accountId)));
     }
 }

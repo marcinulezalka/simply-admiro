@@ -344,7 +344,7 @@ i kolumn są w `Permissions\PermissionTables`.
   organizacji nigdy nie staje się globalna. Zwykle organizację usuwa się miękko.
 - **Odmowy:** wpis w `permission_denials` wygrywa z uprawnieniem z ról i bezpośrednim w tej samej
   organizacji (trait `Permissions\Concerns\HasZonePermissions` nadpisuje `hasPermissionTo()`,
-  więc działa też w middleware `permission:` i w Gate).
+  więc działa też w middleware `zone.permission` i w Gate).
 - **Soft delete i nazwy:** usunięta rola lub uprawnienie dalej zajmuje nazwę w guardzie (unikalny
   indeks), jak e-mail usuniętego konta. Spatie nie widzi rekordów w koszu, więc seeder szuka przez
   `withTrashed()` i przywraca rekord.
@@ -411,6 +411,12 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
 - **Ustawienia lokalizacji** (`Localization\LocalizationSettings`): kraj, język i waluta domyślne (jeden wpis
   `is_default` w słowniku) oraz języki interfejsu w granicach `APP_LOCALES`; język domyślny musi być językiem
   interfejsu. Wybory daje `Queries\Dictionaries\LocalizationChoices`.
+- **Słowniki w panelu** (`Localization\DictionaryManagement`): włączanie i wyłączanie krajów, języków i walut
+  (`Localization\Dictionary`; wpisu domyślnego ani języka interfejsu nie da się wyłączyć) oraz stawki VAT: nowa
+  stawka od daty (nowa podstawowa kończy poprzednią podstawową dzień wcześniej) i zakończenie stawki
+  (`DictionaryChangeRejected` przy złych danych). Nazwy i tłumaczenia stawek buduje `Localization\TaxRateLabels`,
+  a języki nazw słowników `Localization\DictionaryLocales` — te same dla seederów i panelu. Pełne listy (także
+  wyłączone wpisy) daje `Queries\Dictionaries\DictionaryList`.
 - **Dziennik zdarzeń** (`audit_events`, `Models\AuditEvent`): wyjątek od standardu tabel danych — tylko
   dopisywanie, bez kolumn standardowych i historii, konto i aktor jako identyfikator ze strefą (bez klucza obcego),
   IP szyfrowane; odczyt `Queries\Audit\AuditLog`, czyszczenie `mainboard:audit:prune`.

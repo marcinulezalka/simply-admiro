@@ -43,7 +43,7 @@ final readonly class SystemRoleGrant
         if ($roles !== []) {
             $this->organization->within($organization->id, static function () use ($account, $roles): void {
                 $account->assignRole($roles);
-                $account->unsetRelation('roles');
+                $account->forgetZonePermissions();
             });
         }
     }

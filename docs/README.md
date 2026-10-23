@@ -6,7 +6,7 @@
 | [Wdrożenie](wdrozenie.md) | hosting współdzielony: DocumentRoot, co wysyłać na serwer | tego, co trafia na serwer (`.gitattributes` `export-ignore`, nowe katalogi deweloperskie) |
 | [Baza danych i modele](baza-danych.md) | migracje w Core, kolumny standardowe, historia na triggerach, modele, i18n, słowniki lokalizacji, organizacje i uprawnienia; koncepcja: RODO, hierarchia, mappery | zasad schematu bazy, modeli, migracji, seederów lub mechanizmów Core dla danych |
 | [Design system](design-system.md) | koncepcja wyglądu: tokeny, motyw ciemny, karty, warstwy layoutu, komponenty Blade, Tailwind 4 w Core | wyglądu interfejsu, tokenów CSS, wspólnych komponentów lub builda stylów |
-| [Strefy](strefy.md) | rejestracja strefy, sesja, język, nagłówki bezpieczeństwa, zaufane proxy, poziomy dostępu tras, logowanie kodem i PIN-em, uprawnienia kont | mechanizmów stref w Core lub sposobu dodawania strefy |
+| [Strefy](strefy.md) | rejestracja strefy, sesja, język, nagłówki bezpieczeństwa, zaufane proxy, poziomy dostępu tras, logowanie kodem i PIN-em, zaufane urządzenia, zmiana PIN-u, akcje na kontach, dziennik zdarzeń, boty i maskowanie błędów, uprawnienia kont | mechanizmów stref w Core lub sposobu dodawania strefy |
 | [Pakiety zewnętrzne](zaleznosci.md) | zależności Composer, licencje, zasady dodawania | `require` / `require-dev` w `composer.json` (tabela zależności) |
 
 Poza `docs/`:

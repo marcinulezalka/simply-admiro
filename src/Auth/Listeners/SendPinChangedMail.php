@@ -18,6 +18,9 @@ use Illuminate\Support\Carbon;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
 use Simplysmart\Mainboard\Mail\PinChangedMail;
 
+/**
+ * Potwierdzenie zmiany PIN-u dla właściciela konta (zdarzenie PinChanged, e-mail w kolejce).
+ */
 final readonly class SendPinChangedMail
 {
     public function __construct(

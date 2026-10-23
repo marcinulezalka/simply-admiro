@@ -17,6 +17,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Log\LogManager;
 use Simplysmart\Mainboard\Audit\AuditEntries;
 use Simplysmart\Mainboard\Audit\Events\AdminActionPerformed;
+use Simplysmart\Mainboard\Audit\Events\RecordAccessed;
 use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
@@ -39,7 +40,7 @@ final readonly class WriteAuditLog
     ) {}
 
     public function handle(
-        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed $event,
+        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
     ): void {
         $entry = $this->entries->from($event);
 

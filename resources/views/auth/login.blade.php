@@ -1,3 +1,4 @@
+{{-- Formularz adresu e-mail (start logowania strefy) z pułapką formularza. $zone: ZoneDefinition (Core). --}}
 <x-mainboard::auth.layout :title="text('sign_in.title')">
     <form method="POST" action="{{ route($zone->routeName('auth.login.store')) }}">
         @csrf

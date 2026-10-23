@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Permissions;
 
+use Simplysmart\Mainboard\Contracts\HasZoneRoles;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -56,7 +57,9 @@ final readonly class OrganizationMembership
             }
         });
 
-        $account->unsetRelation('roles')->unsetRelation('permissions')->unsetRelation('permissionDenials');
+        if ($account instanceof HasZoneRoles) {
+            $account->forgetZonePermissions();
+        }
         $this->registrar->forgetCachedPermissions();
         $this->revoke->handle($this->zones->of($account), $account, AccessRevocationReason::PermissionsReduced, $actor);
     }

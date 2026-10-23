@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Permissions;
 
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Database\Eloquent\Model;
 use Simplysmart\Mainboard\Auth\AccessRevocationReason;
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Simplysmart\Mainboard\Auth\AccountActor;
 use Simplysmart\Mainboard\Auth\RevokeAccountAccess;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
@@ -60,10 +60,10 @@ final readonly class ZoneRoleAssignment
 
         $this->organization->within($organization->id, static function () use ($account, $definition): void {
             $account->assignRole($definition);
-            $account->unsetRelation('roles');
+            $account->forgetZonePermissions();
         });
 
-        $this->events->dispatch(new ZoneRoleChanged($zone->name, $this->id($account), $role, $organization->id, true, $this->actor($assigner)));
+        $this->events->dispatch(new ZoneRoleChanged($zone->name, AccountKey::of($account), $role, $organization->id, true, $this->actor($assigner)));
     }
 
     /**
@@ -75,11 +75,11 @@ final readonly class ZoneRoleAssignment
 
         $this->organization->within($organization->id, static function () use ($account, $definition): void {
             $account->removeRole($definition);
-            $account->unsetRelation('roles');
+            $account->forgetZonePermissions();
         });
 
         $actor = $this->actor($assigner);
-        $this->events->dispatch(new ZoneRoleChanged($zone->name, $this->id($account), $role, $organization->id, false, $actor));
+        $this->events->dispatch(new ZoneRoleChanged($zone->name, AccountKey::of($account), $role, $organization->id, false, $actor));
         $this->revoke->handle($zone, $account, AccessRevocationReason::PermissionsReduced, $actor);
     }
 
@@ -119,13 +119,6 @@ final readonly class ZoneRoleAssignment
 
     private function actor(ZoneAccount $assigner): AccountActor
     {
-        return new AccountActor($this->zones->of($assigner)->name, $this->id($assigner));
-    }
-
-    private function id(Model $account): int|string
-    {
-        $id = $account->getKey();
-
-        return is_int($id) || is_string($id) ? $id : throw new \LogicException('Account key must be an integer or a string.');
+        return new AccountActor($this->zones->of($assigner)->name, AccountKey::of($assigner));
     }
 }

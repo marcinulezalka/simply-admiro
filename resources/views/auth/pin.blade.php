@@ -1,3 +1,4 @@
+{{-- Krok PIN logowania strefy. $zone: ZoneDefinition (Core), $pinLength: int. --}}
 <x-mainboard::auth.layout :title="text('sign_in.pin_title')">
     <form method="POST" action="{{ route($zone->routeName('auth.pin.store')) }}">
         @csrf

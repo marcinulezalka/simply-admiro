@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Auth\Devices;
 
 use Illuminate\Contracts\Events\Dispatcher;
+use Simplysmart\Mainboard\Auth\AccountKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
@@ -40,7 +41,7 @@ final readonly class RegisterTrustedDevice
     {
         $zone = $this->zone->get();
         $settings = $zone->auth();
-        $accountId = $this->accountId($account);
+        $accountId = AccountKey::of($account);
 
         foreach (array_slice($this->devices->activeFor($accountId), $settings->trustedDevicesPerAccount - 1) as $oldest) {
             $this->devices->revoke($oldest->id);
@@ -54,12 +55,5 @@ final readonly class RegisterTrustedDevice
         $this->cookie->queue($zone, $token, $expiresAt);
 
         $this->events->dispatch(new TrustedDeviceRegistered($zone->name, $account, $name, $request->ip()));
-    }
-
-    private function accountId(SignInAccount $account): int|string
-    {
-        $id = $account->getAuthIdentifier();
-
-        return is_int($id) || is_string($id) ? $id : throw new \LogicException('Account identifier must be an integer or a string.');
     }
 }

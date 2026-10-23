@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Auth\SignIn;
 
+/**
+ * Wynik sprawdzenia PIN-u: poprawny, błędny albo konto zablokowane (teraz lub wcześniej).
+ */
 enum PinCheckResult
 {
     case Valid;

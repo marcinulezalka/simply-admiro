@@ -18,57 +18,44 @@ use Illuminate\Database\Seeder;
 use Simplysmart\Mainboard\Contracts\DictionaryEntry;
 use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Database\IdSlots;
+use Simplysmart\Mainboard\Localization\DictionaryLocales;
 use Simplysmart\Mainboard\Models\DataModel;
 
 /**
  * Baza seederów referencyjnych słowników: idempotentne (rekord szukany po kodzie, także usunięty),
  * zapis przez model (token, checksum, historia), a wybory administratora (włączenie, domyślny)
  * ustawiane tylko przy pierwszym utworzeniu rekordu. Nowe rekordy dostają id z puli seederów (IdSlots, 1–999).
- * Wolno je uruchomić na produkcji.
+ * Wolno je uruchomić na produkcji. Języki nazw i tłumaczeń daje Localization\DictionaryLocales.
  */
 abstract class DictionarySeeder extends Seeder
 {
     public function __construct(
         protected readonly Repository $config,
         private readonly IdSlots $idSlots,
+        private readonly DictionaryLocales $locales,
     ) {}
 
-    /**
-     * Język aplikacji: w nim zapisywana jest kolumna `name`.
-     */
     protected function defaultLocale(): string
     {
-        return $this->config->string('app.locale');
+        return $this->locales->defaultLocale();
     }
 
     /**
-     * Języki interfejsu z APP_LOCALES (mainboard.locale.enabled), język aplikacji zawsze.
-     *
      * @return list<string>
      */
     protected function interfaceLocales(): array
     {
-        $enabled = array_filter($this->config->array('mainboard.locale.enabled', []), is_string(...));
-
-        return array_values(array_unique([$this->defaultLocale(), ...$enabled]));
+        return $this->locales->interfaceLocales();
     }
 
     /**
-     * Tłumaczenia do `json_i18n`: język => tekst, dla każdego języka interfejsu.
-     *
      * @param callable(string): string $translate
      *
      * @return array<string, string>
      */
     protected function translations(callable $translate): array
     {
-        $translations = [];
-
-        foreach ($this->interfaceLocales() as $locale) {
-            $translations[$locale] = $translate($locale);
-        }
-
-        return $translations;
+        return $this->locales->translations($translate);
     }
 
     /**

@@ -17,6 +17,9 @@ use Illuminate\Contracts\Mail\Mailer;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
 use Simplysmart\Mainboard\Mail\AccountLockedMail;
 
+/**
+ * Powiadomienie właściciela o blokadzie konta po błędnych PIN-ach (zdarzenie AccountLocked, e-mail w kolejce).
+ */
 final readonly class SendAccountLockedMail
 {
     public function __construct(

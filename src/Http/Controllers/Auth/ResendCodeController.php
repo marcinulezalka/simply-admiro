@@ -21,6 +21,9 @@ use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Http\SignInRoutes;
 
+/**
+ * Nowy kod logowania na kroku kodu (po odstępie między wysyłkami) z neutralnym komunikatem.
+ */
 final readonly class ResendCodeController
 {
     public function __invoke(Request $request, ResendSignInCode $resend, CurrentZone $zone, Redirector $redirect): RedirectResponse
