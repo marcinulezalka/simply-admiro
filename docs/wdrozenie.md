@@ -36,8 +36,10 @@ php artisan icons:cache                  # manifest ikon blade-icons (flagi), be
 ```
 
 Harmonogram Laravela musi działać z crona (`* * * * * php /ścieżka/artisan schedule:run`): Core planuje
-`mainboard:auth:prune` (co godzinę: kody logowania, zaufane urządzenia) i `mainboard:audit:prune` (codziennie:
-dziennik zdarzeń).
+`mainboard:auth:prune` (co godzinę: kody logowania, zaufane urządzenia), `mainboard:audit:prune` (codziennie:
+dziennik zdarzeń) i `mainboard:exchange-rates:sync` (w dni robocze o `EXCHANGE_RATES_SCHEDULE_AT`, domyślnie 12:30:
+kursy tabeli A NBP z ostatnich `EXCHANGE_RATES_DAYS_BACK` dni; pusta godzina wyłącza; `NBP_API_URL`,
+`NBP_API_TIMEOUT`). Serwer potrzebuje wyjścia HTTPS do `api.nbp.pl`.
 
 ## Assety
 

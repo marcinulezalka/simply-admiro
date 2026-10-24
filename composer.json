@@ -24,6 +24,7 @@
     },
     "require": {
         "php": "^8.4",
+        "ext-bcmath": "*",
         "laravel/framework": "^13.0",
         "outhebox/blade-flags": "^1.7",
         "spatie/laravel-permission": "^8.3"

@@ -4,6 +4,7 @@
 
 | Pakiet | Wersja | Licencja | Sekcja | Do czego |
 | --- | --- | --- | --- | --- |
+| `ext-bcmath` | `*` | PHP | `require` | przeliczanie kwot po kursach walut bez błędów zaokrągleń (`Queries\Dictionaries\ExchangeRatesOn::convert()`) — rozszerzenie PHP, nie pakiet |
 | `laravel/framework` | `^13.0` | MIT | `require` | integracja z Laravelem: `ServiceProvider`, kontener, poczta i logi, tłumaczenia, oraz klasy dostępne tylko w pełnym frameworku: CSRF (`PreventRequestForgery`), `Vite` (nonce CSP), `TrustProxies` |
 | `outhebox/blade-flags` | `^1.7` | MIT | `require` | flagi krajów i języków (`x-mainboard::flag`, wariant flat = SVG z lipis/flag-icons, MIT); wariant domyślny (Twemoji, CC-BY-4.0) nieużywany; ciągnie `blade-ui-kit/blade-icons` (MIT) |
 | `spatie/laravel-permission` | `^8.3` | MIT | `require` | role i uprawnienia stref z zespołami = organizacjami (`docs/baza-danych.md` §15); ciągnie `spatie/laravel-package-tools` (MIT) |

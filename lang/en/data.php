@@ -121,4 +121,13 @@ return [
         'context' => 'Details',
     ],
 
+    'exchange_rate' => [
+        'name' => 'Rate',
+        'currency_id' => 'Currency',
+        'rate_date' => 'Rate date',
+        'rate' => 'Rate (PLN per 1 unit)',
+        'source' => 'Source',
+        'table_number' => 'NBP table number',
+    ],
+
 ];

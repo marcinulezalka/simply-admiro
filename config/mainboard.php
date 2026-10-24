@@ -52,6 +52,18 @@ return [
 
     ],
 
+    /*
+     * Kursy walut w złotych z tabeli A NBP (Web API): adres API i limit czasu zapytania, ile dni wstecz pobiera
+     * codzienna synchronizacja (uzupełnia braki po świętach i awariach) i godzina jej uruchamiania w dni robocze
+     * (NBP publikuje tabelę A ok. 11:45–12:15; pusta wartość wyłącza harmonogram).
+     */
+    'exchange_rates' => [
+        'nbp_url' => env('NBP_API_URL', 'https://api.nbp.pl/api'),
+        'timeout_seconds' => is_numeric($timeout = env('NBP_API_TIMEOUT')) ? (int) $timeout : 15,
+        'days_back' => is_numeric($days = env('EXCHANGE_RATES_DAYS_BACK')) ? (int) $days : 7,
+        'schedule_at' => (string) env('EXCHANGE_RATES_SCHEDULE_AT', '12:30'),
+    ],
+
     'localization' => [
 
         /*

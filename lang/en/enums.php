@@ -33,4 +33,9 @@ return [
         'antarctica' => 'Antarctica',
     ],
 
+    'exchange_rate_source' => [
+        'nbp' => 'NBP (table A)',
+        'manual' => 'manual',
+    ],
+
 ];

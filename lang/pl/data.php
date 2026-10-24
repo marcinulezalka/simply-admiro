@@ -121,4 +121,13 @@ return [
         'context' => 'Szczegóły',
     ],
 
+    'exchange_rate' => [
+        'name' => 'Kurs',
+        'currency_id' => 'Waluta',
+        'rate_date' => 'Dzień kursu',
+        'rate' => 'Kurs (PLN za 1 jednostkę)',
+        'source' => 'Źródło',
+        'table_number' => 'Numer tabeli NBP',
+    ],
+
 ];

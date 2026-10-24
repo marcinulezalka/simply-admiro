@@ -33,4 +33,9 @@ return [
         'antarctica' => 'Antarktyda',
     ],
 
+    'exchange_rate_source' => [
+        'nbp' => 'NBP (tabela A)',
+        'manual' => 'ręczny',
+    ],
+
 ];

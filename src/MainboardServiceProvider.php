@@ -35,6 +35,7 @@ use Simplysmart\Mainboard\Mail\MailLogDefaults;
 use Simplysmart\Mainboard\Providers\AuditServiceProvider;
 use Simplysmart\Mainboard\Providers\CoreRoutesServiceProvider;
 use Simplysmart\Mainboard\Providers\DesignSystemServiceProvider;
+use Simplysmart\Mainboard\Providers\ExchangeRatesServiceProvider;
 use Simplysmart\Mainboard\Providers\PermissionsServiceProvider;
 use Simplysmart\Mainboard\Providers\SecurityServiceProvider;
 use Simplysmart\Mainboard\Providers\SignInServiceProvider;
@@ -68,6 +69,7 @@ final class MainboardServiceProvider extends ServiceProvider
         SecurityServiceProvider::class,
         CoreRoutesServiceProvider::class,
         DesignSystemServiceProvider::class,
+        ExchangeRatesServiceProvider::class,
     ];
 
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';

@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Kursy walut w złotych z tabeli A NBP: słownik `locale_exchange_rates` (`Models\Dictionaries\ExchangeRate`, źródło NBP albo ręczne), dostawca `Contracts\ExchangeRateProvider` (`ExchangeRates\NbpTableA`), synchronizacja aktywnych walut bez nadpisywania kursów ręcznych (`ExchangeRates\ExchangeRateSync`, komenda `mainboard:exchange-rates:sync`, harmonogram w dni robocze `EXCHANGE_RATES_SCHEDULE_AT`), kursy ręczne (`ExchangeRates\ManualExchangeRates`) i odczyty: kurs z dnia, z ostatniego dnia publikacji przed datą i przeliczenie kwot (`Queries\Dictionaries\ExchangeRatesOn`); nowe wymaganie `ext-bcmath`.
 - Podpis odręczny `x-mainboard::signature-pad` (`js/signature-pad.js`): rysowanie myszą, rysikiem albo palcem na płótnie, obraz PNG (data URL) w ukrytym polu formularza, „Wyczyść podpis”, odtworzenie zapisanego podpisu, skrypt raz na stronę z nonce CSP; teksty `layout.signature.*`, klasa `.ss-signature__canvas`.
 - Wysoki kontrast według WCAG 2.2 poza kolorami: odnośniki podkreślone, gruby dwukolorowy fokus widoczny na każdym tle, pełne obramowania kart, pól i przycisków zamiast cieni (motywy `contrast` i `contrast-yellow`); bez wyboru motywu system z `prefers-contrast: more` dostaje kontrast czarno-biały.
 - Motywy wysokiego kontrastu WCAG 2.2 (kontrast co najmniej 7:1): `contrast` (czerń na bieli) i `contrast-yellow` (żółty na czarnym) w `tokens.css`, `Enums\Theme`; ikony `contrast`, `eye`.
