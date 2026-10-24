@@ -1,4 +1,4 @@
-{{-- Szablon bazowy każdej strony (bez skryptów i stylów inline, zgodnie z CSP): <head> z meta i treść w slocie. Layouty (auth, zone) składają się z niego. keywords: lista albo tekst; tags: lista (np. json_tags rekordu) jako meta article:tag; robots: np. "noindex, nofollow"; slot head: dodatki do <head> (np. x-mainboard::styles); palettes: list<Enums\Palette> kolorystyk strony i paletteScope: zakres ich zapamiętania (np. nazwa strefy) — meta ss-palettes dla js/theme.js, przed nim, więc wybrana kolorystyka obowiązuje bez błysku; favicons: list<array{rel: string, href: string, type: ?string, sizes: ?string}>, domyślnie ikony strefy żądania ($zoneFavicons z ZonesServiceProvider, `favicon` strefy). --}}
+{{-- Szablon bazowy każdej strony (bez skryptów i stylów inline, zgodnie z CSP): <head> z meta i treść w slocie. Layouty (auth, zone) składają się z niego. keywords: lista albo tekst; tags: lista (np. json_tags rekordu) jako meta article:tag; robots: np. "noindex, nofollow"; slot head: dodatki do <head> (np. x-mainboard::styles); palettes: list<Enums\Palette> kolorystyk strony i paletteScope: zakres ich zapamiętania (np. nazwa strefy) — meta ss-palettes dla js/theme.js, przed nim, więc wybrana kolorystyka obowiązuje bez błysku; favicons: list<array{rel: string, href: string, type: ?string, sizes: ?string}>, domyślnie ikony strefy żądania ($zoneFavicons z ZonesServiceProvider, `favicon` strefy). Na końcu <body> zgoda na cookies (x-mainboard::cookie-consent), gdy jest potrzebna. --}}
 @props(['title', 'description' => null, 'keywords' => null, 'tags' => null, 'robots' => null, 'palettes' => [], 'paletteScope' => '', 'favicons' => null])
 @php
     $keywordsContent = is_array($keywords) ? implode(', ', array_filter($keywords, is_string(...))) : $keywords;
@@ -35,5 +35,6 @@
 </head>
 <body>
     {{ $slot }}
+    <x-mainboard::cookie-consent />
 </body>
 </html>

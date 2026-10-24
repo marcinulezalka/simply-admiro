@@ -64,6 +64,19 @@ return [
         'schedule_at' => (string) env('EXCHANGE_RATES_SCHEDULE_AT', '12:30'),
     ],
 
+    /*
+     * Zgoda na cookies: baner i ustawienia cookies na każdej stronie (gdy opublikowano politykę cookies albo paczka
+     * zarejestrowała skrypt opcjonalny), nazwa i ważność ciasteczka zgody, limit zapisów zgód na minutę z jednego
+     * adresu i czas przechowywania rejestru zgód (rozliczalność RODO, domyślnie 5 lat).
+     */
+    'cookies' => [
+        'enabled' => (bool) env('COOKIE_CONSENT', true),
+        'cookie_name' => (string) env('COOKIE_CONSENT_NAME', 'ss_consent'),
+        'lifetime_days' => is_numeric($days = env('COOKIE_CONSENT_DAYS')) ? (int) $days : 365,
+        'throttle_per_minute' => 30,
+        'retention_days' => is_numeric($days = env('COOKIE_CONSENT_RETENTION_DAYS')) ? (int) $days : 1826,
+    ],
+
     'localization' => [
 
         /*

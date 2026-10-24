@@ -33,6 +33,7 @@ use Simplysmart\Mainboard\Localization\IntlLocalFormatter;
 use Simplysmart\Mainboard\Logging\LogChannelDefaults;
 use Simplysmart\Mainboard\Mail\MailLogDefaults;
 use Simplysmart\Mainboard\Providers\AuditServiceProvider;
+use Simplysmart\Mainboard\Providers\CookiesServiceProvider;
 use Simplysmart\Mainboard\Providers\CoreRoutesServiceProvider;
 use Simplysmart\Mainboard\Providers\DesignSystemServiceProvider;
 use Simplysmart\Mainboard\Providers\ExchangeRatesServiceProvider;
@@ -70,6 +71,7 @@ final class MainboardServiceProvider extends ServiceProvider
         CoreRoutesServiceProvider::class,
         DesignSystemServiceProvider::class,
         ExchangeRatesServiceProvider::class,
+        CookiesServiceProvider::class,
     ];
 
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';

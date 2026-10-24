@@ -322,6 +322,19 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
   wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.
 
+## 14a. Polityka cookies i rejestr zgód
+
+| Tabela | Model | Kolumny |
+| --- | --- | --- |
+| `cookie_policies` | `CookiePolicy` | standardowe; `version` (null = szkic, unikalny), `published_at`; tytuł i treść Markdown w każdym języku interfejsu w `json_i18n` (`{język: {title, body}}`, bez `HasI18n`) |
+| `cookie_consents` | `CookieConsent` | dziennik bez kolumn standardowych i historii: `recorded_at`, `consent_id` (losowy UUID z ciasteczka), `policy_version`, `decision` (`Enums\ConsentDecision`), `categories` (JSON) |
+
+- Szkic jest jeden; zaczyna się od treści bieżącej wersji, publikacja (`Cookies\CookiePolicies::publish()`)
+  wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer. Opublikowanej wersji się nie zmienia.
+- Rejestr zgód (`Cookies\ConsentRegistry`) nie ma IP, przeglądarki ani danych osobowych; przyjmuje tylko zgodę na
+  bieżącą wersję polityki. `mainboard:cookies:prune` (codziennie) usuwa wpisy starsze niż
+  `COOKIE_CONSENT_RETENTION_DAYS` (domyślnie 1826 dni).
+
 ## 15. Organizacje i uprawnienia
 
 Uprawnienia stref działają na `spatie/laravel-permission` z włączonymi zespołami. Zespołem jest

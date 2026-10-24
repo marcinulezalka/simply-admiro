@@ -268,6 +268,21 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   to urządzenie” przy logowaniu); `name` i `value` zostają jak w checkboxie. Wybór jednej z kilku opcji to
   `.ss-choices`.
 
+### Zgoda na cookies
+
+- **Baner i ustawienia** `x-mainboard::cookie-consent` (w szablonie bazowym `x-mainboard::page`, więc na każdej
+  stronie każdej strefy): natywne `<dialog>` otwierane modalnie (fokus w oknie, tło `::backdrop`, Esc).
+  - Baner `.ss-consent__banner`: tytuł, opis, trzy przyciski jeden pod drugim („Zezwól na wszystkie”, „Odrzuć”,
+    „Dostosuj”) i odnośnik do polityki.
+  - Okno ustawień `.ss-consent__settings`: kategorie (`Enums\CookieCategory`) jako `x-mainboard::switch`
+    (niezbędne zablokowane, „Zawsze włączone”), lista cookies kategorii w `<details>`, przyciski i zamknięcie
+    `.ss-icon-button`; zamknięcie bez decyzji przywraca baner.
+  - Logika w `js/cookie-consent.js` (inline z nonce CSP): ciasteczko zgody, rejestr zgód, skrypty opcjonalne
+    `<script type="text/plain" data-ss-consent-script>` uruchamiane po zgodzie.
+- **Odnośniki** `x-mainboard::cookie-links` („Ustawienia cookies” — każdy element z `data-ss-cookie-settings`
+  otwiera okno; „Polityka cookies”) w stopce logowania, w pasku stron treści i w menu konta layoutu aplikacji.
+- Baner pojawia się tylko, gdy opublikowano politykę cookies albo paczka zarejestrowała skrypt opcjonalny.
+
 ### Strony błędów
 
 `resources/views/app/errors/<kod>.blade.php` (komponent `x-mainboard::error.layout`, teksty `errors.*`): rama

@@ -56,5 +56,6 @@
                 @endisset
             </div>
         </main>
+        <x-mainboard::cookie-links />
     </div>
 </x-mainboard::page>

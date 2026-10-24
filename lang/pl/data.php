@@ -130,4 +130,19 @@ return [
         'table_number' => 'Numer tabeli NBP',
     ],
 
+    'cookie_policy' => [
+        'name' => 'Wersja polityki',
+        'version' => 'Numer wersji',
+        'published_at' => 'Opublikowano',
+        'json_i18n' => 'Tytuł i treść w językach',
+    ],
+
+    'cookie_consent' => [
+        'recorded_at' => 'Zapisano',
+        'consent_id' => 'Identyfikator zgody',
+        'policy_version' => 'Wersja polityki',
+        'decision' => 'Decyzja',
+        'categories' => 'Kategorie',
+    ],
+
 ];

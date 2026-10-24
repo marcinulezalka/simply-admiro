@@ -32,6 +32,9 @@
                                     @foreach ($accountItems as $item)
                                         <li><a class="ss-account-menu__link" href="{{ $item->url }}" @if ($item->current) aria-current="page" @endif><x-mainboard::icon :name="$item->icon" class="ss-account-menu__icon" />{{ $item->label }}</a></li>
                                     @endforeach
+                                    @if (($cookieConsent ?? null) !== null)
+                                        <li><button class="ss-account-menu__link" type="button" data-ss-cookie-settings><x-mainboard::icon name="shield-check" class="ss-account-menu__icon" />{{ text('cookies.links.settings') }}</button></li>
+                                    @endif
                                     @if ($signOut !== null)
                                         <li>
                                             <form method="POST" action="{{ $signOut }}">
