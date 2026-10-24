@@ -32,7 +32,8 @@ use Simplysmart\Mainboard\Zones\ZoneDefinition;
  * Nadawanie i odbieranie ról kont strefy w organizacji bez eskalacji uprawnień: nadający działa w tej samej
  * strefie, oba konta są członkami organizacji (w strefie bez `teams`: organizacja operatora, członkostwo
  * dopisywane przy nadaniu), a wszystkie uprawnienia roli (po spłaszczeniu, z odmowami) nadający ma sam
- * w tej organizacji. Np. właściciel nie nada roli z uprawnieniem, którego mu odjęto.
+ * w tej organizacji. Np. właściciel nie nada roli z uprawnieniem, którego mu odjęto, chyba że jego rola tę
+ * rolę deleguje (`assigns` w pliku ról, RoleDelegation).
  * Odebranie roli unieważnia sesje konta (uprawnienia maleją).
  */
 final readonly class ZoneRoleAssignment
@@ -45,6 +46,7 @@ final readonly class ZoneRoleAssignment
         private RevokeAccountAccess $revoke,
         private Dispatcher $events,
         private OrganizationMembership $membership,
+        private RoleDelegation $delegation,
     ) {}
 
     /**
@@ -110,7 +112,10 @@ final readonly class ZoneRoleAssignment
             ->where(static fn($query) => $query->whereNull(PermissionTables::TEAM_FOREIGN_KEY)->orWhere(PermissionTables::TEAM_FOREIGN_KEY, $organization->id))
             ->first() ?? throw RoleAssignmentDenied::because("the role [{$role}] does not exist in zone [{$zone->name}].");
 
-        if (! $this->coverage->covers($zone, $assigner, $definition->permissions()->pluck(ColumnNames::NAME), $organization->id)) {
+        if (
+            ! $this->coverage->covers($zone, $assigner, $definition->permissions()->pluck(ColumnNames::NAME), $organization->id)
+            && ! $this->delegation->allows($assigner, $role, $organization)
+        ) {
             throw RoleAssignmentDenied::because("the role [{$role}] grants more than the assigner has.");
         }
 

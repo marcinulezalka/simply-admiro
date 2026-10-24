@@ -26,7 +26,8 @@ use Spatie\Permission\PermissionRegistrar;
  * Zapisuje role i uprawnienia strefy z ZoneRoleSet: w jednej transakcji, idempotentnie, z id z puli seederów.
  * Rekord usunięty (soft delete) dalej zajmuje swoją nazwę, więc jest przywracany zamiast tworzony. Role są
  * globalne dla guardu strefy (`organization_id` = null). Uprawnień i ról spoza pliku nie usuwa, tylko je
- * raportuje; usuwa (soft delete) dopiero `prune`.
+ * raportuje; usuwa (soft delete) dopiero `prune`. Role delegowane (`assigns`) zapisuje w `json_default_settings`
+ * roli pod kluczem RoleDelegation::SETTING.
  */
 final readonly class ZoneRoleSynchronizer
 {
@@ -66,6 +67,7 @@ final readonly class ZoneRoleSynchronizer
                     PermissionTables::TEAM_FOREIGN_KEY => null,
                 ]);
                 $role->syncPermissions($set->permissionsOf($name));
+                $this->delegate($role, $set->assignableBy($name));
             }
 
             return $this->stale($set, $guard, $prune);
@@ -99,6 +101,27 @@ final readonly class ZoneRoleSynchronizer
         }
 
         return $record;
+    }
+
+    /**
+     * Role delegowane z pliku w `json_default_settings` roli (bez zapisu, gdy się nie zmieniły).
+     *
+     * @param list<string> $assigns
+     */
+    private function delegate(Role $role, array $assigns): void
+    {
+        $settings = $role->json_default_settings ?? [];
+        unset($settings[RoleDelegation::SETTING]);
+
+        if ($assigns !== []) {
+            $settings[RoleDelegation::SETTING] = $assigns;
+        }
+
+        $role->forceFill([ColumnNames::JSON_DEFAULT_SETTINGS => $settings === [] ? null : $settings]);
+
+        if ($role->isDirty(ColumnNames::JSON_DEFAULT_SETTINGS)) {
+            $role->save();
+        }
     }
 
     /**

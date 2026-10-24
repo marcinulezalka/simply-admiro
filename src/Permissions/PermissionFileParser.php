@@ -23,11 +23,12 @@ use Simplysmart\Mainboard\Contracts\ZoneRegistry;
  * {"zone": "shop", "permissions": ["orders.view"],
  *  "roles": {"guest": {"permissions": []}, "clerk": {"permissions": ["orders.view"]},
  *            "manager": {"inherits": ["clerk"], "permissions": []},
- *            "support": {"permissions": []}, "owner": {"permissions": "*", "except": []}}}
+ *            "support": {"permissions": []}, "owner": {"permissions": "*", "except": [], "assigns": ["clerk"]}}}
  * ```
  *
  * Sprawdza: strefę z logowaniem w rejestrze, role obowiązkowe (RequiredRole), nazwy uprawnień `zasób.akcja`
- * i ról w kebab-case, uprawnienia ról i `except` z listy `permissions`, `inherits` do istniejących ról bez cykli.
+ * i ról w kebab-case, uprawnienia ról i `except` z listy `permissions`, `inherits` do istniejących ról bez cykli,
+ * `assigns` (role, które posiadacz roli nadaje i odbiera mimo braku ich uprawnień; RoleDelegation) do istniejących ról.
  * Etykiety nie należą do pliku: dają je tłumaczenia `permissions.<strefa>.*` i `roles.<strefa>.*`.
  */
 final readonly class PermissionFileParser
@@ -58,7 +59,7 @@ final readonly class PermissionFileParser
             $flattened[$role] = $this->flatten($path, $role, $roles, $permissions, []);
         }
 
-        return new ZoneRoleSet($zone, $permissions, $flattened);
+        return new ZoneRoleSet($zone, $permissions, $flattened, array_filter(array_map(static fn(array $role): array => $role['assigns'], $roles)));
     }
 
     /**
@@ -121,7 +122,7 @@ final readonly class PermissionFileParser
     /**
      * @param list<string> $permissions
      *
-     * @return array<string, array{permissions: list<string>|null, except: list<string>, inherits: list<string>}>
+     * @return array<string, array{permissions: list<string>|null, except: list<string>, inherits: list<string>, assigns: list<string>}>
      */
     private function roles(string $path, mixed $roles, array $permissions): array
     {
@@ -144,7 +145,16 @@ final readonly class PermissionFileParser
                 'permissions' => $own === self::ALL ? null : $this->names($path, $own, "roles.{$name}.permissions", self::PERMISSION_PATTERN, $permissions),
                 'except' => $this->names($path, $role['except'] ?? [], "roles.{$name}.except", self::PERMISSION_PATTERN, $permissions),
                 'inherits' => $this->names($path, $role['inherits'] ?? [], "roles.{$name}.inherits", self::ROLE_PATTERN),
+                'assigns' => $this->names($path, $role['assigns'] ?? [], "roles.{$name}.assigns", self::ROLE_PATTERN),
             ];
+        }
+
+        foreach ($parsed as $name => $role) {
+            foreach ($role['assigns'] as $assigned) {
+                if (! isset($parsed[$assigned])) {
+                    throw InvalidPermissionFile::in($path, "role [{$name}] assigns the unknown role [{$assigned}].");
+                }
+            }
         }
 
         foreach (RequiredRole::cases() as $required) {
@@ -159,7 +169,7 @@ final readonly class PermissionFileParser
     /**
      * Uprawnienia roli razem z odziedziczonymi; `*` to wszystkie uprawnienia strefy, `except` je odejmuje.
      *
-     * @param array<string, array{permissions: list<string>|null, except: list<string>, inherits: list<string>}> $roles
+     * @param array<string, array{permissions: list<string>|null, except: list<string>, inherits: list<string>, assigns: list<string>}> $roles
      * @param list<string> $permissions
      * @param list<string> $path Role na ścieżce dziedziczenia (wykrywanie cyklu).
      *

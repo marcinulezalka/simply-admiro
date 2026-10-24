@@ -401,7 +401,7 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
         "support": {"permissions": ["orders.view"]},
         "clerk": {"permissions": ["orders.view", "orders.manage"]},
         "manager": {"inherits": ["clerk"], "permissions": ["reports.view"]},
-        "owner": {"permissions": "*", "except": ["reports.view"]}
+        "owner": {"permissions": "*", "except": ["reports.view"], "assigns": ["manager"]}
     }
 }
 ```
@@ -410,12 +410,15 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
   są obowiązkowe (`Permissions\RequiredRole`). Nazwy uprawnień mają postać `zasób.akcja` (kebab-case),
   role kebab-case w liczbie pojedynczej.
 - `inherits` i `"*"` z `except` są spłaszczane przy zapisie, więc w bazie nie ma hierarchii ról.
+- `assigns` (opcjonalne) to role delegowane: posiadacz roli nadaje je i odbiera mimo braku ich uprawnień,
+  także na własnym koncie (np. właściciel bez dostępu do danych wrażliwych, który jest też specjalistą).
+  Synchronizacja zapisuje listę w `json_default_settings.assigns` roli (`Permissions\RoleDelegation::SETTING`).
 - Etykiet nie ma w pliku: dają je tłumaczenia `permissions.<strefa>.<zasób>.<akcja>` i `roles.<strefa>.<rola>`
   (pl, en), dla stref publicznych w Core, dla paczki z własnym plikiem w jej `lang/`
   (`text('<paczka>::permissions.<strefa>.…')`, kaskada sięga potem do Core). Paczka strefy ma enum
   uprawnień i ról, a test sprawdza jego zgodność z plikiem.
 - `Permissions\PermissionFileParser` waliduje plik przed zapisem (nieznana strefa, brak roli obowiązkowej,
-  nieznane uprawnienie w roli lub `except`, zła nazwa, duplikat, nieznana rola w `inherits`, cykl).
+  nieznane uprawnienie w roli lub `except`, zła nazwa, duplikat, nieznana rola w `inherits` lub `assigns`, cykl).
 - `php artisan mainboard:permissions:sync [--zone=]` (oraz seeder `ZonePermissionsSeeder`) najpierw waliduje
   wszystkie pliki, potem w jednej transakcji zapisuje uprawnienia i role globalne guardu strefy z id z puli
   seederów, przywraca usunięte i synchronizuje uprawnienia ról. Jest idempotentna. Rekordy strefy spoza
@@ -426,7 +429,8 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
 - `Permissions\ZoneRoleAssignment::assign()` / `revoke()` chronią przed eskalacją: nadający jest kontem tej
   samej strefy, oba konta są członkami organizacji (strefa bez `teams`: tylko organizacja operatora,
   członkostwo dopisywane przy nadaniu), a każde uprawnienie roli nadający ma sam w tej organizacji
-  (`Permissions\PermissionCoverage`, z odmowami). Bez sprawdzania eskalacji role nadaje tylko system
+  (`Permissions\PermissionCoverage`, z odmowami) albo rolę deleguje mu któraś z jego ról w tej organizacji
+  (`Permissions\RoleDelegation`, `assigns`; role z innych organizacji się nie liczą). Bez sprawdzania eskalacji role nadaje tylko system
   (`Permissions\SystemRoleGrant`: konsola, zakładanie właścicieli). Odebranie roli unieważnia sesje konta. Każda zmiana trafia do dziennika
   `sign_in` (`ZoneRoleChanged` z aktorem).
 - Właściciela strefy zakłada się przez kontrakt `Contracts\ZoneOwnerProvisioner` z rejestru
