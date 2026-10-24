@@ -204,6 +204,21 @@ return [
 
     ],
 
+    'cron' => [
+
+        /*
+         * Skrypt crona `storage/app/cron.sh` (harmonogram i worker kolejki dla hostingu bez supervisora), tworzony
+         * komendą `mainboard:cron:script`. Wartości trafiają do skryptu przy generowaniu; sekretów nie zawiera.
+         * `php` to polecenie PHP na serwerze (nazwa albo ścieżka), `interval_minutes` to interwał zadania w panelu
+         * hostingu (worker kończy pracę 10 s przed kolejnym uruchomieniem), `queue_worker` = false pomija worker.
+         */
+        'php' => env('CRON_PHP', 'php'),
+        'interval_minutes' => (int) env('CRON_INTERVAL_MINUTES', 1),
+        'queue_tries' => (int) env('CRON_QUEUE_TRIES', 3),
+        'queue_worker' => (bool) env('CRON_QUEUE_WORKER', true),
+
+    ],
+
     'honeypot' => [
 
         /*

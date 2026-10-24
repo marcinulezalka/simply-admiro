@@ -82,6 +82,24 @@ kursy tabeli A NBP z ostatnich `EXCHANGE_RATES_DAYS_BACK` dni; pusta godzina wy�
 rok z `date.nager.at`; `HOLIDAYS_SCHEDULE=false` wyłącza, `HOLIDAYS_API_URL`, `HOLIDAYS_API_TIMEOUT`) i `mainboard:cookies:prune` (codziennie: rejestr zgód na cookies starszy niż
 `COOKIE_CONSENT_RETENTION_DAYS`). Serwer potrzebuje wyjścia HTTPS do `api.nbp.pl` i `date.nager.at`.
 
+### Cron na hostingu bez supervisora
+
+Kolejka musi być asynchroniczna (kod logowania, zob. [strefy.md](strefy.md)), więc worker kolejki działa z crona.
+Panel hostingu często uruchamia tylko plik, bez argumentów, dlatego `php artisan mainboard:cron:script` tworzy
+z szablonu `resources/stubs/cron.sh.stub` skrypt `storage/app/cron.sh` (prawa 0755, katalog ignorowany przez git):
+`schedule:run` i `queue:work --tries=<n> --max-time=<interwał − 10 s>` (przy interwale 1 min z `--stop-when-empty`).
+Skrypt nie zawiera sekretów; wartości wstawiane przy generowaniu:
+
+| Zmienna | Domyślnie | Znaczenie |
+| --- | --- | --- |
+| `CRON_PHP` | `php` | polecenie PHP na serwerze (nazwa albo ścieżka); `--php` je nadpisuje |
+| `CRON_INTERVAL_MINUTES` | `1` | interwał zadania ustawiony w panelu |
+| `CRON_QUEUE_TRIES` | `3` | próby zadania kolejki |
+| `CRON_QUEUE_WORKER` | `true` | `false` pomija worker (też przy `QUEUE_CONNECTION=sync`) |
+
+`vendor/bin/simplysmart deploy` (tools) odtwarza skrypt przy każdym wdrożeniu z `--php=<DEPLOY_PHP>`. W panelu
+hostingu: program BASH, plik `<katalog aplikacji>/storage/app/cron.sh`, interwał równy `CRON_INTERVAL_MINUTES`.
+
 Zgoda na cookies (`COOKIE_CONSENT`, domyślnie włączona): baner pojawia się po opublikowaniu polityki cookies
 w panelu `admiro` („Polityka cookies”); ciasteczko zgody `COOKIE_CONSENT_NAME` ważne `COOKIE_CONSENT_DAYS` dni.
 Zewnętrzny skrypt opcjonalny (np. analityka) wymaga dopisania jego domeny do `mainboard.security.csp.policy` —

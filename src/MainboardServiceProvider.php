@@ -23,6 +23,7 @@ use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
 use Simplysmart\Mainboard\Console\SeedLocalization;
+use Simplysmart\Mainboard\Console\WriteCronScript;
 use Simplysmart\Mainboard\Contracts\InterfaceLocales;
 use Simplysmart\Mainboard\Contracts\LocalFormatter;
 use Simplysmart\Mainboard\Contracts\TextTranslator;
@@ -130,7 +131,7 @@ final class MainboardServiceProvider extends ServiceProvider
         $events->listen([JobProcessed::class, JobFailed::class], [SetHistoryActorForJob::class, 'finish']);
 
         if ($this->app->runningInConsole()) {
-            $this->commands([SeedLocalization::class]);
+            $this->commands([SeedLocalization::class, WriteCronScript::class]);
         }
     }
 
