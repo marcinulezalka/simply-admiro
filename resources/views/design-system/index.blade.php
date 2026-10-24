@@ -258,9 +258,13 @@
                             </div>
                             <div class="ss-calendar__row">
                                 @foreach (range(19, 25) as $date)
-                                    <div @class(['ss-calendar__day', 'ss-cell--open' => $date < 24, 'ss-cell--closed' => $date >= 24, 'ss-calendar__day--today' => $date === 23]) @if ($date === 23) aria-current="date" @endif>
+                                    <div @class(['ss-calendar__day', 'ss-cell--open' => $date < 24, 'ss-cell--closed' => $date >= 24 && $date !== 25, 'ss-calendar__day--today' => $date === 23, 'ss-calendar__day--holiday' => $date === 25]) @if ($date === 23) aria-current="date" @endif>
                                         <span class="ss-calendar__date">{{ $date }}</span>
-                                        <span class="ss-calendar__note">{{ $date < 24 ? text('design_system.sample.available') : text('design_system.sample.unavailable') }}</span>
+                                        @if ($date === 25)
+                                            <span class="ss-calendar__holiday">{{ text('design_system.sample.holiday') }}</span>
+                                        @else
+                                            <span class="ss-calendar__note">{{ $date < 24 ? text('design_system.sample.available') : text('design_system.sample.unavailable') }}</span>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -268,6 +272,7 @@
                         <p class="ss-legend">
                             <span class="ss-legend__item"><span class="ss-legend__swatch ss-cell--open" aria-hidden="true"></span>{{ text('design_system.sample.available') }}</span>
                             <span class="ss-legend__item"><span class="ss-legend__swatch ss-cell--closed" aria-hidden="true"></span>{{ text('design_system.sample.unavailable') }}</span>
+                            <span class="ss-legend__item"><span class="ss-legend__swatch ss-calendar__day--holiday" aria-hidden="true"></span>{{ text('design_system.sample.day_off') }}</span>
                         </p>
                     </div>
                 </section>

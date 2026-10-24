@@ -246,7 +246,8 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   poprzedni i następny (`.ss-icon-button` z nazwą dla czytników), nazwa okresu (`aria-live="polite"`) i „Dziś”.
 - **Kalendarz miesiąca** `.ss-calendar` (tydzień od poniedziałku, nazwy dni z `local_day`): dzień z numerem,
   treścią (np. liczba zamówień) i wskaźnikiem; dziś `aria-current="date"` z obwódką akcentu; dni spoza miesiąca
-  przygaszone; nieczynne z opisem tekstowym.
+  przygaszone; nieczynne z opisem tekstowym; święto / dzień wolny `.ss-calendar__day--holiday` (tło ostrzeżenia)
+  z nazwą `.ss-calendar__holiday` — dni wolne daje `Queries\Dictionaries\HolidaysIn` (w legendzie próbka tej klasy).
 - **Dostępność w siatce**: komórki w godzinach dostępności `.ss-cell--open` (bardzo lekkie tło akcentu), poza nimi
   `.ss-cell--closed` (subtelne ukośne kreskowanie); zawsze z legendą `.ss-legend` i opisem tekstowym w pustej
   komórce dla czytników ekranu.

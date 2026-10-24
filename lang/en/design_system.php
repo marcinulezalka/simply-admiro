@@ -91,6 +91,8 @@ return [
         ],
         'previous' => 'Previous period',
         'next' => 'Next period',
+        'holiday' => 'Christmas Day',
+        'day_off' => 'Holiday, day off',
         'available' => 'Available',
         'unavailable' => 'Unavailable',
     ],

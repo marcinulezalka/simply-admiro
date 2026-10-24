@@ -145,4 +145,12 @@ return [
         'categories' => 'Categories',
     ],
 
+    'holiday' => [
+        'name' => 'Name',
+        'country_id' => 'Country',
+        'holiday_date' => 'Date',
+        'source' => 'Source',
+        'is_day_off' => 'Day off work',
+    ],
+
 ];

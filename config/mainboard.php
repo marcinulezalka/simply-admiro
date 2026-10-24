@@ -65,6 +65,16 @@ return [
     ],
 
     /*
+     * Święta i dni wolne krajów z publicznego API Nager.Date (adres i limit czasu zapytania) oraz comiesięczna
+     * synchronizacja dla aktywnych krajów na bieżący i następny rok.
+     */
+    'holidays' => [
+        'nager_url' => env('HOLIDAYS_API_URL', 'https://date.nager.at/api/v3'),
+        'timeout_seconds' => is_numeric($timeout = env('HOLIDAYS_API_TIMEOUT')) ? (int) $timeout : 15,
+        'schedule' => (bool) env('HOLIDAYS_SCHEDULE', true),
+    ],
+
+    /*
      * Zgoda na cookies: baner i ustawienia cookies na każdej stronie (gdy opublikowano politykę cookies albo paczka
      * zarejestrowała skrypt opcjonalny), nazwa i ważność ciasteczka zgody, limit zapisów zgód na minutę z jednego
      * adresu i czas przechowywania rejestru zgód (rozliczalność RODO, domyślnie 5 lat).

@@ -38,4 +38,9 @@ return [
         'manual' => 'ręczny',
     ],
 
+    'holiday_source' => [
+        'nager' => 'kalendarz świąt',
+        'manual' => 'ręczny',
+    ],
+
 ];

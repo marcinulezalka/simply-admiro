@@ -39,8 +39,9 @@ Harmonogram Laravela musi działać z crona (`* * * * * php /ścieżka/artisan s
 `mainboard:auth:prune` (co godzinę: kody logowania, zaufane urządzenia), `mainboard:audit:prune` (codziennie:
 dziennik zdarzeń) i `mainboard:exchange-rates:sync` (w dni robocze o `EXCHANGE_RATES_SCHEDULE_AT`, domyślnie 12:30:
 kursy tabeli A NBP z ostatnich `EXCHANGE_RATES_DAYS_BACK` dni; pusta godzina wyłącza; `NBP_API_URL`,
-`NBP_API_TIMEOUT`) i `mainboard:cookies:prune` (codziennie: rejestr zgód na cookies starszy niż
-`COOKIE_CONSENT_RETENTION_DAYS`). Serwer potrzebuje wyjścia HTTPS do `api.nbp.pl`.
+`NBP_API_TIMEOUT`), `mainboard:holidays:sync` (pierwszego dnia miesiąca: święta aktywnych krajów na bieżący i następny
+rok z `date.nager.at`; `HOLIDAYS_SCHEDULE=false` wyłącza, `HOLIDAYS_API_URL`, `HOLIDAYS_API_TIMEOUT`) i `mainboard:cookies:prune` (codziennie: rejestr zgód na cookies starszy niż
+`COOKIE_CONSENT_RETENTION_DAYS`). Serwer potrzebuje wyjścia HTTPS do `api.nbp.pl` i `date.nager.at`.
 
 Zgoda na cookies (`COOKIE_CONSENT`, domyślnie włączona): baner pojawia się po opublikowaniu polityki cookies
 w panelu `admiro` („Polityka cookies”); ciasteczko zgody `COOKIE_CONSENT_NAME` ważne `COOKIE_CONSENT_DAYS` dni.

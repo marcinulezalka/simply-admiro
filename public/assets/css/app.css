@@ -2388,7 +2388,8 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-calendar — kalendarz miesiąca (tydzień od poniedziałku): dzień z numerem, treścią i wskaźnikiem; dziś
- * (aria-current="date") z obwódką akcentu, dni spoza miesiąca przygaszone, nieczynne z opisem.
+ * (aria-current="date") z obwódką akcentu, dni spoza miesiąca przygaszone, nieczynne z opisem; święto / dzień wolny
+ * (.ss-calendar__day--holiday) z tłem ostrzeżenia, numerem w kolorze ostrzeżenia i nazwą (.ss-calendar__holiday).
  */
 .ss-calendar {
     display: flex;
@@ -2454,6 +2455,24 @@ a.ss-notification:focus-visible {
 
 .ss-calendar__note {
     color: var(--ss-color-muted);
+}
+
+.ss-calendar__day--holiday {
+    border-color: color-mix(in srgb, var(--ss-color-warning) 45%, var(--ss-color-border-strong));
+    background: var(--ss-color-warning-surface);
+}
+
+.ss-calendar__day--holiday .ss-calendar__date {
+    color: var(--ss-color-warning);
+}
+
+.ss-calendar__holiday {
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.ss-legend__swatch.ss-calendar__day--holiday {
+    border: 1px solid color-mix(in srgb, var(--ss-color-warning) 45%, var(--ss-color-border-strong));
 }
 
 .ss-calendar__link {

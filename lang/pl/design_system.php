@@ -91,6 +91,8 @@ return [
         ],
         'previous' => 'Poprzedni okres',
         'next' => 'Następny okres',
+        'holiday' => 'Boże Narodzenie',
+        'day_off' => 'Święto, dzień wolny',
         'available' => 'Dostępne',
         'unavailable' => 'Niedostępne',
     ],

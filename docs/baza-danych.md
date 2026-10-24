@@ -276,7 +276,7 @@ final class ErpProductMapper extends FieldMapper
 
 ## 14. Słowniki lokalizacji
 
-Pierwsze słowniki Core: kraje, języki, waluty, stawki VAT i kursy walut. Wspólne dla
+Pierwsze słowniki Core: kraje, języki, waluty, stawki VAT, kursy walut i dni wolne. Wspólne dla
 wszystkich stref, więc tabele, modele (`Models\Dictionaries`) i odczyty (`Queries\Dictionaries`)
 są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 
@@ -287,6 +287,7 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 | `locale_countries` | `Country` | `alpha_code_2` (`PL`), `alpha_code_3` (`POL`), `numeric_code` (`616`), `dial_code`, `currency_id`, `is_eu`, `flag_icon` (`pl`), `continent` (`Enums\Continent`), `region_code` (UN M49), `population` |
 | `locale_country_language` | `CountryLanguage` (pivot) | `country_id`, `language_id`, `is_primary` |
 | `locale_tax_rates` | `TaxRate` | `country_id`, `type` (`Enums\TaxRateType`), `rate`, `valid_from`, `valid_to`, `note` |
+| `locale_holidays` | `Holiday` | `country_id`, `holiday_date`, `source` (`Enums\HolidaySource`: `nager`, `manual`), `is_day_off`; `name` w języku kraju, `json_i18n` z nazwą angielską; unikalne kraj + dzień |
 | `locale_exchange_rates` | `ExchangeRate` | `currency_id`, `rate_date`, `rate` (PLN za 1 jednostkę, 6 miejsc), `source` (`Enums\ExchangeRateSource`: `nbp`, `manual`), `table_number`; unikalne waluta + dzień |
 
 - `name` jest w języku aplikacji, `json_i18n` ma nazwy w językach interfejsu (`translatedName()`).
@@ -318,6 +319,11 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   `Queries\Dictionaries\ExchangeRatesOn` zwraca kurs z dnia, kurs z ostatniego dnia publikacji przed datą
   (`lastBefore()` — reguła przeliczeń faktur) i przelicza kwoty przez PLN (`convert()`, bcmath, zaokrąglenie do
   `decimals` waluty docelowej). Synchronizacja: `php artisan mainboard:exchange-rates:sync [--from= --to=]`.
+- Dni wolne krajów: ogólnokrajowe święta „Public” z publicznego API Nager.Date (`Contracts\HolidayProvider`,
+  domyślnie `Holidays\NagerDate`; wysyłany jest tylko kod kraju i rok) zapisywane przez `Holidays\HolidaySync`
+  bez nadpisywania dni wolnych ręcznych (`Holidays\ManualHolidays`); dwa święta jednego dnia mają wspólny wpis.
+  `Queries\Dictionaries\HolidaysIn` zwraca dni wolne w okresie (także kraju aplikacji — kalendarze stref je
+  oznaczają) i mówi, czy dzień jest roboczy. Synchronizacja: `php artisan mainboard:holidays:sync [--year=] [--country=]`.
 - Dane startowe: `php artisan mainboard:localization:seed` (seedery w `src/Database/Seeders/`, nazwy
   z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
   wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.

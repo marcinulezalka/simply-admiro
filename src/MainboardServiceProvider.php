@@ -37,6 +37,7 @@ use Simplysmart\Mainboard\Providers\CookiesServiceProvider;
 use Simplysmart\Mainboard\Providers\CoreRoutesServiceProvider;
 use Simplysmart\Mainboard\Providers\DesignSystemServiceProvider;
 use Simplysmart\Mainboard\Providers\ExchangeRatesServiceProvider;
+use Simplysmart\Mainboard\Providers\HolidaysServiceProvider;
 use Simplysmart\Mainboard\Providers\PermissionsServiceProvider;
 use Simplysmart\Mainboard\Providers\SecurityServiceProvider;
 use Simplysmart\Mainboard\Providers\SignInServiceProvider;
@@ -72,6 +73,7 @@ final class MainboardServiceProvider extends ServiceProvider
         DesignSystemServiceProvider::class,
         ExchangeRatesServiceProvider::class,
         CookiesServiceProvider::class,
+        HolidaysServiceProvider::class,
     ];
 
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';
