@@ -13,10 +13,16 @@ declare(strict_types=1);
 
 return [
 
+    'layout' => [
+        'automatic' => 'Wiadomość wysłana automatycznie — nie odpowiadaj na nią.',
+    ],
+
     'login_code' => [
         'subject' => 'Twój kod logowania',
         'greeting' => 'Dzień dobry, :name!',
         'body' => 'Twój kod logowania: :code. Jest ważny przez :minutes min.',
+        'code_label' => 'Twój kod logowania:',
+        'valid' => 'Kod jest ważny przez :minutes min.',
         'ignore' => 'Jeśli to nie Ty próbujesz się zalogować, zignoruj tę wiadomość — bez kodu nikt nie wejdzie na Twoje konto.',
     ],
 
@@ -39,6 +45,8 @@ return [
         'greeting' => 'Dzień dobry, :name!',
         'body' => 'Urządzenie :device zostało zapamiętane :at. Logowanie na nim nie wymaga kodu z e-maila, ale nadal wymaga PIN-u.',
         'manage' => 'Jeśli to nie Ty, odwołaj je tutaj i zmień PIN: :url',
+        'manage_html' => 'Jeśli to nie Ty, odwołaj je i zmień PIN.',
+        'manage_action' => 'Zaufane urządzenia',
     ],
 
     'device_token_reused' => [

@@ -13,10 +13,16 @@ declare(strict_types=1);
 
 return [
 
+    'layout' => [
+        'automatic' => 'This message was sent automatically — please do not reply.',
+    ],
+
     'login_code' => [
         'subject' => 'Your sign-in code',
         'greeting' => 'Hello, :name!',
         'body' => 'Your sign-in code: :code. It is valid for :minutes min.',
+        'code_label' => 'Your sign-in code:',
+        'valid' => 'The code is valid for :minutes min.',
         'ignore' => 'If you are not trying to sign in, ignore this message — nobody can enter your account without the code.',
     ],
 
@@ -39,6 +45,8 @@ return [
         'greeting' => 'Hello, :name!',
         'body' => 'The device :device was remembered on :at. Signing in on it needs no e-mail code, but still needs your PIN.',
         'manage' => 'If this was not you, revoke it here and change your PIN: :url',
+        'manage_html' => 'If this was not you, revoke it and change your PIN.',
+        'manage_action' => 'Trusted devices',
     ],
 
     'device_token_reused' => [

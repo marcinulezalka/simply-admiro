@@ -17,29 +17,30 @@ use Carbon\CarbonInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 
 /**
  * Powiadomienie właściciela konta o blokadzie po błędnych PIN-ach (tylko on się o niej dowiaduje).
  */
-final class AccountLockedMail extends Mailable implements ShouldQueue, ShouldBeEncrypted
+final class AccountLockedMail extends ZoneMailable implements ShouldQueue, ShouldBeEncrypted
 {
     use Queueable;
 
     public function __construct(
+        string $zoneName,
+        ?int $organizationId,
         public readonly string $accountName,
         public readonly CarbonInterface $lockedUntil,
-    ) {}
-
-    public function envelope(): Envelope
-    {
-        return new Envelope(subject: text_email('account_locked.subject'));
+    ) {
+        parent::__construct($zoneName, $organizationId);
     }
 
-    public function content(): Content
+    protected function template(): string
     {
-        return new Content(text: 'mainboard::mail.account-locked');
+        return 'account-locked';
+    }
+
+    protected function subjectKey(): string
+    {
+        return 'account_locked.subject';
     }
 }

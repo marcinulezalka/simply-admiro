@@ -13,30 +13,30 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Mail;
 
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-
 /**
  * Kod logowania; wysyłany z jobu IssueSignInCode (już w tle). Kodu nie ma w temacie,
  * żeby nie był widoczny w powiadomieniach na zablokowanym ekranie.
  */
-final class LoginCodeMail extends Mailable
+final class LoginCodeMail extends ZoneMailable
 {
     public function __construct(
+        string $zoneName,
+        ?int $organizationId,
         public readonly string $accountName,
         #[\SensitiveParameter]
         public readonly string $code,
         public readonly int $validForMinutes,
-    ) {}
-
-    public function envelope(): Envelope
-    {
-        return new Envelope(subject: text_email('login_code.subject'));
+    ) {
+        parent::__construct($zoneName, $organizationId);
     }
 
-    public function content(): Content
+    protected function template(): string
     {
-        return new Content(text: 'mainboard::mail.login-code');
+        return 'login-code';
+    }
+
+    protected function subjectKey(): string
+    {
+        return 'login_code.subject';
     }
 }

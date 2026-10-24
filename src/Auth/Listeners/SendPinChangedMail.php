@@ -16,6 +16,8 @@ namespace Simplysmart\Mainboard\Auth\Listeners;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Carbon;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
+use Simplysmart\Mainboard\Contracts\ZoneRegistry;
+use Simplysmart\Mainboard\Mail\MailOrganization;
 use Simplysmart\Mainboard\Mail\PinChangedMail;
 
 /**
@@ -25,10 +27,12 @@ final readonly class SendPinChangedMail
 {
     public function __construct(
         private Mailer $mailer,
+        private ZoneRegistry $zones,
+        private MailOrganization $organizations,
     ) {}
 
     public function handle(PinChanged $event): void
     {
-        $this->mailer->to($event->account->emailAddress())->queue(new PinChangedMail($event->account->displayName(), Carbon::now()));
+        $this->mailer->to($event->account->emailAddress())->queue(new PinChangedMail($event->zone, $this->organizations->for($this->zones->get($event->zone), $event->account), $event->account->displayName(), Carbon::now()));
     }
 }

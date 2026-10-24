@@ -22,6 +22,7 @@ use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Http\AccountRoutes;
 use Simplysmart\Mainboard\Mail\DeviceTokenReusedMail;
+use Simplysmart\Mainboard\Mail\MailOrganization;
 use Simplysmart\Mainboard\Mail\NewTrustedDeviceMail;
 
 /**
@@ -33,17 +34,20 @@ final readonly class SendTrustedDeviceMails
         private Mailer $mailer,
         private UrlGenerator $url,
         private ZoneRegistry $zones,
+        private MailOrganization $organizations,
     ) {}
 
     public function handle(TrustedDeviceRegistered|AccountAccessRevoked $event): void
     {
         $account = $event->account;
+        $zone = $this->zones->get($event->zone);
+        $organization = $this->organizations->for($zone, $account);
 
         if ($event instanceof TrustedDeviceRegistered) {
-            $devices = $this->url->route($this->zones->get($event->zone)->routeName(AccountRoutes::SECURITY)) . '#' . AccountRoutes::SECTION_DEVICES;
-            $this->mailer->to($account->emailAddress())->queue(new NewTrustedDeviceMail($account->displayName(), $event->deviceName, Carbon::now(), $devices));
+            $devices = $this->url->route($zone->routeName(AccountRoutes::SECURITY)) . '#' . AccountRoutes::SECTION_DEVICES;
+            $this->mailer->to($account->emailAddress())->queue(new NewTrustedDeviceMail($zone->name, $organization, $account->displayName(), $event->deviceName, Carbon::now(), $devices));
         } elseif ($event->reason === AccessRevocationReason::DeviceTokenReused) {
-            $this->mailer->to($account->emailAddress())->queue(new DeviceTokenReusedMail($account->displayName()));
+            $this->mailer->to($account->emailAddress())->queue(new DeviceTokenReusedMail($zone->name, $organization, $account->displayName()));
         }
     }
 }

@@ -654,6 +654,21 @@ textarea.ss-input {
 }
 
 /**
+ * .ss-brand-preview — podgląd pliku marki (logo, sygnet, ikona strony) w formularzu: wysokość 3rem, proporcje
+ * obrazu, na tle przytłumionej powierzchni z ramką, żeby było widać przezroczyste krawędzie.
+ */
+.ss-brand-preview {
+    display: block;
+    height: 3rem;
+    width: auto;
+    max-width: 100%;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+/**
  * Warstwy layoutu aplikacji (docs/design-system.md §5): .ss-app (tło strony) → .ss-topbar → .ss-module-nav →
  * .ss-main z nagłówkiem kontekstowym .ss-context, stepperem .ss-stepper i siatką kart .ss-grid.
  */

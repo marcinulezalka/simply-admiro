@@ -15,7 +15,9 @@ namespace Simplysmart\Mainboard\Auth\Listeners;
 
 use Illuminate\Contracts\Mail\Mailer;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
+use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Mail\AccountLockedMail;
+use Simplysmart\Mainboard\Mail\MailOrganization;
 
 /**
  * Powiadomienie właściciela o blokadzie konta po błędnych PIN-ach (zdarzenie AccountLocked, e-mail w kolejce).
@@ -24,10 +26,12 @@ final readonly class SendAccountLockedMail
 {
     public function __construct(
         private Mailer $mailer,
+        private ZoneRegistry $zones,
+        private MailOrganization $organizations,
     ) {}
 
     public function handle(AccountLocked $event): void
     {
-        $this->mailer->to($event->account->emailAddress())->queue(new AccountLockedMail($event->account->displayName(), $event->until));
+        $this->mailer->to($event->account->emailAddress())->queue(new AccountLockedMail($event->zone, $this->organizations->for($this->zones->get($event->zone), $event->account), $event->account->displayName(), $event->until));
     }
 }

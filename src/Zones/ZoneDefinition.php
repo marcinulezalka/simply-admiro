@@ -19,6 +19,7 @@ use LogicException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettings;
 use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
 use Simplysmart\Mainboard\Enums\Palette;
+use Simplysmart\Mainboard\Mail\MailPalette;
 
 /**
  * Niezmienna definicja jednej strefy (budowana przez ZoneDefinitionFactory z configu paczki strefy).
@@ -48,6 +49,10 @@ final readonly class ZoneDefinition
      * @param list<array{route: string, label: string}> $legalLinks Odnośniki prawne w karcie logowania (krótka nazwa trasy
      *                                                         strefy i klucz tekstu), przed odnośnikami cookies; pusta
      *                                                         lista = same odnośniki cookies pod kartami.
+     * @param ZoneBrand|null $brand Logo i sygnet strefy (`brand`); null = marka Core (w e-mailach logo simplysmart).
+     * @param string|null $mailViews Prefiks widoków e-maili strefy (`mail.views`, np. `shop::mail.shop`): `<prefiks>.layout`
+     *                               i `<prefiks>.<szablon>` zastępują widoki Core; null = layout i szablony Core.
+     * @param MailPalette $mailPalette Kolory e-maili strefy (`mail.palette`); domyślnie paleta Core.
      */
     public function __construct(
         public string $name,
@@ -67,6 +72,9 @@ final readonly class ZoneDefinition
         public ?string $textNamespace = null,
         public ?ZoneFonts $fonts = null,
         public array $legalLinks = [],
+        public ?ZoneBrand $brand = null,
+        public ?string $mailViews = null,
+        public MailPalette $mailPalette = new MailPalette(),
     ) {}
 
     /**

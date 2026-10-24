@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
 use Simplysmart\Mainboard\Enums\Palette;
+use Simplysmart\Mainboard\Mail\MailPalette;
 
 /**
  * Buduje ZoneDefinition z configu paczki strefy, uzupełniając go domyślnymi wartościami Core.
@@ -29,11 +30,16 @@ use Simplysmart\Mainboard\Enums\Palette;
  * (arkusze CSS strefy), palettes (kolorystyki do wyboru: wartości Enums\Palette), favicon (ikony strony: `ico`, `svg`,
  * `apple` — ścieżki plików), texts (namespace tekstów paczki strefy, np. etykiety ról), fonts (pliki .woff2 strefy:
  * klucz → `family`, `weight`, `style`, `file`, `unicode_range`), legal_links (odnośniki prawne w karcie logowania: lista
- * `route` — krótka nazwa trasy strefy — i `label` — klucz tekstu; tylko strefa z logowaniem).
+ * `route` — krótka nazwa trasy strefy — i `label` — klucz tekstu; tylko strefa z logowaniem), brand (`logo`, `signet` —
+ * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
+ * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
+ * `on_accent`).
  */
 final readonly class ZoneDefinitionFactory
 {
     private const string NAME_PATTERN = '/^[a-z][a-z0-9_]*$/';
+
+    private const string MAIL_VIEWS_PATTERN = '/^[a-z][a-z0-9_-]*::[a-z0-9_.-]+$/';
 
     public function __construct(
         private Repository $config,
@@ -78,6 +84,9 @@ final readonly class ZoneDefinitionFactory
             textNamespace: $this->nullableString($config, 'texts', null),
             fonts: $this->fonts($name, Arr::array($config, 'fonts', [])),
             legalLinks: $model !== null ? $this->legalLinks($name, Arr::array($config, 'legal_links', [])) : [],
+            brand: $this->brand($name, Arr::array($config, 'brand', [])),
+            mailViews: $this->mailViews($name, Arr::array($config, 'mail', [])),
+            mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
         );
     }
 
@@ -254,6 +263,70 @@ final readonly class ZoneDefinitionFactory
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
         }
+    }
+
+    /**
+     * @param array<array-key, mixed> $files
+     *
+     * @throws InvalidArgumentException
+     */
+    private function brand(string $zone, array $files): ?ZoneBrand
+    {
+        if ($files === []) {
+            return null;
+        }
+
+        $paths = [];
+
+        foreach ($files as $type => $path) {
+            if (! is_string($type) || ! is_string($path)) {
+                throw new InvalidArgumentException("Zone [{$zone}] brand must map brand files to paths.");
+            }
+
+            $paths[$type] = $path;
+        }
+
+        try {
+            return new ZoneBrand($paths);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
+        }
+    }
+
+    /**
+     * @param array<array-key, mixed> $colors
+     *
+     * @throws InvalidArgumentException
+     */
+    private function mailPalette(string $zone, array $colors): MailPalette
+    {
+        try {
+            return MailPalette::fromArray($colors);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
+        }
+    }
+
+    /**
+     * Prefiks widoków e-maili (`mail.views`): nazwa widoku z namespace paczki, np. `shop::mail.shop`.
+     *
+     * @param array<array-key, mixed> $mail
+     *
+     * @throws InvalidArgumentException
+     */
+    private function mailViews(string $zone, array $mail): ?string
+    {
+        $views = $mail['views'] ?? null;
+
+        if ($views === null) {
+            return null;
+        }
+
+        if (! is_string($views) || preg_match(self::MAIL_VIEWS_PATTERN, $views) !== 1) {
+            throw new InvalidArgumentException("Zone [{$zone}] mail.views must be a namespaced view prefix like `package::mail.{$zone}`.");
+        }
+
+        return $views;
     }
 
     /**

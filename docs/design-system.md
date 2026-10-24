@@ -293,6 +293,17 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 - Notka pod formularzem (prop `note`, `.ss-auth__note`): mniejszy, przygaszony tekst, np. o blokadzie po błędnych
   PIN-ach. Teksty kroków podmienia paczka strefy (`docs/strefy.md`).
 
+### E-maile
+
+- E-maile stref (`Mail\ZoneMailable`, `docs/strefy.md` „E-maile strefy”) mają ramę `mainboard::mail.frame`: tabele
+  600 px, logo osadzone w wiadomości, biała karta treści z ramką i zaokrągleniem, stopka (informacja o wysyłce
+  automatycznej, odnośniki prawne strefy, copyright). Style inline w kolorach `mail.palette` strefy — domyślnie
+  wartości z palety design systemu (tło slate-50, karta biała, ramka gray-200, tekst gray-900, przytłumiony gray-500,
+  akcent gray-800), bo klienci poczty nie czytają tokenów `--ss-*`.
+- Kod logowania jest wyróżniony (32 px, krój o stałej szerokości), a akcja (np. „Zaufane urządzenia”) to przycisk
+  w kolorze akcentu. Logo tylko PNG/JPG.
+- Podgląd pliku marki w formularzu (logo, sygnet, ikona strony organizacji w panelu): `.ss-brand-preview`.
+
 ### Strony błędów
 
 `resources/views/app/errors/<kod>.blade.php` (komponent `x-mainboard::error.layout`, teksty `errors.*`): rama

@@ -22,6 +22,7 @@ use Simplysmart\Mainboard\Contracts\AccountLocator;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Mail\LoginCodeMail;
+use Simplysmart\Mainboard\Mail\MailOrganization;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
@@ -43,9 +44,9 @@ final class IssueSignInCode implements ShouldQueue, ShouldBeEncrypted
         public readonly bool $replaceRecent = false,
     ) {}
 
-    public function handle(ZoneRegistry $zones, CurrentZone $current, AccountLocator $accounts, LoginChallengeService $challenges, Mailer $mailer): void
+    public function handle(ZoneRegistry $zones, CurrentZone $current, AccountLocator $accounts, LoginChallengeService $challenges, Mailer $mailer, MailOrganization $organizations): void
     {
-        $current->within($zones->get($this->zone), function (ZoneDefinition $zone) use ($accounts, $challenges, $mailer): void {
+        $current->within($zones->get($this->zone), function (ZoneDefinition $zone) use ($accounts, $challenges, $mailer, $organizations): void {
             $account = $accounts->findByEmail($this->email);
 
             if ($account === null || ! $account->canSignIn()) {
@@ -57,7 +58,7 @@ final class IssueSignInCode implements ShouldQueue, ShouldBeEncrypted
                 : $challenges->issueUnlessRecent($account, $this->ip, $this->userAgent);
 
             if ($code !== null) {
-                $mailer->to($account->emailAddress())->send(new LoginCodeMail($account->displayName(), $code, $zone->auth()->codeTtlMinutes));
+                $mailer->to($account->emailAddress())->send(new LoginCodeMail($zone->name, $organizations->for($zone, $account), $account->displayName(), $code, $zone->auth()->codeTtlMinutes));
             }
         });
     }

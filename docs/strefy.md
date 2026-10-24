@@ -42,6 +42,11 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     i cookies, wysuwaną kliknięciem nazwy simplysmart na banerze albo logo — pozycję przycisku na banerze
        //     zmienia arkusz strefy (.ss-auth__footer-trigger--image) — i przełącznik motywu w tej stopce
        //     formularza; bez nich odnośniki cookies są pod kartami; tylko strefa z logowaniem),
+       // 'brand' => ['logo' => __DIR__.'/../public/images/logo.png', 'signet' => ...png]
+       //     (marka strefy, PNG/JPG — klienci poczty nie pokazują SVG; logo trafia do e-maili, gdy organizacja nie ma
+       //     własnego; brak pliku, zły format albo `favicon` w tej sekcji zatrzymuje start),
+       // 'mail' => ['views' => '<paczka>::mail.<strefa>', 'palette' => ['accent' => '#112a46', ...]]
+       //     (e-maile strefy, patrz „E-maile strefy”; zły prefiks albo kolor spoza #rrggbb zatrzymuje start),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)
@@ -186,6 +191,34 @@ e-mail. Otwarcie rekordu z danymi osobowymi (np. kartoteki) zgłasza strefa zdar
 (typ i token rekordu, flaga danych wrażliwych, opcjonalnie organizacja oglądającego `viewerOrganizationId`, gdy
 rekord należy do innej organizacji), więc trafia do dziennika organizacji, do której rekord należy. Dziennik jednej organizacji
 (jej zdarzenia i zdarzenia kont jej członków) daje `Queries\Audit\AuditLog::forOrganization()`. `mainboard:audit:prune` codziennie usuwa wpisy starsze niż `AUDIT_RETENTION_DAYS` (365 dni).
+
+## E-maile strefy
+
+E-maile Core (kod logowania, blokada konta, zmiana PIN-u, nowe zaufane urządzenie, skopiowany token urządzenia)
+dziedziczą po `Mail\ZoneMailable` i idą jako HTML z wersją tekstową. Mail niesie nazwę strefy, organizację i język,
+a wysyłka i podgląd działają wewnątrz strefy (`CurrentZone::within`), więc w workerze kolejki wygląda tak samo jak
+w żądaniu. Nowy e-mail strefy dziedziczy po `ZoneMailable` (konstruktor: strefa, id organizacji, dane), podaje
+`template()` i `subjectKey()` oraz widoki `mainboard::mail.html.<szablon>` (rozszerza `$mailLayout`) i
+`mainboard::mail.<szablon>` (tekst) — albo tylko widoki w paczce strefy.
+
+| Element | Strefa z `mail.views` = `<prefiks>` | Bez `mail.views` |
+| --- | --- | --- |
+| layout HTML | `<prefiks>.layout` (wymagany; brak zatrzymuje wysyłkę) | `mainboard::mail.layout` |
+| treść HTML | `<prefiks>.<szablon>`, gdy istnieje | `mainboard::mail.html.<szablon>` |
+| wersja tekstowa | `<prefiks>.text.<szablon>`, gdy istnieje | `mainboard::mail.<szablon>` |
+| teksty | `<namespace texts>::emails.*`, potem Core (`ZoneDefinition::textKey`) | Core `emails.*` |
+| kolory | `mail.palette` (`bg`, `surface`, `border`, `text`, `muted`, `accent`, `on_accent`; brakujące z Core) | paleta Core |
+
+Layout strefy może dołączyć ramę Core (`@include('mainboard::mail.frame')`: tabele 600 px, logo, karta treści,
+stopka z odnośnikami prawnymi strefy `legal_links` i copyrightem) albo mieć własny HTML. Style są inline, bo klienci
+poczty nie czytają arkuszy ani tokenów `--ss-*`. Widoki dostają `$mailZone`, `$mailPalette`, `$mailLogo`,
+`$mailOrganization` i `$mailLegalLinks`.
+
+Logo (`Mail\MailBrandResolver`) jest osadzone w wiadomości (CID): logo organizacji z panelu (`Organizations\OrganizationBranding`,
+pliki na prywatnym dysku `MAINBOARD_ORGANIZATION_BRAND_DISK`, domyślnie `local`), potem `brand.logo` strefy, a na końcu
+logo simplysmart (`public/assets/img/brand/mail-logo.png`). Organizację maila konta wybiera `Mail\MailOrganization`:
+strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywna organizacja konta, przy kilku albo
+żadnej logo strefy.
 
 ## Boty i maskowanie błędów
 

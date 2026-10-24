@@ -16,29 +16,30 @@ namespace Simplysmart\Mainboard\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 
 /**
  * Ostrzeżenie: użyto skopiowanego ciasteczka zaufanego urządzenia, więc wylogowaliśmy wszystkie sesje
  * i odwołaliśmy wszystkie urządzenia konta.
  */
-final class DeviceTokenReusedMail extends Mailable implements ShouldQueue, ShouldBeEncrypted
+final class DeviceTokenReusedMail extends ZoneMailable implements ShouldQueue, ShouldBeEncrypted
 {
     use Queueable;
 
     public function __construct(
+        string $zoneName,
+        ?int $organizationId,
         public readonly string $accountName,
-    ) {}
-
-    public function envelope(): Envelope
-    {
-        return new Envelope(subject: text_email('device_token_reused.subject'));
+    ) {
+        parent::__construct($zoneName, $organizationId);
     }
 
-    public function content(): Content
+    protected function template(): string
     {
-        return new Content(text: 'mainboard::mail.device-token-reused');
+        return 'device-token-reused';
+    }
+
+    protected function subjectKey(): string
+    {
+        return 'device_token_reused.subject';
     }
 }

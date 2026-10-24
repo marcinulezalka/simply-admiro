@@ -37,6 +37,16 @@ return [
 
     ],
 
+    'organization_brand' => [
+
+        /*
+         * Dysk plików marki organizacji (logo, sygnet, ikona strony) zapisywanych w panelu. Prywatny: pliki
+         * czytają e-maile (osadzone w wiadomości) i podgląd w panelu, nie serwuje ich publiczny adres.
+         */
+        'disk' => env('MAINBOARD_ORGANIZATION_BRAND_DISK', 'local'),
+
+    ],
+
     'locale' => [
 
         /*

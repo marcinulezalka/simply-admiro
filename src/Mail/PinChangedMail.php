@@ -17,29 +17,30 @@ use Carbon\CarbonInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 
 /**
  * Potwierdzenie zmiany PIN-u dla właściciela konta (ostrzega, jeśli to nie on).
  */
-final class PinChangedMail extends Mailable implements ShouldQueue, ShouldBeEncrypted
+final class PinChangedMail extends ZoneMailable implements ShouldQueue, ShouldBeEncrypted
 {
     use Queueable;
 
     public function __construct(
+        string $zoneName,
+        ?int $organizationId,
         public readonly string $accountName,
         public readonly CarbonInterface $changedAt,
-    ) {}
-
-    public function envelope(): Envelope
-    {
-        return new Envelope(subject: text_email('pin_changed.subject'));
+    ) {
+        parent::__construct($zoneName, $organizationId);
     }
 
-    public function content(): Content
+    protected function template(): string
     {
-        return new Content(text: 'mainboard::mail.pin-changed');
+        return 'pin-changed';
+    }
+
+    protected function subjectKey(): string
+    {
+        return 'pin_changed.subject';
     }
 }

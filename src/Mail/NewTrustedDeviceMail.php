@@ -17,31 +17,32 @@ use Carbon\CarbonInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 
 /**
  * Powiadomienie o zapamiętaniu nowego zaufanego urządzenia, z linkiem do listy urządzeń konta.
  */
-final class NewTrustedDeviceMail extends Mailable implements ShouldQueue, ShouldBeEncrypted
+final class NewTrustedDeviceMail extends ZoneMailable implements ShouldQueue, ShouldBeEncrypted
 {
     use Queueable;
 
     public function __construct(
+        string $zoneName,
+        ?int $organizationId,
         public readonly string $accountName,
         public readonly string $deviceName,
         public readonly CarbonInterface $registeredAt,
         public readonly string $devicesUrl,
-    ) {}
-
-    public function envelope(): Envelope
-    {
-        return new Envelope(subject: text_email('new_trusted_device.subject'));
+    ) {
+        parent::__construct($zoneName, $organizationId);
     }
 
-    public function content(): Content
+    protected function template(): string
     {
-        return new Content(text: 'mainboard::mail.new-trusted-device');
+        return 'new-trusted-device';
+    }
+
+    protected function subjectKey(): string
+    {
+        return 'new_trusted_device.subject';
     }
 }
