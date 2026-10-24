@@ -16,7 +16,38 @@ Jeśli panel wymusza stały katalog (np. `public_html/`), wyślij do niego **tyl
 | `docs/` | dokumentacja |
 | `.claude/`, `.git/` | skille AI i historia repozytorium |
 | `.env*` | dane środowiska. Na serwerze tworzy się osobny plik |
+| `packages/` | paczki pobiera na serwerze Composer z ich repozytoriów git (zob. niżej) |
 | `node_modules/`, `resources/css/`, `resources/js/` | źródła i narzędzia builda; serwer dostaje tylko wynik (zob. niżej) |
+
+## Paczki na serwerze (Composer z GitHuba)
+
+Lokalnie paczki są dowiązaniami z `packages/` (repozytorium typu path). Serwer ich nie dostaje: Composer
+pobiera paczki z ich repozytoriów git do `vendor/`, według manifestu wdrożeniowego.
+
+Jednorazowo na serwerze:
+
+```bash
+# Composer 2.8+ na PHP 8.4 w katalogu domowym
+php84 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php84 composer-setup.php --install-dir="$HOME/bin" --filename=composer && rm composer-setup.php
+# token GitHub tylko do odczytu (fine-grained, „Contents: read” dla repozytoriów paczek, także prywatnych)
+php84 ~/bin/composer config -g github-oauth.github.com <token>
+```
+
+Przy każdym wdrożeniu:
+
+```bash
+# lokalnie, po wypchnięciu wszystkich repozytoriów (paczek i aplikacji)
+composer deploy:lock            # composer.deploy.json + composer.deploy.lock (w .gitignore)
+# wyślij kod aplikacji i oba pliki; na serwerze (z .env i APP_KEY):
+COMPOSER=composer.deploy.json php84 ~/bin/composer install --no-dev --optimize-autoloader
+php84 artisan migrate --force
+php84 artisan config:cache && php84 artisan route:cache && php84 artisan view:cache
+```
+
+Lock przypina paczki do commitów z GitHuba, więc niewypchnięty kod nie trafi na serwer (`deploy:lock` ostrzega
+o niewypchniętych commitach). Domyślne `php` na hostingu może być starszą wersją — wszystkie polecenia
+uruchamiaj przez PHP 8.4 (także w cronie).
 
 ## Baza danych
 
