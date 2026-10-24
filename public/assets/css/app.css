@@ -2722,6 +2722,21 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * .ss-signature — podpis odręczny (x-mainboard::signature-pad): ramka do rysowania na białym tle (podpis zawsze ciemny,
+ * także w motywie ciemnym), bez przewijania strony przy rysowaniu palcem.
+ */
+.ss-signature__canvas {
+    width: 100%;
+    max-width: 30rem;
+    height: auto;
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: #ffffff;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+/**
  * .ss-theme-light / .ss-theme-dark — element tylko dla motywu jasnego albo ciemnego (np. dwa obrazy banera), zgodnie
  * z wyborem w przełączniku (data-theme; kontrast czarno-biały liczy się jako jasny, żółto-czarny jako ciemny) albo
  * z motywem systemu.

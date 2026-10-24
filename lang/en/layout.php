@@ -50,6 +50,11 @@ return [
         'page' => 'Page :page of :pages',
         'total' => 'items: :count',
     ],
+    'signature' => [
+        'hint' => 'Sign with a mouse, stylus or finger inside the frame.',
+        'noscript' => 'Signing requires JavaScript.',
+        'clear' => 'Clear the signature',
+    ],
     'steps' => [
         'done' => 'completed',
         'current' => 'current',

@@ -50,6 +50,11 @@ return [
         'page' => 'Strona :page z :pages',
         'total' => 'pozycji: :count',
     ],
+    'signature' => [
+        'hint' => 'Podpisz myszą, rysikiem albo palcem w ramce.',
+        'noscript' => 'Podpis wymaga włączonego JavaScriptu.',
+        'clear' => 'Wyczyść podpis',
+    ],
     'steps' => [
         'done' => 'zakończony',
         'current' => 'bieżący',

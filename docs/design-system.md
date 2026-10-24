@@ -299,7 +299,8 @@ do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
 `x-mainboard::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie
-`x-mainboard::pagination` (poprzednia/następna, „Strona X z Y”; przy jednej stronie nic), plakietka jako przycisk
+`x-mainboard::pagination` (poprzednia/następna, „Strona X z Y”; przy jednej stronie nic), podpis odręczny
+`x-mainboard::signature-pad` (płótno, obraz PNG w ukrytym polu, „Wyczyść”; skrypt raz na stronę), plakietka jako przycisk
 (`button.ss-badge`, np. odebranie roli),
 `.ss-grid` (`--3`, `--wide`), `.ss-stat`, `.ss-list`, `.ss-table`, `.ss-pairs`, `.ss-form-layout`,
 `.ss-form-actions`, `.ss-form-row`, `.ss-fieldset`, `.ss-choices` z `.ss-choice` (wybór jednej opcji jako
