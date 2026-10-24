@@ -4,6 +4,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-24
+
 ### Added
 
 - Dni wolne (`holidays`, menu System): święta kraju w roku (`settings.view`), pobranie z kalendarza świąt, dzień wolny ręczny i usunięcie wpisu ręcznego (`settings.manage`), każda zmiana w dzienniku zdarzeń.
