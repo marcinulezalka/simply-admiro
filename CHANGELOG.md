@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Podpowiedzi w polach (placeholder) kursów walut i dni wolnych to sam przykład, bez „np.” / „e.g.”.
+
 ## [0.1.0] - 2026-10-24
 
 ### Added
