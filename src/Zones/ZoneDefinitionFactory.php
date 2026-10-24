@@ -27,7 +27,9 @@ use Simplysmart\Mainboard\Enums\Palette;
  * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem),
  * security (`mask_errors`, `block_ai_agents`; agenci AI domyślnie blokowani w strefach z logowaniem), stylesheets
  * (arkusze CSS strefy), palettes (kolorystyki do wyboru: wartości Enums\Palette), favicon (ikony strony: `ico`, `svg`,
- * `apple` — ścieżki plików), texts (namespace tekstów paczki strefy, np. etykiety ról).
+ * `apple` — ścieżki plików), texts (namespace tekstów paczki strefy, np. etykiety ról), fonts (pliki .woff2 strefy:
+ * klucz → `family`, `weight`, `style`, `file`, `unicode_range`), legal_links (odnośniki prawne w karcie logowania: lista
+ * `route` — krótka nazwa trasy strefy — i `label` — klucz tekstu; tylko strefa z logowaniem).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -74,6 +76,8 @@ final readonly class ZoneDefinitionFactory
             palettes: $this->palettes($name, Arr::array($config, 'palettes', [])),
             favicon: $this->favicon($name, Arr::array($config, 'favicon', [])),
             textNamespace: $this->nullableString($config, 'texts', null),
+            fonts: $this->fonts($name, Arr::array($config, 'fonts', [])),
+            legalLinks: $model !== null ? $this->legalLinks($name, Arr::array($config, 'legal_links', [])) : [],
         );
     }
 
@@ -213,5 +217,69 @@ final readonly class ZoneDefinitionFactory
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
         }
+    }
+
+    /**
+     * Fonty strefy z `fonts` (klucz pliku → `family`, `weight`, `style`, `file`, opcjonalnie `unicode_range`); brak
+     * klucza = font Core.
+     *
+     * @param array<array-key, mixed> $fonts
+     *
+     * @throws InvalidArgumentException Gdy wpis albo plik jest niepoprawny.
+     */
+    private function fonts(string $zone, array $fonts): ?ZoneFonts
+    {
+        if ($fonts === []) {
+            return null;
+        }
+
+        $faces = [];
+
+        foreach ($fonts as $key => $face) {
+            if (! is_string($key) || ! is_array($face)) {
+                throw new InvalidArgumentException("Zone [{$zone}] fonts must map file keys to font descriptions.");
+            }
+
+            $faces[$key] = [
+                'family' => Arr::string($face, 'family'),
+                'weight' => Arr::integer($face, 'weight', 400),
+                'style' => Arr::string($face, 'style', 'normal'),
+                'file' => Arr::string($face, 'file'),
+                'unicode_range' => $this->nullableString($face, 'unicode_range', null),
+            ];
+        }
+
+        try {
+            return new ZoneFonts($faces);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
+        }
+    }
+
+    /**
+     * Odnośniki prawne karty logowania z `legal_links` (lista `route` i `label`, niepuste teksty).
+     *
+     * @param array<array-key, mixed> $links
+     *
+     * @return list<array{route: string, label: string}>
+     *
+     * @throws InvalidArgumentException Gdy wpis nie ma niepustych `route` i `label`.
+     */
+    private function legalLinks(string $zone, array $links): array
+    {
+        $legalLinks = [];
+
+        foreach ($links as $link) {
+            $route = is_array($link) && is_string($link['route'] ?? null) ? $link['route'] : '';
+            $label = is_array($link) && is_string($link['label'] ?? null) ? $link['label'] : '';
+
+            if ($route === '' || $label === '') {
+                throw new InvalidArgumentException("Zone [{$zone}] legal_links need a route name and a label key.");
+            }
+
+            $legalLinks[] = ['route' => $route, 'label' => $label];
+        }
+
+        return $legalLinks;
     }
 }

@@ -65,7 +65,9 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
   Tokeny: `--ss-color-<stan>` i `--ss-color-<stan>-surface`.
 - Logo i panel marki używają `--ss-color-brand` / `--ss-color-on-brand` (czerń albo biel), nie
   `--ss-color-text`, bo grafitowy tekst nie jest kolorem marki.
-- Typografia: `--ss-font-sans` (font systemowy, dopóki marka nie ma własnego). Skala:
+- Typografia: `--ss-font-sans` (font systemowy, dopóki marka nie ma własnego), `--ss-font-display` (tytuł
+  logowania, domyślnie `--ss-font-sans`) i `--ss-font-accent` (fragment w `*gwiazdkach*`, domyślnie font otoczenia);
+  strefa podmienia je w swoim arkuszu fontami z `fonts` w configu strefy. Skala:
 
 | Element | Tailwind | Kolor |
 | --- | --- | --- |

@@ -44,6 +44,10 @@ final readonly class ZoneDefinition
      * @param ZoneFavicon|null $favicon Ikony strony strefy (trasa `<strefa>.favicon`); null = ikona aplikacji.
      * @param string|null $textNamespace Namespace tekstów paczki strefy (`texts` w configu, np. etykiety ról
      *                                   `<namespace>::roles.<strefa>.<rola>`); null = teksty Core.
+     * @param ZoneFonts|null $fonts Fonty strefy (trasa `<strefa>.font`, `@font-face` w szablonie bazowym); null = font Core.
+     * @param list<array{route: string, label: string}> $legalLinks Odnośniki prawne w karcie logowania (krótka nazwa trasy
+     *                                                         strefy i klucz tekstu), przed odnośnikami cookies; pusta
+     *                                                         lista = same odnośniki cookies pod kartami.
      */
     public function __construct(
         public string $name,
@@ -61,6 +65,8 @@ final readonly class ZoneDefinition
         public array $palettes = [],
         public ?ZoneFavicon $favicon = null,
         public ?string $textNamespace = null,
+        public ?ZoneFonts $fonts = null,
+        public array $legalLinks = [],
     ) {}
 
     /**

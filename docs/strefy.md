@@ -32,6 +32,16 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'favicon' => ['ico' => __DIR__.'/../public/images/favicon.ico', 'svg' => ..., 'apple' => ...png]
        //     (ikony strony strefy, każda opcjonalna; Core serwuje je trasą <strefa>.favicon z wersją w adresie
        //     i publicznym cache, a x-mainboard::page w strefie dodaje znaczniki <link>; bez klucza ikona aplikacji),
+       // 'fonts' => ['brand-latin' => ['family' => 'Brand Sans', 'weight' => 400, 'style' => 'normal',
+       //     'file' => __DIR__.'/../public/fonts/brand-latin.woff2', 'unicode_range' => 'U+0000-00FF']]
+       //     (pliki .woff2 strefy; Core serwuje je trasą <strefa>.font z wersją w adresie i publicznym cache, zgodnie
+       //     z CSP font-src 'self', a x-mainboard::page w strefie dodaje reguły @font-face; arkusz strefy przypisuje
+       //     rodziny tokenom --ss-font-sans, --ss-font-display, --ss-font-accent; zły wpis zatrzymuje start),
+       // 'legal_links' => [['route' => 'legal.privacy', 'label' => '<paczka>::legal.privacy.link'], ...]
+       //     (krótka nazwa trasy strefy i klucz tekstu; logowanie dostaje stopkę simplysmart z tymi odnośnikami
+       //     i cookies, wysuwaną kliknięciem nazwy simplysmart na banerze albo logo — pozycję przycisku na banerze
+       //     zmienia arkusz strefy (.ss-auth__footer-trigger--image) — a przełącznik motywu stoi na dole karty
+       //     formularza; bez nich odnośniki cookies są pod kartami; tylko strefa z logowaniem),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)

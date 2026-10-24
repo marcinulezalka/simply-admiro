@@ -37,6 +37,9 @@ return [
     'switch_context' => 'Switch context',
     'current' => 'current',
     'theme' => 'Theme',
+    'legal' => 'Legal information',
+    'footer_toggle' => 'simplysmart: legal information and cookies',
+    'copyright' => '© :year simplysmart. All rights reserved.',
     'themes' => [
         'light' => 'Light',
         'dark' => 'Dark',

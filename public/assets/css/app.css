@@ -550,6 +550,7 @@ button.ss-badge:focus-visible {
 
 .ss-auth__title {
     margin: 0;
+    font-family: var(--ss-font-display);
     font-size: 1.5rem;
     font-weight: 600;
     line-height: 1.25;
@@ -3162,7 +3163,148 @@ a.ss-notification:focus-visible {
     font-size: 0.8125rem;
 }
 
+/**
+ * Stopka simplysmart logowania strefy z odnośnikami prawnymi (`legal_links`): .ss-auth__footer pod ramą kart, węższa
+ * o promień ramy i wysunięta spod jej dolnej krawędzi (rama nad stopką); w środku logo, odnośniki prawne i cookies
+ * (.ss-auth__legal, .ss-auth__legal-cookies wtapia x-mainboard::cookie-links w wiersz) i copyright. Na szerokim ekranie
+ * po starcie js/auth-footer.js (.ss-auth--footer-ready) stopka jest schowana (wiersz siatki 0fr) i wysuwa się
+ * (.ss-auth--footer-open) po kliknięciu .ss-auth__footer-trigger: niewidocznego przycisku na nazwie simplysmart
+ * banera (--image, pozycję zmienia arkusz strefy) albo logo; stopka składa się z .ss-auth__footer-inner (przycinanie przy zwijaniu) i .ss-auth__footer-body (wygląd). .ss-auth__card-end — przełącznik motywu na dole karty.
+ */
+.ss-auth__cards {
+    position: relative;
+    z-index: 1;
+}
+
+.ss-auth__footer {
+    display: grid;
+    grid-template-rows: 1fr;
+    width: calc(100% - 2 * var(--ss-radius-frame));
+    max-width: calc(var(--ss-auth-split-width) - 2 * var(--ss-radius-frame));
+    margin-top: calc(-1 * var(--ss-radius-frame));
+    transition: grid-template-rows 0.3s ease, opacity 0.3s ease;
+}
+
+.ss-auth:not(.ss-auth--split) .ss-auth__footer {
+    max-width: calc(var(--ss-auth-width) - 2 * var(--ss-radius-frame));
+}
+
+.ss-auth__footer-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ss-auth__footer-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    padding: calc(var(--ss-radius-frame) + var(--ss-space-4)) var(--ss-space-6) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-top: 0;
+    border-radius: 0 0 var(--ss-radius-frame) var(--ss-radius-frame);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-auth__footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3) var(--ss-space-6);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-auth__footer-logo {
+    width: 6.5rem;
+}
+
+.ss-auth__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-4);
+}
+
+.ss-auth__legal .ss-link {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+    text-decoration: underline;
+}
+
+.ss-auth__legal-cookies {
+    display: contents;
+}
+
+.ss-auth__copyright {
+    margin: 0;
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-auth__footer-trigger {
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.ss-auth__footer-trigger:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-auth__footer-trigger--image {
+    display: none;
+    position: absolute;
+    top: 91%;
+    left: 38%;
+    width: 24%;
+    height: 7%;
+}
+
+.ss-auth__footer-trigger--logo {
+    align-self: flex-start;
+}
+
+.ss-auth__card-end {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: auto;
+}
+
+/* Treść karty zostaje wyśrodkowana w pionie między górną krawędzią a przełącznikiem motywu na dole. */
+.ss-auth--footer .ss-auth__card > :first-child {
+    margin-top: auto;
+}
+
+@media (min-width: 56rem) {
+    .ss-auth__footer-trigger--image {
+        display: block;
+    }
+
+    .ss-auth--footer-ready .ss-auth__footer {
+        grid-template-rows: 0fr;
+        opacity: 0;
+    }
+
+    .ss-auth--footer-ready.ss-auth--footer-open .ss-auth__footer {
+        grid-template-rows: 1fr;
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-auth__footer {
+        transition: none;
+    }
+}
+
 .ss-accent-text {
     color: var(--ss-color-accent);
+    font-family: var(--ss-font-accent);
     font-style: italic;
 }

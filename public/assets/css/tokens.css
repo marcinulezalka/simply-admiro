@@ -147,6 +147,9 @@
     /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/) */
     --ss-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --ss-font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    /* Nagłówki wyróżnione (tytuł logowania) i fragment w *gwiazdkach*; strefa podmienia je fontami z `fonts` */
+    --ss-font-display: var(--ss-font-sans);
+    --ss-font-accent: inherit;
 
     /* Odstępy */
     --ss-space-1: 0.25rem;

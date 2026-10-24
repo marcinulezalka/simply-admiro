@@ -59,6 +59,8 @@ final class ZonesServiceProvider extends ServiceProvider
 
     private const string PAGE_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.page';
 
+    private const string CONTENT_LAYOUT_VIEW = CascadeTextTranslator::CORE_NAMESPACE . '::components.content.layout';
+
     public function register(): void
     {
         $this->app->singleton(ZoneRegistry::class, InMemoryZoneRegistry::class);
@@ -82,6 +84,7 @@ final class ZonesServiceProvider extends ServiceProvider
         $views->composer(self::ZONE_LAYOUT_VIEW, $this->shareZoneWithLayout(...));
         $views->composer(self::AUTH_LAYOUT_VIEW, $this->shareAuthLayout(...));
         $views->composer(self::PAGE_VIEW, $this->shareFavicons(...));
+        $views->composer(self::CONTENT_LAYOUT_VIEW, $this->shareZoneStylesheets(...));
 
         $this->useZoneRedirects();
         $this->app->afterResolving(HttpKernel::class, $this->useZoneRedirects(...));
@@ -125,7 +128,8 @@ final class ZonesServiceProvider extends ServiceProvider
     /**
      * Layout logowania dostaje układ strefy żądania (`auth.layout`) i adresy jej banera (`auth.brand`, wersja
      * w adresie); poza strefą z logowaniem (np. fałszywe logowanie pułapki, podgląd w design systemie) układ domyślny
-     * i logo. Do tego arkusze (`stylesheets`) i kolorystyki (`palettes`) strefy żądania. Prop `layout` komponentu wygrywa.
+     * i logo. Do tego arkusze (`stylesheets`), kolorystyki (`palettes`) i odnośniki prawne (`legal_links`, adresy i etykiety)
+     * strefy żądania. Prop `layout` komponentu wygrywa.
      */
     private function shareAuthLayout(View $view): void
     {
@@ -138,6 +142,10 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : [])
             ->with('zonePalettes', $zone->has() ? $zone->get()->palettes : [])
             ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
+            ->with('zoneLegalLinks', $settings === null ? [] : array_map(static fn(array $link): array => [
+                'url' => route($zone->get()->routeName($link['route'])),
+                'label' => text($link['label']),
+            ], $zone->get()->legalLinks))
             ->with('zoneAuthBrand', $brand === null ? null : [
                 'light' => $brandUrl(AuthBrand::LIGHT),
                 'dark' => $brand->dark !== null ? $brandUrl(AuthBrand::DARK) : null,
@@ -146,13 +154,28 @@ final class ZonesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Szablon bazowy strony dostaje znaczniki ikon strefy żądania (`favicon`, adresy z wersją); poza strefą albo bez
-     * `favicon` lista jest pusta (ikona aplikacji z `public/favicon.ico`).
+     * Strona treści w strefie (np. dokumenty prawne strefy) dostaje arkusze strefy żądania (`stylesheets`), jak logowanie;
+     * poza strefą (np. polityka cookies Core) lista jest pusta.
+     */
+    private function shareZoneStylesheets(View $view): void
+    {
+        $zone = $this->app->make(CurrentZone::class);
+
+        $view->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : []);
+    }
+
+    /**
+     * Szablon bazowy strony dostaje znaczniki ikon strefy żądania (`favicon`, adresy z wersją; poza strefą albo bez
+     * `favicon` lista jest pusta — ikona aplikacji z `public/favicon.ico`) i reguły `@font-face` jej fontów (`fonts`,
+     * adresy z wersją; bez nich pusty tekst — font Core).
      */
     private function shareFavicons(View $view): void
     {
         $zone = $this->app->make(CurrentZone::class);
         $favicon = $zone->has() ? $zone->get()->favicon : null;
+
+        $fonts = $zone->has() ? $zone->get()->fonts : null;
+        $view->with('zoneFontFaces', $fonts?->fontFaceCss(static fn(string $key, string $version): string => route($zone->get()->routeName(ZoneRouteRegistrar::FONT), ['font' => $key, 'v' => $version])) ?? '');
 
         $view->with('zoneFavicons', $favicon === null ? [] : array_map(static fn(FaviconType $type): array => [
             'rel' => $type->rel(),

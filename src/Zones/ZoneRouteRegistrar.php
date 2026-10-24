@@ -19,6 +19,7 @@ use LogicException;
 use Simplysmart\Mainboard\Enums\FaviconType;
 use Simplysmart\Mainboard\Http\AccountRoutes;
 use Simplysmart\Mainboard\Http\Controllers\ZoneFaviconController;
+use Simplysmart\Mainboard\Http\Controllers\ZoneFontController;
 use Simplysmart\Mainboard\Http\SignInRoutes;
 use Simplysmart\Mainboard\Localization\LocaleRouting;
 
@@ -27,13 +28,17 @@ use Simplysmart\Mainboard\Localization\LocaleRouting;
  * strefy oraz middleware poziomu dostępu każdego pliku tras.
  *
  * Pliki tras strefy definiują ścieżki względne i krótkie nazwy; brakujący plik jest pomijany.
- * Strefa z `favicon` dostaje trasę jej plików (`<strefa>.favicon`, dla każdego poziomu dostępu).
+ * Strefa z `favicon` dostaje trasę jej plików (`<strefa>.favicon`, dla każdego poziomu dostępu), strefa z `fonts`
+ * trasę plików fontów (`<strefa>.font`).
  * Strefa z logowaniem dostaje też trasy logowania (Http\SignInRoutes) i konta (Http\AccountRoutes) z Core.
  */
 final readonly class ZoneRouteRegistrar
 {
     /** Plik ikony strony strefy (nazwa względem prefiksu strefy), gdy strefa ma `favicon`. */
     public const string FAVICON = 'favicon';
+
+    /** Plik fontu strefy (nazwa względem prefiksu strefy), gdy strefa ma `fonts`. */
+    public const string FONT = 'font';
 
     /**
      * @var array<string, AccessTier>
@@ -71,6 +76,10 @@ final readonly class ZoneRouteRegistrar
         $this->router->group($attributes, function () use ($zone): void {
             if ($zone->favicon !== null) {
                 $this->router->get('favicon/{type}', ZoneFaviconController::class)->where('type', implode('|', array_map(static fn(FaviconType $type): string => $type->value, $zone->favicon->types())))->name(self::FAVICON);
+            }
+
+            if ($zone->fonts !== null) {
+                $this->router->get('font/{font}', ZoneFontController::class)->whereIn('font', $zone->fonts->keys())->name(self::FONT);
             }
 
             if ($zone->requiresLogin()) {
