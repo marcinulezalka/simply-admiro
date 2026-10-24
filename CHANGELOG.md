@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Dni wolne (`holidays`, menu System): święta kraju w roku (`settings.view`), pobranie z kalendarza świąt, dzień wolny ręczny i usunięcie wpisu ręcznego (`settings.manage`), każda zmiana w dzienniku zdarzeń.
 - Polityka cookies (`cookie-policy`, menu System): szkic w językach interfejsu (Markdown), publikacja nowej wersji (ponowna zgoda odwiedzających), lista wersji i liczba zgód z 30 dni; zmiany z `settings.manage`, w dzienniku zdarzeń.
 - Kursy walut (`exchange-rates`, menu System): lista z filtrem waluty i okresu (`settings.view`), pobranie z NBP za okres, kurs ręczny i usunięcie kursu ręcznego (`settings.manage`), każda zmiana w dzienniku zdarzeń.
 - Menu strefy administratorów `Http\AdmiroNavigation` (pulpit; strefy i konta, właściciel strefy, administratorzy; klienci; dziennik, ustawienia, słowniki — każda pozycja tylko z uprawnieniem; role administratora pod nazwą konta) i widoki panelu na design systemie: pulpit z kartami-skrótami, strefy, konta strefy z wyszukiwaniem i stronicowaniem, administratorzy z rolami jako plakietkami, właściciel strefy, organizacje, członkowie z rolami strefy, dziennik zdarzeń z czytelnymi nazwami i filtrami, ustawienia z zakładkami słowników i przełącznikami języków, słowniki i stawki VAT.
