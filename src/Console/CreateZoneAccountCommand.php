@@ -34,7 +34,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Baza komendy paczki strefy zakładającej konto (`<strefa>:account:create {email} {name} [--role=*]
- * [--organization=]`).
+ * [--organization=] [--skip-existing]`).
  *
  * Paczka ustawia tylko `$name`, `$description` i zoneName(); walidacja, strefa żądania
  * i komunikaty są wspólne. PIN właściciel konta ustawia przy pierwszym logowaniu. `--role` nadaje role
@@ -43,6 +43,11 @@ use Symfony\Component\Console\Input\InputOption;
  */
 abstract class CreateZoneAccountCommand extends Command
 {
+    /**
+     * Opcja: istniejący adres kończy się sukcesem bez zmian (powtarzalny onboarding `simplysmart deploy:onboarding`).
+     */
+    private const string SKIP_EXISTING = 'skip-existing';
+
     /**
      * Nazwa strefy z configu paczki (np. `config()->string('shop.zone.name')`).
      */
@@ -80,6 +85,12 @@ abstract class CreateZoneAccountCommand extends Command
                 return $account;
             }));
         } catch (AccountAlreadyExists) {
+            if ($this->option(self::SKIP_EXISTING) === true) {
+                $this->info('Konto z tym adresem e-mail już istnieje — pominięte.');
+
+                return self::SUCCESS;
+            }
+
             $this->error('Konto z tym adresem e-mail już istnieje.');
 
             return self::FAILURE;
@@ -125,6 +136,7 @@ abstract class CreateZoneAccountCommand extends Command
         return [
             new InputOption('role', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Rola konta (można powtórzyć)'),
             new InputOption('organization', null, InputOption::VALUE_REQUIRED, 'Token organizacji ról (strefa z organizacjami klientów)'),
+            new InputOption(self::SKIP_EXISTING, null, InputOption::VALUE_NONE, 'Istniejące konto nie jest błędem (onboarding wdrożenia)'),
         ];
     }
 

@@ -34,10 +34,13 @@ php84 composer-setup.php --install-dir="$HOME/bin" --filename=composer && rm com
 php84 ~/bin/composer config -g github-oauth.github.com <token>
 ```
 
-Wdrożenie jednym poleceniem z komputera deweloperskiego robi skrypt aplikacji `infrastructure/deploy.sh`
-(konfiguracja w `infrastructure/deploy.env`: konto SSH, katalog, PHP, jednorazowo token). Sprawdza wypchnięcie
-repozytoriów, tworzy lock, wysyła go i uruchamia na serwerze `infrastructure/deploy-remote.sh` (Composer,
-`git pull`, instalacja, `APP_KEY`, migracje, role, słowniki, cache). Ręcznie te same kroki wyglądają tak.
+Wdrożenie jednym poleceniem z komputera deweloperskiego robi `vendor/bin/simplysmart deploy` z pakietu
+`simplysmart/tools` (konfiguracja w `infrastructure/deploy.env`: konto SSH, katalog, PHP, jednorazowo token).
+Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go i uruchamia na serwerze skrypt serwerowy z tools
+(Composer, `git pull`, instalacja, `APP_KEY`, migracje, role, słowniki, cache). Pierwszą instalację robi
+`vendor/bin/simplysmart deploy:onboarding`: to samo wdrożenie plus konta z `infrastructure/deploy.onboarding.env`
+(`<strefa>:account:create --skip-existing`, więc można je powtarzać). `--dry-run` pokazuje plan bez wysyłania.
+Ręcznie te same kroki wyglądają tak.
 
 Przy każdym wdrożeniu:
 
