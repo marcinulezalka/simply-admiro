@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 return [
 
-    'example' => 'np. :value',
-    'email' => 'np. jan.kowalski@przyklad.pl',
-    'first_name' => 'np. Jan',
-    'last_name' => 'np. Kowalski',
-    'full_name' => 'np. Jan Kowalski',
-    'company' => 'np. Przykład Sp. z o.o.',
-    'address' => 'np. ul. Przykładowa 1, 00-001 Warszawa',
+    'example' => ':value',
+    'email' => 'jan.kowalski@przyklad.pl',
+    'first_name' => 'Jan',
+    'last_name' => 'Kowalski',
+    'full_name' => 'Jan Kowalski',
+    'company' => 'Przykład Sp. z o.o.',
+    'address' => 'ul. Przykładowa 1, 00-001 Warszawa',
     'search' => 'Wpisz, czego szukasz',
     'note' => 'Krótka notatka, widoczna dla zespołu',
 

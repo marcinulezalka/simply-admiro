@@ -4,12 +4,17 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Podpowiedzi w polach (placeholder) to sam przykład, bez „np.” / „e.g.” (`placeholders.*`, wzór `placeholders.example`, maski `InputMask::placeholder()`).
+
 ### Added
 
 - Fonty per strefa: `fonts` w configu strefy (klucz pliku → `family`, `weight`, `style`, `file` .woff2, opcjonalnie `unicode_range`; `Zones\ZoneFonts`, zły wpis zatrzymuje start), pliki serwowane trasą `<strefa>.font` z wersją w adresie i publicznym cache (CSP `font-src 'self'`), reguły `@font-face` w `<head>` każdej strony strefy (`x-mainboard::page`, prop `fontFaces`). Nowe tokeny `--ss-font-display` (tytuł logowania) i `--ss-font-accent` (wyróżniony fragment nagłówka).
-- Odnośniki prawne strefy na logowaniu: `legal_links` w configu strefy (krótka nazwa trasy strefy i klucz tekstu, `ZoneDefinition::$legalLinks`, zły wpis zatrzymuje start). Strefa z nimi dostaje stopkę simplysmart (`.ss-auth__footer`: logo, odnośniki prawne i cookies `.ss-auth__legal`, copyright `layout.copyright`) wysuwaną spod dolnej krawędzi kart po kliknięciu nazwy simplysmart na banerze albo logo (`.ss-auth__footer-trigger`, `js/auth-footer.js`, Escape chowa; bez skryptu i na telefonie stale widoczną), a przełącznik motywu przenosi się na dół karty formularza (`.ss-auth__card-end`); bez odnośników układ bez zmian (przełącznik w rogu, odnośniki cookies pod kartami). Layout logowania przyjmuje props `legalLinks`, `stylesheets` i `fontFaces` (podgląd strefy w design systemie poza strefą).
+- Odnośniki prawne strefy na logowaniu: `legal_links` w configu strefy (krótka nazwa trasy strefy i klucz tekstu, `ZoneDefinition::$legalLinks`, zły wpis zatrzymuje start). Strefa z nimi dostaje stopkę simplysmart (`.ss-auth__footer`: logo, odnośniki prawne i cookies `.ss-auth__legal`, polityka cookies na pierwszym miejscu; w dolnym wierszu `.ss-auth__footer-meta` copyright `layout.copyright`, ustawienia cookies z ikoną `settings` i przełącznik motywu; odnośniki podkreślone dopiero przy najechaniu) wysuwaną spod dolnej krawędzi kart po kliknięciu nazwy simplysmart na banerze albo logo (`.ss-auth__footer-trigger`, `js/auth-footer.js`, Escape chowa; bez skryptu i na telefonie stale widoczną); bez odnośników układ bez zmian (przełącznik w rogu, odnośniki cookies pod kartami). Layout logowania przyjmuje props `legalLinks`, `stylesheets` i `fontFaces` (podgląd strefy w design systemie poza strefą).
 - Strona treści w strefie (`x-mainboard::content.layout`) dostaje arkusze strefy żądania, jak logowanie.
-- Lista zewnętrznych pakietów Composera do strony licencji: `Queries\InstalledPackages` (bez pakietów deweloperskich i z repozytoriów `path`, z licencją, opisem i stroną domową).
+- `x-mainboard::cookie-links` przyjmuje `parts` (`settings`, `policy`) i `icon` (ikona `settings` przy ustawieniach). Okna zgody na cookies mają w tytule nową ikonę `cookie`, a przyciski ikony (zezwól, odrzuć, dostosuj, zapisz).
+- Lista pakietów Composera do strony licencji: `Queries\InstalledPackages` — tylko bezpośrednie zależności aplikacji i jej własnych paczek (bez dalszych zależności, np. pakietów samego Laravela, bez pakietów platformy i własnych paczek), z wersją, licencją, opisem i stroną domową.
 
 ## [0.2.0] - 2026-10-24
 

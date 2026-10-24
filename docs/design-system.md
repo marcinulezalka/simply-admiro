@@ -225,7 +225,7 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 - **Pole** `x-mainboard::input`: etykieta nad polem, subtelna ikona w tle po lewej (przygaszona, pełna przy
   fokusie), podpowiedź i błąd powiązane przez `aria-describedby` (`aria-invalid` przy błędzie). Popularne pola
   mają ikonę: e-mail `mail`, osoba `user`, firma `building`, adres `map-pin`, data `calendar`.
-- **Podpowiedzi w polach** (placeholder): przykład formatu „np. …” na neutralnych, fikcyjnych danych, nigdy zamiast
+- **Podpowiedzi w polach** (placeholder): sam przykład formatu, bez „np.” (np. `jan.kowalski@przyklad.pl`), na neutralnych, fikcyjnych danych, nigdy zamiast
   etykiety ani instrukcji (znika przy pisaniu); kolor `--ss-color-muted` z pełnym kryciem (kontrast 4,8:1). Wspólne
   teksty w grupie `placeholders.*` (e-mail, imię, nazwisko, imię i nazwisko, firma, adres, wyszukiwanie, notatka) i wzór
   `placeholders.example`; maski biorą go przez `InputMask::placeholder()`. Pola kodu i PIN-u nie mają podpowiedzi.

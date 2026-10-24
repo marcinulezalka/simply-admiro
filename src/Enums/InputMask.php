@@ -53,7 +53,7 @@ enum InputMask: string
     }
 
     /**
-     * Podpowiedź w polu: przykład w formacie maski ze wspólnym wzorem `placeholders.example` („np. …”).
+     * Podpowiedź w polu: przykład w formacie maski ze wspólnym wzorem `placeholders.example` (sam przykład, bez „np.”).
      */
     public function placeholder(): string
     {

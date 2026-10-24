@@ -41,7 +41,7 @@ return [
     ],
 
     'sample' => [
-        'placeholder_hint' => 'The placeholder shows an example of the format (“e.g. …”) and disappears while typing — the label above the field stays.',
+        'placeholder_hint' => 'The placeholder shows just an example of the format (no “e.g.”) and disappears while typing — the label above the field stays.',
         'palette_inverse' => 'Inverse card',
         'page_title' => 'Page title',
         'card_title' => 'Card title',

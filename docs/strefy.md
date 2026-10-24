@@ -40,7 +40,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'legal_links' => [['route' => 'legal.privacy', 'label' => '<paczka>::legal.privacy.link'], ...]
        //     (krótka nazwa trasy strefy i klucz tekstu; logowanie dostaje stopkę simplysmart z tymi odnośnikami
        //     i cookies, wysuwaną kliknięciem nazwy simplysmart na banerze albo logo — pozycję przycisku na banerze
-       //     zmienia arkusz strefy (.ss-auth__footer-trigger--image) — a przełącznik motywu stoi na dole karty
+       //     zmienia arkusz strefy (.ss-auth__footer-trigger--image) — i przełącznik motywu w tej stopce
        //     formularza; bez nich odnośniki cookies są pod kartami; tylko strefa z logowaniem),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie

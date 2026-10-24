@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 return [
 
-    'example' => 'e.g. :value',
-    'email' => 'e.g. john.smith@example.com',
-    'first_name' => 'e.g. John',
-    'last_name' => 'e.g. Smith',
-    'full_name' => 'e.g. John Smith',
-    'company' => 'e.g. Example Ltd',
-    'address' => 'e.g. 1 Example Street, London',
+    'example' => ':value',
+    'email' => 'john.smith@example.com',
+    'first_name' => 'John',
+    'last_name' => 'Smith',
+    'full_name' => 'John Smith',
+    'company' => 'Example Ltd',
+    'address' => '1 Example Street, London',
     'search' => 'Type what you are looking for',
     'note' => 'A short note, visible to the team',
 

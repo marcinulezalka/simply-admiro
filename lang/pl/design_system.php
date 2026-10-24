@@ -41,7 +41,7 @@ return [
     ],
 
     'sample' => [
-        'placeholder_hint' => 'Podpowiedź w polu pokazuje przykład formatu („np. …”) i znika przy pisaniu — etykieta nad polem zostaje.',
+        'placeholder_hint' => 'Podpowiedź w polu pokazuje sam przykład formatu (bez „np.”) i znika przy pisaniu — etykieta nad polem zostaje.',
         'palette_inverse' => 'Karta odwrócona',
         'page_title' => 'Tytuł strony',
         'card_title' => 'Tytuł karty',
