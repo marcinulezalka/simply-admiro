@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * This file is part of simplysmart/tools.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
+use Simplysmart\Tools\Console\Application;
+use Simplysmart\Tools\Console\Command;
+use Simplysmart\Tools\Console\DeployCommand;
+use Simplysmart\Tools\Console\PresetCommand;
+use Simplysmart\Tools\Console\PrivatePackagesCommand;
+use Simplysmart\Tools\Console\VersionReleaseCommand;
+use Simplysmart\Tools\Deploy\DeployMode;
+use Simplysmart\Tools\Deploy\RemoteScript;
+use Simplysmart\Tools\Deploy\RepositoryCheck;
+use Simplysmart\Tools\PrivatePackages\GitRepositorySource;
+use Simplysmart\Tools\PrivatePackages\ProcessComposerRunner;
+use Simplysmart\Tools\Process\SystemProcessRunner;
+use Simplysmart\Tools\Release\ReleaseClock;
+use Simplysmart\Tools\Release\ReleasePlanner;
+use Simplysmart\Tools\Release\VersionRelease;
+
+require $GLOBALS['_composer_autoload_path'] ?? dirname(__DIR__) . '/vendor/autoload.php';
+
+$processes = new SystemProcessRunner();
+$privatePackages = new PrivatePackagesCommand(new ProcessComposerRunner());
+$repositories = new RepositoryCheck($processes, new GitRepositorySource($processes));
+$script = RemoteScript::fromPackage();
+$lockCommand = static fn(?array $composer): Command => new PrivatePackagesCommand(new ProcessComposerRunner($composer));
+
+$application = new Application([
+    new VersionReleaseCommand(new VersionRelease(new ReleasePlanner(), ReleaseClock::fromEnvironment())),
+    $privatePackages,
+    new PresetCommand('deploy:lock', 'Manifest wdrożeniowy composer.deploy.json/.lock z paczkami z repozytoriów git', $privatePackages, [PrivatePackagesCommand::DEPLOY]),
+    new DeployCommand(DeployMode::Deploy, $processes, $repositories, $script, $lockCommand),
+    new DeployCommand(DeployMode::Onboarding, $processes, $repositories, $script, $lockCommand),
+]);
+
+exit($application->run(array_slice($_SERVER['argv'], 1), (string) getcwd(), STDOUT, STDERR));

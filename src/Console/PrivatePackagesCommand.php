@@ -21,11 +21,15 @@ use Simplysmart\Tools\PrivatePackages\PrivatePackagesException;
 use Simplysmart\Tools\PrivatePackages\RepositorySource;
 
 /**
- * Polecenie vendor/bin/composer-private: instaluje paczki prywatne z private-packages.json
+ * Polecenie `simplysmart private:install` (i vendor/bin/composer-private): instaluje paczki prywatne z private-packages.json
  * (albo pokazuje plan przy --dry-run). Bez listy kończy się sukcesem — publiczny klon nic nie instaluje.
  */
-final readonly class PrivatePackagesCommand
+final readonly class PrivatePackagesCommand implements Command
 {
+    public const string NAME = 'private:install';
+
+    public const string DEPLOY = '--deploy';
+
     public const string USAGE = <<<'USAGE'
         Użycie: composer-private [--deploy] [--dry-run] [--root=<katalog>]
 
@@ -47,6 +51,16 @@ final readonly class PrivatePackagesCommand
         private RepositorySource $repositories = new GitRepositorySource(),
     ) {}
 
+    public function name(): string
+    {
+        return self::NAME;
+    }
+
+    public function description(): string
+    {
+        return 'Instalacja paczek prywatnych z private-packages.json (= vendor/bin/composer-private)';
+    }
+
     /**
      * @param  list<string>  $arguments  Argumenty bez nazwy skryptu.
      * @param  string  $workingDirectory  Domyślny katalog projektu.
@@ -63,7 +77,7 @@ final readonly class PrivatePackagesCommand
         foreach ($arguments as $argument) {
             if ($argument === '--dry-run') {
                 $dryRun = true;
-            } elseif ($argument === '--deploy') {
+            } elseif ($argument === self::DEPLOY) {
                 $deploy = true;
             } elseif (str_starts_with($argument, '--root=')) {
                 $root = substr($argument, strlen('--root='));

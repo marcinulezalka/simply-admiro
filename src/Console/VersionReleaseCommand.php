@@ -19,16 +19,28 @@ use Simplysmart\Tools\Release\ReleaseFiles;
 use Simplysmart\Tools\Release\VersionRelease;
 
 /**
- * Polecenie vendor/bin/version-release: zamienia argumenty na wydanie (albo jego podgląd
+ * Polecenie `simplysmart release` (i vendor/bin/version-release): zamienia argumenty na wydanie (albo jego podgląd
  * przy --dry-run) i wynik na komunikat.
  */
-final readonly class VersionReleaseCommand
+final readonly class VersionReleaseCommand implements Command
 {
+    public const string NAME = 'release';
+
     private const string DRY_RUN_NOTICE = 'Tryb --dry-run: pliki nie zostały zmienione.';
 
     public function __construct(
         private VersionRelease $release,
     ) {}
+
+    public function name(): string
+    {
+        return self::NAME;
+    }
+
+    public function description(): string
+    {
+        return 'Wydanie wersji z sekcji [Unreleased] w CHANGELOG.md (= vendor/bin/version-release)';
+    }
 
     /**
      * @param  list<string>  $arguments  Argumenty bez nazwy skryptu.

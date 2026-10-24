@@ -14,15 +14,23 @@ declare(strict_types=1);
 namespace Simplysmart\Tools\PrivatePackages;
 
 /**
- * Composer w osobnym procesie, ze strumieniami bieżącego procesu. Uruchomiony jako skrypt
- * composera używa tego samego pliku composera (COMPOSER_BINARY), inaczej `composer` z PATH.
+ * Composer w osobnym procesie, ze strumieniami bieżącego procesu. Polecenie podane w konstruktorze
+ * (np. `php composer.phar`) ma pierwszeństwo; uruchomiony jako skrypt composera używa tego samego pliku
+ * composera (COMPOSER_BINARY), inaczej `composer` z PATH.
  */
 final readonly class ProcessComposerRunner implements ComposerRunner
 {
+    /**
+     * @param  list<string>|null  $command  Polecenie Composera; null — COMPOSER_BINARY albo `composer`.
+     */
+    public function __construct(
+        private ?array $command = null,
+    ) {}
+
     public function update(string $root, string $manifest, array $packages, array $options = []): int
     {
         $binary = getenv('COMPOSER_BINARY');
-        $composer = is_string($binary) && $binary !== '' ? [PHP_BINARY, $binary] : ['composer'];
+        $composer = $this->command ?? (is_string($binary) && $binary !== '' ? [PHP_BINARY, $binary] : ['composer']);
         $environment = [...getenv(), 'COMPOSER' => $manifest];
 
         $process = proc_open([...$composer, 'update', ...$packages, ...$options, '--no-interaction'], [STDIN, STDOUT, STDERR], $pipes, $root, $environment);

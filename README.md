@@ -9,6 +9,22 @@ bez frameworka.
 composer require --dev simplysmart/tools
 ```
 
+## Polecenie simplysmart
+
+`vendor/bin/simplysmart` to jedno wejście do narzędzi pakietu, jak `artisan`: nazwy z dwukropkiem
+(kropka działa tak samo — `deploy.onboarding` = `deploy:onboarding`), bez nazwy albo z `list` — lista poleceń.
+
+| Polecenie | Co robi |
+| --- | --- |
+| `release` | wydanie wersji (= `vendor/bin/version-release`) |
+| `private:install` | paczki prywatne (= `vendor/bin/composer-private`) |
+| `deploy:lock` | manifest wdrożeniowy (= `vendor/bin/composer-private --deploy`) |
+| `deploy` | wdrożenie na serwer |
+| `deploy:onboarding` | wdrożenie i konta pierwszej instalacji |
+
+Opcje poleceń są takie jak w samodzielnych narzędziach (`--dry-run`, `--root=<katalog>`); `vendor/bin/version-release`
+i `vendor/bin/composer-private` działają dalej.
+
 ## Wydanie wersji
 
 Projekt i każdy pakiet mają własne `CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/pl/1.1.0/))
@@ -67,6 +83,54 @@ vendor/bin/composer-private --deploy --dry-run   # pokazuje paczki; nie zapisuje
 ```
 
 Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z repozytorium zdalnego), paczka bez `origin` to błąd. Oba pliki dodaj do `.gitignore` i wyślij na serwer, a tam: `COMPOSER=composer.deploy.json composer install --no-dev`. Do repozytoriów prywatnych composer potrzebuje tokenu (`composer config -g github-oauth.github.com <token>`). W projekcie: `"deploy:lock": "@php vendor/bin/composer-private --deploy"`.
+
+## Wdrożenie na serwer
+
+`vendor/bin/simplysmart deploy` uruchamia się na komputerze deweloperskim, w katalogu projektu:
+
+1. sprawdza, czy projekt i paczki z `packages/*/*` są wypchnięte (niewypchnięte commity zatrzymują wdrożenie,
+   niezacommitowane zmiany i nieudany `git fetch` dają ostrzeżenie; katalogi bez `.git` są pomijane),
+2. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
+3. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`),
+4. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`,
+   `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje, role, słowniki, cache.
+   Skrypt i token idą standardowym wejściem, więc serwer nie potrzebuje tools, a token nie trafia do listy procesów.
+
+Konfiguracja: `infrastructure/deploy.env` (dodaj do `.gitignore`; w projekcie wzór `deploy.env.example`), format
+`KLUCZ=wartość` bez uruchamiania powłoki — wartości ze spacjami w cudzysłowie `"…"` (`\"` i `\\` jako znaki) albo
+`'…'` (dosłownie), komentarz po `#`, opcjonalny `export`.
+
+| Klucz | Znaczenie |
+| --- | --- |
+| `DEPLOY_SSH` | konto SSH serwera (`login@serwer` albo alias z `~/.ssh/config`), wymagane |
+| `DEPLOY_PATH` | katalog aplikacji na serwerze (repozytorium projektu z `.env`), wymagane; `~/` = katalog domowy |
+| `DEPLOY_PHP` | polecenie PHP 8.4 na serwerze (domyślnie `php84`) |
+| `REMOTE_COMPOSER` | plik Composera na serwerze (np. `composer.phar`); pusty = `~/bin/composer` |
+| `LOCAL_COMPOSER` | polecenie Composera na komputerze (np. `php composer.phar`); pusty = `composer` |
+| `GITHUB_TOKEN` | token tylko do odczytu do repozytoriów paczek; zapisywany w konfiguracji Composera na serwerze |
+
+```bash
+vendor/bin/simplysmart deploy --dry-run                    # konfiguracja, repozytoria i plan; nic nie wysyła
+vendor/bin/simplysmart deploy
+vendor/bin/simplysmart deploy --config=infrastructure/test.env
+```
+
+### Onboarding
+
+`vendor/bin/simplysmart deploy:onboarding` robi to samo wdrożenie, a na końcu zakłada konta pierwszej instalacji
+z `infrastructure/deploy.onboarding.env` (dodaj do `.gitignore`; inny plik: `--onboarding=<plik>`):
+
+```bash
+ONBOARD_ACCOUNT_1_ZONE=admiro                # strefa: polecenie <strefa>:account:create, wymagane
+ONBOARD_ACCOUNT_1_EMAIL=admin@firma.pl       # wymagane
+ONBOARD_ACCOUNT_1_NAME="Jan Kowalski"        # wymagane
+ONBOARD_ACCOUNT_1_ROLES=hero                 # role po przecinku, opcjonalnie
+ONBOARD_ACCOUNT_1_ORGANIZATION=              # token organizacji ról, opcjonalnie
+```
+
+Każde konto to `php artisan <strefa>:account:create <e-mail> <imię> --role=… --organization=… --skip-existing`,
+więc istniejący adres jest pomijany i onboarding można powtórzyć. Nieznany klucz, brak wymaganej wartości albo
+nazwa strefy spoza `[a-z0-9_-]` to błąd przed połączeniem z serwerem. `--dry-run` pokazuje konta bez wysyłania.
 
 ## Skille AI
 

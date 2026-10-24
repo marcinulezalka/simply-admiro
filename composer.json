@@ -42,6 +42,7 @@
         }
     },
     "bin": [
+        "bin/simplysmart",
         "bin/version-release",
         "bin/composer-private"
     ],

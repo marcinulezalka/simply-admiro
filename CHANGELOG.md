@@ -6,6 +6,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- `vendor/bin/simplysmart`: jedno wejście w stylu artisan (`list`, nazwy z dwukropkiem, kropka jako zamiennik: `deploy.onboarding` = `deploy:onboarding`) z poleceniami `release` (= `version-release`), `private:install` (= `composer-private`), `deploy:lock` (= `composer-private --deploy`), `deploy` i `deploy:onboarding`; dotychczasowe `vendor/bin/version-release` i `vendor/bin/composer-private` działają bez zmian.
+- `simplysmart deploy`: wdrożenie z komputera deweloperskiego według `infrastructure/deploy.env` (`--config`, `--root`, `--dry-run`) — sprawdzenie wypchnięcia projektu i `packages/*/*`, manifest wdrożeniowy, `scp` plików wdrożeniowych i skrypt serwerowy `resources/deploy/remote.sh` przez `ssh … 'bash -s'` (token przez standardowe wejście); serwer nie potrzebuje tools. Parser plików konfiguracji bez powłoki (`Deploy\EnvFile`: cudzysłowy, spacje wokół `=`, `export`, komentarze, błędy z numerem linii, `MissingConfigException` z brakującymi kluczami), każda wartość w skrypcie cytowana (`Deploy\ShellArgument`).
+- `simplysmart deploy:onboarding`: wdrożenie i konta pierwszej instalacji z `infrastructure/deploy.onboarding.env` (`ONBOARD_ACCOUNT_<n>_ZONE`, `_EMAIL`, `_NAME`, `_ROLES`, `_ORGANIZATION`, `--onboarding`) zakładane poleceniem `<strefa>:account:create --skip-existing`.
+- `ProcessComposerRunner` przyjmuje polecenie Composera (`LOCAL_COMPOSER`, np. `php composer.phar`); `Process\ProcessRunner` uruchamia git, scp i ssh (także w `GitRepositorySource`).
 - `composer-private --deploy`: manifest i lock wdrożeniowy (`composer.deploy.json`, `composer.deploy.lock`) z paczkami z repozytoriów git zamiast katalogów `path` — adresy z `git remote origin` paczek (`PrivatePackages\RepositorySource`, `GitRepositorySource`), lock przez `composer update --no-install --no-scripts`, ostrzeżenie o niewypchniętych commitach, `--dry-run`; serwer instaluje paczki z GitHuba do `vendor/` (`COMPOSER=composer.deploy.json composer install --no-dev`).
 
 ## [0.2.0] - 2026-10-24
