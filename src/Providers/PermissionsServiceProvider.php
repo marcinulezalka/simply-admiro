@@ -18,16 +18,18 @@ use Illuminate\Support\ServiceProvider;
 use Simplysmart\Mainboard\Console\SeedOrganizations;
 use Simplysmart\Mainboard\Console\SyncZonePermissions;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
+use Simplysmart\Mainboard\Contracts\CurrentRole;
 use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
 use Simplysmart\Mainboard\Http\Middleware\RequireZonePermission;
 use Simplysmart\Mainboard\Permissions\PermissionDefaults;
 use Simplysmart\Mainboard\Permissions\PermissionFiles;
+use Simplysmart\Mainboard\Permissions\RequestRole;
 use Simplysmart\Mainboard\Permissions\SpatieCurrentOrganization;
 use Simplysmart\Mainboard\Permissions\SpatiePermissionChecker;
 use Simplysmart\Mainboard\Permissions\ZoneOwnerProvisioners;
 
 /**
- * Organizacje i uprawnienia stref na spatie/laravel-permission: kontrakty sprawdzania i bieżącej organizacji,
+ * Organizacje i uprawnienia stref na spatie/laravel-permission: kontrakty sprawdzania, bieżącej organizacji i aktywnej roli,
  * rejestry plików ról (z katalogiem Core) i zakładania właścicieli, middleware `zone.permission`, komendy
  * organizacji i ról oraz konfiguracja spatie ustawiana po register() wszystkich providerów (wtedy config spatie
  * jest już scalony), przed ich boot().
@@ -40,6 +42,7 @@ final class PermissionsServiceProvider extends ServiceProvider
     {
         $this->app->bind(ZonePermissionChecker::class, SpatiePermissionChecker::class);
         $this->app->bind(CurrentOrganization::class, SpatieCurrentOrganization::class);
+        $this->app->scoped(CurrentRole::class, RequestRole::class);
         $this->app->singleton(ZoneOwnerProvisioners::class);
         $this->app->singleton(PermissionFiles::class, static function (): PermissionFiles {
             $files = new PermissionFiles();

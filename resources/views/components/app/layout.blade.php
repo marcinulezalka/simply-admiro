@@ -1,11 +1,11 @@
-{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej: u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (np. organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole subtelne logo. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. widok i organizacja; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; przełącznik motywu nad logo w stopce menu; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo w stopce menu). Menu rozwijane działają bez skryptu (<details>). --}}
-@props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => [], 'palettes' => [], 'paletteScope' => ''])
+{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole odnośnik „Ustawienia” i subtelne logo simplysmart (35% szerokości), które wysuwa od dołu stopkę simplysmart (cookies, odnośniki prawne, copyright; js/footer-toggle.js). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
+@props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'settings' => null, 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'legalLinks' => [], 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => [], 'palettes' => [], 'paletteScope' => ''])
 @php($toasts ??= \Simplysmart\Mainboard\View\Toast::fromSession(session(\Simplysmart\Mainboard\View\Toast::SESSION_KEY)))
 <x-mainboard::page :title="$title" :description="$description" robots="noindex, nofollow" :palettes="$palettes" :palette-scope="$paletteScope">
     <x-slot:head>
         <x-mainboard::styles :files="[...\Simplysmart\Mainboard\View\CoreAssets::STYLESHEETS, ...$stylesheets]" />
         <x-mainboard::zone-styles :paths="$zoneStylesheets" />
-        <x-mainboard::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js']" />
+        <x-mainboard::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js', 'js/pin-keypad.js', 'js/footer-toggle.js']" />
     </x-slot:head>
 
     {{ $before ?? '' }}
@@ -32,9 +32,6 @@
                                     @foreach ($accountItems as $item)
                                         <li><a class="ss-account-menu__link" href="{{ $item->url }}" @if ($item->current) aria-current="page" @endif><x-mainboard::icon :name="$item->icon" class="ss-account-menu__icon" />{{ $item->label }}</a></li>
                                     @endforeach
-                                    @if (($cookieConsent ?? null) !== null)
-                                        <li><button class="ss-account-menu__link" type="button" data-ss-cookie-settings><x-mainboard::icon name="shield-check" class="ss-account-menu__icon" />{{ text('cookies.links.settings') }}</button></li>
-                                    @endif
                                     @if ($signOut !== null)
                                         <li>
                                             <form method="POST" action="{{ $signOut }}">
@@ -138,7 +135,14 @@
                 </div>
             </div>
 
-            <nav class="ss-sidebar__nav" aria-label="{{ text('layout.menu') }}">
+            <nav class="ss-sidebar__nav" aria-label="{{ $settings?->active ? text('layout.settings') : text('layout.menu') }}">
+                @if ($settings?->active)
+                    <a class="ss-sidebar__link ss-sidebar__back" href="{{ $settings->backUrl }}" title="{{ text('layout.back_to_app') }}">
+                        <x-mainboard::icon name="arrow-left" class="ss-sidebar__icon" />
+                        <span class="ss-sidebar__label">{{ text('layout.back_to_app') }}</span>
+                    </a>
+                    <p class="ss-sidebar__title">{{ text('layout.settings') }}</p>
+                @endif
                 @foreach ($navigation as $group)
                     @if (filled($group->label))
                         <p class="ss-sidebar__group">{{ $group->label }}</p>
@@ -159,15 +163,40 @@
                 @endforeach
             </nav>
 
-            <x-mainboard::theme-toggle class="ss-sidebar__theme" />
+            @if ($settings !== null && ! $settings->active)
+                <ul class="ss-sidebar__list ss-sidebar__settings">
+                    <li>
+                        <a class="ss-sidebar__link" href="{{ $settings->url }}" title="{{ text('layout.settings') }}">
+                            <x-mainboard::icon name="settings" class="ss-sidebar__icon" />
+                            <span class="ss-sidebar__label">{{ text('layout.settings') }}</span>
+                        </a>
+                    </li>
+                </ul>
+            @endif
 
-            <div class="ss-sidebar__brand">
-                @isset($brand)
-                    {{ $brand }}
-                @else
-                    <x-mainboard::logo class="ss-sidebar__logo" />
-                @endisset
-            </div>
+            @isset($brand)
+                <div class="ss-sidebar__brand">{{ $brand }}</div>
+            @else
+                <div class="ss-sidebar__brand" data-ss-footer-root="ss-sidebar__brand">
+                    <footer class="ss-sidebar__footer" id="ss-sidebar-footer" data-ss-footer>
+                        <div class="ss-sidebar__footer-inner">
+                            <div class="ss-sidebar__footer-body">
+                                <nav class="ss-sidebar__legal" aria-label="{{ text('layout.legal') }}">
+                                    <x-mainboard::cookie-links class="ss-sidebar__cookies" />
+                                    @foreach ($legalLinks as $link)
+                                        <a class="ss-link" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                                    @endforeach
+                                </nav>
+                                <p class="ss-sidebar__copyright">{{ text('layout.copyright', ['year' => (string) now()->year]) }}</p>
+                            </div>
+                        </div>
+                    </footer>
+                    <button class="ss-sidebar__brand-toggle" type="button" aria-expanded="false" aria-controls="ss-sidebar-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
+                        <x-mainboard::logo class="ss-sidebar__logo" />
+                        <span class="ss-sr-only">{{ text('layout.footer_toggle') }}</span>
+                    </button>
+                </div>
+            @endisset
         </aside>
 
         <div class="ss-shell__backdrop" data-ss-sidebar-backdrop hidden></div>

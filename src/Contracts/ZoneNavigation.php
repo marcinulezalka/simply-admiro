@@ -17,8 +17,8 @@ use Simplysmart\Mainboard\View\Navigation\NavigationGroup;
 use Simplysmart\Mainboard\View\Navigation\SearchBox;
 
 /**
- * Menu strefy w layoucie aplikacji (x-mainboard::zone.layout): pozycje według uprawnień zalogowanego konta, globalna
- * wyszukiwarka i druga linia pod nazwą konta. Implementacja należy do paczki strefy i jest rejestrowana w
+ * Menu strefy w layoucie aplikacji (x-mainboard::zone.layout): pozycje według uprawnień zalogowanego konta, ustawienia
+ * strefy (menu ustawień z powrotem do aplikacji), globalna wyszukiwarka i druga linia pod nazwą konta. Implementacja należy do paczki strefy i jest rejestrowana w
  * Zones\ZoneNavigations; rozwiązywana dla żądania (może korzystać z kontekstu żądania i konta).
  */
 interface ZoneNavigation
@@ -29,6 +29,14 @@ interface ZoneNavigation
      * @return list<NavigationGroup>
      */
     public function groups(): array;
+
+    /**
+     * Grupy ustawień strefy (konfiguracje posegregowane tematycznie) z bieżącą pozycją oznaczoną; Core dokłada po nich
+     * grupę konta (profil, bezpieczeństwo, wygląd). Pusta lista = same ustawienia konta.
+     *
+     * @return list<NavigationGroup>
+     */
+    public function settings(): array;
 
     /**
      * Globalna wyszukiwarka w top barze albo null (konto bez uprawnienia do wyszukiwania).

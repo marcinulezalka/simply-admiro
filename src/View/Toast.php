@@ -23,6 +23,11 @@ final readonly class Toast
 {
     public const string SESSION_KEY = 'toasts';
 
+    /**
+     * Klucz sesji krótkiego komunikatu akcji (`redirect()->with('status', …)`), pokazywanego jako toast powodzenia.
+     */
+    public const string STATUS_KEY = 'status';
+
     public function __construct(
         public ToastType $type,
         public string $message,
@@ -76,5 +81,22 @@ final readonly class Toast
         }
 
         return $toasts;
+    }
+
+    /**
+     * Wszystkie toasty flashowane w sesji: lista spod {@see self::SESSION_KEY} oraz komunikat spod
+     * {@see self::STATUS_KEY} jako toast powodzenia (layouty stref, logowania i strony publicznej).
+     *
+     * @return list<self>
+     */
+    public static function fromFlash(mixed $toasts, mixed $status): array
+    {
+        $flashed = self::fromSession($toasts);
+
+        if (is_string($status) && $status !== '') {
+            $flashed[] = new self(ToastType::Success, $status);
+        }
+
+        return $flashed;
     }
 }

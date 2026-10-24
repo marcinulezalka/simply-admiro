@@ -8,7 +8,7 @@ Strefy publiczne (strefy z paczek prywatnych mają własne migracje i nie są tu
 | --- | --- | --- | --- |
 | `admiro` | `simplysmart/admiro` | administratorzy | `create_admiro_tables` |
 
-Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie kodem z e-maila i PIN-em z zaufanymi urządzeniami; zmiana PIN-u i akcje administracyjne na kontach; uprawnienia kont w organizacjach (role z plików JSON, bieżąca organizacja w żądaniu, trasy z uprawnieniem, nadawanie ról bez eskalacji, zakładanie właścicieli; `docs/baza-danych.md` §15). Do tego maskowanie błędów, blokada agentów AI i pułapki na boty.
+Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie kodem z e-maila i PIN-em z zaufanymi urządzeniami; zmiana PIN-u i akcje administracyjne na kontach; uprawnienia kont w organizacjach (role z plików JSON, bieżąca organizacja w żądaniu, role jako konteksty, trasy z uprawnieniem, nadawanie ról bez eskalacji, zakładanie właścicieli; `docs/baza-danych.md` §15). Layout strefy z menu ustawień. Do tego maskowanie błędów, blokada agentów AI i pułapki na boty.
 
 ## Jak dodać strefę
 
@@ -48,6 +48,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'mail' => ['views' => '<paczka>::mail.<strefa>', 'palette' => ['accent' => '#112a46', ...]]
        //     (e-maile strefy, patrz „E-maile strefy”; zły prefiks albo kolor spoza #rrggbb zatrzymuje start),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
+       // 'role_contexts' => true (tylko z `teams`: role konta w organizacji są kontekstami — patrz „Uprawnienia”),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak mainboard.security.mask_errors, agenci AI blokowani w strefach z logowaniem)
    ],
@@ -73,7 +74,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
    - role i uprawnienia strefy są w pliku JSON (`docs/baza-danych.md` §15): strefa publiczna w `database/seeders/permissions/<strefa>.json` Core, paczka prywatna we własnym repozytorium, rejestrowanym w jej providerze przez `PermissionFiles::add()`;
    - strefa bez rejestracji zakłada konta komendą `<strefa>:account:create {email} {name} [--role=…] [--organization=<token>]`: klasa w paczce dziedziczy po `Console\CreateZoneAccountCommand` i podaje tylko `$name`, `$description` i `zoneName()`. Walidację, strefę żądania i komunikaty daje baza, a konto tworzy akcja `Auth\CreateZoneAccount` (aktywne, bez PIN-u; zajęty adres → `AccountAlreadyExists`). PIN właściciel ustawia przy pierwszym logowaniu. `--role` nadaje role przez `Permissions\SystemRoleGrant` (bez sprawdzania eskalacji, tylko konsola i zakładanie właścicieli) w organizacji z `--organization`, a w strefie bez `teams` w organizacji operatora; nieznana rola cofa założenie konta.
 
-5. Widoki strefy budują się na layoucie Core `<x-mainboard::zone.layout :title="...">` (opcjonalnie `meta`, `back` i slot `actions` nagłówka). Core daje mu `$zone`, `$account` (konto zalogowane w guardzie strefy albo null) i organizacje konta. Dla zalogowanego konta layout to layout aplikacji z menu bocznym (`x-mainboard::app.layout`): awatar w kolorze konta z drugą linią, menu konta (profil, PIN, urządzenia, wylogowanie), przełącznik organizacji (gdy konto ma kilka), komunikaty `status` jako toasty. Menu, globalną wyszukiwarkę i drugą linię podaje strefa: klasa `Contracts\ZoneNavigation` (pozycje według uprawnień konta, bieżąca przez `current`) zarejestrowana w providerze strefy przez `Zones\ZoneNavigations::add('<strefa>', Klasa::class)`; strefa bez niej ma layout bez pozycji menu. Gość (strona publiczna strefy) dostaje prostą kolumnę treści. Proste strony to `Route::view(...)` bez kontrolera.
+5. Widoki strefy budują się na layoucie Core `<x-mainboard::zone.layout :title="...">` (opcjonalnie `meta`, `back` i slot `actions` nagłówka). Core daje mu `$zone`, `$account` (konto zalogowane w guardzie strefy albo null) i organizacje konta. Dla zalogowanego konta layout to layout aplikacji z menu bocznym (`x-mainboard::app.layout`): awatar w kolorze konta z drugą linią, menu konta (profil, bezpieczeństwo, wygląd, wylogowanie), przełącznik kontekstu (organizacja, gdy konto ma kilka; rola w strefie z `role_contexts`, gdy konto ma kilka ról), komunikaty `status` jako toasty, stopka simplysmart z odnośnikami prawnymi strefy (`legal_links`). Menu, ustawienia strefy, globalną wyszukiwarkę i drugą linię podaje strefa: klasa `Contracts\ZoneNavigation` (pozycje według uprawnień konta, bieżąca przez `current`) zarejestrowana w providerze strefy przez `Zones\ZoneNavigations::add('<strefa>', Klasa::class)`; strefa bez niej ma layout bez pozycji menu i same ustawienia konta. **Ustawienia** (`Zones\ZoneSettingsMenu`, `View\Navigation\SettingsMenu`): każda strefa ma osobne menu ustawień — `ZoneNavigation::settings()` daje grupy konfiguracji strefy posegregowane tematycznie, Core dokłada po nich grupę „Konto” (profil, bezpieczeństwo, wygląd: motyw i kolorystyka). Odnośnik „Ustawienia” na dole menu prowadzi do pierwszej pozycji; na stronie, której pozycja ustawień jest bieżąca, menu boczne przełącza się na menu ustawień z „Wróć do aplikacji” (pulpit strefy). Pozycja nie może być jednocześnie w `groups()` i `settings()`. Gość (strona publiczna strefy) dostaje prostą kolumnę treści. Proste strony to `Route::view(...)` bez kontrolera.
 
 ## Co Core robi za strefę
 
@@ -119,9 +120,11 @@ Trasy konta (`Http\AccountRoutes`, pod `account/`, poziom `Authenticated`, zmian
 | `<strefa>.account.profile` | profil: imię i nazwisko, adres e-mail (tylko odczyt), język interfejsu (przy kilku włączonych; `json_attributes.locale`, `Profile\AccountLocale`, po logowaniu dashboard w tym języku), kolor awatara; w strefie z `teams` organizacje konta z rolami (`roleLabel()`: `<texts>::roles.<strefa>.<rola>`) i przełącznikiem; `account.profile.update` zapisuje (`Profile\UpdateProfile`) |
 | `<strefa>.account.security` | bezpieczeństwo: zmiana PIN-u (`#pin`; `account.pin.code` wysyła kod, `account.pin.update` zapisuje), zaufane urządzenia (`#devices`; `account.devices.revoke` po tokenie, `account.devices.revoke-all`), ostatnie zdarzenia konta (`Queries\Audit\AccountHistory`, bez IP), `account.security.sign-out-everywhere` (DELETE: `RevokeAccountAccess` z powodem `SignedOutEverywhere` i wylogowanie) |
 | `<strefa>.account.pin`, `<strefa>.account.devices` | dawne adresy sekcji: przekierowanie do `account.security#pin` / `#devices` |
+| `<strefa>.account.appearance` | wygląd: motyw (`x-mainboard::theme-toggle`) i — gdy strefa ma `palettes` — kolorystyka; wybór zapamiętuje przeglądarka |
 | `<strefa>.account.organization.switch` | przełączenie bieżącej organizacji (strefa z `teams`) |
+| `<strefa>.account.role.switch` | przełączenie aktywnej roli (strefa z `role_contexts`; POST `role`, rola spoza ról konta to 404) i przekierowanie na pulpit strefy |
 
-Trasy urządzeń istnieją tylko w strefie z zaufanymi urządzeniami. Menu konta w layoucie strefy: profil, bezpieczeństwo, wylogowanie. Etykiety ról w profilu biorą teksty paczki strefy z `texts` w configu strefy (namespace, np. `'texts' => 'shop'`).
+Trasy urządzeń istnieją tylko w strefie z zaufanymi urządzeniami. Menu konta w layoucie strefy: profil, bezpieczeństwo, wygląd, wylogowanie (te same pozycje co grupa „Konto” w ustawieniach). Pola PIN-u mają klawiaturę ekranową (`x-mainboard::pin-field`, `docs/design-system.md`). Etykiety ról w profilu biorą teksty paczki strefy z `texts` w configu strefy (namespace, np. `'texts' => 'shop'`).
 
 Ekrany logowania (`auth/*`) czytają teksty przez `ZoneDefinition::signInText()`: najpierw
 `<texts>::sign_in.<strefa>.<klucz>` (osobno dla strefy, gdy kilka stref dzieli paczkę tekstów), potem
@@ -277,6 +280,14 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
   w pierwszej. Bez członkostwa nie ma organizacji, więc nie ma uprawnień. Po odpowiedzi organizacja jest czyszczona.
   Layout strefy pokazuje przełącznik organizacji, gdy konto należy do więcej niż jednej (`$organizations`,
   `$currentOrganizationId` daje Core).
+- **Role jako konteksty** (`role_contexts` w configu strefy z `teams`; kontrakt `Contracts\CurrentRole`,
+  `Permissions\RoleSelector`): konto z kilkoma rolami w organizacji działa w jednej aktywnej roli — wybranej
+  (`account.role.switch`, sesja strefy osobno dla każdej organizacji) albo pierwszej, zapamiętanej w sesji, więc rola
+  nadana w trakcie sesji nie zmienia kontekstu sama. `UseCurrentTeam` ustawia ją razem z organizacją, a
+  `HasZonePermissions::hasPermissionTo()` liczy wtedy tylko uprawnienia tej roli (plus bezpośrednie, odmowy nadal
+  wygrywają); inne konta i inne organizacje nie są zawężane. Menu, pulpit i trasy strefy wynikają więc z aktywnej roli
+  (np. właściciel, kierownik, sprzedawca). Przełącznik w layoucie: grupa „Rola” (`$roles`, `$currentRole`), gdy konto ma
+  co najmniej dwie role.
 - **Trasa z uprawnieniem:** `ZonePermission::middleware(Permission::ReportsView)` daje middleware
   `zone.permission:<uprawnienie>`, który sprawdza konto z guardu strefy przez `ZonePermissionChecker`
   (z odmowami); brak uprawnienia to 403. W kodzie: `ZonePermissionChecker::allows($zone, $account, $permission)`.

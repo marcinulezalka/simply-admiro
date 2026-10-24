@@ -87,9 +87,9 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   na `<html>` (`:root[data-theme=…] { color-scheme: … }` w `tokens.css`). W Tailwind te same tokeny trafią do `@theme`.
 - **Przełącznik** `x-mainboard::theme-toggle`: przełącznik segmentowy z czterema motywami (`Enums\Theme`) — jasny,
   ciemny, kontrast WCAG (`contrast`: czerń na bieli) i duży kontrast WCAG (`contrast-yellow`: żółty na czarnym); wybrany
-  segment ma `aria-pressed="true"`, etykiety w `title` i dla czytników ekranu. Stoi w layoucie aplikacji (stopka menu nad
-  logo, w zwiniętym menu pionowo), na stronach logowania (prawy górny róg), na stronach treści i na stronie design
-  systemu. Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony
+  segment ma `aria-pressed="true"`, etykiety w `title` i dla czytników ekranu. Stoi w ustawieniach konta (strona
+  „Wygląd”, `account.appearance`; menu boczne aplikacji go nie ma), na stronach logowania (prawy górny róg albo stopka
+  simplysmart), na stronach treści i na stronie design systemu. Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony
   (`x-mainboard::page`) stosuje go przed narysowaniem (bez błysku). Bez skryptu przełącznik jest ukryty i obowiązuje
   motyw systemu.
 - **Motywy wysokiego kontrastu (WCAG 2.2 AAA):** bloki `:root[data-theme="contrast"]` i `[data-theme="contrast-yellow"]`
@@ -109,7 +109,8 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   `<html>` (`:root[data-palette=…]`, wygrywa z `:root` arkusza strefy) podmienia akcent, informację i kartę odwróconą
   w obu motywach; powierzchnie zostają ze strefy. Strefa wybiera oferowane kolorystyki w configu (`palettes`);
   `x-mainboard::palette-switch` pokazuje „Domyślna” (kolory bazowe) i listę z próbkami; layouty (aplikacja, logowanie)
-  go nie wyświetlają — przełącznik jest tylko w sekcji „Kolorystyki” design systemu, a strona stosuje zapisany wybór. `x-mainboard::page` dostaje te same `palettes` i `paletteScope`
+  go nie wyświetlają — przełącznik jest na stronie „Wygląd” w ustawieniach konta (strefa z `palettes`) i w sekcji
+  „Kolorystyki” design systemu, a każda strona stosuje zapisany wybór. `x-mainboard::page` dostaje te same `palettes` i `paletteScope`
   (meta `ss-palettes` przed `js/theme.js`), więc wybór — zapamiętany w przeglądarce osobno dla każdej strefy — działa
   bez błysku; kolorystyka spoza listy strefy jest pomijana. Bez skryptu przełącznik jest ukryty.
 
@@ -229,6 +230,12 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   etykiety ani instrukcji (znika przy pisaniu); kolor `--ss-color-muted` z pełnym kryciem (kontrast 4,8:1). Wspólne
   teksty w grupie `placeholders.*` (e-mail, imię, nazwisko, imię i nazwisko, firma, adres, wyszukiwanie, notatka) i wzór
   `placeholders.example`; maski biorą go przez `InputMask::placeholder()`. Pola kodu i PIN-u nie mają podpowiedzi.
+- **Pole PIN-u** `x-mainboard::pin-field` (kroki logowania z PIN-em, ustawienie PIN-u, zmiana PIN-u w bezpieczeństwie):
+  `.ss-input--code` z przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
+  modal `.ss-keypad` (natywny `<dialog>`, `js/pin-keypad.js`): cyfry 0–9 w siatce 3 × 4, „C” czyści, ikona `backspace`
+  usuwa ostatnią cyfrę, „Gotowe” zamyka; kropki pokazują liczbę wpisanych cyfr (liczba także dla czytników ekranu),
+  cyfry trafiają do pola na bieżąco (do `maxlength`), fizyczna klawiatura działa w polu i w oknie, po zamknięciu fokus
+  wraca do pola. Bez skryptu przycisk jest ukryty. Kod z e-maila używa tego samego pola bez klawiatury (`:keypad="false"`).
 - **Maski** `Enums\InputMask` (telefon, kod pocztowy, NIP, PESEL, numer rachunku): wzór (`9` cyfra, `A` litera),
   klawiatura numeryczna, ikona, przykład w placeholderze i format w podpowiedzi. `js/input-mask.js` formatuje
   w trakcie pisania i przy wklejaniu; bez skryptu pole przyjmuje tekst, a format podaje podpowiedź.
@@ -262,8 +269,10 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   ekranu. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
   (tytuł albo prefiks dla czytników). Błąd (`danger`) ma `role="alert"` i zostaje do zamknięcia; pozostałe mają
   `role="status"` i znikają po 6 s (`js/toasts.js`; pauza przy najechaniu i fokusie). Toast może mieć jedną
-  akcję (link, np. „Zobacz”, „Cofnij”). Layout aplikacji pokazuje toasty z sesji: akcja flashuje
-  `Toast::SESSION_KEY` z listą `Toast::toArray()`. Wariant `inline` to próbki w treści strony.
+  akcję (link, np. „Zobacz”, „Cofnij”). Layouty aplikacji, logowania i strony publicznej strefy pokazują toasty
+  z sesji (`Toast::fromFlash()`): akcja flashuje `Toast::SESSION_KEY` z listą `Toast::toArray()`, a krótki komunikat
+  `status` (`Toast::STATUS_KEY`, np. „Wylogowano” po wylogowaniu) staje się toastem powodzenia — komunikaty z sesji
+  nie trafiają do szarego `.ss-notice` w karcie. Wariant `inline` to próbki w treści strony.
 - **Powiadomienia** (`View\Notifications\NotificationPanel`, `NotificationItem`, `x-mainboard::notification`):
   dzwonek w top barze z licznikiem nieprzeczytanych (liczba także w tekście dla czytników) i panelem
   (`<details data-ss-dropdown>`, jak menu konta: otwarcie jednego zamyka drugie); pełna lista na osobnej stronie.
@@ -325,7 +334,12 @@ z `NavigationItem`: etykieta, adres, ikona, bieżąca pozycja przez `aria-curren
 i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
 globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy
-`x-mainboard::app.context` (też w powłoce widoków design systemu). Skrypt `public/assets/js/app-shell.js`
+`x-mainboard::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
+pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Na dole menu odnośnik „Ustawienia”
+(`settings`: `View\Navigation\SettingsMenu`) i subtelne logo simplysmart (35% szerokości menu, `.ss-sidebar__brand-toggle`),
+które wysuwa od dołu stopkę simplysmart (`.ss-sidebar__footer`: ustawienia i polityka cookies, odnośniki prawne strefy
+`legalLinks`, copyright; `js/footer-toggle.js`, wspólny ze stopką logowania). Na stronie ustawień (`settings->active`)
+menu pokazuje zamiast pozycji aplikacji „Wróć do aplikacji”, tytuł „Ustawienia” i grupy ustawień (`docs/strefy.md`). Skrypt `public/assets/js/app-shell.js`
 osadza `x-mainboard::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.
 

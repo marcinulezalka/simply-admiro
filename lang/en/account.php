@@ -14,6 +14,13 @@ declare(strict_types=1);
 return [
 
     'organization' => 'Organization',
+    'role' => 'Role',
+    'settings_group' => 'Account',
+    'appearance_title' => 'Appearance',
+    'appearance_lead' => 'Theme and colours of the application on this device.',
+    'theme_title' => 'Theme',
+    'theme_hint' => 'Light, dark or high contrast. This browser remembers your choice.',
+    'palette_hint' => 'The accent colour of the application. This browser remembers your choice.',
     'organization_switch' => 'Switch',
     'menu' => 'Account',
     'pin_title' => 'Change PIN',

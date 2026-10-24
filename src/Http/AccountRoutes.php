@@ -19,13 +19,15 @@ use Simplysmart\Mainboard\Http\Controllers\Account\PinChangeController;
 use Simplysmart\Mainboard\Http\Controllers\Account\SecurityController;
 use Simplysmart\Mainboard\Http\Controllers\Account\TrustedDeviceController;
 use Simplysmart\Mainboard\Http\Controllers\Account\ProfileController;
+use Simplysmart\Mainboard\Http\Controllers\Account\RoleSwitchController;
 use Simplysmart\Mainboard\Zones\AccessTier;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
  * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (imię i nazwisko, język, kolor
  * awatara), strona bezpieczeństwa (zmiana PIN-u, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
- * przekierowują do jej sekcji), w strefie z zaufanymi urządzeniami ich odwołanie, a w strefie z zespołami przełączenie organizacji. Każda zmiana ma limit
+ * przekierowują do jej sekcji), wygląd (motyw i kolorystyka), w strefie z zaufanymi urządzeniami ich odwołanie, w strefie
+ * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli. Każda zmiana ma limit
  * `mainboard.sign-in`.
  */
 final readonly class AccountRoutes
@@ -43,6 +45,15 @@ final readonly class AccountRoutes
     public const string DEVICES_REVOKE_ALL = 'account.devices.revoke-all';
 
     public const string ORGANIZATION_SWITCH = 'account.organization.switch';
+
+    /** Przełączenie aktywnej roli (kontekstu) w strefie z `role_contexts`. */
+    public const string ROLE_SWITCH = 'account.role.switch';
+
+    /** Wygląd: motyw i kolorystyka (ustawienia konta). */
+    public const string APPEARANCE = 'account.appearance';
+
+    /** Widok strony wyglądu. */
+    public const string APPEARANCE_VIEW = 'mainboard::account.appearance';
 
     public const string PROFILE = 'account.profile';
 
@@ -72,6 +83,7 @@ final readonly class AccountRoutes
             $this->router->get('profile', [ProfileController::class, 'show'])->name(self::PROFILE);
             $this->router->put('profile', [ProfileController::class, 'update'])->middleware($throttle)->name(self::PROFILE_UPDATE);
             $this->router->get('security', [SecurityController::class, 'show'])->name(self::SECURITY);
+            $this->router->view('appearance', self::APPEARANCE_VIEW)->name(self::APPEARANCE);
             $this->router->delete('security/sessions', [SecurityController::class, 'signOutEverywhere'])->middleware($throttle)->name(self::SIGN_OUT_EVERYWHERE);
             $this->router->get('pin', [SecurityController::class, 'section'])->defaults('section', self::SECTION_PIN)->name(self::PIN);
             $this->router->post('pin/code', [PinChangeController::class, 'sendCode'])->middleware($throttle)->name(self::PIN_CODE);
@@ -85,6 +97,10 @@ final readonly class AccountRoutes
 
             if ($zone->teams) {
                 $this->router->post('organization', OrganizationSwitchController::class)->middleware($throttle)->name(self::ORGANIZATION_SWITCH);
+            }
+
+            if ($zone->roleContexts) {
+                $this->router->post('role', RoleSwitchController::class)->middleware($throttle)->name(self::ROLE_SWITCH);
             }
         });
     }

@@ -26,6 +26,16 @@ return [
     'unread' => 'nieprzeczytane',
     'close' => 'Zamknij',
     'toasts' => 'Komunikaty aplikacji',
+    'keypad' => [
+        'open' => 'Wpisz na klawiaturze ekranowej',
+        'digits' => 'Cyfry',
+        'count' => 'Wpisane cyfry: :count',
+        'clear' => 'Wyczyść',
+        'backspace' => 'Usuń ostatnią cyfrę',
+        'done' => 'Gotowe',
+    ],
+    'settings' => 'Ustawienia',
+    'back_to_app' => 'Wróć do aplikacji',
 
     'toast' => [
         'success' => 'Gotowe',

@@ -1242,6 +1242,8 @@ textarea.ss-input {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-4);
+    min-width: 0;
+    max-width: var(--ss-sidebar-width);
     padding: var(--ss-space-4) var(--ss-space-3);
     border-right: 1px solid var(--ss-color-border);
     background: var(--ss-color-surface);
@@ -1249,7 +1251,9 @@ textarea.ss-input {
 
 /**
  * Nagłówek menu: tożsamość (awatar, imię i nazwisko albo nazwa, druga linia) otwierająca menu konta, pod nią akcje
- * (zwijanie menu, powiadomienia). Stopka: subtelne logo w lewym dolnym rogu.
+ * (zwijanie menu, powiadomienia). Menu ma stałą szerokość (--ss-sidebar-width, najwyżej), a dłuższe nazwy i pozycje
+ * zawijają się do kolejnych wierszy. Stopka: odnośnik do ustawień i subtelne logo simplysmart (najwyżej 35%
+ * szerokości) wysuwające stopkę simplysmart.
  */
 .ss-sidebar__header {
     display: flex;
@@ -1295,19 +1299,15 @@ summary.ss-sidebar__identity:focus-visible {
 }
 
 .ss-sidebar__identity-name {
-    overflow: hidden;
     font-size: 0.875rem;
     font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .ss-sidebar__identity-subtitle {
-    overflow: hidden;
     color: var(--ss-color-muted);
     font-size: 0.75rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .ss-sidebar__actions {
@@ -1322,29 +1322,119 @@ summary.ss-sidebar__identity:focus-visible {
     left: 0;
 }
 
-/* Przełącznik motywu w stopce menu, nad logo; w zwiniętym menu ułożony pionowo. */
-.ss-sidebar__theme {
-    align-self: flex-start;
-    margin: auto var(--ss-space-3) 0;
+/* Odnośnik do ustawień w stopce menu, nad logo. */
+.ss-sidebar__settings {
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border);
 }
 
+/*
+ * Stopka menu: logo simplysmart (.ss-sidebar__brand-toggle, 35% szerokości, przygaszone) wysuwa od dołu do góry
+ * stopkę simplysmart (.ss-sidebar__footer: cookies, odnośniki prawne strefy, copyright) jak na logowaniu strefy
+ * (js/footer-toggle.js, .ss-sidebar__brand--footer-open); bez skryptu stopka jest stale widoczna.
+ */
 .ss-sidebar__brand {
-    margin-top: auto;
-    padding: var(--ss-space-3) var(--ss-space-3) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    padding: 0 var(--ss-space-3);
+}
+
+.ss-sidebar__settings ~ .ss-sidebar__brand {
+    margin-top: calc(-1 * var(--ss-space-2));
+}
+
+.ss-sidebar__brand-toggle {
+    align-self: flex-start;
+    width: 35%;
+    padding: var(--ss-space-1) 0;
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: transparent;
+    color: inherit;
     opacity: 0.45;
+    cursor: pointer;
     transition: opacity 0.15s ease;
 }
 
-.ss-sidebar__theme ~ .ss-sidebar__brand {
-    margin-top: 0;
-}
-
-.ss-sidebar__brand:hover {
+.ss-sidebar__brand-toggle:hover,
+.ss-sidebar__brand--footer-open .ss-sidebar__brand-toggle {
     opacity: 0.8;
 }
 
+.ss-sidebar__brand-toggle:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
 .ss-sidebar__logo {
-    width: 3rem;
+    display: block;
+    width: 100%;
+}
+
+.ss-sidebar__footer {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.2s ease, opacity 0.2s ease;
+}
+
+.ss-sidebar__brand--footer-ready .ss-sidebar__footer {
+    grid-template-rows: 0fr;
+    opacity: 0;
+}
+
+.ss-sidebar__brand--footer-ready.ss-sidebar__brand--footer-open .ss-sidebar__footer {
+    grid-template-rows: 1fr;
+    opacity: 1;
+}
+
+.ss-sidebar__footer-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ss-sidebar__footer-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    padding: var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-sidebar__legal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: flex-start;
+}
+
+.ss-sidebar__legal .ss-link,
+.ss-sidebar__cookies .ss-cookie-links__button {
+    color: inherit;
+    font-size: inherit;
+    text-decoration: none;
+}
+
+.ss-sidebar__legal .ss-link:hover,
+.ss-sidebar__legal .ss-link:focus-visible {
+    color: var(--ss-color-text);
+    text-decoration: underline;
+}
+
+.ss-sidebar__cookies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: flex-start;
+    margin: 0;
+}
+
+.ss-sidebar__copyright {
+    margin: 0;
 }
 
 .ss-sidebar__nav {
@@ -1378,14 +1468,14 @@ summary.ss-sidebar__identity:focus-visible {
 .ss-sidebar__link {
     display: flex;
     gap: var(--ss-space-3);
-    align-items: center;
+    align-items: flex-start;
     padding: var(--ss-space-2) var(--ss-space-3);
     border-radius: var(--ss-radius-control);
     color: var(--ss-color-muted);
     font-size: 0.875rem;
     font-weight: 500;
+    line-height: 1.25rem;
     text-decoration: none;
-    white-space: nowrap;
 }
 
 .ss-sidebar__link:hover {
@@ -1412,8 +1502,20 @@ summary.ss-sidebar__identity:focus-visible {
 
 .ss-sidebar__label {
     flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Tryb ustawień: powrót do aplikacji nad tytułem „Ustawienia”, potem grupy ustawień. */
+.ss-sidebar__back {
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__title {
+    margin: var(--ss-space-3) 0 0;
+    padding: 0 var(--ss-space-3);
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .ss-sidebar__badge {
@@ -1560,10 +1662,11 @@ summary.ss-sidebar__identity:focus-visible {
         padding: 0;
     }
 
-    .ss-shell--collapsed .ss-sidebar__theme {
-        flex-direction: column;
-        align-self: center;
-        margin-inline: 0;
+    .ss-shell--collapsed .ss-sidebar__title {
+        visibility: hidden;
+        height: 1px;
+        margin: 0;
+        overflow: hidden;
     }
 
     .ss-shell--collapsed .ss-sidebar__group {
@@ -1590,7 +1693,8 @@ summary.ss-sidebar__identity:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
     .ss-sidebar,
-    .ss-shell--js .ss-sidebar {
+    .ss-shell--js .ss-sidebar,
+    .ss-sidebar__footer {
         transition: none;
     }
 }
@@ -2289,6 +2393,158 @@ a.ss-notification:focus-visible {
 
 .ss-input-wrap:focus-within .ss-input-wrap__icon {
     opacity: 1;
+}
+
+/**
+ * .ss-input-wrap--keypad — pole PIN-u z przyciskiem klawiatury ekranowej po prawej (x-mainboard::pin-field):
+ * .ss-input-wrap__action w polu, tekst pola odsunięty od przycisku z obu stron, więc cyfry zostają wyśrodkowane.
+ */
+.ss-input-wrap--keypad .ss-input {
+    padding-inline: 3rem;
+}
+
+.ss-input-wrap__action {
+    position: absolute;
+    top: 50%;
+    right: var(--ss-space-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: transparent;
+    color: var(--ss-color-muted);
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.ss-input-wrap__action[hidden] {
+    display: none;
+}
+
+.ss-input-wrap__action:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-input-wrap__action:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-input-wrap__action-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/**
+ * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js): nagłówek z nazwą pola
+ * i zamknięciem, kropki wpisanych cyfr (__display, __dot), siatka 3 × 4 dużych klawiszy (__key; --muted — wyczyść
+ * i usuń ostatnią cyfrę) i „Gotowe” na całą szerokość.
+ */
+.ss-keypad {
+    width: min(100% - 2 * var(--ss-space-4), 20rem);
+    padding: var(--ss-space-6);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    box-shadow: var(--ss-shadow-elevated);
+}
+
+.ss-keypad[open] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-keypad::backdrop {
+    background: rgb(10 12 20 / 0.6);
+}
+
+.ss-keypad__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ss-space-4);
+}
+
+.ss-keypad__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-keypad__display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    margin: 0;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-keypad__dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: var(--ss-color-text);
+}
+
+.ss-keypad__keys {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--ss-space-2);
+}
+
+.ss-keypad__key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.25rem;
+    padding: 0;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-mono);
+    font-size: 1.375rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.ss-keypad__key:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-keypad__key:active {
+    border-color: var(--ss-color-accent);
+}
+
+.ss-keypad__key:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-keypad__key--muted {
+    border-color: transparent;
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    font-size: 1rem;
+}
+
+.ss-keypad__key-icon {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 /**
@@ -3202,7 +3458,7 @@ a.ss-notification:focus-visible {
  * Stopka simplysmart logowania strefy z odnośnikami prawnymi (`legal_links`): .ss-auth__footer pod ramą kart, węższa
  * o promień ramy i wysunięta spod jej dolnej krawędzi (rama nad stopką); w środku logo, odnośniki prawne i cookies
  * (.ss-auth__legal, .ss-auth__legal-cookies wtapia politykę cookies w wiersz), a w dolnym wierszu copyright, ustawienia cookies z ikoną (.ss-auth__cookie-settings) i przełącznik motywu; odnośniki bez podkreślenia, podkreślone przy najechaniu i fokusie. Na szerokim ekranie
- * po starcie js/auth-footer.js (.ss-auth--footer-ready) stopka jest schowana (wiersz siatki 0fr) i wysuwa się
+ * po starcie js/footer-toggle.js (.ss-auth--footer-ready) stopka jest schowana (wiersz siatki 0fr) i wysuwa się
  * (.ss-auth--footer-open) po kliknięciu .ss-auth__footer-trigger: niewidocznego przycisku na nazwie simplysmart
  * banera (--image, pozycję zmienia arkusz strefy) albo logo; stopka składa się z .ss-auth__footer-inner (przycinanie przy zwijaniu) i .ss-auth__footer-body (wygląd). .ss-auth__footer-meta — dolny wiersz stopki, .ss-auth__footer-actions — ustawienia cookies i przełącznik motywu.
  */

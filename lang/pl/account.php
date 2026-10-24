@@ -14,6 +14,13 @@ declare(strict_types=1);
 return [
 
     'organization' => 'Organizacja',
+    'role' => 'Rola',
+    'settings_group' => 'Konto',
+    'appearance_title' => 'Wygląd',
+    'appearance_lead' => 'Motyw i kolorystyka aplikacji na tym urządzeniu.',
+    'theme_title' => 'Motyw',
+    'theme_hint' => 'Jasny, ciemny albo wysoki kontrast. Wybór zapamiętuje ta przeglądarka.',
+    'palette_hint' => 'Kolor akcentu aplikacji. Wybór zapamiętuje ta przeglądarka.',
     'organization_switch' => 'Przełącz',
     'menu' => 'Konto',
     'pin_title' => 'Zmień PIN',

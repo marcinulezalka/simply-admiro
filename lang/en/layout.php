@@ -26,6 +26,16 @@ return [
     'unread' => 'unread',
     'close' => 'Close',
     'toasts' => 'Application messages',
+    'keypad' => [
+        'open' => 'Type on the on-screen keypad',
+        'digits' => 'Digits',
+        'count' => 'Digits entered: :count',
+        'clear' => 'Clear',
+        'backspace' => 'Delete the last digit',
+        'done' => 'Done',
+    ],
+    'settings' => 'Settings',
+    'back_to_app' => 'Back to the application',
 
     'toast' => [
         'success' => 'Done',

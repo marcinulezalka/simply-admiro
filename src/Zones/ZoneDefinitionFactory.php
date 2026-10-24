@@ -33,7 +33,8 @@ use Simplysmart\Mainboard\Mail\MailPalette;
  * `route` — krótka nazwa trasy strefy — i `label` — klucz tekstu; tylko strefa z logowaniem), brand (`logo`, `signet` —
  * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
- * `on_accent`).
+ * `on_accent`) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
+ * z `teams`).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -87,6 +88,7 @@ final readonly class ZoneDefinitionFactory
             brand: $this->brand($name, Arr::array($config, 'brand', [])),
             mailViews: $this->mailViews($name, Arr::array($config, 'mail', [])),
             mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
+            roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
         );
     }
 

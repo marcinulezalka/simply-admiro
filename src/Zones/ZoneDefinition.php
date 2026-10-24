@@ -53,6 +53,9 @@ final readonly class ZoneDefinition
      * @param string|null $mailViews Prefiks widoków e-maili strefy (`mail.views`, np. `shop::mail.shop`): `<prefiks>.layout`
      *                               i `<prefiks>.<szablon>` zastępują widoki Core; null = layout i szablony Core.
      * @param MailPalette $mailPalette Kolory e-maili strefy (`mail.palette`); domyślnie paleta Core.
+     * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
+     *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
+     *                           są zawężone do niej; false = uprawnienia z sumy ról.
      */
     public function __construct(
         public string $name,
@@ -75,6 +78,7 @@ final readonly class ZoneDefinition
         public ?ZoneBrand $brand = null,
         public ?string $mailViews = null,
         public MailPalette $mailPalette = new MailPalette(),
+        public bool $roleContexts = false,
     ) {}
 
     /**
@@ -148,6 +152,19 @@ final readonly class ZoneDefinition
         }
 
         return $model;
+    }
+
+    /**
+     * Odnośniki prawne strefy (`legal_links`) z adresami tras i etykietami, do stopek logowania i layoutu aplikacji.
+     *
+     * @return list<array{url: string, label: string}>
+     */
+    public function legalLinkTargets(): array
+    {
+        return array_map(fn(array $link): array => [
+            'url' => route($this->routeName($link['route'])),
+            'label' => text($link['label']),
+        ], $this->legalLinks);
     }
 
     /**

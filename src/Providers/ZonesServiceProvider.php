@@ -23,11 +23,17 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use LogicException;
+use Simplysmart\Mainboard\Auth\AuthBrand;
 use Simplysmart\Mainboard\Contracts\CurrentAccount;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
+use Simplysmart\Mainboard\Contracts\CurrentRole;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
 use Simplysmart\Mainboard\Enums\AuthLayout;
+use Simplysmart\Mainboard\Enums\FaviconType;
+use Simplysmart\Mainboard\Http\SignInRoutes;
+use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Mainboard\Permissions\RoleSelector;
 use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
 use Simplysmart\Mainboard\Translation\CascadeTextTranslator;
 use Simplysmart\Mainboard\Zones\InMemoryZoneRegistry;
@@ -38,9 +44,7 @@ use Simplysmart\Mainboard\Zones\ZoneRedirects;
 use Simplysmart\Mainboard\Zones\ZoneRouteRegistrar;
 use Simplysmart\Mainboard\Zones\ZoneSessionConfigurator;
 use Simplysmart\Mainboard\Zones\ZoneSessionManager;
-use Simplysmart\Mainboard\Auth\AuthBrand;
-use Simplysmart\Mainboard\Enums\FaviconType;
-use Simplysmart\Mainboard\Http\SignInRoutes;
+use Simplysmart\Mainboard\Zones\ZoneSettingsMenu;
 
 /**
  * Mechanizm stref: rejestr (singleton), strefa i konto żądania, osobny magazyn sesji każdej strefy,
@@ -92,8 +96,9 @@ final class ZonesServiceProvider extends ServiceProvider
 
     /**
      * Layout strefy dostaje strefę żądania, konto zalogowane w jej guardzie (albo null), w strefie z `teams`
-     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna), id i nazwę bieżącej organizacji oraz menu strefy
-     * z Zones\ZoneNavigations (dla zalogowanego konta).
+     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna), id i nazwę bieżącej organizacji, w strefie
+     * z `role_contexts` role konta do przełączania (co najmniej dwie) i aktywną rolę, menu strefy z
+     * Zones\ZoneNavigations oraz menu ustawień (Zones\ZoneSettingsMenu) dla zalogowanego konta.
      */
     private function shareZoneWithLayout(View $view): void
     {
@@ -104,12 +109,17 @@ final class ZonesServiceProvider extends ServiceProvider
             : null;
         $currentId = $this->app->make(CurrentOrganization::class)->id();
 
+        $navigation = $account !== null ? $this->app->make(ZoneNavigations::class)->for($zone->name) : null;
+
         $view->with('zone', $zone)
             ->with('account', $account)
             ->with('organizations', $organizations !== null && $organizations->count() > 1 ? $organizations : null)
             ->with('currentOrganizationId', $currentId)
             ->with('currentOrganizationName', $organizations?->firstWhere('id', $currentId)?->name)
-            ->with('navigation', $account !== null ? $this->app->make(ZoneNavigations::class)->for($zone->name) : null);
+            ->with('roles', $account instanceof ZoneAccount ? $this->app->make(RoleSelector::class)->choices($zone, $account, $currentId) : [])
+            ->with('currentRole', $account !== null ? $this->app->make(CurrentRole::class)->of($account, $currentId) : null)
+            ->with('navigation', $navigation)
+            ->with('settingsMenu', $account !== null ? $this->app->make(ZoneSettingsMenu::class)->for($zone, $navigation) : null);
     }
 
     /**
@@ -142,10 +152,7 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : [])
             ->with('zonePalettes', $zone->has() ? $zone->get()->palettes : [])
             ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
-            ->with('zoneLegalLinks', $settings === null ? [] : array_map(static fn(array $link): array => [
-                'url' => route($zone->get()->routeName($link['route'])),
-                'label' => text($link['label']),
-            ], $zone->get()->legalLinks))
+            ->with('zoneLegalLinks', $settings === null ? [] : $zone->get()->legalLinkTargets())
             ->with('zoneAuthBrand', $brand === null ? null : [
                 'light' => $brandUrl(AuthBrand::LIGHT),
                 'dark' => $brand->dark !== null ? $brandUrl(AuthBrand::DARK) : null,

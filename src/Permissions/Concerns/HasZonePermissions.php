@@ -14,20 +14,27 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Permissions\Concerns;
 
 use BackedEnum;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
+use Simplysmart\Mainboard\Contracts\CurrentOrganization;
+use Simplysmart\Mainboard\Contracts\CurrentRole;
 use Simplysmart\Mainboard\Models\Permissions\PermissionDenial;
 use Simplysmart\Mainboard\Models\Relations\HasPermissionDenials;
 use Spatie\Permission\Contracts\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Role i uprawnienia spatie konta strefy z odmowami: odmowa w bieżącej organizacji wygrywa z uprawnieniem
- * z ról i bezpośrednim. Nadpisuje hasPermissionTo(), więc middleware `permission:`, Gate i can() uwzględniają odmowy.
+ * z ról i bezpośrednim. Nadpisuje hasPermissionTo(), więc middleware `permission:`, Gate i can() uwzględniają odmowy
+ * oraz aktywną rolę (Contracts\CurrentRole, strefa z `role_contexts`): z kilku ról konta liczy się wtedy tylko ona
+ * (uprawnienia bezpośrednie zostają).
  *
  * Odmowy konta są wczytywane raz na instancję modelu (relacja `permissionDenials`).
  *
  * @property-read Collection<int, PermissionDenial> $permissionDenials
+ * @property-read Collection<int, Role> $roles
  *
  * @method $this unsetRelation(string $relation) Metoda modelu Eloquent.
  */
@@ -49,7 +56,26 @@ trait HasZonePermissions
             return false;
         }
 
-        return ! $this->isPermissionDenied($this->filterPermission($permission, $guardName));
+        $permission = $this->filterPermission($permission, $guardName);
+
+        return ! $this->isOutsideActiveRole($permission) && ! $this->isPermissionDenied($permission);
+    }
+
+    /**
+     * Czy uprawnienie pochodzi tylko z ról innych niż aktywna rola konta w bieżącej organizacji (bez aktywnej roli
+     * albo z uprawnieniem bezpośrednim: nie).
+     */
+    public function isOutsideActiveRole(Permission $permission): bool
+    {
+        $active = $this instanceof Authenticatable
+            ? app(CurrentRole::class)->of($this, app(CurrentOrganization::class)->id())
+            : null;
+
+        if ($active === null || $this->hasDirectPermission($permission)) {
+            return false;
+        }
+
+        return ! $this->roles->contains(static fn(Role $role): bool => $role->name === $active && $role->hasPermissionTo($permission));
     }
 
     /**

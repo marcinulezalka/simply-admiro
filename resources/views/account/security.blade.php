@@ -1,10 +1,10 @@
-{{-- Bezpieczeństwo zalogowanego konta (SecurityController): zmiana PIN-u (#pin: kod z e-maila, obecny i nowy PIN w zakresie strefy), zaufane urządzenia (#devices, gdy strefa je ma) z odwołaniem, wylogowanie ze wszystkich urządzeń i ostatnie zdarzenia konta (Queries\Audit\AccountHistory, bez adresów IP). $currentPinLength, $pinLength: Auth\PinLength; $codeLength: int; $devices: ?list<Auth\Devices\TrustedDeviceRecord> (null = strefa bez zaufanych urządzeń); $currentSelector: ?string; $history: Collection<int, Models\AuditEvent>; $zone daje Core. --}}
+{{-- Bezpieczeństwo zalogowanego konta (SecurityController): zmiana PIN-u (#pin: kod z e-maila, obecny i nowy PIN w zakresie strefy; pola PIN-u z klawiaturą ekranową x-mainboard::pin-field), zaufane urządzenia (#devices, gdy strefa je ma) z odwołaniem, wylogowanie ze wszystkich urządzeń i ostatnie zdarzenia konta (Queries\Audit\AccountHistory, bez adresów IP). $currentPinLength, $pinLength: Auth\PinLength; $codeLength: int; $devices: ?list<Auth\Devices\TrustedDeviceRecord> (null = strefa bez zaufanych urządzeń); $currentSelector: ?string; $history: Collection<int, Models\AuditEvent>; $zone daje Core. --}}
 @php
     $routes = \Simplysmart\Mainboard\Http\AccountRoutes::class;
-    $codeField = static fn (string $id, string $name, string $label, string $type, string $autocomplete, int $min, int $max) => compact('id', 'name', 'label', 'type', 'autocomplete', 'min', 'max');
+    $codeField = static fn (string $id, string $name, string $label, string $type, string $autocomplete, int $min, int $max, bool $keypad = true) => compact('id', 'name', 'label', 'type', 'autocomplete', 'min', 'max', 'keypad');
     $pinFields = [
         $codeField('security-current-pin', 'current_pin', text('account.current_pin'), 'password', 'current-password', $currentPinLength->min, $currentPinLength->max),
-        $codeField('security-code', 'code', text('sign_in.code'), 'text', 'one-time-code', $codeLength, $codeLength),
+        $codeField('security-code', 'code', text('sign_in.code'), 'text', 'one-time-code', $codeLength, $codeLength, false),
         $codeField('security-pin', 'pin', text('account.new_pin'), 'password', 'new-password', $pinLength->min, $pinLength->max),
         $codeField('security-pin-confirmation', 'pin_confirmation', text('sign_in.pin_confirmation'), 'password', 'new-password', $pinLength->min, $pinLength->max),
     ];
@@ -22,11 +22,7 @@
                 @csrf
                 @method('PUT')
                 @foreach ($pinFields as $field)
-                    <div class="ss-field">
-                        <label class="ss-field__label" for="{{ $field['id'] }}">{{ $field['label'] }}</label>
-                        <input class="ss-input ss-input--code" id="{{ $field['id'] }}" name="{{ $field['name'] }}" type="{{ $field['type'] }}" inputmode="numeric" autocomplete="{{ $field['autocomplete'] }}" minlength="{{ $field['min'] }}" maxlength="{{ $field['max'] }}" required @error($field['name']) aria-invalid="true" aria-describedby="{{ $field['id'] }}-error" @enderror>
-                        @error($field['name']) <p class="ss-field__error" id="{{ $field['id'] }}-error" role="alert">{{ $message }}</p> @enderror
-                    </div>
+                    <x-mainboard::pin-field :id="$field['id']" :name="$field['name']" :label="$field['label']" :type="$field['type']" :autocomplete="$field['autocomplete']" :min="$field['min']" :max="$field['max']" :keypad="$field['keypad']" :error="$errors->first($field['name'])" />
                 @endforeach
                 <div class="ss-form-actions">
                     <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="lock" class="ss-button__icon" />{{ text_action('save') }}</button>

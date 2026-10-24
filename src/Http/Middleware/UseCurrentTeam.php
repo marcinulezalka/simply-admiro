@@ -19,13 +19,17 @@ use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Simplysmart\Mainboard\Contracts\CurrentOrganization;
+use Simplysmart\Mainboard\Contracts\CurrentRole;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Mainboard\Models\ZoneAccount;
 use Simplysmart\Mainboard\Permissions\OrganizationSelector;
+use Simplysmart\Mainboard\Permissions\RoleSelector;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Ustawia organizację żądania (OrganizationSelector) dla sprawdzeń uprawnień i wiązań tras, a po odpowiedzi
- * ją czyści, więc nie przechodzi do kolejnego żądania (Octane, testy). Stoi po StartSession, przed SubstituteBindings.
+ * Ustawia organizację żądania (OrganizationSelector) i w strefie z `role_contexts` aktywną rolę konta w niej
+ * (RoleSelector) dla sprawdzeń uprawnień i wiązań tras, a po odpowiedzi je czyści, więc nie przechodzą do kolejnego
+ * żądania (Octane, testy). Stoi po StartSession, przed SubstituteBindings.
  */
 final readonly class UseCurrentTeam
 {
@@ -34,6 +38,8 @@ final readonly class UseCurrentTeam
         private CurrentAccount $account,
         private OrganizationSelector $selector,
         private CurrentOrganization $organization,
+        private RoleSelector $roles,
+        private CurrentRole $role,
     ) {}
 
     /**
@@ -45,7 +51,18 @@ final readonly class UseCurrentTeam
         $account = $this->account->get();
         $account = $account instanceof Model ? $account : null;
 
-        $this->organization->set($this->selector->select($zone, $account, $request->session()));
+        $organizationId = $this->selector->select($zone, $account, $request->session());
+        $this->organization->set($organizationId);
+        $this->role->clear();
+
+        if ($account instanceof ZoneAccount && $organizationId !== null) {
+            $role = $this->roles->select($zone, $account, $organizationId, $request->session());
+
+            if ($role !== null) {
+                $this->role->set($account, $organizationId, $role);
+            }
+        }
+
         if ($account instanceof HasZoneRoles) {
             $account->forgetZonePermissions();
         }
@@ -54,6 +71,7 @@ final readonly class UseCurrentTeam
             return $next($request);
         } finally {
             $this->organization->set(null);
+            $this->role->clear();
         }
     }
 }
