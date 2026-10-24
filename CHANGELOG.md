@@ -4,6 +4,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-24
+
 ### Added
 
 - Teksty ekranów logowania z paczki strefy: `ZoneDefinition::signInText()` (tekst strefy `<texts>::sign_in.<strefa>.*`, potem paczki, potem Core), wstęp i notka każdego kroku (`lead`, `note`, `code_note`, `pin_lead`, `pin_note`, `pin_setup_note`), przykład adresu i przyciski (`email_placeholder`, `submit`, `pin_setup_submit`), nagłówek z wyróżnionym fragmentem w `*gwiazdkach*` (`View\AccentText`, `.ss-accent-text`) i notka pod formularzem (`.ss-auth__note`).
