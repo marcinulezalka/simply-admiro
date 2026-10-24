@@ -21,7 +21,9 @@ use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Admiro\Http\AdminAudit;
 use Simplysmart\Admiro\Http\AdminContext;
 use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Mainboard\Enums\BrandAsset;
 use Simplysmart\Mainboard\Models\Organization;
+use Simplysmart\Mainboard\Organizations\OrganizationBranding;
 use Simplysmart\Mainboard\Organizations\OrganizationChangeRejected;
 use Simplysmart\Mainboard\Organizations\OrganizationManagement;
 use Simplysmart\Mainboard\Queries\Organizations\ActiveOrganizations;
@@ -30,7 +32,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Organizacje (firmy i oddziały): lista (`organizations.view`), zakładanie, zmiany, włączanie i wyłączanie
- * (`organizations.manage`). Każda zmiana trafia do dziennika; członków obsługuje OrganizationMemberController.
+ * (`organizations.manage`). Każda zmiana trafia do dziennika; członków obsługuje OrganizationMemberController,
+ * a markę (logo, sygnet, ikona strony; karta w formularzu edycji) OrganizationBrandController.
  */
 final readonly class OrganizationController
 {
@@ -73,13 +76,14 @@ final readonly class OrganizationController
         return $this->toIndex('organization_created');
     }
 
-    public function edit(string $organization, ActiveOrganizations $active): View
+    public function edit(string $organization, ActiveOrganizations $active, OrganizationBranding $branding): View
     {
         $current = $this->organization($organization);
 
         return view('admiro::organizations.form', [
             'organization' => $current,
             'parents' => $active->all()->reject(static fn(Organization $parent): bool => $parent->id === $current->id),
+            'brandAssets' => array_map(static fn(BrandAsset $asset): array => ['asset' => $asset, 'set' => $branding->has($current, $asset)], BrandAsset::cases()),
         ]);
     }
 

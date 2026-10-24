@@ -23,10 +23,12 @@ use Simplysmart\Admiro\Http\Controllers\ExchangeRateController;
 use Simplysmart\Admiro\Http\Controllers\HolidayController;
 use Simplysmart\Admiro\Http\Controllers\TaxRateController;
 use Simplysmart\Admiro\Http\Controllers\SettingsController;
+use Simplysmart\Admiro\Http\Controllers\OrganizationBrandController;
 use Simplysmart\Admiro\Http\Controllers\OrganizationController;
 use Simplysmart\Admiro\Http\Controllers\OrganizationMemberController;
 use Simplysmart\Admiro\Http\Controllers\OwnerController;
 use Simplysmart\Admiro\Http\Controllers\ZoneController;
+use Simplysmart\Mainboard\Enums\BrandAsset;
 use Simplysmart\Mainboard\Zones\ZonePermission;
 
 /*
@@ -62,6 +64,9 @@ Route::middleware(ZonePermission::middleware(Permission::OrganizationsManage))->
     Route::put('organizations/{organization}', [OrganizationController::class, 'update'])->middleware('throttle:mainboard.sign-in')->name('organizations.update');
     Route::post('organizations/{organization}/toggle', [OrganizationController::class, 'toggle'])->middleware('throttle:mainboard.sign-in')->name('organizations.toggle');
     Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationMemberController::class, 'remove'])->middleware('throttle:mainboard.sign-in')->name('organizations.members.remove');
+    Route::get('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'show'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->name('organizations.brand.show');
+    Route::post('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'store'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:mainboard.sign-in')->name('organizations.brand.store');
+    Route::delete('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'destroy'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:mainboard.sign-in')->name('organizations.brand.destroy');
 });
 
 Route::middleware(ZonePermission::middleware(Permission::OrganizationsView))->group(static function (): void {
