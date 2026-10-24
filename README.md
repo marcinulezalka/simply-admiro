@@ -93,7 +93,9 @@ Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z rep
 2. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
 3. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`),
 4. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`,
-   `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje, role, słowniki, cache.
+   `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje, role, słowniki, cache
+   i skrypt crona `storage/app/cron.sh` (`mainboard:cron:script --php=<DEPLOY_PHP>`, gdy Core ma tę komendę; w panelu
+   hostingu: program BASH, ten plik, co minutę).
    Skrypt i token idą standardowym wejściem, więc serwer nie potrzebuje tools, a token nie trafia do listy procesów.
 
 Konfiguracja: `infrastructure/deploy.env` (dodaj do `.gitignore`; w projekcie wzór `deploy.env.example`), format

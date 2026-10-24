@@ -89,4 +89,10 @@ step "Cache konfiguracji, tras i widoków"
 "$php_bin" artisan route:cache
 "$php_bin" artisan view:cache
 
+# Skrypt crona (harmonogram i worker kolejki) dla panelu hostingu; tylko gdy Core ma tę komendę.
+if "$php_bin" artisan list --raw | awk '{print $1}' | grep -qx 'mainboard:cron:script'; then
+    step "Skrypt crona"
+    "$php_bin" artisan mainboard:cron:script --php="$php_bin"
+fi
+
 step "Wdrożenie zakończone: $("$php_bin" artisan --version)"

@@ -105,6 +105,19 @@ final class RemoteScriptTest extends TestCase
         $this->assertLessThan($permissions, $organizations);
     }
 
+    #[Test]
+    public function skrypt_serwerowy_tworzy_skrypt_crona_po_cache_z_php_wdrozenia(): void
+    {
+        $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'));
+        $cache = strpos($script, 'artisan view:cache');
+        $cron = strpos($script, '"$php_bin" artisan mainboard:cron:script --php="$php_bin"');
+
+        $this->assertIsInt($cache);
+        $this->assertIsInt($cron);
+        $this->assertLessThan($cron, $cache);
+        $this->assertStringContainsString("grep -qx 'mainboard:cron:script'", $script);
+    }
+
     /**
      * @return list<string> Wartości wypisane przez skrypt (rozdzielone bajtem zerowym).
      */
