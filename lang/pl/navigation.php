@@ -17,6 +17,8 @@ return [
         'zones' => 'Strefy i konta',
         'organizations' => 'Klienci',
         'system' => 'System',
+        'application' => 'Aplikacja',
+        'dictionaries' => 'Słowniki i kalendarz',
     ],
 
 ];

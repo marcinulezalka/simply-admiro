@@ -17,6 +17,8 @@ return [
         'zones' => 'Zones and accounts',
         'organizations' => 'Clients',
         'system' => 'System',
+        'application' => 'Application',
+        'dictionaries' => 'Dictionaries and calendar',
     ],
 
 ];

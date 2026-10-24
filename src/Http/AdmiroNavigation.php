@@ -23,8 +23,9 @@ use Simplysmart\Mainboard\View\Navigation\NavigationItem;
 use Simplysmart\Mainboard\View\Navigation\SearchBox;
 
 /**
- * Menu strefy administratorów w layoucie aplikacji: pulpit oraz grupy stref i kont, organizacji i systemu — każda
- * pozycja tylko z uprawnieniem administratora (puste grupy znikają); druga linia pod nazwą konta: role
+ * Menu strefy administratorów w layoucie aplikacji: pulpit oraz grupy stref i kont, organizacji i systemu (dziennik
+ * zdarzeń); w ustawieniach grupy aplikacji (ustawienia, polityka cookies) i słowników (słowniki, kursy walut, dni wolne)
+ * — każda pozycja tylko z uprawnieniem administratora (puste grupy znikają); druga linia pod nazwą konta: role
  * administratora w organizacji operatora. Bez wyszukiwarki (konta szuka się w strefie).
  */
 final readonly class AdmiroNavigation implements ZoneNavigation
@@ -49,15 +50,25 @@ final readonly class AdmiroNavigation implements ZoneNavigation
             )),
             new NavigationGroup(text('admiro::navigation.groups.system'), $this->items(
                 $this->itemIf(Permission::AuditView, 'audit.index', 'admiro::admin.audit_title', 'history', 'audit.*'),
-                $this->itemIf(Permission::SettingsView, 'settings.show', 'admiro::admin.settings_title', 'settings', 'settings.*'),
-                $this->itemIf(Permission::SettingsView, 'dictionaries.index', 'admiro::admin.dictionaries_title', 'dictionaries', 'dictionaries.*', ['dictionary' => 'countries']),
-                $this->itemIf(Permission::SettingsView, 'exchange-rates.index', 'admiro::admin.exchange_rates_title', 'credit-card', 'exchange-rates.*'),
-                $this->itemIf(Permission::SettingsView, 'holidays.index', 'admiro::admin.holidays_title', 'calendar', 'holidays.*'),
-                $this->itemIf(Permission::SettingsView, 'cookie-policy.index', 'admiro::admin.cookie_policy_title', 'shield-check', 'cookie-policy.*'),
             )),
         ];
 
-        return array_values(array_filter($groups, static fn(NavigationGroup $group): bool => $group->items !== []));
+        return $this->nonEmpty($groups);
+    }
+
+    public function settings(): array
+    {
+        return $this->nonEmpty([
+            new NavigationGroup(text('admiro::navigation.groups.application'), $this->items(
+                $this->itemIf(Permission::SettingsView, 'settings.show', 'admiro::admin.settings_title', 'settings', 'settings.*'),
+                $this->itemIf(Permission::SettingsView, 'cookie-policy.index', 'admiro::admin.cookie_policy_title', 'shield-check', 'cookie-policy.*'),
+            )),
+            new NavigationGroup(text('admiro::navigation.groups.dictionaries'), $this->items(
+                $this->itemIf(Permission::SettingsView, 'dictionaries.index', 'admiro::admin.dictionaries_title', 'dictionaries', 'dictionaries.*', ['dictionary' => 'countries']),
+                $this->itemIf(Permission::SettingsView, 'exchange-rates.index', 'admiro::admin.exchange_rates_title', 'credit-card', 'exchange-rates.*'),
+                $this->itemIf(Permission::SettingsView, 'holidays.index', 'admiro::admin.holidays_title', 'calendar', 'holidays.*'),
+            )),
+        ]);
     }
 
     public function search(): ?SearchBox
@@ -70,6 +81,18 @@ final readonly class AdmiroNavigation implements ZoneNavigation
         $roles = array_map($this->context->zone()->roleLabel(...), $this->roles->of($this->context->admin(), Organization::OPERATOR_ID));
 
         return $roles === [] ? null : implode(' · ', $roles);
+    }
+
+    /**
+     * Grupy z pozycjami (grupy bez pozycji, do których administrator nie ma uprawnień, znikają).
+     *
+     * @param list<NavigationGroup> $groups
+     *
+     * @return list<NavigationGroup>
+     */
+    private function nonEmpty(array $groups): array
+    {
+        return array_values(array_filter($groups, static fn(NavigationGroup $group): bool => $group->items !== []));
     }
 
     /**

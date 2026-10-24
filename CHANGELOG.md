@@ -10,6 +10,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Ustawienia, polityka cookies, słowniki, kursy walut i dni wolne przeniesione z menu głównego do menu ustawień (grupy „Aplikacja” oraz „Słowniki i kalendarz”); w menu „System” został dziennik zdarzeń.
 - Podpowiedzi w polach (placeholder) kursów walut i dni wolnych to sam przykład, bez „np.” / „e.g.”.
 
 ## [0.1.0] - 2026-10-24
