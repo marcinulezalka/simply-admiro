@@ -54,6 +54,20 @@ vendor/bin/composer-private --root=<katalog>
 
 Bez `private-packages.json` kończy się kodem 0 i nic nie robi (publiczny klon, CI). Zwykłe `composer install` / `update` usuwa paczki prywatne z `vendor/`, więc potem trzeba uruchomić narzędzie ponownie. W projekcie wygodnie podpiąć je jako skrypt: `"private:install": "@php vendor/bin/composer-private"`.
 
+### Wdrożenie: paczki z repozytoriów git
+
+Lokalnie paczki z repozytoriów typu `path` (np. `packages/*/*`) są dowiązaniami, a `composer.lock` zapisuje je jako „z katalogu”. Na serwerze tych katalogów nie ma, więc tryb `--deploy` buduje osobny manifest wdrożeniowy:
+
+- `composer.deploy.json` — `composer.json` bez repozytoriów `path`, z repozytorium VCS (adres `git remote origin`) każdej paczki z tych katalogów, którą projekt wymaga (`require`, `require-dev`, paczki prywatne), i z dopisanymi paczkami prywatnymi;
+- `composer.deploy.lock` — kopia `composer.private.lock` (albo `composer.lock`) zaktualizowana przez `composer update <paczki> --no-install --no-scripts`: paczki przypięte do commitów z repozytoriów zdalnych, `vendor/` bez zmian.
+
+```bash
+vendor/bin/composer-private --deploy             # po wypchnięciu repozytoriów paczek
+vendor/bin/composer-private --deploy --dry-run   # pokazuje paczki; nie zapisuje plików
+```
+
+Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z repozytorium zdalnego), paczka bez `origin` to błąd. Oba pliki dodaj do `.gitignore` i wyślij na serwer, a tam: `COMPOSER=composer.deploy.json composer install --no-dev`. Do repozytoriów prywatnych composer potrzebuje tokenu (`composer config -g github-oauth.github.com <token>`). W projekcie: `"deploy:lock": "@php vendor/bin/composer-private --deploy"`.
+
 ## Skille AI
 
 Pakiet dostarcza wspólne skille dla agentów AI w `resources/boost/skills/`: `solid-dry` (SOLID, DRY, standardy PHP 8.4), `docs-after-tests` (dokumentacja po testach) i `changelog-before-commit` (CHANGELOG i wydania z `--dry-run`). W projekcie Laravel z [Laravel Boost](https://laravel.com/docs/boost) dopisz pakiet do `boost.json`, a Boost skopiuje skille do `.claude/skills/`:

@@ -1,7 +1,7 @@
 # Package: simplysmart/tools
 
 ## Context & Responsibility
-Development toolbox (dev dependency, `require-dev`) for simplysmart projects and packages. Plain PHP ^8.4 CLI — no framework, no Laravel, no Artisan. Tools: `vendor/bin/version-release`, a SemVer release driven by the `## [Unreleased]` section of `CHANGELOG.md` (Keep a Changelog) that bumps `VERSION`. It is the single release implementation for the skeleton and every package — never copy it elsewhere. And `vendor/bin/composer-private`, which installs private packages from a git-ignored `private-packages.json` through `composer.private.json`/`.lock`, leaving the public `composer.json` untouched (see the skeleton's "Private Packages").
+Development toolbox (dev dependency, `require-dev`) for simplysmart projects and packages. Plain PHP ^8.4 CLI — no framework, no Laravel, no Artisan. Tools: `vendor/bin/version-release`, a SemVer release driven by the `## [Unreleased]` section of `CHANGELOG.md` (Keep a Changelog) that bumps `VERSION`. It is the single release implementation for the skeleton and every package — never copy it elsewhere. And `vendor/bin/composer-private`, which installs private packages from a git-ignored `private-packages.json` through `composer.private.json`/`.lock`, leaving the public `composer.json` untouched (see the skeleton's "Private Packages"); with `--deploy` it builds `composer.deploy.json`/`.lock` for servers (path repositories replaced by VCS repositories read through `PrivatePackages\RepositorySource`, lock written with `--no-install --no-scripts`).
 
 ## Architectural Boundaries
 - **Dev-only scope**: No application domain logic or business rules; code runs only in local/CI environments.

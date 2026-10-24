@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `composer-private --deploy`: manifest i lock wdrożeniowy (`composer.deploy.json`, `composer.deploy.lock`) z paczkami z repozytoriów git zamiast katalogów `path` — adresy z `git remote origin` paczek (`PrivatePackages\RepositorySource`, `GitRepositorySource`), lock przez `composer update --no-install --no-scripts`, ostrzeżenie o niewypchniętych commitach, `--dry-run`; serwer instaluje paczki z GitHuba do `vendor/` (`COMPOSER=composer.deploy.json composer install --no-dev`).
+
 ## [0.2.0] - 2026-10-24
 
 ### Added

@@ -22,7 +22,8 @@ interface ComposerRunner
      * @param  string  $root  Katalog projektu.
      * @param  string  $manifest  Nazwa pliku manifestu względem $root (np. composer.private.json).
      * @param  list<string>  $packages  Paczki do aktualizacji.
+     * @param  list<string>  $options  Dodatkowe opcje composera (np. `--no-install`).
      * @return int Kod wyjścia composera.
      */
-    public function update(string $root, string $manifest, array $packages): int;
+    public function update(string $root, string $manifest, array $packages, array $options = []): int;
 }

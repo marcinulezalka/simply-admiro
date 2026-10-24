@@ -26,7 +26,7 @@ final class PrivatePackagesCommandTest extends TestCase
     private string $root;
 
     /**
-     * @var list<array{string, string, list<string>}>
+     * @var list<array{0: string, 1: string, 2: list<string>, 3?: list<string>}>
      */
     private array $composerCalls = [];
 
@@ -157,15 +157,15 @@ final class PrivatePackagesCommandTest extends TestCase
     {
         $composer = new class ($composerExitCode) implements ComposerRunner {
             /**
-             * @var list<array{string, string, list<string>}>
+             * @var list<array{0: string, 1: string, 2: list<string>, 3?: list<string>}>
              */
             public array $calls = [];
 
             public function __construct(private int $exitCode) {}
 
-            public function update(string $root, string $manifest, array $packages): int
+            public function update(string $root, string $manifest, array $packages, array $options = []): int
             {
-                $this->calls[] = [$root, $manifest, $packages];
+                $this->calls[] = $options === [] ? [$root, $manifest, $packages] : [$root, $manifest, $packages, $options];
 
                 return $this->exitCode;
             }

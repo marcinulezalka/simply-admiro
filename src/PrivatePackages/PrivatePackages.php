@@ -33,6 +33,10 @@ final readonly class PrivatePackages
 
     public const string LOCK = 'composer.private.lock';
 
+    public const string DEPLOY_MANIFEST = 'composer.deploy.json';
+
+    public const string DEPLOY_LOCK = 'composer.deploy.lock';
+
     private const string PACKAGE_NAME = '/^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$/';
 
     /**
@@ -114,6 +118,22 @@ final readonly class PrivatePackages
         if (! is_file($this->path(self::LOCK)) && is_file($this->path(self::PUBLIC_LOCK))
             && ! copy($this->path(self::PUBLIC_LOCK), $this->path(self::LOCK))) {
             throw new PrivatePackagesException('Nie udało się utworzyć ' . self::LOCK . '.');
+        }
+    }
+
+    /**
+     * Zapisuje composer.deploy.json i świeżą kopię locka (composer.private.lock, a bez niego composer.lock) jako
+     * composer.deploy.lock — wersje paczek spoza repozytoriów path zostają te same.
+     *
+     * @throws PrivatePackagesException Gdy zapisu nie da się wykonać.
+     */
+    public function prepareDeploy(string $manifest): void
+    {
+        $this->write(self::DEPLOY_MANIFEST, $manifest);
+        $source = is_file($this->path(self::LOCK)) ? self::LOCK : self::PUBLIC_LOCK;
+
+        if (is_file($this->path($source)) && ! copy($this->path($source), $this->path(self::DEPLOY_LOCK))) {
+            throw new PrivatePackagesException('Nie udało się utworzyć ' . self::DEPLOY_LOCK . '.');
         }
     }
 

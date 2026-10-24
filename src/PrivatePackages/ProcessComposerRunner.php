@@ -19,13 +19,13 @@ namespace Simplysmart\Tools\PrivatePackages;
  */
 final readonly class ProcessComposerRunner implements ComposerRunner
 {
-    public function update(string $root, string $manifest, array $packages): int
+    public function update(string $root, string $manifest, array $packages, array $options = []): int
     {
         $binary = getenv('COMPOSER_BINARY');
         $composer = is_string($binary) && $binary !== '' ? [PHP_BINARY, $binary] : ['composer'];
         $environment = [...getenv(), 'COMPOSER' => $manifest];
 
-        $process = proc_open([...$composer, 'update', ...$packages, '--no-interaction'], [STDIN, STDOUT, STDERR], $pipes, $root, $environment);
+        $process = proc_open([...$composer, 'update', ...$packages, ...$options, '--no-interaction'], [STDIN, STDOUT, STDERR], $pipes, $root, $environment);
 
         if (! is_resource($process)) {
             throw new PrivatePackagesException('Nie udało się uruchomić composera.');
