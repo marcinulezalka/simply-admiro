@@ -284,6 +284,13 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   otwiera okno; „Polityka cookies”) w stopce logowania, w pasku stron treści i w menu konta layoutu aplikacji.
 - Baner pojawia się tylko, gdy opublikowano politykę cookies albo paczka zarejestrowała skrypt opcjonalny.
 
+### Logowanie
+
+- Nagłówek karty logowania (`x-mainboard::auth.layout`, prop `title`) może mieć wyróżniony fragment w `*gwiazdkach*`:
+  `View\AccentText` zamienia go na `.ss-accent-text` (kursywa w kolorze akcentu), a w `<title>` zostaje sam tekst.
+- Notka pod formularzem (prop `note`, `.ss-auth__note`): mniejszy, przygaszony tekst, np. o blokadzie po błędnych
+  PIN-ach. Teksty kroków podmienia paczka strefy (`docs/strefy.md`).
+
 ### Strony błędów
 
 `resources/views/app/errors/<kod>.blade.php` (komponent `x-mainboard::error.layout`, teksty `errors.*`): rama

@@ -108,6 +108,13 @@ Trasy konta (`Http\AccountRoutes`, pod `account/`, poziom `Authenticated`, zmian
 
 Trasy urządzeń istnieją tylko w strefie z zaufanymi urządzeniami. Menu konta w layoucie strefy: profil, bezpieczeństwo, wylogowanie. Etykiety ról w profilu biorą teksty paczki strefy z `texts` w configu strefy (namespace, np. `'texts' => 'shop'`).
 
+Ekrany logowania (`auth/*`) czytają teksty przez `ZoneDefinition::signInText()`: najpierw
+`<texts>::sign_in.<strefa>.<klucz>` (osobno dla strefy, gdy kilka stref dzieli paczkę tekstów), potem
+`<texts>::sign_in.<klucz>`, na końcu Core `sign_in.<klucz>`. Poza tekstami Core strefa może dać wstęp i notkę
+każdego kroku (`lead`, `note`, `code_note`, `pin_lead`, `pin_note`, `pin_setup_note`; w Core puste), przykład adresu
+(`email_placeholder`) i przyciski (`submit`, `pin_setup_submit`); nagłówek może mieć wyróżniony fragment
+w `*gwiazdkach*` (`View\AccentText`).
+
 **Kroki.** Każdy krok implementuje `Contracts\SignInStep`. Lista kroków i ich kolejność pochodzą z `auth.steps`, a domyślnie są to `EmailCodeStep`, `PinSetupStep`, `PinStep`.
 - `SignInFlow` wybiera pierwszy wymagany i niewykonany krok.
 - `EnsureSignInStep` wpuszcza tylko na ten krok i tylko w czasie jego ważności, więc kroków nie da się przeskoczyć.

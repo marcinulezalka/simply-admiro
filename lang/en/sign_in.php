@@ -14,6 +14,15 @@ declare(strict_types=1);
 return [
 
     'title' => 'Sign in',
+    'lead' => '',
+    'note' => '',
+    'email_placeholder' => '',
+    'submit' => 'Continue',
+    'pin_lead' => '',
+    'pin_note' => '',
+    'pin_setup_note' => '',
+    'pin_setup_submit' => 'Continue',
+    'code_note' => '',
     'email' => 'E-mail address',
     'continue' => 'Continue',
     'code_title' => 'Enter the code from the e-mail',

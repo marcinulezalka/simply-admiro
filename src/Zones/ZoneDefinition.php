@@ -75,6 +75,27 @@ final readonly class ZoneDefinition
     }
 
     /**
+     * Tekst ekranu logowania strefy: najpierw osobny dla strefy (`<namespace>::sign_in.<strefa>.<klucz>`, gdy kilka
+     * stref dzieli paczkę tekstów), potem paczki (`<namespace>::sign_in.<klucz>`), na końcu Core (`sign_in.<klucz>`).
+     *
+     * @param array<string, scalar> $replace
+     */
+    public function signInText(string $key, array $replace = []): string
+    {
+        if ($this->textNamespace !== null) {
+            foreach ([$this->textKey('sign_in.' . $this->name . '.' . $key), $this->textKey('sign_in.' . $key)] as $candidate) {
+                $line = text($candidate, $replace);
+
+                if ($line !== $candidate) {
+                    return $line;
+                }
+            }
+        }
+
+        return text('sign_in.' . $key, $replace);
+    }
+
+    /**
      * Etykieta roli strefy (`roles.<strefa>.<rola>` w tekstach paczki strefy albo Core).
      */
     public function roleLabel(string $role): string

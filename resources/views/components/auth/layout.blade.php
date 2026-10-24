@@ -1,7 +1,8 @@
-{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page (docs/design-system.md): tytuł, opcjonalny wstęp (lead), komunikat stanu, formularz w slocie i akcje drugorzędne (slot actions). Wariant (Enums\AuthLayout) z `auth.layout` strefy ($zoneAuthLayout z ZonesServiceProvider), prop layout go nadpisuje: centered — jedna karta .ss-card z logo; split — rama .ss-frame z kartą marki (.ss-card--inverse, .ss-card--elevated; logo albo baner strefy z `auth.brand` (wersja ciemna przełączana z motywem: .ss-theme-light / .ss-theme-dark), $zoneAuthBrand albo prop brand: ?array{light: string, dark: ?string, alt: string}) po lewej i kartą formularza (.ss-card--tinted) po prawej; z banerem (.ss-auth--image) karta banera nie ma ramki, a karta formularza nachodzi na nią i zakrywa jej zaokrąglenie. W prawym górnym rogu przełącznik motywu; kolorystyka strefy ($zonePalettes, $zonePaletteScope) obowiązuje bez przełącznika. Wygląd wyłącznie z klas design systemu. Strony logowania nie są indeksowane. --}}
-@props(['title' => null, 'description' => null, 'lead' => null, 'layout' => null, 'brand' => null])
+{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page (docs/design-system.md): tytuł (fragment w *gwiazdkach* wyróżniony, View\AccentText; w <title> bez gwiazdek), opcjonalny wstęp (lead), komunikat stanu, formularz w slocie, opcjonalna notka pod formularzem (note) i akcje drugorzędne (slot actions). Wariant (Enums\AuthLayout) z `auth.layout` strefy ($zoneAuthLayout z ZonesServiceProvider), prop layout go nadpisuje: centered — jedna karta .ss-card z logo; split — rama .ss-frame z kartą marki (.ss-card--inverse, .ss-card--elevated; logo albo baner strefy z `auth.brand` (wersja ciemna przełączana z motywem: .ss-theme-light / .ss-theme-dark), $zoneAuthBrand albo prop brand: ?array{light: string, dark: ?string, alt: string}) po lewej i kartą formularza (.ss-card--tinted) po prawej; z banerem (.ss-auth--image) karta banera nie ma ramki, a karta formularza nachodzi na nią i zakrywa jej zaokrąglenie. W prawym górnym rogu przełącznik motywu; kolorystyka strefy ($zonePalettes, $zonePaletteScope) obowiązuje bez przełącznika. Wygląd wyłącznie z klas design systemu. Strony logowania nie są indeksowane. --}}
+@props(['title' => null, 'description' => null, 'lead' => null, 'note' => null, 'layout' => null, 'brand' => null])
 @php
-    $pageTitle = $title ?? text('sign_in.title');
+    $heading = $title ?? text('sign_in.title');
+    $pageTitle = \Simplysmart\Mainboard\View\AccentText::plain($heading);
     $brand ??= $zoneAuthBrand ?? null;
     $isSplit = ($layout ?? $zoneAuthLayout ?? \Simplysmart\Mainboard\Enums\AuthLayout::Centered) === \Simplysmart\Mainboard\Enums\AuthLayout::Split;
 @endphp
@@ -39,7 +40,7 @@
                 @endunless
 
                 <div class="ss-auth__header">
-                    <h1 class="ss-auth__title">{{ $pageTitle }}</h1>
+                    <h1 class="ss-auth__title">{{ \Simplysmart\Mainboard\View\AccentText::html($heading) }}</h1>
                     @if (filled($lead))
                         <p class="ss-auth__lead">{{ $lead }}</p>
                     @endif
@@ -50,6 +51,10 @@
                 @endif
 
                 {{ $slot }}
+
+                @if (filled($note))
+                    <p class="ss-auth__note">{{ $note }}</p>
+                @endif
 
                 @isset($actions)
                     <div class="ss-auth__actions">{{ $actions }}</div>

@@ -14,6 +14,15 @@ declare(strict_types=1);
 return [
 
     'title' => 'Logowanie',
+    'lead' => '',
+    'note' => '',
+    'email_placeholder' => '',
+    'submit' => 'Dalej',
+    'pin_lead' => '',
+    'pin_note' => '',
+    'pin_setup_note' => '',
+    'pin_setup_submit' => 'Dalej',
+    'code_note' => '',
     'email' => 'Adres e-mail',
     'continue' => 'Dalej',
     'code_title' => 'Wpisz kod z e-maila',
