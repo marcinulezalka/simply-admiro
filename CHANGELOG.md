@@ -4,6 +4,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-24
+
 ### Added
 
 - `vendor/bin/composer-private`: instaluje paczki prywatne z lokalnego `private-packages.json` przez `composer.private.json`/`.lock`, bez zmian w publicznym `composer.json`; opcje `--dry-run` i `--root`, bez listy nic nie robi.
