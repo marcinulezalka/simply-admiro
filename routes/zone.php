@@ -18,6 +18,7 @@ use Simplysmart\Admiro\Http\Controllers\AccountActionController;
 use Simplysmart\Admiro\Http\Controllers\AdministratorController;
 use Simplysmart\Admiro\Http\Controllers\AuditController;
 use Simplysmart\Admiro\Http\Controllers\DictionaryController;
+use Simplysmart\Admiro\Http\Controllers\ExchangeRateController;
 use Simplysmart\Admiro\Http\Controllers\TaxRateController;
 use Simplysmart\Admiro\Http\Controllers\SettingsController;
 use Simplysmart\Admiro\Http\Controllers\OrganizationController;
@@ -74,10 +75,14 @@ Route::put('settings', [SettingsController::class, 'update'])->middleware([ZoneP
 Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(static function (): void {
     Route::get('dictionaries/{dictionary}', [DictionaryController::class, 'index'])->name('dictionaries.index');
     Route::get('tax-rates/{country}', [TaxRateController::class, 'index'])->name('tax-rates.index');
+    Route::get('exchange-rates', [ExchangeRateController::class, 'index'])->name('exchange-rates.index');
 });
 
 Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:mainboard.sign-in'])->group(static function (): void {
     Route::post('dictionaries/{dictionary}/{code}/toggle', [DictionaryController::class, 'toggle'])->name('dictionaries.toggle');
     Route::post('tax-rates/{country}', [TaxRateController::class, 'store'])->name('tax-rates.store');
     Route::put('tax-rates/{country}/{rate}', [TaxRateController::class, 'end'])->name('tax-rates.end');
+    Route::post('exchange-rates/sync', [ExchangeRateController::class, 'sync'])->name('exchange-rates.sync');
+    Route::post('exchange-rates', [ExchangeRateController::class, 'store'])->name('exchange-rates.store');
+    Route::delete('exchange-rates/{rate}', [ExchangeRateController::class, 'destroy'])->name('exchange-rates.destroy');
 });
