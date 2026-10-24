@@ -34,6 +34,11 @@ php84 composer-setup.php --install-dir="$HOME/bin" --filename=composer && rm com
 php84 ~/bin/composer config -g github-oauth.github.com <token>
 ```
 
+Wdrożenie jednym poleceniem z komputera deweloperskiego robi skrypt aplikacji `infrastructure/deploy.sh`
+(konfiguracja w `infrastructure/deploy.env`: konto SSH, katalog, PHP, jednorazowo token). Sprawdza wypchnięcie
+repozytoriów, tworzy lock, wysyła go i uruchamia na serwerze `infrastructure/deploy-remote.sh` (Composer,
+`git pull`, instalacja, `APP_KEY`, migracje, role, słowniki, cache). Ręcznie te same kroki wyglądają tak.
+
 Przy każdym wdrożeniu:
 
 ```bash
