@@ -2570,8 +2570,8 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-auth__brand--image — karta marki z banerem strefy (auth.brand): obraz wypełnia kartę z zachowaniem
- * proporcji (przycięcie do środka; na telefonie niski pasek z górną częścią banera), bez ramki i tła karty (tło
+ * .ss-auth__brand--image — karta marki z banerem strefy (auth.brand): na szerokim ekranie wysokość karty wynika
+ * z proporcji obrazu, więc baner jest widoczny cały (na telefonie niski pasek z górną częścią banera), bez ramki i tła karty (tło
  * odwrócone prześwitywało w ciemnym motywie jasną obwódką). .ss-auth--image łączy baner z kartą formularza.
  */
 .ss-auth__brand--image {
@@ -2610,8 +2610,18 @@ a.ss-notification:focus-visible {
     object-position: center 20%;
 }
 
+/*
+ * Od 56rem baner płynie w karcie: jej wysokość wynika z proporcji obrazu (całe zdjęcie, bez obcinania), a karta
+ * formularza rozciąga się do niej; dopiero gdy formularz jest wyższy, obraz wypełnia kartę z przycięciem do środka.
+ */
 @media (min-width: 56rem) {
+    .ss-auth--split .ss-auth__brand--image {
+        min-height: 0;
+    }
+
     .ss-auth__brand-image {
+        position: static;
+        vertical-align: top;
         object-position: center;
     }
 }

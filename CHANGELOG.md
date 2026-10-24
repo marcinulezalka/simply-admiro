@@ -7,6 +7,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 ### Changed
 
 - Podpowiedzi w polach (placeholder) to sam przykład, bez „np.” / „e.g.” (`placeholders.*`, wzór `placeholders.example`, maski `InputMask::placeholder()`).
+- Logowanie w układzie dwóch kart z banerem strefy (`.ss-auth__brand--image`): na szerokim ekranie wysokość karty marki wynika z proporcji obrazu, więc baner nie jest obcinany, a karta formularza dopasowuje się do niego.
 
 ### Added
 
