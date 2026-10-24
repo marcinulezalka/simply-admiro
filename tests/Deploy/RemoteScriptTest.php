@@ -93,6 +93,18 @@ final class RemoteScriptTest extends TestCase
         $this->assertStringContainsString("\"\$php_bin\" artisan 'admiro:account:create' 'a@example.com' 'Jan' '--skip-existing'\n", $script);
     }
 
+    #[Test]
+    public function skrypt_serwerowy_zaklada_organizacje_operatora_przed_rolami(): void
+    {
+        $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'));
+        $organizations = strpos($script, 'artisan mainboard:organizations:seed');
+        $permissions = strpos($script, 'artisan mainboard:permissions:sync');
+
+        $this->assertIsInt($organizations);
+        $this->assertIsInt($permissions);
+        $this->assertLessThan($permissions, $organizations);
+    }
+
     /**
      * @return list<string> Wartości wypisane przez skrypt (rozdzielone bajtem zerowym).
      */

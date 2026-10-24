@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Skrypt serwerowy wdrożenia zakłada organizację operatora (`mainboard:organizations:seed`, po słownikach, przed rolami); bez niej na nowej bazie `deploy:onboarding` nie nadawał ról kontom stref bez firm klientów („No query results for model Organization 1”).
+
 ### Added
 
 - `vendor/bin/simplysmart`: jedno wejście w stylu artisan (`list`, nazwy z dwukropkiem, kropka jako zamiennik: `deploy.onboarding` = `deploy:onboarding`) z poleceniami `release` (= `version-release`), `private:install` (= `composer-private`), `deploy:lock` (= `composer-private --deploy`), `deploy` i `deploy:onboarding`; dotychczasowe `vendor/bin/version-release` i `vendor/bin/composer-private` działają bez zmian.

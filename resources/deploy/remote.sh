@@ -5,7 +5,7 @@
 #   2. .env i pliki wdrożeniowe na miejscu, git pull --ff-only aplikacji,
 #   3. token GitHub dla Composera (GITHUB_TOKEN, jeśli podany),
 #   4. paczki z manifestu wdrożeniowego (COMPOSER=composer.deploy.json, --no-dev),
-#   5. APP_KEY, migracje, role i słowniki (każda komenda *:dictionaries:sync paczek), cache.
+#   5. APP_KEY, migracje, słowniki, organizacja operatora, role, słowniki paczek (*:dictionaries:sync), cache.
 # Zatrzymuje się przy pierwszym błędzie.
 #
 # Użycie na serwerze:
@@ -74,9 +74,11 @@ COMPOSER=composer.deploy.json "${composer[@]}" install --no-dev --optimize-autol
 step "Migracje"
 "$php_bin" artisan migrate --force
 
-step "Role, słowniki i dane startowe"
-"$php_bin" artisan mainboard:permissions:sync
+step "Słowniki, organizacja operatora i role"
+# Kolejność z docs/wdrozenie.md mainboard: role stref bez firm klientów nadawane są w organizacji operatora.
 "$php_bin" artisan mainboard:localization:seed
+"$php_bin" artisan mainboard:organizations:seed
+"$php_bin" artisan mainboard:permissions:sync
 for command in $("$php_bin" artisan list --raw | awk '{print $1}' | grep -E ':dictionaries:sync$' || true); do
     "$php_bin" artisan "$command"
 done
