@@ -26,7 +26,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - Zmienne liczbowe w `.env` z niepoprawną wartością (np. tekst w `AUTH_CODE_TTL`) dają wartość domyślną zamiast 0.
 - Strony treści (polityki): bez przełącznika motywu; tytuł z opcjonalną ikoną (prop `icon` w `x-admiro::content.layout`, polityka cookies z ikoną ciasteczka); odnośniki w treści i na pasku bez podkreślenia — pojawia się pod kursorem i przy fokusie (w treści odnośniki pogrubione); tekst do 70ch, bloki na całą szerokość karty.
 - Polityka cookies: lista cookies jako panele na całą szerokość (nazwa z kategorią, cel, czas przechowywania; długie wartości zawijane) zamiast tabeli; przycisk „Ustawienia cookies” z ikoną.
-- Baner zgody cookies: „Zezwól na wszystkie” (główny) na górze na całą szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj” jako przyciski drugorzędne (obrys; wcześniej „Odrzuć” był główny); na wąskim telefonie jeden pod drugim.
+- Okna zgody na cookies (baner i ustawienia): szersze (do 48rem, wcześniej 32rem i 40rem), przyciski w jednym wierszu po równo — w banerze „Zezwól na wszystkie” (główny), „Odrzuć” i „Dostosuj” jako drugorzędne (obrys; wcześniej „Odrzuć” był główny); na wąskim telefonie jeden pod drugim.
 - Odnośniki prawne na dole karty logowania w kolejności: dokumenty strefy (`legal_links`, np. polityka prywatności, RODO), polityka cookies, ustawienia cookies (wcześniej polityka cookies była pierwsza).
 - Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta z białym logotypem „admiro” na środku (w ciemnym motywie karta jasna z czarnym logotypem); na telefonie logotyp nad formularzem.
 - Odnośniki w całej strefie bez podkreślenia; podkreślenie pojawia się pod kursorem i przy fokusie z klawiatury.

@@ -3624,13 +3624,13 @@ a.ss-notification:focus-visible {
 
 /**
  * Zgoda na cookies (x-admiro::cookie-consent): .ss-consent__dialog — natywny <dialog> otwierany modalnie
- * (fokus w oknie, tło ::backdrop przyciemnione), karta na środku z wewnętrznym przewijaniem; __banner — pierwszy
- * kontakt z trzema przyciskami jeden pod drugim (__actions--stacked); __settings — okno ustawień z kategoriami
- * (__category, przełącznik x-admiro::switch, lista cookies w __details). .ss-cookie-links — odnośniki
+ * (fokus w oknie, tło ::backdrop przyciemnione), karta na środku z wewnętrznym przewijaniem, ta sama szerokość dla
+ * wszystkich okien zgody; __banner — pierwszy kontakt; __settings — okno ustawień z kategoriami (__category,
+ * przełącznik x-admiro::switch, lista cookies w __details); __actions — przyciski każdego okna w jednym wierszu. .ss-cookie-links — odnośniki
  * „Ustawienia cookies” i „Polityka cookies” w stopkach layoutów.
  */
 .ss-consent__dialog {
-    width: min(100% - 2 * var(--ss-space-4), 32rem);
+    width: min(100% - 2 * var(--ss-space-4), 48rem);
     max-height: 86vh;
     overflow-y: auto;
     padding: var(--ss-space-6);
@@ -3639,10 +3639,6 @@ a.ss-notification:focus-visible {
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     box-shadow: var(--ss-shadow-elevated);
-}
-
-.ss-consent__settings {
-    width: min(100% - 2 * var(--ss-space-4), 40rem);
 }
 
 .ss-consent__dialog::backdrop {
@@ -3678,37 +3674,24 @@ a.ss-notification:focus-visible {
 }
 
 .ss-consent__actions {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--ss-space-2);
     margin-top: var(--ss-space-4);
 }
 
-/* Przyciski banera: „Zezwól na wszystkie” (główny) na górze na całą szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj”
-   (drugorzędne) po połowie; na wąskim telefonie (poniżej 30rem) wszystkie jeden pod drugim. Kolejność w kodzie jest
-   taka sama jak na ekranie (także dla klawiatury). */
-.ss-consent__actions--stacked {
-    display: grid;
-    grid-template-columns: 1fr;
-}
-
-.ss-consent__actions--stacked .ss-button {
+.ss-consent__actions .ss-button {
     justify-content: center;
     width: 100%;
 }
 
-@media (min-width: 30rem) {
-    .ss-consent__actions--stacked {
-        grid-template-columns: 1fr 1fr;
+/* Przyciski okien zgody w jednym wierszu, po równo (kolejność w kodzie taka jak na ekranie, także dla klawiatury);
+   na wąskim telefonie (poniżej 36rem) jeden pod drugim. */
+@media (min-width: 36rem) {
+    .ss-consent__actions {
+        grid-auto-columns: minmax(0, 1fr);
+        grid-auto-flow: column;
     }
-
-    .ss-consent__actions--stacked .ss-button--primary {
-        grid-column: 1 / -1;
-    }
-}
-
-.ss-consent__save {
-    margin-inline-start: auto;
 }
 
 .ss-consent__categories {

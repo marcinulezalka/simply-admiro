@@ -308,10 +308,11 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 ### Zgoda na cookies
 
 - **Baner i ustawienia** `x-admiro::cookie-consent` (w szablonie bazowym `x-admiro::page`, więc na każdej
-  stronie każdej strefy): natywne `<dialog>` otwierane modalnie (fokus w oknie, tło `::backdrop`, Esc).
-  - Baner `.ss-consent__banner`: tytuł, opis, trzy przyciski — „Zezwól na wszystkie” (główny) na górze na całą
-    szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj” (drugorzędne, obrys), na wąskim telefonie jeden pod drugim —
-    i odnośnik do polityki.
+  stronie każdej strefy): natywne `<dialog>` otwierane modalnie (fokus w oknie, tło `::backdrop`, Esc), oba okna
+  tej samej szerokości (do 48rem); przyciski każdego okna (`.ss-consent__actions`) w jednym wierszu, po równo,
+  a na wąskim telefonie (poniżej 36rem) jeden pod drugim.
+  - Baner `.ss-consent__banner`: tytuł, opis, trzy przyciski — „Zezwól na wszystkie” (główny), „Odrzuć”
+    i „Dostosuj” (drugorzędne, obrys) — i odnośnik do polityki.
   - Okno ustawień `.ss-consent__settings`: kategorie (`Enums\CookieCategory`) jako `x-admiro::switch`
     (niezbędne zablokowane, „Zawsze włączone”), lista cookies kategorii w `<details>`, przyciski i zamknięcie
     `.ss-icon-button`; zamknięcie bez decyzji przywraca baner.
