@@ -3045,20 +3045,16 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): przełącznik segmentowy z ikonami motywów
- * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG) z podwójnym obrysem jak .ss-tabs; wybrany segment wypełniony
- * akcentem, przestrzenny (--ss-shadow-segment, aria-pressed="true").
- * .ss-auth__theme — przełącznik w prawym górnym rogu karty formularza logowania (karta ma nad nagłówkiem miejsce na niego).
+ * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG); wybrany segment wypełniony akcentem (aria-pressed="true").
  */
 .ss-theme-toggle {
     display: inline-flex;
     flex: none;
     gap: 2px;
-    margin: calc(var(--ss-segment-gap) + var(--ss-segment-stroke));
     padding: 2px;
-    border: var(--ss-segment-stroke) solid var(--ss-segment-ring);
+    border: 1px solid var(--ss-color-border-strong);
     border-radius: var(--ss-radius-button);
-    background: var(--ss-color-surface-muted);
-    box-shadow: 0 0 0 var(--ss-segment-gap) var(--ss-color-surface), 0 0 0 calc(var(--ss-segment-gap) + var(--ss-segment-stroke)) var(--ss-segment-ring);
+    background: var(--ss-color-surface);
 }
 
 .ss-theme-toggle[hidden] {
@@ -3092,7 +3088,6 @@ a.ss-notification:focus-visible {
 .ss-theme-toggle__option[aria-pressed="true"] {
     background: var(--ss-color-accent);
     color: var(--ss-color-on-accent);
-    box-shadow: var(--ss-shadow-segment);
 }
 
 /* Wysoki kontrast: pełne ramki bez cieni i poświaty (pierścień w kolorze ramki). */
@@ -3108,18 +3103,6 @@ a.ss-notification:focus-visible {
 
 .ss-auth__card {
     position: relative;
-}
-
-.ss-auth__card:has(> .ss-auth__theme) {
-    padding-top: calc(var(--ss-space-16) + var(--ss-space-2));
-}
-
-.ss-auth__theme {
-    display: flex;
-    position: absolute;
-    top: var(--ss-space-4);
-    right: var(--ss-space-4);
-    gap: var(--ss-space-2);
 }
 
 /**
