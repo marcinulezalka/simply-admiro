@@ -6,7 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Strona startowa: w karcie marki pod logo simplysmart subtelne, przygaszone logo zarejestrowanych stref (każde raz; `View\ZoneLogos`, `.ss-welcome__zones`) — z nowego klucza `logo` strefy (SVG z `fill="currentColor"`, domyślnie `auth.logo`; `ZoneDefinition::$logo`).
+- Strona startowa w ramie (`.ss-frame`) z dwiema kartami o zagnieżdżonych zaokrągleniach; w karcie marki logo simplysmart i hasło na środku, pod nimi kafelki z bardzo delikatnym gradientem i przygaszonym logo zarejestrowanych stref (każde raz; `View\ZoneLogos`, `.ss-welcome__zones`) — z nowego klucza `logo` strefy (SVG z `fill="currentColor"`, domyślnie `auth.logo`; `ZoneDefinition::$logo`).
 - Dokumenty prawne w wersjach: polityka prywatności i klauzula RODO (tabela `legal_documents`, `Enums\LegalDocumentType`, `Legal\LegalDocuments` — szkic i publikacja jak w polityce cookies) z publicznymi stronami `/polityka-prywatnosci` i `/rodo` (trasy `admiro.legal.*`); strefa linkuje opublikowane dokumenty z `legal_documents` w configu w karcie logowania, stopce i e-mailach (`Legal\LegalLinks`).
 - Polecenie `admiro:legal:seed`: publikuje pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO z treści Core (administrator danych z `LEGAL_CONTROLLER_NAME`, `LEGAL_CONTROLLER_EMAIL`); idempotentne, istniejących dokumentów nie zmienia; każdy dokument opublikowany z szablonu zgłasza ostrzeżeniem w logu aplikacji i w wyjściu polecenia (także we wdrożeniu), żeby sprawdzić treść i administratora danych.
 - Strony polityk z odnośnikiem „Wstecz” nad i pod treścią (poprzednia strona z tej samej domeny, inaczej strona główna) i kartą „Zobacz także” z pozostałymi opublikowanymi dokumentami.

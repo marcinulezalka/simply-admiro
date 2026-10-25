@@ -212,8 +212,9 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-welcome — domyślna strona startowa (app/welcome): karta na środku ekranu, treść obok panelu
- * marki; na wąskim ekranie panel marki nad treścią. Panel ma odwrócone kolory motywu.
+ * .ss-welcome — domyślna strona startowa (app/welcome): rama .ss-frame na środku ekranu z dwiema kartami
+ * o zagnieżdżonych zaokrągleniach — treść (.ss-card) obok karty marki (kolory marki, logo i hasło
+ * na środku, pod nimi siatka kafelków z logo stref); na wąskim ekranie karta marki nad treścią.
  */
 .ss-welcome {
     display: flex;
@@ -224,14 +225,8 @@ button.ss-badge:focus-visible {
 }
 
 .ss-welcome__card {
-    display: flex;
-    flex-direction: column-reverse;
     width: 100%;
     max-width: 72rem;
-    overflow: hidden;
-    border-radius: 0.75rem;
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-color-text) 12%, transparent),
-        0 1rem 2.5rem -1.5rem color-mix(in srgb, var(--ss-color-text) 25%, transparent);
 }
 
 .ss-welcome__content {
@@ -325,11 +320,15 @@ button.ss-badge:focus-visible {
 .ss-welcome__brand {
     display: flex;
     flex-direction: column;
+    order: -1;
+    align-items: center;
     justify-content: center;
     gap: var(--ss-space-4);
     padding: var(--ss-space-16) var(--ss-space-8);
+    border-color: transparent;
     background: var(--ss-color-brand);
     color: var(--ss-color-on-brand);
+    text-align: center;
 }
 
 .ss-welcome__brand .ss-logo {
@@ -343,43 +342,56 @@ button.ss-badge:focus-visible {
     opacity: 0.7;
 }
 
-/* Logo stref pod marką simplysmart: małe, w kolorze karty, przygaszone (pełna widoczność po najechaniu). */
+/* Logo stref pod marką simplysmart: kafelki na środku (po kilka w wierszu, zwężane do 6.5rem na telefonie), każdy z bardzo delikatnym gradientem w kolorze
+   karty; logo małe i przygaszone (wyraźniejsze po najechaniu). */
 .ss-welcome__zones {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--ss-space-3) var(--ss-space-6);
-    align-items: center;
-    margin: var(--ss-space-2) 0 0;
-    padding: var(--ss-space-4) 0 0;
-    border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+    justify-content: center;
+    gap: var(--ss-space-3);
+    width: 100%;
+    margin: var(--ss-space-4) 0 0;
+    padding: 0;
     list-style: none;
 }
 
 .ss-welcome__zone-logo {
     display: flex;
-    opacity: 0.45;
-    transition: opacity 0.2s ease;
-}
-
-.ss-welcome__zone-logo:hover {
-    opacity: 0.8;
+    flex: 1 1 6.5rem;
+    max-width: 9rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.5rem;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+    border-radius: var(--ss-radius-control);
+    background: linear-gradient(135deg, color-mix(in srgb, currentColor 7%, transparent), color-mix(in srgb, currentColor 1%, transparent));
 }
 
 .ss-welcome__zone-logo svg {
     width: auto;
+    max-width: 100%;
     height: 1.125rem;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.ss-welcome__zone-logo:hover svg {
+    opacity: 0.85;
+}
+
+@media (min-width: 56rem) {
+    .ss-welcome__brand {
+        order: 0;
+    }
 }
 
 @media (min-width: 64rem) {
-    .ss-welcome__card {
-        flex-direction: row;
-    }
-
     .ss-welcome__content {
         padding: var(--ss-space-16);
     }
 
-    .ss-welcome__brand {
+    .ss-frame--row > .ss-welcome__brand {
         flex: 0 0 26rem;
     }
 
