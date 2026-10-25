@@ -15,6 +15,7 @@ namespace Simplysmart\Admiro\Database\Seeders;
 
 use Illuminate\Config\Repository;
 use Illuminate\Database\Seeder;
+use Psr\Log\LoggerInterface;
 use Simplysmart\Admiro\Contracts\InterfaceLocales;
 use Simplysmart\Admiro\Cookies\CookiePolicies;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
@@ -28,7 +29,8 @@ use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
  * języku interfejsu, który ma plik; `:name` i `:email` to administrator danych z `admiro.legal.controller`,
  * `:consent_days` — ważność zgody cookies. Seeder referencyjny, idempotentny: dokument, który ma już wersję albo
  * szkic, zostaje bez zmian (kolejne wersje powstają w panelu administratora); bez pliku w języku domyślnym nic
- * nie jest publikowane.
+ * nie jest publikowane. Każdy dokument opublikowany z szablonu trafia do logu aplikacji (ostrzeżenie) i do wyjścia
+ * komendy, żeby administrator sprawdził treść i dane administratora danych.
  */
 final class LegalDocumentsSeeder extends Seeder
 {
@@ -43,6 +45,7 @@ final class LegalDocumentsSeeder extends Seeder
         private readonly CookiePolicyVersions $cookieVersions,
         private readonly LegalDocuments $documents,
         private readonly LegalDocumentVersions $documentVersions,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function run(): void
@@ -53,6 +56,7 @@ final class LegalDocumentsSeeder extends Seeder
         if (isset($cookies[$default]) && $this->cookieVersions->current() === null && $this->cookieVersions->draft() === null) {
             $this->cookiePolicies->saveDraft($cookies);
             $this->cookiePolicies->publish($default);
+            $this->reportTemplate($cookies[$default]['title']);
         }
 
         foreach (LegalDocumentType::cases() as $type) {
@@ -61,8 +65,22 @@ final class LegalDocumentsSeeder extends Seeder
             if (isset($content[$default]) && $this->documentVersions->current($type) === null && $this->documentVersions->draft($type) === null) {
                 $this->documents->saveDraft($type, $content);
                 $this->documents->publish($type, $default);
+                $this->reportTemplate($content[$default]['title']);
             }
         }
+    }
+
+    /**
+     * Ostrzeżenie w logu aplikacji i w wyjściu komendy: dokument opublikowano z szablonu Core.
+     */
+    private function reportTemplate(string $title): void
+    {
+        $message = "Opublikowano szablon dokumentu „{$title}” z administratorem danych "
+            . "{$this->config->string('admiro.legal.controller.name')} ({$this->config->string('admiro.legal.controller.email')}). "
+            . 'To treść szablonowa: sprawdź ją i w razie potrzeby opublikuj nową wersję w panelu admiro.';
+
+        $this->logger->warning($message);
+        $this->command?->warn($message);
     }
 
     /**
