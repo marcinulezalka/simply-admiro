@@ -24,6 +24,8 @@ return [
     | jego zmiana nie zmienia nazw tras (prefiks "admiro." jest stały) i nie może być kodem języka.
     | Administratorzy domyślnie zawsze logują się kodem z e-maila i PIN-em (bez zaufanych urządzeń).
     | PIN administratorów ma co najmniej 8 cyfr zamiast 4 z mainboard (ADMIRO_PIN_MIN_LENGTH); maksimum 16 z mainboard.
+    | Marka strefy (public/images/, źródła w brand/): logotyp „admiro” w kroju Zen Dots w e-mailach, sygnet „a”
+    | jako awatar i ikony strony.
     |
     */
 
@@ -34,6 +36,15 @@ return [
         'auth' => [
             'trusted_devices' => ['enabled' => (bool) env('ADMIRO_TRUSTED_DEVICES', false)],
             'pin' => ['min_length' => filter_var(env('ADMIRO_PIN_MIN_LENGTH'), FILTER_VALIDATE_INT, ['options' => ['default' => 8]])],
+        ],
+        'brand' => [
+            'logo' => __DIR__ . '/../public/images/logo.png',
+            'signet' => __DIR__ . '/../public/images/signet.png',
+        ],
+        'favicon' => [
+            'ico' => __DIR__ . '/../public/images/favicon.ico',
+            'svg' => __DIR__ . '/../public/images/favicon.svg',
+            'apple' => __DIR__ . '/../public/images/apple-touch-icon.png',
         ],
     ],
 

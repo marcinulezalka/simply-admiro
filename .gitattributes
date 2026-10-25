@@ -6,4 +6,6 @@
 *.md diff=markdown
 *.php diff=php
 
+/brand export-ignore
 /.claude export-ignore
+
