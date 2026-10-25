@@ -33,6 +33,7 @@ use Simplysmart\Mainboard\Enums\AuthLayout;
 use Simplysmart\Mainboard\Enums\FaviconType;
 use Simplysmart\Mainboard\Http\SignInRoutes;
 use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Mainboard\Legal\LegalLinks;
 use Simplysmart\Mainboard\Permissions\RoleSelector;
 use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
 use Simplysmart\Mainboard\Translation\CascadeTextTranslator;
@@ -120,6 +121,7 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('roles', $account instanceof ZoneAccount ? $this->app->make(RoleSelector::class)->choices($zone, $account, $currentId) : [])
             ->with('currentRole', $account !== null ? $this->app->make(CurrentRole::class)->of($account, $currentId) : null)
             ->with('navigation', $navigation)
+            ->with('zoneLegalLinks', $this->app->make(LegalLinks::class)->for($zone))
             ->with('settingsMenu', $account !== null ? $this->app->make(ZoneSettingsMenu::class)->for($zone, $navigation) : null);
     }
 
@@ -140,7 +142,7 @@ final class ZonesServiceProvider extends ServiceProvider
      * Layout logowania dostaje układ strefy żądania (`auth.layout`), adresy jej banera (`auth.brand`, wersja
      * w adresie) i treść jej logo SVG (`auth.logo`); poza strefą z logowaniem (np. fałszywe logowanie pułapki,
      * podgląd w design systemie) układ domyślny i logo. Do tego arkusze (`stylesheets`), kolorystyki (`palettes`) i odnośniki prawne (`legal_links`, adresy i etykiety)
-     * strefy żądania. Prop `layout` komponentu wygrywa.
+     * strefy żądania, a także jej tytuł karty przeglądarki (tekst `page_title`, pusty = nagłówek ekranu). Prop `layout` komponentu wygrywa.
      */
     private function shareAuthLayout(View $view): void
     {
@@ -153,7 +155,8 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : [])
             ->with('zonePalettes', $zone->has() ? $zone->get()->palettes : [])
             ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
-            ->with('zoneLegalLinks', $settings === null ? [] : $zone->get()->legalLinkTargets())
+            ->with('zoneAuthPageTitle', $settings === null ? '' : $zone->get()->signInText('page_title'))
+            ->with('zoneLegalLinks', $settings === null ? [] : $this->app->make(LegalLinks::class)->for($zone->get()))
             ->with('zoneAuthLogo', $settings?->logo === null ? null : (file_get_contents($settings->logo) ?: null))
             ->with('zoneAuthBrand', $brand === null ? null : [
                 'light' => $brandUrl(AuthBrand::LIGHT),

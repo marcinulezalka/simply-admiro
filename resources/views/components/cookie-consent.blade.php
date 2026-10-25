@@ -1,4 +1,4 @@
-{{-- Zgoda na cookies (w szablonie bazowym x-mainboard::page, każda strona): tytuły z ikoną ciasteczka, przyciski z ikonami; baner na przyciemnionym tle (zezwól na wszystkie, odrzuć, dostosuj; odnośnik do polityki) i okno ustawień z kategoriami (niezbędne zawsze włączone, przełączniki pozostałych, lista cookies kategorii); skrypty opcjonalne nieaktywne do zgody. Logika w js/cookie-consent.js (ciasteczko zgody, rejestr zgód). $cookieConsent: ?Cookies\ConsentBannerState (null: baner niepotrzebny). --}}
+{{-- Zgoda na cookies (w szablonie bazowym x-mainboard::page, każda strona): tytuły z ikoną ciasteczka, przyciski z ikonami; baner na przyciemnionym tle (na górze zezwól na wszystkie jako przycisk główny na całą szerokość, pod nim w rzędzie odrzuć i dostosuj jako drugorzędne; odnośnik do polityki) i okno ustawień z kategoriami (niezbędne zawsze włączone, przełączniki pozostałych, lista cookies kategorii); skrypty opcjonalne nieaktywne do zgody. Logika w js/cookie-consent.js (ciasteczko zgody, rejestr zgód). $cookieConsent: ?Cookies\ConsentBannerState (null: baner niepotrzebny). --}}
 @if ($cookieConsent !== null)
     <div class="ss-consent" data-ss-consent data-version="{{ $cookieConsent->version }}" data-endpoint="{{ $cookieConsent->consentUrl }}" data-cookie="{{ $cookieConsent->cookieName }}" data-days="{{ $cookieConsent->lifetimeDays }}">
         <dialog class="ss-consent__dialog ss-consent__banner" data-ss-consent-banner aria-labelledby="ss-consent-title" aria-describedby="ss-consent-lead">
@@ -6,7 +6,7 @@
             <p class="ss-consent__lead" id="ss-consent-lead">{{ text('cookies.banner.lead') }}</p>
             <div class="ss-consent__actions ss-consent__actions--stacked">
                 <button class="ss-button ss-button--primary" type="button" data-ss-consent-action="accept"><x-mainboard::icon name="check-circle" class="ss-button__icon" />{{ text('cookies.actions.accept') }}</button>
-                <button class="ss-button ss-button--primary" type="button" data-ss-consent-action="reject"><x-mainboard::icon name="close" class="ss-button__icon" />{{ text('cookies.actions.reject') }}</button>
+                <button class="ss-button" type="button" data-ss-consent-action="reject"><x-mainboard::icon name="close" class="ss-button__icon" />{{ text('cookies.actions.reject') }}</button>
                 <button class="ss-button" type="button" data-ss-consent-action="customize"><x-mainboard::icon name="settings" class="ss-button__icon" />{{ text('cookies.actions.customize') }}</button>
             </div>
             @if ($cookieConsent->policyUrl !== null)

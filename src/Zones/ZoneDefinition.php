@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettings;
 use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
+use Simplysmart\Mainboard\Enums\LegalDocumentType;
 use Simplysmart\Mainboard\Enums\Palette;
 use Simplysmart\Mainboard\Mail\MailPalette;
 
@@ -49,6 +50,8 @@ final readonly class ZoneDefinition
      * @param list<array{route: string, label: string}> $legalLinks Odnośniki prawne w karcie logowania (krótka nazwa trasy
      *                                                         strefy i klucz tekstu), przed odnośnikami cookies; pusta
      *                                                         lista = same odnośniki cookies pod kartami.
+     * @param list<LegalDocumentType> $legalDocuments Opublikowane dokumenty prawne Core linkowane w strefie (karta logowania,
+     *                                              stopka, e-maile; Legal\LegalLinks) przed `legalLinks`.
      * @param ZoneBrand|null $brand Logo i sygnet strefy (`brand`); null = marka Core (w e-mailach logo simplysmart).
      * @param string|null $mailViews Prefiks widoków e-maili strefy (`mail.views`, np. `shop::mail.shop`): `<prefiks>.layout`
      *                               i `<prefiks>.<szablon>` zastępują widoki Core; null = layout i szablony Core.
@@ -79,6 +82,7 @@ final readonly class ZoneDefinition
         public ?string $mailViews = null,
         public MailPalette $mailPalette = new MailPalette(),
         public bool $roleContexts = false,
+        public array $legalDocuments = [],
     ) {}
 
     /**
@@ -152,19 +156,6 @@ final readonly class ZoneDefinition
         }
 
         return $model;
-    }
-
-    /**
-     * Odnośniki prawne strefy (`legal_links`) z adresami tras i etykietami, do stopek logowania i layoutu aplikacji.
-     *
-     * @return list<array{url: string, label: string}>
-     */
-    public function legalLinkTargets(): array
-    {
-        return array_map(fn(array $link): array => [
-            'url' => route($this->routeName($link['route'])),
-            'label' => text($link['label']),
-        ], $this->legalLinks);
     }
 
     /**

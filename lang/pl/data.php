@@ -147,6 +147,13 @@ return [
         'published_at' => 'Opublikowano',
         'json_i18n' => 'Tytuł i treść w językach',
     ],
+    'legal_document' => [
+        'name' => 'Wersja dokumentu',
+        'document' => 'Dokument',
+        'version' => 'Numer wersji',
+        'published_at' => 'Opublikowano',
+        'json_i18n' => 'Tytuł i treść w językach',
+    ],
 
     'cookie_consent' => [
         'recorded_at' => 'Zapisano',

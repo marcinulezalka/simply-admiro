@@ -21,7 +21,7 @@
         :back="$back"
         :navigation="$settingsMenu?->active ? $settingsMenu->groups : ($navigation?->groups() ?? [])"
         :settings="$settingsMenu"
-        :legal-links="$zone->legalLinkTargets()"
+        :legal-links="$zoneLegalLinks ?? []"
         :search="$navigation?->search()"
         :account="[
             'name' => $account->displayName(),

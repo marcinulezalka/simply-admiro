@@ -42,8 +42,11 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     rodziny tokenom --ss-font-sans, --ss-font-base, --ss-font-display, --ss-font-accent; zły wpis zatrzymuje start),
        // 'legal_links' => [['route' => 'legal.privacy', 'label' => '<paczka>::legal.privacy.link'], ...]
        //     (krótka nazwa trasy strefy i klucz tekstu; logowanie pokazuje je na dole karty formularza razem
-       //     z polityką i ustawieniami cookies, .ss-auth__legal — bez stopki strony simplysmart; layout aplikacji
+       //     przed polityką i ustawieniami cookies, .ss-auth__legal — bez stopki strony simplysmart; layout aplikacji
        //     w stopce simplysmart; tylko strefa z logowaniem),
+       // 'legal_documents' => ['privacy', 'gdpr'] (dokumenty prawne Core — Enums\LegalDocumentType — linkowane w karcie
+       //     logowania, stopce layoutu aplikacji i e-mailach strefy przed `legal_links`, tylko opublikowane; strony
+       //     dokumentów to trasy Core mainboard.legal.*; nieznana lub powtórzona wartość zatrzymuje start),
        // 'brand' => ['logo' => __DIR__.'/../public/images/logo.png', 'signet' => ...png]
        //     (marka strefy, PNG/JPG — klienci poczty nie pokazują SVG; logo trafia do e-maili, gdy organizacja nie ma
        //     własnego; brak pliku, zły format albo `favicon` w tej sekcji zatrzymuje start),
@@ -133,7 +136,8 @@ Ekrany logowania (`auth/*`) czytają teksty przez `ZoneDefinition::signInText()`
 `<texts>::sign_in.<klucz>`, na końcu Core `sign_in.<klucz>`. Poza tekstami Core strefa może dać wstęp i notkę
 każdego kroku (`lead`, `note`, `code_note`, `pin_lead`, `pin_note`, `pin_setup_note`; w Core puste), przykład adresu
 (`email_placeholder`) i przyciski (`submit`, `pin_setup_submit`); nagłówek może mieć wyróżniony fragment
-w `*gwiazdkach*` (`View\AccentText`).
+w `*gwiazdkach*` (`View\AccentText`). Tytuł karty przeglądarki (`<title>`) to nagłówek ekranu bez gwiazdek, chyba że
+strefa da `page_title` (w Core pusty) — wtedy jest nim na każdym ekranie logowania (np. sama nazwa strefy).
 
 **Kroki.** Każdy krok implementuje `Contracts\SignInStep`. Lista kroków i ich kolejność pochodzą z `auth.steps`, a domyślnie są to `EmailCodeStep`, `PinSetupStep`, `PinStep`.
 - `SignInFlow` wybiera pierwszy wymagany i niewykonany krok.

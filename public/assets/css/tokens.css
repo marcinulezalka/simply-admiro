@@ -59,6 +59,8 @@
     --ss-color-accent: var(--ss-color-accent-base);
     --ss-color-accent-hover: light-dark(var(--ss-gray-900), var(--ss-white));
     --ss-color-on-accent: light-dark(var(--ss-white), var(--ss-gray-900));
+    /* Kolor fragmentu w *gwiazdkach* (.ss-accent-text); strefa może dać kolor marki bez zmiany akcentu przycisków */
+    --ss-color-accent-text: var(--ss-color-accent);
     --ss-color-danger: light-dark(var(--ss-red-700), var(--ss-red-400));
 
     /* Stany (toasty, komunikaty): kolor tekstu i ikony oraz tło; zawsze z tekstem lub ikoną, nie samym kolorem */
@@ -186,6 +188,15 @@
     /* Logowanie: rozmiar tytułu karty i wspólna wysokość pól i przycisków formularza (strefa może je zmienić) */
     --ss-auth-title-size: 1.5rem;
     --ss-auth-control-height: 2.5rem;
+    /* Wysokość przycisków formularza logowania; domyślnie jak pola */
+    --ss-auth-button-height: var(--ss-auth-control-height);
+    /* Dodatkowy odstęp między nagłówkiem a formularzem karty logowania (ponad odstęp karty) */
+    --ss-auth-header-space: 0rem;
+    /* Separator nad odnośnikami prawnymi karty logowania (linia i odstęp nad wierszem); domyślnie bez separatora */
+    --ss-auth-legal-border: none;
+    --ss-auth-legal-space: 0rem;
+    /* Podkreślenie odnośników .ss-link poza najechaniem i fokusem; strefa może dać none (podkreślenie tylko pod kursorem) */
+    --ss-link-decoration: underline;
     /* Grubość kreski ikon liniowych (x-mainboard::icon); strefa może dać grubszą, bardziej miękką kreskę */
     --ss-icon-stroke: 1.75;
     --ss-content-page-width: 72rem;

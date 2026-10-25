@@ -32,6 +32,7 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-color-accent` | akcja główna, element aktywny | `#1f2937` (grafit) | `#f3f4f6` | `bg-gray-800` |
 | `--ss-color-accent-hover` | hover akcji głównej | `#111827` | `#ffffff` | `bg-gray-900` |
 | `--ss-color-on-accent` | tekst na akcencie | `#ffffff` | `#111827` | `text-white` |
+| `--ss-color-accent-text` | fragment w `*gwiazdkach*` (`.ss-accent-text`; strefa może dać kolor marki, akcent przycisków bez zmian) | `var(--ss-color-accent)` | `var(--ss-color-accent)` | `text-gray-800` |
 | `--ss-radius-card` | karty, panele, modale | `1rem` | | `rounded-2xl` |
 | `--ss-radius-control` | pola, kontrolki | `0.875rem` | | `rounded-xl` |
 | `--ss-radius-button` | przyciski, przyciski z ikoną, przełącznik motywu, klawisze PIN (strefa może dać `--ss-radius-pill`) | `var(--ss-radius-control)` | | `rounded-xl` |
@@ -39,7 +40,11 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-radius-pill` | pigułki, awatar, wyszukiwarka | `9999px` | | `rounded-full` |
 | `--ss-icon-stroke` | grubość kreski ikon liniowych `.ss-icon` (wygrywa z atrybutem plików; strefa może dać grubszą, miększą kreskę) | `1.75` | | `stroke-[1.75]` |
 | `--ss-auth-title-size` | tytuł karty logowania `.ss-auth__title` | `1.5rem` | | `text-2xl` |
-| `--ss-auth-control-height` | wspólna wysokość pól i przycisków formularza logowania (bez `.ss-button--sm`/`--lg`) | `2.5rem` | | `min-h-10` |
+| `--ss-auth-header-space` | dodatkowy odstęp między nagłówkiem a formularzem karty logowania (ponad odstęp karty) | `0rem` | | `mb-0` |
+| `--ss-auth-legal-border`, `--ss-auth-legal-space` | separator nad odnośnikami prawnymi karty logowania (`.ss-auth__legal`): linia i odstęp nad wierszem; znika z wierszem | `none`, `0rem` | | `border-t`, `pt-6` |
+| `--ss-link-decoration` | podkreślenie odnośników `.ss-link` poza najechaniem i fokusem (strefa może dać `none`: podkreślenie tylko pod kursorem) | `underline` | | `underline` |
+| `--ss-auth-control-height` | wysokość pól formularza logowania | `2.5rem` | | `min-h-10` |
+| `--ss-auth-button-height` | wysokość przycisków formularza logowania (bez `.ss-button--sm`/`--lg`) | `var(--ss-auth-control-height)` | | `h-10` |
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
 | `--ss-color-canvas` | tło powłoki aplikacji (`.ss-shell`) | `#e8e9ed` | `#0b0d12` | `bg-gray-200` |
@@ -206,8 +211,8 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: polityka cookies, odnośniki prawne strefy (`legal_links`) i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
-| `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i przełącznikiem motywu nad i pod treścią, spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł, `lead`) i treścią w `.ss-prose`, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: odnośniki prawne strefy (`legal_links`), polityka cookies i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
+| `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i odnośnikami cookies nad i pod treścią (bez przełącznika motywu; odnośniki `.ss-link` bez podkreślenia, podkreślone pod kursorem), spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł z opcjonalną ikoną `icon`, `lead`) i treścią w `.ss-prose` (tekst do 70ch, bloki na całą szerokość; odnośniki pogrubione w kolorze akcentu, podkreślone dopiero pod kursorem i przy fokusie); na stronie polityki cookies lista cookies `.ss-cookie-list` jako panele `.ss-card--muted` na całą szerokość z zawijaniem długich wartości i przycisk ustawień z ikoną, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
 
@@ -304,8 +309,9 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 
 - **Baner i ustawienia** `x-mainboard::cookie-consent` (w szablonie bazowym `x-mainboard::page`, więc na każdej
   stronie każdej strefy): natywne `<dialog>` otwierane modalnie (fokus w oknie, tło `::backdrop`, Esc).
-  - Baner `.ss-consent__banner`: tytuł, opis, trzy przyciski jeden pod drugim („Zezwól na wszystkie”, „Odrzuć”,
-    „Dostosuj”) i odnośnik do polityki.
+  - Baner `.ss-consent__banner`: tytuł, opis, trzy przyciski — „Zezwól na wszystkie” (główny) na górze na całą
+    szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj” (drugorzędne, obrys), na wąskim telefonie jeden pod drugim —
+    i odnośnik do polityki.
   - Okno ustawień `.ss-consent__settings`: kategorie (`Enums\CookieCategory`) jako `x-mainboard::switch`
     (niezbędne zablokowane, „Zawsze włączone”), lista cookies kategorii w `<details>`, przyciski i zamknięcie
     `.ss-icon-button`; zamknięcie bez decyzji przywraca baner.

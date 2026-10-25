@@ -15,7 +15,6 @@ namespace Simplysmart\Mainboard\Mail;
 
 use Closure;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Mail\Mailable;
@@ -25,6 +24,7 @@ use Illuminate\Mail\SentMessage;
 use LogicException;
 use Simplysmart\Mainboard\Contracts\CurrentZone;
 use Simplysmart\Mainboard\Contracts\ZoneRegistry;
+use Simplysmart\Mainboard\Legal\LegalLinks;
 use Simplysmart\Mainboard\Localization\LocaleRouting;
 use Simplysmart\Mainboard\Models\Organization;
 use Simplysmart\Mainboard\Zones\ZoneDefinition;
@@ -144,13 +144,9 @@ abstract class ZoneMailable extends Mailable
     private function legalLinks(ZoneDefinition $zone): array
     {
         $container = Container::getInstance();
-        $url = $container->make(UrlGenerator::class);
         $parameters = $container->make(LocaleRouting::class)->isPrefixed() ? [LocaleRouting::PARAMETER => $this->locale] : [];
 
-        return array_map(static fn(array $link): array => [
-            'url' => $url->route($zone->routeName($link['route']), $parameters),
-            'label' => text($link['label']),
-        ], $zone->legalLinks);
+        return $container->make(LegalLinks::class)->for($zone, $parameters);
     }
 
     /**

@@ -18,6 +18,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
+use Simplysmart\Mainboard\Enums\LegalDocumentType;
 use Simplysmart\Mainboard\Enums\Palette;
 use Simplysmart\Mainboard\Mail\MailPalette;
 
@@ -30,7 +31,9 @@ use Simplysmart\Mainboard\Mail\MailPalette;
  * (arkusze CSS strefy), palettes (kolorystyki do wyboru: wartości Enums\Palette), favicon (ikony strony: `ico`, `svg`,
  * `apple` — ścieżki plików), texts (namespace tekstów paczki strefy, np. etykiety ról), fonts (pliki .woff2 strefy:
  * klucz → `family`, `weight`, `style`, `file`, `unicode_range`), legal_links (odnośniki prawne w karcie logowania: lista
- * `route` — krótka nazwa trasy strefy — i `label` — klucz tekstu; tylko strefa z logowaniem), brand (`logo`, `signet` —
+ * `route` — krótka nazwa trasy strefy — i `label` — klucz tekstu; tylko strefa z logowaniem), legal_documents
+ * (dokumenty prawne Core linkowane w strefie, gdy są opublikowane: wartości Enums\LegalDocumentType; tylko strefa
+ * z logowaniem), brand (`logo`, `signet` —
  * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
  * `on_accent`) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
@@ -85,6 +88,7 @@ final readonly class ZoneDefinitionFactory
             textNamespace: $this->nullableString($config, 'texts', null),
             fonts: $this->fonts($name, Arr::array($config, 'fonts', [])),
             legalLinks: $model !== null ? $this->legalLinks($name, Arr::array($config, 'legal_links', [])) : [],
+            legalDocuments: $model !== null ? $this->legalDocuments($name, Arr::array($config, 'legal_documents', [])) : [],
             brand: $this->brand($name, Arr::array($config, 'brand', [])),
             mailViews: $this->mailViews($name, Arr::array($config, 'mail', [])),
             mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
@@ -198,6 +202,33 @@ final readonly class ZoneDefinitionFactory
         }
 
         return $palettes;
+    }
+
+    /**
+     * Dokumenty prawne Core strefy z `legal_documents` (wartości {@see LegalDocumentType}, bez powtórzeń, w kolejności
+     * z configu).
+     *
+     * @param array<array-key, mixed> $values
+     *
+     * @return list<LegalDocumentType>
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest znanym dokumentem albo się powtarza.
+     */
+    private function legalDocuments(string $zone, array $values): array
+    {
+        $documents = [];
+
+        foreach ($values as $value) {
+            $document = is_string($value) ? LegalDocumentType::tryFrom($value) : null;
+
+            if ($document === null || in_array($document, $documents, true)) {
+                throw new InvalidArgumentException("Zone [{$zone}] legal_documents must be unique values of " . LegalDocumentType::class . '.');
+            }
+
+            $documents[] = $document;
+        }
+
+        return $documents;
     }
 
     /**

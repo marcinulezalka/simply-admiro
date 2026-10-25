@@ -147,6 +147,13 @@ return [
         'published_at' => 'Published at',
         'json_i18n' => 'Title and content per language',
     ],
+    'legal_document' => [
+        'name' => 'Document version',
+        'document' => 'Document',
+        'version' => 'Version number',
+        'published_at' => 'Published at',
+        'json_i18n' => 'Title and content per language',
+    ],
 
     'cookie_consent' => [
         'recorded_at' => 'Recorded at',

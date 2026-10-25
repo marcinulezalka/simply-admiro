@@ -97,6 +97,18 @@ return [
         'retention_days' => is_numeric($days = env('COOKIE_CONSENT_RETENTION_DAYS')) ? (int) $days : 1826,
     ],
 
+    /*
+     * Dokumenty prawne (polityka prywatności, klauzula RODO, polityka cookies): administrator danych wpisywany do treści
+     * pierwszych wersji przez seeder `mainboard:legal:seed` (imię i nazwisko albo nazwa i e-mail kontaktowy, bez adresu).
+     * Kolejne wersje zmienia się w panelu administratora, nie w configu.
+     */
+    'legal' => [
+        'controller' => [
+            'name' => (string) env('LEGAL_CONTROLLER_NAME', 'Marcin Ulężałka'),
+            'email' => (string) env('LEGAL_CONTROLLER_EMAIL', 'kontakt@simplysmart.pl'),
+        ],
+    ],
+
     'localization' => [
 
         /*

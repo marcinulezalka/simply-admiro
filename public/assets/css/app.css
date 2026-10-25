@@ -524,7 +524,13 @@ button.ss-badge:focus-visible {
     color: var(--ss-color-text);
     font-size: 0.875rem;
     font-weight: 500;
+    text-decoration: var(--ss-link-decoration);
     text-underline-offset: 0.2em;
+}
+
+.ss-link:hover,
+.ss-link:focus-visible {
+    text-decoration: underline;
 }
 
 .ss-input:focus-visible,
@@ -581,6 +587,7 @@ button.ss-badge:focus-visible {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-2);
+    margin-bottom: var(--ss-auth-header-space);
 }
 
 .ss-auth__title {
@@ -591,13 +598,13 @@ button.ss-badge:focus-visible {
     line-height: 1.25;
 }
 
-/* Pola i przyciski formularza logowania mają tę samą wysokość (--ss-auth-control-height); rozmiary sm/lg zostają. */
+/* Pola formularza logowania mają wysokość --ss-auth-control-height, przyciski --ss-auth-button-height (domyślnie tę samą); rozmiary sm/lg zostają. */
 .ss-auth .ss-input {
     min-height: var(--ss-auth-control-height);
 }
 
 .ss-auth .ss-button:not(.ss-button--sm, .ss-button--lg) {
-    --ss-button-height: var(--ss-auth-control-height);
+    --ss-button-height: var(--ss-auth-button-height);
 }
 
 .ss-auth__lead {
@@ -3333,8 +3340,9 @@ a.ss-notification:focus-visible {
     height: 1rem;
 }
 
-.ss-content-page__theme {
-    margin-left: auto;
+/* Na stronach treści odnośniki .ss-link bez podkreślenia, podkreślone pod kursorem i przy fokusie (jak w treści). */
+.ss-content-page {
+    --ss-link-decoration: none;
 }
 
 .ss-content-page__layout {
@@ -3370,10 +3378,20 @@ a.ss-notification:focus-visible {
 }
 
 .ss-content-page__title {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
     margin: 0;
     font-size: 1.875rem;
     font-weight: 600;
     line-height: 1.2;
+}
+
+.ss-content-page__title-icon {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--ss-color-muted);
 }
 
 .ss-content-page__lead {
@@ -3438,12 +3456,16 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-prose — treść dokumentu (nagłówki h2/h3, akapity, listy, odnośniki) z wygodną długością wiersza; nagłówki
- * sekcji zostawiają odstęp przy skoku ze spisu treści.
+ * .ss-prose — treść dokumentu (nagłówki h2/h3, akapity, listy, odnośniki) z wygodną długością wiersza (tekst do 70ch,
+ * panele i inne bloki na całą szerokość karty); nagłówki sekcji zostawiają odstęp przy skoku ze spisu treści.
+ * Odnośniki w treści: pogrubione w kolorze akcentu, bez podkreślenia — podkreślenie pod kursorem i przy fokusie.
  */
 .ss-prose {
-    max-width: 70ch;
     line-height: 1.7;
+}
+
+.ss-prose :where(h2, h3, p, ul:not(.ss-cookie-list), ol) {
+    max-width: 70ch;
 }
 
 .ss-prose > :first-child {
@@ -3481,13 +3503,76 @@ a.ss-notification:focus-visible {
 
 .ss-prose a {
     color: var(--ss-color-accent);
-    text-decoration: underline;
+    font-weight: 600;
+    text-decoration: none;
     text-underline-offset: 2px;
+}
+
+.ss-prose a:hover,
+.ss-prose a:focus-visible {
+    text-decoration: underline;
 }
 
 .ss-prose a:focus-visible {
     outline: 2px solid var(--ss-color-accent);
     outline-offset: 2px;
+}
+
+/**
+ * .ss-cookie-list — lista cookies na stronie polityki: każdy plik w panelu (.ss-card--muted) na całą szerokość treści,
+ * nazwa z kategorią (.ss-badge) w nagłówku, cel i czas przechowywania pod spodem; długie nazwy i opisy się zawijają.
+ */
+.ss-cookie-list,
+.ss-prose .ss-cookie-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0 0 var(--ss-space-4);
+    padding: 0;
+    list-style: none;
+}
+
+.ss-prose .ss-cookie-list li + li {
+    margin-top: 0;
+}
+
+.ss-cookie-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.ss-cookie-list__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-cookie-list__name {
+    font-family: var(--ss-font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-cookie-list__details {
+    display: grid;
+    gap: var(--ss-space-2);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-cookie-list__details dt {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ss-cookie-list__details dd {
+    margin: 0;
 }
 
 /**
@@ -3599,13 +3684,27 @@ a.ss-notification:focus-visible {
     margin-top: var(--ss-space-4);
 }
 
+/* Przyciski banera: „Zezwól na wszystkie” (główny) na górze na całą szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj”
+   (drugorzędne) po połowie; na wąskim telefonie (poniżej 30rem) wszystkie jeden pod drugim. Kolejność w kodzie jest
+   taka sama jak na ekranie (także dla klawiatury). */
 .ss-consent__actions--stacked {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
 }
 
 .ss-consent__actions--stacked .ss-button {
     justify-content: center;
     width: 100%;
+}
+
+@media (min-width: 30rem) {
+    .ss-consent__actions--stacked {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ss-consent__actions--stacked .ss-button--primary {
+        grid-column: 1 / -1;
+    }
 }
 
 .ss-consent__save {
@@ -3670,7 +3769,8 @@ a.ss-notification:focus-visible {
 /**
  * .ss-auth__legal — odnośniki prawne strefy (`legal_links`) z polityką i ustawieniami cookies na dole karty
  * formularza logowania: drobny, wyśrodkowany wiersz w kolorze przygaszonym, zawijany; .ss-auth__legal-cookies wtapia
- * odnośniki cookies (x-mainboard::cookie-links) w ten wiersz. Bez żadnego odnośnika wiersz znika.
+ * odnośniki cookies (x-mainboard::cookie-links) w ten wiersz. Bez żadnego odnośnika wiersz znika (razem z separatorem
+ * nad nim: --ss-auth-legal-border i --ss-auth-legal-space, domyślnie brak).
  */
 .ss-auth__legal {
     display: flex;
@@ -3678,6 +3778,8 @@ a.ss-notification:focus-visible {
     gap: var(--ss-space-2) var(--ss-space-6);
     justify-content: center;
     margin-top: var(--ss-space-2);
+    padding-top: var(--ss-auth-legal-space);
+    border-top: var(--ss-auth-legal-border);
     font-family: var(--ss-font-sans);
     font-size: 0.75rem;
     font-weight: 600;
@@ -3897,7 +3999,7 @@ a.ss-notification:focus-visible {
 }
 
 .ss-accent-text {
-    color: var(--ss-color-accent);
+    color: var(--ss-color-accent-text);
     font-family: var(--ss-font-accent);
     font-style: italic;
 }

@@ -1,5 +1,5 @@
-{{-- Układ strony treści (np. polityka prywatności, regulamin; docs/design-system.md §5) na szablonie bazowym x-mainboard::page: pasek x-mainboard::content.bar (powrót i przełącznik motywu) nad i pod treścią, spis treści w karcie po lewej (na telefonie nad treścią, na szerokim ekranie przyklejony), karta dokumentu z nagłówkiem (eyebrow, tytuł, lead) i treścią w .ss-prose oraz opcjonalna karta „Zobacz także” (slot related, np. lista .ss-related). back: adres powrotu (bez niego pasek ma tylko przełącznik); toc: list<array{id: string, label: string}> — id nagłówków sekcji w treści; robots: np. "noindex, nofollow" (strony treści są domyślnie indeksowane). W strefie arkusze strefy ($zoneStylesheets z ZonesServiceProvider) po stylach Core. --}}
-@props(['title', 'description' => null, 'eyebrow' => null, 'lead' => null, 'back' => null, 'toc' => [], 'robots' => null])
+{{-- Układ strony treści (np. polityka prywatności, regulamin; docs/design-system.md §5) na szablonie bazowym x-mainboard::page: pasek x-mainboard::content.bar (powrót i odnośniki cookies, bez przełącznika motywu) nad i pod treścią, spis treści w karcie po lewej (na telefonie nad treścią, na szerokim ekranie przyklejony), karta dokumentu z nagłówkiem (eyebrow, tytuł z opcjonalną ikoną — prop icon, nazwa ikony x-mainboard::icon — lead) i treścią w .ss-prose oraz opcjonalna karta „Zobacz także” (slot related, np. lista .ss-related). back: adres powrotu (bez niego pasek ma tylko przełącznik); toc: list<array{id: string, label: string}> — id nagłówków sekcji w treści; robots: np. "noindex, nofollow" (strony treści są domyślnie indeksowane). W strefie arkusze strefy ($zoneStylesheets z ZonesServiceProvider) po stylach Core. --}}
+@props(['title', 'icon' => null, 'description' => null, 'eyebrow' => null, 'lead' => null, 'back' => null, 'toc' => [], 'robots' => null])
 <x-mainboard::page :title="$title" :description="$description ?? $lead" :robots="$robots">
     <x-slot:head>
         <x-mainboard::styles />
@@ -29,7 +29,7 @@
                         @if (filled($eyebrow))
                             <p class="ss-content-page__eyebrow">{{ $eyebrow }}</p>
                         @endif
-                        <h1 class="ss-content-page__title">{{ $title }}</h1>
+                        <h1 class="ss-content-page__title">@if (filled($icon))<x-mainboard::icon :name="$icon" class="ss-content-page__title-icon" />@endif{{ $title }}</h1>
                         @if (filled($lead))
                             <p class="ss-content-page__lead">{{ $lead }}</p>
                         @endif

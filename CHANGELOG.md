@@ -6,10 +6,21 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Tokeny dla stref: `--ss-auth-title-size` (tytuł karty logowania), `--ss-auth-control-height` (wspólna wysokość pól i przycisków formularza logowania), `--ss-icon-stroke` (grubość kreski ikon liniowych) i `--ss-radius-input` (zaokrąglenie pól niezależnie od kart); wartości domyślne bez zmian wyglądu.
+- Dokumenty prawne w wersjach: polityka prywatności i klauzula RODO (tabela `legal_documents`, `Enums\LegalDocumentType`, `Legal\LegalDocuments` — szkic i publikacja jak w polityce cookies) z publicznymi stronami `/polityka-prywatnosci` i `/rodo` (trasy `mainboard.legal.*`); strefa linkuje opublikowane dokumenty z `legal_documents` w configu w karcie logowania, stopce i e-mailach (`Legal\LegalLinks`).
+- Polecenie `mainboard:legal:seed`: publikuje pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO z treści Core (administrator danych z `LEGAL_CONTROLLER_NAME`, `LEGAL_CONTROLLER_EMAIL`); idempotentne, istniejących dokumentów nie zmienia.
+- Strony polityk z odnośnikiem „Wstecz” nad i pod treścią (poprzednia strona z tej samej domeny, inaczej strona główna) i kartą „Zobacz także” z pozostałymi opublikowanymi dokumentami.
+- Tokeny dla stref: `--ss-auth-title-size` (tytuł karty logowania), `--ss-auth-control-height` (wysokość pól formularza logowania), `--ss-auth-button-height` (wysokość jego przycisków, domyślnie jak pola), `--ss-icon-stroke` (grubość kreski ikon liniowych), `--ss-color-accent-text` (kolor fragmentu w `*gwiazdkach*`, domyślnie akcent) `--ss-auth-header-space` (dodatkowy odstęp między nagłówkiem a formularzem logowania), `--ss-auth-legal-border` i `--ss-auth-legal-space` (separator nad odnośnikami prawnymi logowania), `--ss-link-decoration` (podkreślenie odnośników poza najechaniem) i `--ss-radius-input` (zaokrąglenie pól niezależnie od kart); wartości domyślne bez zmian wyglądu.
+- Tytuł karty przeglądarki na ekranach logowania z tekstu strefy `page_title` (np. sama nazwa strefy); pusty w Core, wtedy jak dotąd nagłówek ekranu.
 - Subtelne ikony w polach kodu i PIN-u na stronach logowania (`lock` przy PIN-ie, `shield-check` przy kodzie z e-maila); `x-mainboard::pin-field` przyjmuje prop `icon`.
 - Układ logowania `split-reversed` (`Enums\AuthLayout::SplitReversed`, `auth.layout` strefy): dwie karty w ramie w odbiciu lustrzanym — formularz po lewej, karta marki po prawej (`.ss-auth--reversed`; na telefonie marka nad formularzem); z banerem karta formularza zakrywa zaokrąglenie banera po swojej prawej stronie.
 - Logo strefy w karcie marki: `auth.logo` w configu strefy (ścieżka pliku SVG z `fill="currentColor"`, osadzany inline w kolorze karty) zamiast logo simplysmart; brak pliku albo inny format zatrzymuje start (`ZoneAuthSettings::$logo`, prop `logo` w `x-mainboard::auth.layout`).
+
+### Changed
+
+- Strony treści (polityki): bez przełącznika motywu; tytuł z opcjonalną ikoną (prop `icon` w `x-mainboard::content.layout`, polityka cookies z ikoną ciasteczka); odnośniki w treści i na pasku bez podkreślenia — pojawia się pod kursorem i przy fokusie (w treści odnośniki pogrubione); tekst do 70ch, bloki na całą szerokość karty.
+- Polityka cookies: lista cookies jako panele na całą szerokość (nazwa z kategorią, cel, czas przechowywania; długie wartości zawijane) zamiast tabeli; przycisk „Ustawienia cookies” z ikoną.
+- Baner zgody cookies: „Zezwól na wszystkie” (główny) na górze na całą szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj” jako przyciski drugorzędne (obrys; wcześniej „Odrzuć” był główny); na wąskim telefonie jeden pod drugim.
+- Odnośniki prawne na dole karty logowania w kolejności: dokumenty strefy (`legal_links`, np. polityka prywatności, RODO), polityka cookies, ustawienia cookies (wcześniej polityka cookies była pierwsza).
 
 ## [0.3.0] - 2026-10-25
 

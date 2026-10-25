@@ -14,6 +14,7 @@ declare(strict_types=1);
 return [
 
     'title' => 'Logowanie',
+    'page_title' => '',
     'lead' => '',
     'note' => '',
     'email_placeholder' => '',

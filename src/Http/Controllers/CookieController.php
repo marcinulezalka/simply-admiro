@@ -25,12 +25,14 @@ use Simplysmart\Mainboard\Cookies\CookiePolicyRejected;
 use Simplysmart\Mainboard\Cookies\PolicyMarkdown;
 use Simplysmart\Mainboard\Enums\ConsentDecision;
 use Simplysmart\Mainboard\Enums\CookieCategory;
+use Simplysmart\Mainboard\Legal\BackLink;
+use Simplysmart\Mainboard\Legal\LegalLinks;
 use Simplysmart\Mainboard\Queries\Cookies\CookiePolicyVersions;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Publiczne trasy Core dla cookies (bez sesji): strona bieżącej polityki cookies w języku żądania (albo domyślnym)
- * z listą cookies według kategorii oraz zapis zgody z banera w rejestrze (JSON, limit żądań, bez IP).
+ * z listą cookies według kategorii, odnośnikiem „Wstecz” i kartą „Zobacz także” (opublikowane dokumenty prawne) oraz zapis zgody z banera w rejestrze (JSON, limit żądań, bez IP).
  */
 final readonly class CookieController
 {
@@ -38,7 +40,7 @@ final readonly class CookieController
         private CookiePolicyVersions $versions,
     ) {}
 
-    public function policy(CookieCatalog $catalog, InterfaceLocales $locales): View
+    public function policy(Request $request, CookieCatalog $catalog, InterfaceLocales $locales, LegalLinks $links, BackLink $back): View
     {
         $policy = $this->versions->current() ?? throw new NotFoundHttpException();
         $content = $policy->content(App::getLocale());
@@ -52,6 +54,8 @@ final readonly class CookieController
             'title' => $content['title'],
             'html' => PolicyMarkdown::html($content['body']),
             'cookies' => $catalog->all(),
+            'back' => $back->for($request),
+            'related' => $links->related(LegalLinks::COOKIES),
         ]);
     }
 

@@ -343,6 +343,22 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   bieżącą wersję polityki. `mainboard:cookies:prune` (codziennie) usuwa wpisy starsze niż
   `COOKIE_CONSENT_RETENTION_DAYS` (domyślnie 1826 dni).
 
+## 14b. Dokumenty prawne
+
+| Tabela | Model | Kolumny |
+| --- | --- | --- |
+| `legal_documents` | `LegalDocument` | standardowe; `document` (`Enums\LegalDocumentType`: `privacy`, `gdpr`), `version` (null = szkic, unikalny w obrębie dokumentu), `published_at`; tytuł i treść Markdown w każdym języku interfejsu w `json_i18n` (`{język: {title, body}}`, jak w polityce cookies) |
+
+- Każdy dokument ma jeden szkic; zaczyna się od treści bieżącej wersji, publikacja (`Legal\LegalDocuments::publish()`)
+  wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer dokumentu. Opublikowanej wersji się nie zmienia;
+  wersje czyta `Queries\Legal\LegalDocumentVersions`.
+- Publiczne strony to trasy Core `mainboard.legal.privacy` (`/polityka-prywatnosci`) i `mainboard.legal.gdpr`
+  (`/rodo`); bez opublikowanej wersji 404. Strefa linkuje opublikowane dokumenty z `legal_documents` w configu
+  (`Legal\LegalLinks`: karta logowania, stopka layoutu aplikacji, e-maile).
+- Pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO publikuje `php artisan mainboard:legal:seed`
+  (`Database\Seeders\LegalDocumentsSeeder`, treść z `database/seeders/legal/<język>/<dokument>.md`, administrator danych
+  z `LEGAL_CONTROLLER_NAME` i `LEGAL_CONTROLLER_EMAIL`); idempotentnie — dokument z wersją albo szkicem zostaje.
+
 ## 15. Organizacje i uprawnienia
 
 Uprawnienia stref działają na `spatie/laravel-permission` z włączonymi zespołami. Zespołem jest
