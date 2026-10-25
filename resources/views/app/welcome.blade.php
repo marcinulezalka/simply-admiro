@@ -1,4 +1,4 @@
-{{-- Domyślna strona startowa aplikacji (trasa `/` szkieletu: view('welcome')). Aplikacja zastępuje ją własnym resources/views/welcome.blade.php. Jedna strona bez akcji: marka, funkcje Core jako ikona, tytuł i opis, stopka z logo Laravela i wersją admiro; rama .ss-frame z dwiema kartami; w karcie marki logo simplysmart na środku, pod nim siatka kafelków z subtelnym gradientem i logo zarejestrowanych stref (View\ZoneLogos). Nazwy simplysmart i admiro wyróżnia View\BrandNames. --}}
+{{-- Domyślna strona startowa aplikacji (trasa `/` szkieletu: view('welcome')). Aplikacja zastępuje ją własnym resources/views/welcome.blade.php. Jedna strona bez akcji: marka, funkcje Core jako ikona, tytuł i opis, stopka z logo Laravela i wersją admiro; rama .ss-frame z dwiema kartami; w karcie marki logo simplysmart na środku, pod nim siatka kafelków z subtelnym gradientem i logo zarejestrowanych stref (View\ZoneLogos). Nazwy simplysmart i admiro wyróżnia View\BrandNames, w nagłówku nazwa simplysmart to logo SVG (BrandNames::withLogo()). --}}
 @php($highlight = \Simplysmart\Admiro\View\BrandNames::highlight(...))
 @php($features = ['zones' => 'zones', 'sign_in' => 'sign-in', 'dictionaries' => 'dictionaries', 'history' => 'history', 'locale' => 'locale', 'standards' => 'standards'])
 <x-admiro::page :title="config('app.name')" :description="text('welcome.lead')">
@@ -9,7 +9,7 @@
     <div class="ss-welcome">
         <main class="ss-frame ss-frame--row ss-welcome__card">
             <section class="ss-card ss-welcome__content">
-                <h1 class="ss-welcome__title">{{ $highlight(text('welcome.title')) }}</h1>
+                <h1 class="ss-welcome__title">{{ \Simplysmart\Admiro\View\BrandNames::withLogo(text('welcome.title')) }}</h1>
                 <p class="ss-welcome__lead ss-muted">{{ $highlight(text('welcome.lead')) }}</p>
 
                 <h2 class="ss-welcome__heading">{{ text('welcome.inside') }}</h2>

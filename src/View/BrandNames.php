@@ -28,10 +28,27 @@ final class BrandNames
      */
     public const array NAMES = ['simplysmart', 'admiro'];
 
+    /**
+     * Logo simplysmart osadzane w tekście zamiast nazwy (np. w nagłówku strony startowej).
+     */
+    public const string LOGO_NAME = 'simplysmart';
+
     public static function highlight(string $text): HtmlString
     {
         $pattern = '/\b(' . implode('|', array_map(preg_quote(...), self::NAMES)) . ')\b/u';
 
         return new HtmlString((string) preg_replace($pattern, '<strong class="ss-brand-name">$1</strong>', e($text)));
+    }
+
+    /**
+     * Jak highlight(), ale nazwa simplysmart (całe słowo) staje się logo SVG w linii tekstu (`.ss-logo-inline`,
+     * fill="currentColor", aria-label zachowuje nazwę dla czytników ekranu); pozostałe nazwy są wyróżnione.
+     */
+    public static function withLogo(string $text): HtmlString
+    {
+        $parts = preg_split('/\b' . preg_quote(self::LOGO_NAME, '/') . '\b/u', $text) ?: [$text];
+        $logo = '<span class="ss-logo-inline">' . trim(CoreAssets::contents('img/brand/logo.svg')) . '</span>';
+
+        return new HtmlString(implode($logo, array_map(static fn(string $part): string => self::highlight($part)->toHtml(), $parts)));
     }
 }

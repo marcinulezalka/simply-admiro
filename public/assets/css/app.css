@@ -21,6 +21,18 @@
     color: var(--ss-color-brand);
 }
 
+/* Logo simplysmart w linii tekstu (View\BrandNames::withLogo()): wysokość z rozmiaru fontu, w kolorze tekstu, na linii bazowej. */
+.ss-logo-inline {
+    display: inline-block;
+    vertical-align: -0.34em;
+}
+
+.ss-logo-inline svg {
+    display: block;
+    width: auto;
+    height: 1.3em;
+}
+
 .ss-muted {
     color: var(--ss-color-muted);
 }
