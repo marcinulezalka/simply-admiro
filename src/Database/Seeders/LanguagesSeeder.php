@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
+namespace Simplysmart\Mainboard\Database\Seeders;
+
+use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Mainboard\Models\Dictionaries\Language;
+
+/**
+ * Słownik języków: języki urzędowe krajów z listy (dane ICU) z nazwą w językach interfejsu
+ * i nazwą własną; ikonę flagi (LocalizationData::languageFlagIcons()) dopisuje tylko wpisom bez niej.
+ * Od startu: język aplikacji domyślny, języki z APP_LOCALES jako języki interfejsu, włączone także
+ * ACTIVE_LANGUAGES.
+ */
+final class LanguagesSeeder extends DictionarySeeder
+{
+    public function run(): void
+    {
+        $default = $this->defaultLocale();
+        $interface = $this->interfaceLocales();
+        $active = array_values(array_unique([...$interface, ...LocalizationData::ACTIVE_LANGUAGES]));
+        $hasDefault = Language::query()->where(ColumnNames::IS_DEFAULT, true)->exists();
+
+        $codes = array_values(array_unique([...$active, ...LocalizationData::languageCodes()]));
+        $flagIcons = LocalizationData::languageFlagIcons($codes);
+
+        foreach ($codes as $code) {
+            $language = $this->byCode(Language::class, $code);
+            $language->forceFill([
+                'name' => LocalizationData::languageName($code, $default),
+                'native_name' => LocalizationData::languageName($code, $code),
+                'json_i18n' => $this->translations(static fn(string $locale): string => LocalizationData::languageName($code, $locale)),
+            ]);
+
+            if ($language->flag_icon === null) {
+                $language->forceFill(['flag_icon' => $flagIcons[$code] ?? null]);
+            }
+
+            if (! $language->exists) {
+                $language->forceFill([
+                    'is_active' => in_array($code, $active, true),
+                    'is_interface' => in_array($code, $interface, true),
+                    'is_default' => ! $hasDefault && $code === $default,
+                    'sort_order' => self::sortOrder($code, $active),
+                ]);
+            }
+
+            $language->save();
+        }
+    }
+}

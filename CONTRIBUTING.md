@@ -5,13 +5,13 @@ Zasady rozwijania projektu i wydawania kolejnych wersji.
 ## Pakiety zewnętrzne
 
 Zanim dodasz zależność do `composer.json`, sprawdź zasady w
-`docs/zaleznosci.md` w Core (`simplysmart/mainboard`): licencja zgodna z MIT, `require` / `require-dev`, `composer audit`.
+[docs/zaleznosci.md](docs/zaleznosci.md): licencja zgodna z MIT, `require` / `require-dev`, `composer audit`.
 
 ## Standardy kodu
 
 PSR-4 (autoload: jedna klasa na plik, namespace odpowiada katalogowi) i styl PER Coding Style (następca PSR-12) pilnowany przez Laravel Pint z presetem `per` (`pint.json`). Każdy plik PHP zaczyna się od `declare(strict_types=1);` i nagłówka PHPDoc z prawami autorskimi (wymusza to Pint). Przed commitem uruchom `composer lint` i `composer analyse` (PHPStan, poziom `max`); `composer format` poprawia styl.
 
-Kontrakty (interfejsy) paczki trzymamy w `src/Contracts/`, a ich implementacje wiążemy w `AdmiroServiceProvider`.
+Kontrakty (interfejsy) paczki trzymamy w `src/Contracts/`, a ich implementacje wiążemy w providerach obszarów (`src/Providers/`), rejestrowanych przez `AdmiroServiceProvider`. Strefa administratorów (`src/Panel/`) korzysta z rdzenia tak jak każda inna strefa.
 
 ## Wydanie wersji
 
@@ -33,6 +33,6 @@ podbijania (MAJOR / MINOR / PATCH) i strefę czasową daty opisuje [docs/narzedz
 
 ## Narzędzia deweloperskie
 
-Kod w `src/Tools/` to czysty PHP CLI: bez Laravela, Core i klas strefy (uruchamia się przed frameworkiem). Operacje
+Kod w `src/Tools/` to czysty PHP CLI: bez Laravela, rdzenia i klas strefy (uruchamia się przed frameworkiem). Operacje
 zapisujące pliki albo działające na serwerze mają `--dry-run`, a `deploy:fresh` dodatkowo `--confirm=<DEPLOY_SSH>`.
 Testy narzędzi są w `tests/Tools/` (`composer test`) i działają tylko w katalogach tymczasowych.

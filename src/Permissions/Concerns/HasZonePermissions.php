@@ -1,0 +1,102 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * This file is part of simplysmart/mainboard.
+ *
+ * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
+ *
+ * Licensed under the Simplysmart Restricted Source License 1.0.
+ * See the LICENSE file distributed with this source code.
+ */
+
+namespace Simplysmart\Mainboard\Permissions\Concerns;
+
+use BackedEnum;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Collection;
+use Simplysmart\Mainboard\Contracts\CurrentOrganization;
+use Simplysmart\Mainboard\Contracts\CurrentRole;
+use Simplysmart\Mainboard\Models\Permissions\PermissionDenial;
+use Simplysmart\Mainboard\Models\Relations\HasPermissionDenials;
+use Spatie\Permission\Contracts\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+use Spatie\Permission\Traits\HasRoles;
+
+/**
+ * Role i uprawnienia spatie konta strefy z odmowami: odmowa w bieżącej organizacji wygrywa z uprawnieniem
+ * z ról i bezpośrednim. Nadpisuje hasPermissionTo(), więc middleware `permission:`, Gate i can() uwzględniają odmowy
+ * oraz aktywną rolę (Contracts\CurrentRole, strefa z `role_contexts`): z kilku ról konta liczy się wtedy tylko ona
+ * (uprawnienia bezpośrednie zostają).
+ *
+ * Odmowy konta są wczytywane raz na instancję modelu (relacja `permissionDenials`).
+ *
+ * @property-read Collection<int, PermissionDenial> $permissionDenials
+ * @property-read Collection<int, Role> $roles
+ *
+ * @method $this unsetRelation(string $relation) Metoda modelu Eloquent.
+ */
+trait HasZonePermissions
+{
+    use HasPermissionDenials;
+    use HasRoles {
+        hasPermissionTo as private hasPermissionFromRoles;
+    }
+
+    /**
+     * @param string|int|Permission|BackedEnum $permission
+     *
+     * @throws \Spatie\Permission\Exceptions\PermissionDoesNotExist
+     */
+    public function hasPermissionTo($permission, ?string $guardName = null): bool
+    {
+        if (! $this->hasPermissionFromRoles($permission, $guardName)) {
+            return false;
+        }
+
+        $permission = $this->filterPermission($permission, $guardName);
+
+        return ! $this->isOutsideActiveRole($permission) && ! $this->isPermissionDenied($permission);
+    }
+
+    /**
+     * Czy uprawnienie pochodzi tylko z ról innych niż aktywna rola konta w bieżącej organizacji (bez aktywnej roli
+     * albo z uprawnieniem bezpośrednim: nie).
+     */
+    public function isOutsideActiveRole(Permission $permission): bool
+    {
+        $active = $this instanceof Authenticatable
+            ? app(CurrentRole::class)->of($this, app(CurrentOrganization::class)->id())
+            : null;
+
+        if ($active === null || $this->hasDirectPermission($permission)) {
+            return false;
+        }
+
+        return ! $this->roles->contains(static fn(Role $role): bool => $role->name === $active && $role->hasPermissionTo($permission));
+    }
+
+    /**
+     * Zapomina wczytane role, uprawnienia i odmowy konta (po zmianie bieżącej organizacji albo przypisań),
+     * więc kolejne sprawdzenie czyta je od nowa.
+     */
+    public function forgetZonePermissions(): static
+    {
+        return $this->unsetRelation('roles')->unsetRelation('permissions')->unsetRelation('permissionDenials');
+    }
+
+    /**
+     * Czy konto ma odmowę uprawnienia w bieżącej organizacji.
+     */
+    public function isPermissionDenied(Permission $permission): bool
+    {
+        $organization = app(PermissionRegistrar::class)->getPermissionsTeamId();
+
+        return $this->permissionDenials->contains(
+            static fn(PermissionDenial $denial): bool => $denial->permission_id === $permission->getKey()
+                && $denial->organization_id === $organization,
+        );
+    }
+}

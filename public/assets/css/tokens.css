@@ -1,0 +1,335 @@
+/**
+ * Tokeny marki simplysmart: jedyne miejsce z wartościami kolorów, fontów i odstępów.
+ * Komponenty używają tylko zmiennych semantycznych (--ss-color-bg, --ss-color-text…),
+ * nigdy palety bazowej. Token z wariantem dla motywu ciemnego ma postać light-dark(jasny, ciemny): motyw wybiera
+ * color-scheme (system albo data-theme na <html>), więc obie wartości stoją w jednej linii.
+ *
+ * Paleta marki: czerń i biel z logotypu (zob. brand/README.md).
+ */
+
+:root {
+    color-scheme: light dark;
+
+    /* Paleta bazowa */
+    --ss-black: #000000;
+    --ss-white: #ffffff;
+    --ss-slate-50: #f8fafc;
+    --ss-slate-100: #f1f5f9;
+    --ss-slate-700: #334155;
+    --ss-slate-800: #1e293b;
+    --ss-slate-900: #0f172a;
+    --ss-slate-950: #020617;
+    --ss-gray-50: #f9fafb;
+    --ss-gray-100: #f3f4f6;
+    --ss-gray-200: #e5e7eb;
+    --ss-gray-400: #9ca3af;
+    --ss-gray-500: #6b7280;
+    --ss-gray-600: #4b5563;
+    --ss-gray-800: #1f2937;
+    --ss-gray-900: #111827;
+    --ss-neutral-400: #a3a3a3;
+    --ss-neutral-900: #171717;
+    --ss-red-50: #fef2f2;
+    --ss-red-700: #b91c1c;
+    --ss-red-950: #450a0a;
+    --ss-green-50: #f0fdf4;
+    --ss-green-400: #4ade80;
+    --ss-green-700: #15803d;
+    --ss-green-950: #052e16;
+    --ss-amber-50: #fffbeb;
+    --ss-amber-400: #fbbf24;
+    --ss-amber-800: #92400e;
+    --ss-amber-950: #451a03;
+    --ss-blue-50: #eff6ff;
+    --ss-blue-400: #60a5fa;
+    --ss-blue-700: #1d4ed8;
+    --ss-blue-950: #172554;
+    --ss-red-400: #f87171;
+
+    /* Kolory semantyczne: motyw jasny (docs/design-system.md §2) */
+    --ss-color-bg: light-dark(var(--ss-slate-50), var(--ss-slate-950));
+    --ss-color-surface: light-dark(var(--ss-white), var(--ss-slate-900));
+    --ss-color-surface-muted: light-dark(var(--ss-slate-100), var(--ss-slate-800));
+    --ss-color-border: light-dark(var(--ss-gray-100), var(--ss-slate-800));
+    --ss-color-border-strong: light-dark(var(--ss-gray-200), var(--ss-slate-700));
+    --ss-color-text: light-dark(var(--ss-gray-900), var(--ss-gray-50));
+    --ss-color-muted: light-dark(var(--ss-gray-500), var(--ss-gray-400));
+    /* Akcent bazowy strefy: kolorystyka (data-palette) nadpisuje --ss-color-accent, baza zostaje (próbka „domyślna”) */
+    --ss-color-accent-base: light-dark(var(--ss-gray-800), var(--ss-gray-100));
+    --ss-color-accent: var(--ss-color-accent-base);
+    --ss-color-accent-hover: light-dark(var(--ss-gray-900), var(--ss-white));
+    --ss-color-on-accent: light-dark(var(--ss-white), var(--ss-gray-900));
+    /* Kolor fragmentu w *gwiazdkach* (.ss-accent-text); strefa może dać kolor marki bez zmiany akcentu przycisków */
+    --ss-color-accent-text: var(--ss-color-accent);
+    --ss-color-danger: light-dark(var(--ss-red-700), var(--ss-red-400));
+
+    /* Stany (toasty, komunikaty): kolor tekstu i ikony oraz tło; zawsze z tekstem lub ikoną, nie samym kolorem */
+    --ss-color-danger-surface: light-dark(var(--ss-red-50), var(--ss-red-950));
+
+    /* Przyciemnienie pod wysuwanym panelem (menu na telefonie) */
+    --ss-color-backdrop: light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.6));
+    --ss-color-success: light-dark(var(--ss-green-700), var(--ss-green-400));
+    --ss-color-success-surface: light-dark(var(--ss-green-50), var(--ss-green-950));
+    --ss-color-warning: light-dark(var(--ss-amber-800), var(--ss-amber-400));
+    --ss-color-warning-surface: light-dark(var(--ss-amber-50), var(--ss-amber-950));
+    --ss-color-info: light-dark(var(--ss-blue-700), var(--ss-blue-400));
+    --ss-color-info-surface: light-dark(var(--ss-blue-50), var(--ss-blue-950));
+
+    /* Karta odwrócona (wyróżniona kolorem, np. obok jasnej karty w ramie) */
+    --ss-color-surface-inverse: light-dark(var(--ss-neutral-900), var(--ss-gray-100));
+    --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));
+    --ss-color-muted-inverse: light-dark(var(--ss-neutral-400), var(--ss-gray-600));
+
+    /* Powłoka aplikacji (x-mainboard::app.layout): neutralne szare płótno, jaśniejszy panel menu, delikatna biel
+       pod najechaniem pozycji menu; aktywna pozycja i karty mają --ss-color-surface z miękkim cieniem */
+    --ss-color-canvas: light-dark(#e8e9ed, #0b0d12);
+    --ss-color-sidebar: light-dark(#f3f4f6, #141821);
+    --ss-color-sidebar-hover: light-dark(rgb(255 255 255 / 0.65), rgb(255 255 255 / 0.06));
+
+    /* Tło stron logowania: delikatny gradient z tła strony w odcień powierzchni */
+    --ss-color-auth-from: light-dark(var(--ss-white), var(--ss-slate-900));
+    --ss-color-auth-to: light-dark(var(--ss-slate-100), var(--ss-slate-950));
+
+    /* Marka: logo i panel marki wyłącznie w czerni albo bieli (brand/README.md) */
+    --ss-color-brand: light-dark(var(--ss-black), var(--ss-white));
+    --ss-color-on-brand: light-dark(var(--ss-white), var(--ss-black));
+
+    /* Kolory awatarów (Enums\AvatarColor): tło i inicjały, kontrast co najmniej 6,4:1 */
+    --ss-avatar-slate-bg: light-dark(#e2e8f0, #334155);
+    --ss-avatar-slate-fg: light-dark(#1e293b, #e2e8f0);
+    --ss-avatar-red-bg: light-dark(#fee2e2, #7f1d1d);
+    --ss-avatar-red-fg: light-dark(#991b1b, #fecaca);
+    --ss-avatar-amber-bg: light-dark(#fef3c7, #78350f);
+    --ss-avatar-amber-fg: light-dark(#92400e, #fde68a);
+    --ss-avatar-green-bg: light-dark(#dcfce7, #14532d);
+    --ss-avatar-green-fg: light-dark(#166534, #bbf7d0);
+    --ss-avatar-teal-bg: light-dark(#ccfbf1, #134e4a);
+    --ss-avatar-teal-fg: light-dark(#115e59, #99f6e4);
+    --ss-avatar-blue-bg: light-dark(#dbeafe, #1e3a8a);
+    --ss-avatar-blue-fg: light-dark(#1e40af, #bfdbfe);
+    --ss-avatar-violet-bg: light-dark(#ede9fe, #4c1d95);
+    --ss-avatar-violet-fg: light-dark(#5b21b6, #ddd6fe);
+    --ss-avatar-pink-bg: light-dark(#fce7f3, #831843);
+    --ss-avatar-pink-fg: light-dark(#9d174d, #fbcfe8);
+
+    /* Kolorystyki (Enums\Palette, data-palette na <html>): akcent, jego hover, informacja i karta odwrócona */
+    --ss-palette-teal-accent: light-dark(#0f766e, #5eead4);
+    --ss-palette-teal-accent-hover: light-dark(#115e59, #99f6e4);
+    --ss-palette-teal-info: light-dark(#115e59, #5eead4);
+    --ss-palette-teal-info-surface: light-dark(#ccfbf1, #134e4a);
+    --ss-palette-teal-inverse: light-dark(#042f2e, #ccfbf1);
+    --ss-palette-indigo-accent: light-dark(#4f46e5, #a5b4fc);
+    --ss-palette-indigo-accent-hover: light-dark(#4338ca, #c7d2fe);
+    --ss-palette-indigo-info: light-dark(#4338ca, #a5b4fc);
+    --ss-palette-indigo-info-surface: light-dark(#e0e7ff, #312e81);
+    --ss-palette-indigo-inverse: light-dark(#1e1b4b, #e0e7ff);
+    --ss-palette-blue-accent: light-dark(#2563eb, #93c5fd);
+    --ss-palette-blue-accent-hover: light-dark(#1d4ed8, #bfdbfe);
+    --ss-palette-blue-info: light-dark(#1d4ed8, #93c5fd);
+    --ss-palette-blue-info-surface: light-dark(#dbeafe, #1e3a8a);
+    --ss-palette-blue-inverse: light-dark(#172554, #dbeafe);
+    --ss-palette-emerald-accent: light-dark(#047857, #6ee7b7);
+    --ss-palette-emerald-accent-hover: light-dark(#065f46, #a7f3d0);
+    --ss-palette-emerald-info: light-dark(#065f46, #6ee7b7);
+    --ss-palette-emerald-info-surface: light-dark(#d1fae5, #064e3b);
+    --ss-palette-emerald-inverse: light-dark(#022c22, #d1fae5);
+    --ss-palette-violet-accent: light-dark(#6d28d9, #c4b5fd);
+    --ss-palette-violet-accent-hover: light-dark(#5b21b6, #ddd6fe);
+    --ss-palette-violet-info: light-dark(#5b21b6, #c4b5fd);
+    --ss-palette-violet-info-surface: light-dark(#ede9fe, #4c1d95);
+    --ss-palette-violet-inverse: light-dark(#2e1065, #ede9fe);
+
+    /* Promienie i cienie */
+    --ss-radius-card: 1rem;
+    --ss-radius-control: 0.875rem;
+    --ss-radius-pill: 9999px;
+    /* Przyciski (.ss-button, .ss-icon-button, przełącznik motywu, klawisze PIN); strefa może dać pigułkę (--ss-radius-pill) */
+    --ss-radius-button: var(--ss-radius-control);
+    /* Pola formularzy (.ss-input); strefa może dać pigułkę (--ss-radius-pill) niezależnie od kart i kafelków */
+    --ss-radius-input: var(--ss-radius-control);
+    /* Rama z kartami: karta w ramie ma promień ramy minus jej odstęp, więc krawędzie są równoległe */
+    --ss-radius-frame: 1.75rem;
+    --ss-frame-padding: 0.75rem;
+    --ss-radius-nested: calc(var(--ss-radius-frame) - var(--ss-frame-padding));
+    --ss-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --ss-shadow-soft: 0 1px 2px 0 light-dark(rgb(15 23 42 / 0.04), rgb(0 0 0 / 0.3)), 0 12px 32px -16px light-dark(rgb(15 23 42 / 0.16), rgb(0 0 0 / 0.6));
+    --ss-shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --ss-shadow-frame: 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3)), 0 24px 48px -28px light-dark(rgb(0 0 0 / 0.18), rgb(0 0 0 / 0.6));
+    --ss-shadow-elevated: 0 32px 64px -24px light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.7)), 0 12px 24px -12px light-dark(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.5));
+    /* Przełącznik segmentowy (.ss-tabs): podwójny obrys — wewnętrzny owal (ramka) i zewnętrzny
+       pierścień oddzielony tłem — w jasnym odcieniu akcentu; wybrany segment w akcencie, przestrzenny (trzy cienie
+       wewnętrzne: ciemniejszy u góry, jasny i w kolorze akcentu u dołu) z poświatą akcentu pod spodem */
+    --ss-segment-ring: color-mix(in srgb, var(--ss-color-accent) 45%, var(--ss-color-surface));
+    --ss-segment-stroke: 1.5px;
+    --ss-segment-gap: 3px;
+    --ss-shadow-segment: inset 0 5px 16px color-mix(in srgb, var(--ss-color-accent), #000000 35%), inset 0 -5px 8px rgb(255 255 255 / 0.25), inset 0 -2px 2px var(--ss-color-accent), 0 8px 18px -4px color-mix(in srgb, var(--ss-color-accent) 50%, transparent);
+
+    /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/). --ss-font-sans to font
+       interfejsu (przyciski, pola, menu, zakładki, tabele, odznaki), --ss-font-base — treść strony (body) */
+    --ss-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --ss-font-base: var(--ss-font-sans);
+    --ss-font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    /* Nagłówki wyróżnione (tytuł logowania) i fragment w *gwiazdkach*; strefa podmienia je fontami z `fonts` */
+    --ss-font-display: var(--ss-font-sans);
+    --ss-font-accent: inherit;
+
+    /* Odstępy */
+    --ss-space-1: 0.25rem;
+    --ss-space-2: 0.5rem;
+    --ss-space-3: 0.75rem;
+    --ss-space-4: 1rem;
+    --ss-space-6: 1.5rem;
+    --ss-space-8: 2rem;
+    --ss-space-16: 4rem;
+
+    --ss-content-width: 40rem;
+    --ss-auth-width: 26rem;
+    --ss-auth-split-width: 60rem;
+    /* Logowanie: rozmiar tytułu karty i wspólna wysokość pól i przycisków formularza (strefa może je zmienić) */
+    --ss-auth-title-size: 1.5rem;
+    --ss-auth-control-height: 2.5rem;
+    /* Wysokość przycisków formularza logowania; domyślnie jak pola */
+    --ss-auth-button-height: var(--ss-auth-control-height);
+    /* Dodatkowy odstęp między nagłówkiem a formularzem karty logowania (ponad odstęp karty) */
+    --ss-auth-header-space: 0rem;
+    /* Separator nad odnośnikami prawnymi karty logowania (linia i odstęp nad wierszem); domyślnie bez separatora */
+    --ss-auth-legal-border: none;
+    --ss-auth-legal-space: 0rem;
+    /* Podkreślenie odnośników .ss-link poza najechaniem i fokusem; strefa może dać none (podkreślenie tylko pod kursorem) */
+    --ss-link-decoration: underline;
+    /* Grubość kreski ikon liniowych (x-mainboard::icon); strefa może dać grubszą, bardziej miękką kreskę */
+    --ss-icon-stroke: 1.75;
+    --ss-content-page-width: 72rem;
+    --ss-sidebar-width: 16rem;
+    --ss-sidebar-collapsed-width: 4.5rem;
+}
+
+/**
+ * Wybór motywu (x-mainboard::theme-toggle, js/theme.js): atrybut data-theme na <html> wymusza schemat kolorów, więc
+ * light-dark() w tokenach wybiera wartość jasną albo ciemną; bez atrybutu obowiązuje motyw systemu. Motywy
+ * wysokiego kontrastu (contrast, contrast-yellow) są na końcu pliku, po kolorystykach, bo je wyłączają.
+ */
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/**
+ * Kolorystyka strefy (x-mainboard::palette-switch, js/theme.js): data-palette na <html> podmienia akcent, informację
+ * i kartę odwróconą na kolory palety, w obu motywach. Selektor :root[...] wygrywa z nadpisaniami tokenów w arkuszu
+ * strefy (`stylesheets`, sam :root), więc strefa zmienia bazę, a wybrana kolorystyka i tak się nakłada.
+ */
+
+:root[data-palette="teal"] {
+    --ss-color-accent: var(--ss-palette-teal-accent);
+    --ss-color-accent-hover: var(--ss-palette-teal-accent-hover);
+    --ss-color-info: var(--ss-palette-teal-info);
+    --ss-color-info-surface: var(--ss-palette-teal-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-teal-inverse);
+}
+
+:root[data-palette="indigo"] {
+    --ss-color-accent: var(--ss-palette-indigo-accent);
+    --ss-color-accent-hover: var(--ss-palette-indigo-accent-hover);
+    --ss-color-info: var(--ss-palette-indigo-info);
+    --ss-color-info-surface: var(--ss-palette-indigo-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-indigo-inverse);
+}
+
+:root[data-palette="blue"] {
+    --ss-color-accent: var(--ss-palette-blue-accent);
+    --ss-color-accent-hover: var(--ss-palette-blue-accent-hover);
+    --ss-color-info: var(--ss-palette-blue-info);
+    --ss-color-info-surface: var(--ss-palette-blue-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-blue-inverse);
+}
+
+:root[data-palette="emerald"] {
+    --ss-color-accent: var(--ss-palette-emerald-accent);
+    --ss-color-accent-hover: var(--ss-palette-emerald-accent-hover);
+    --ss-color-info: var(--ss-palette-emerald-info);
+    --ss-color-info-surface: var(--ss-palette-emerald-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-emerald-inverse);
+}
+
+:root[data-palette="violet"] {
+    --ss-color-accent: var(--ss-palette-violet-accent);
+    --ss-color-accent-hover: var(--ss-palette-violet-accent-hover);
+    --ss-color-info: var(--ss-palette-violet-info);
+    --ss-color-info-surface: var(--ss-palette-violet-info-surface);
+    --ss-color-surface-inverse: var(--ss-palette-violet-inverse);
+}
+
+/**
+ * Motywy wysokiego kontrastu WCAG 2.2 (x-mainboard::theme-toggle): contrast — czerń na bieli, contrast-yellow — żółty
+ * na czarnym (duży kontrast). Tekst, ramki i akcent mają kontrast co najmniej 7:1 (AAA), ramki są pełne, a
+ * kolorystyka strefy (data-palette) nie działa, bo te bloki stoją po niej i podmieniają te same tokeny.
+ */
+:root[data-theme="contrast"] {
+    color-scheme: light;
+    --ss-color-bg: var(--ss-white);
+    --ss-color-surface: var(--ss-white);
+    --ss-color-surface-muted: var(--ss-white);
+    --ss-color-border: var(--ss-black);
+    --ss-color-border-strong: var(--ss-black);
+    --ss-color-text: var(--ss-black);
+    --ss-color-muted: #262626;
+    --ss-color-accent-base: var(--ss-black);
+    --ss-color-accent: var(--ss-black);
+    --ss-color-accent-hover: #262626;
+    --ss-color-on-accent: var(--ss-white);
+    --ss-color-danger: #8b0000;
+    --ss-color-danger-surface: var(--ss-white);
+    --ss-color-success: #0b4f0b;
+    --ss-color-success-surface: var(--ss-white);
+    --ss-color-warning: #5c3300;
+    --ss-color-warning-surface: var(--ss-white);
+    --ss-color-info: #0a2f75;
+    --ss-color-info-surface: var(--ss-white);
+    --ss-color-surface-inverse: var(--ss-black);
+    --ss-color-on-inverse: var(--ss-white);
+    --ss-color-muted-inverse: var(--ss-white);
+    --ss-color-brand: var(--ss-black);
+    --ss-color-on-brand: var(--ss-white);
+    --ss-color-auth-from: var(--ss-white);
+    --ss-color-canvas: var(--ss-white);
+    --ss-color-sidebar: var(--ss-white);
+    --ss-color-sidebar-hover: var(--ss-white);
+    --ss-color-auth-to: #f0f0f0;
+}
+
+:root[data-theme="contrast-yellow"] {
+    color-scheme: dark;
+    --ss-color-bg: var(--ss-black);
+    --ss-color-surface: var(--ss-black);
+    --ss-color-surface-muted: var(--ss-black);
+    --ss-color-border: #ffff00;
+    --ss-color-border-strong: #ffff00;
+    --ss-color-text: #ffff00;
+    --ss-color-muted: #ffff00;
+    --ss-color-accent-base: #ffff00;
+    --ss-color-accent: #ffff00;
+    --ss-color-accent-hover: var(--ss-white);
+    --ss-color-on-accent: var(--ss-black);
+    --ss-color-danger: #ff8a8a;
+    --ss-color-danger-surface: var(--ss-black);
+    --ss-color-success: #7dff7d;
+    --ss-color-success-surface: var(--ss-black);
+    --ss-color-warning: #ffd24d;
+    --ss-color-warning-surface: var(--ss-black);
+    --ss-color-info: #8fd8ff;
+    --ss-color-info-surface: var(--ss-black);
+    --ss-color-surface-inverse: #ffff00;
+    --ss-color-on-inverse: var(--ss-black);
+    --ss-color-muted-inverse: var(--ss-black);
+    --ss-color-brand: var(--ss-white);
+    --ss-color-on-brand: var(--ss-black);
+    --ss-color-auth-from: var(--ss-black);
+    --ss-color-canvas: var(--ss-black);
+    --ss-color-sidebar: var(--ss-black);
+    --ss-color-sidebar-hover: var(--ss-black);
+    --ss-color-auth-to: #141400;
+}

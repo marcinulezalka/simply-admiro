@@ -2,12 +2,15 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "simplysmart/admiro",
     "type": "library",
-    "description": "Admiro: the administrators' zone of simplysmart applications and the developer toolbox (SemVer releases, private packages, deployment).",
+    "description": "Admiro: the core of simplysmart applications (database, zones, sign-in, permissions, localization, UI), the administrators' zone and the developer toolbox (SemVer releases, private packages, deployment).",
     "keywords": [
         "simplysmart",
         "admiro",
-        "zone",
+        "core",
+        "modular",
+        "zones",
         "administration",
+        "database",
         "tools",
         "semver",
         "changelog",
@@ -29,27 +32,24 @@
     },
     "require": {
         "php": "^8.4",
+        "ext-bcmath": "*",
         "laravel/framework": "^13.0",
-        "simplysmart/mainboard": "@dev"
+        "outhebox/blade-flags": "^1.7",
+        "spatie/laravel-permission": "^8.3"
     },
     "require-dev": {
         "laravel/pint": "^1.27",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.5"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../mainboard",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "autoload": {
         "psr-4": {
+            "Simplysmart\\Mainboard\\": "src/",
             "Simplysmart\\Admiro\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -70,6 +70,7 @@
     "extra": {
         "laravel": {
             "providers": [
+                "Simplysmart\\Mainboard\\MainboardServiceProvider",
                 "Simplysmart\\Admiro\\Panel\\PanelServiceProvider"
             ]
         }

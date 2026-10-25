@@ -1,0 +1,4019 @@
+/**
+ * Komponenty aplikacji. Zależy od tokens.css i base.css, ładowanych wcześniej
+ * w <head> (bez @import: parametr ?v= nie przechodzi na importowane pliki).
+ */
+
+/**
+ * .ss-page — kolumna treści wyśrodkowana na stronie.
+ */
+.ss-page {
+    max-width: var(--ss-content-width);
+    margin: var(--ss-space-16) auto;
+    padding: 0 var(--ss-space-4);
+}
+
+/**
+ * .ss-logo — logotyp osadzony inline (SVG z fill="currentColor"), więc przyjmuje
+ * kolor tekstu i sam przełącza się w motywie ciemnym. Szerokość ustala rodzic.
+ */
+.ss-logo {
+    width: 16rem;
+    color: var(--ss-color-brand);
+}
+
+.ss-muted {
+    color: var(--ss-color-muted);
+}
+
+/**
+ * .ss-icon — ikona liniowa (x-mainboard::icon), kwadrat 2.5rem; SVG wypełnia kontener.
+ */
+.ss-icon {
+    display: inline-flex;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.ss-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Grubość kreski z tokenu wygrywa z atrybutem stroke-width plików ikon (tylko ikony liniowe). */
+.ss-icon svg[stroke] {
+    stroke-width: var(--ss-icon-stroke);
+}
+
+/**
+ * .ss-icon--tile — ikona w kafelku surface-muted (lista funkcji, próbki ikon).
+ */
+.ss-icon--tile {
+    flex: none;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+/**
+ * .ss-card — karta (docs/design-system.md §4): surface, ramka border, promień karty, bez cienia;
+ * .ss-card--muted — karta w karcie: surface-muted, bez ramki, mniejszy promień.
+ */
+.ss-card {
+    padding: var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+}
+
+.ss-card--muted {
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+/* .ss-card--link — cała karta jest odnośnikiem (skrót do sekcji): ikona w kafelku i etykieta w wierszu. */
+.ss-card--link {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    color: var(--ss-color-text);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ss-card--link:hover {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-card--link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+@media (min-width: 40rem) {
+    .ss-card {
+        padding: var(--ss-space-6);
+    }
+}
+
+/**
+ * .ss-card--tinted — karta wyróżniona jednolitym tłem surface-muted z ramką border-strong (np. jasna karta w ramie).
+ * .ss-card--inverse — karta w kolorach odwróconych (surface-inverse); tekst, etykiety i akcja główna dopasowują się.
+ * .ss-card--elevated — karta wyniesiona nad płaszczyznę (--ss-shadow-elevated); wyjątek od zasady „karta bez cienia”,
+ * tylko dla jednej, wyróżnionej karty widoku.
+ */
+.ss-card--tinted {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-card--inverse {
+    border-color: transparent;
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
+}
+
+.ss-card--inverse .ss-muted,
+.ss-card--inverse .ss-field__label {
+    color: var(--ss-color-muted-inverse);
+}
+
+.ss-card--inverse .ss-logo {
+    color: var(--ss-color-on-brand);
+}
+
+.ss-card--inverse .ss-button--primary {
+    border-color: var(--ss-color-on-inverse);
+    background: var(--ss-color-on-inverse);
+    color: var(--ss-color-surface-inverse);
+}
+
+.ss-card--elevated {
+    box-shadow: var(--ss-shadow-elevated);
+}
+
+/**
+ * .ss-frame — rama grupująca karty (np. dwie karty obok siebie): tło surface, odstęp --ss-frame-padding,
+ * promień --ss-radius-frame i miękki cień; karty w ramie dostają promień zagnieżdżony (rama minus odstęp).
+ */
+/* Promień kart w ramie liczony na samej ramie: rama (albo jej przodek) może zmienić --ss-radius-frame
+   i --ss-frame-padding, a zewnętrzny promień zostaje równy wewnętrznemu plus odstęp. */
+.ss-frame {
+    --ss-radius-nested: calc(var(--ss-radius-frame) - var(--ss-frame-padding));
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-frame-padding);
+    padding: var(--ss-frame-padding);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-frame);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-frame);
+}
+
+.ss-frame > .ss-card {
+    border-radius: var(--ss-radius-nested);
+}
+
+/* Podwójna klasa: rama w wierszu wygrywa z układem kontenera, z którym jest połączona (np. .ss-auth__cards). */
+@media (min-width: 56rem) {
+    .ss-frame.ss-frame--row {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .ss-frame--row > .ss-card {
+        flex: 1;
+    }
+}
+
+/**
+ * .ss-badge — plakietka (wersja, stan): pigułka surface-muted, drobny tekst.
+ */
+.ss-badge {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    padding: var(--ss-space-1) var(--ss-space-3);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Plakietka jako przycisk (np. odebranie roli): bez ramki, z kursorem i widocznym fokusem. */
+button.ss-badge {
+    border: 0;
+    cursor: pointer;
+}
+
+button.ss-badge:hover {
+    background: var(--ss-color-border-strong);
+}
+
+button.ss-badge:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-flag — flaga kraju lub języka (x-mainboard::flag), 4:3 w wysokości tekstu obok.
+ */
+.ss-flag {
+    display: inline-block;
+    width: 1.333em;
+    height: 1em;
+    vertical-align: -0.125em;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-color-text) 15%, transparent);
+}
+
+/**
+ * .ss-welcome — domyślna strona startowa (app/welcome): karta na środku ekranu, treść obok panelu
+ * marki; na wąskim ekranie panel marki nad treścią. Panel ma odwrócone kolory motywu.
+ */
+.ss-welcome {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-4);
+}
+
+.ss-welcome__card {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    max-width: 72rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-color-text) 12%, transparent),
+        0 1rem 2.5rem -1.5rem color-mix(in srgb, var(--ss-color-text) 25%, transparent);
+}
+
+.ss-welcome__content {
+    flex: 1;
+    padding: var(--ss-space-8);
+    font-size: 0.9375rem;
+}
+
+.ss-welcome__title {
+    margin: 0 0 var(--ss-space-2);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.ss-welcome__lead {
+    max-width: 40rem;
+    margin: 0;
+}
+
+/**
+ * .ss-brand-name — nazwa produktu simplysmart w tekście (View\BrandNames): pogrubiona, w kolorze tekstu.
+ */
+.ss-brand-name {
+    color: var(--ss-color-text);
+    font-weight: 600;
+}
+
+.ss-welcome__heading {
+    margin: var(--ss-space-8) 0 var(--ss-space-2);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-welcome__features {
+    display: grid;
+    gap: var(--ss-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/**
+ * .ss-welcome__feature — funkcja Core: ikona w kafelku surface-muted, obok tytuł (text) i opis (muted).
+ */
+.ss-welcome__feature {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+}
+
+.ss-welcome__feature-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875rem;
+}
+
+.ss-welcome__feature-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+/**
+ * .ss-welcome__footer — stopka karty: „Zbudowane na” z logo Laravela (monochromatyczne, currentColor)
+ * i plakietka wersji Core.
+ */
+.ss-welcome__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--ss-space-8);
+    padding-top: var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.8125rem;
+}
+
+.ss-welcome__built-on {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-welcome__laravel {
+    width: 5.5rem;
+    color: var(--ss-color-text);
+}
+
+.ss-welcome__brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--ss-space-4);
+    padding: var(--ss-space-16) var(--ss-space-8);
+    background: var(--ss-color-brand);
+    color: var(--ss-color-on-brand);
+}
+
+.ss-welcome__brand .ss-logo {
+    width: 100%;
+    max-width: 18rem;
+    color: inherit;
+}
+
+.ss-welcome__tagline {
+    margin: 0;
+    opacity: 0.7;
+}
+
+@media (min-width: 64rem) {
+    .ss-welcome__card {
+        flex-direction: row;
+    }
+
+    .ss-welcome__content {
+        padding: var(--ss-space-16);
+    }
+
+    .ss-welcome__brand {
+        flex: 0 0 26rem;
+    }
+
+    .ss-welcome__features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: var(--ss-space-8);
+    }
+}
+
+/**
+ * Formularze (docs/design-system.md §6): pole z etykietą nad nim, błąd pod polem (tekst w kolorze
+ * --ss-color-danger, nigdy sam kolor), widoczny fokus w kolorze akcentu na każdym elemencie.
+ */
+.ss-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+}
+
+.ss-field__label {
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ss-field__error {
+    margin: 0;
+    color: var(--ss-color-danger);
+    font-size: 0.875rem;
+}
+
+.ss-input {
+    width: 100%;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-input);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font: inherit;
+    font-family: var(--ss-font-sans);
+}
+
+/**
+ * Podpowiedź w polu (placeholder): przykład formatu „np. …”, nigdy zamiast etykiety; kolor muted z pełnym kryciem
+ * (Firefox domyślnie przygasza placeholder poniżej kontrastu 4,5:1).
+ */
+.ss-input::placeholder,
+.ss-search__input::placeholder {
+    color: var(--ss-color-muted);
+    opacity: 1;
+}
+
+.ss-input[aria-invalid="true"] {
+    border-color: var(--ss-color-danger);
+}
+
+/**
+ * .ss-input--code — kod jednorazowy i PIN: duże, rozstrzelone cyfry, wyśrodkowane.
+ */
+.ss-input--code {
+    font-family: var(--ss-font-mono);
+    font-size: 1.25rem;
+    letter-spacing: 0.25em;
+    text-align: center;
+}
+
+/**
+ * .ss-button — przycisk drugorzędny (ramka, tło karty); .ss-button--primary — jedyna akcja główna
+ * widoku w kolorze akcentu; .ss-button--block — na całą szerokość formularza.
+ * Rozmiary (tokeny --ss-button-*): średni domyślny — wysokość 40px, wcięcie 16px, ikona 20px, odstęp ikony 8px,
+ * tekst 16px; .ss-button--sm — 36px, 12px, ikona 16px, odstęp 6px, tekst 14px (gęste miejsca: tabele, karty);
+ * .ss-button--lg — 56px, 20px, ikona 24px, odstęp 8px, tekst 18px (jedna duża akcja ekranu).
+ */
+.ss-button {
+    --ss-button-height: 2.5rem;
+    --ss-button-padding: 1rem;
+    --ss-button-icon: 1.25rem;
+    --ss-button-gap: 0.5rem;
+    --ss-button-font: 1rem;
+    display: inline-flex;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--ss-button-height);
+    padding: 0.25rem var(--ss-button-padding);
+    line-height: 1.25;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    font-size: var(--ss-button-font);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ss-button--sm {
+    --ss-button-height: 2.25rem;
+    --ss-button-padding: 0.75rem;
+    --ss-button-icon: 1rem;
+    --ss-button-gap: 0.375rem;
+    --ss-button-font: 0.875rem;
+}
+
+.ss-button--lg {
+    --ss-button-height: 3.5rem;
+    --ss-button-padding: 1.25rem;
+    --ss-button-icon: 1.5rem;
+    --ss-button-gap: 0.5rem;
+    --ss-button-font: 1.125rem;
+}
+
+.ss-button:hover:not(:disabled) {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.ss-button--primary {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-button--primary:hover:not(:disabled) {
+    border-color: var(--ss-color-accent-hover);
+    background: var(--ss-color-accent-hover);
+}
+
+.ss-button--block {
+    width: 100%;
+}
+
+/**
+ * .ss-button__icon — ikona w przycisku (x-mainboard::icon) przed tekstem albo po nim; .ss-button--pill — przycisk
+ * w pigułce (np. akcje w ramie z kartami).
+ */
+.ss-button {
+    gap: var(--ss-button-gap);
+}
+
+.ss-button__icon,
+.ss-badge__icon {
+    flex: none;
+    width: var(--ss-button-icon, 1.125rem);
+    height: var(--ss-button-icon, 1.125rem);
+}
+
+.ss-badge__icon {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.ss-button--pill {
+    border-radius: var(--ss-radius-pill);
+}
+
+.ss-link {
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: var(--ss-link-decoration);
+    text-underline-offset: 0.2em;
+}
+
+.ss-link:hover,
+.ss-link:focus-visible {
+    text-decoration: underline;
+}
+
+.ss-input:focus-visible,
+.ss-button:focus-visible,
+.ss-link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-notice — komunikat stanu (role="status") w karcie: tło karty w karcie, bez ramki.
+ */
+.ss-notice {
+    margin: 0;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    font-size: 0.875rem;
+}
+
+/**
+ * .ss-auth — strony logowania stref (x-mainboard::auth.layout): wąska karta na środku ekranu,
+ * logo nad tytułem, pod formularzem akcje drugorzędne. Karta bez cienia (§4). Tło: delikatny gradient
+ * (--ss-color-auth-from → --ss-color-auth-to, w rogu odrobina akcentu strefy) w każdym motywie.
+ */
+.ss-auth {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-4);
+    background:
+        radial-gradient(ellipse at top left, color-mix(in srgb, var(--ss-color-accent) 7%, transparent), transparent 60%),
+        linear-gradient(160deg, var(--ss-color-auth-from), var(--ss-color-auth-to));
+}
+
+/**
+ * .ss-auth__card — tylko układ karty z formularzem; wygląd daje .ss-card (i jej warianty w układzie split).
+ */
+.ss-auth__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    width: 100%;
+    max-width: var(--ss-auth-width);
+}
+
+.ss-auth__logo {
+    width: 9rem;
+}
+
+.ss-auth__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin-bottom: var(--ss-auth-header-space);
+}
+
+.ss-auth__title {
+    margin: 0;
+    font-family: var(--ss-font-display);
+    font-size: var(--ss-auth-title-size);
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+/* Pola formularza logowania mają wysokość --ss-auth-control-height, przyciski --ss-auth-button-height (domyślnie tę samą); rozmiary sm/lg zostają. */
+.ss-auth .ss-input {
+    min-height: var(--ss-auth-control-height);
+}
+
+.ss-auth .ss-button:not(.ss-button--sm, .ss-button--lg) {
+    --ss-button-height: var(--ss-auth-button-height);
+}
+
+.ss-auth__lead {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-auth__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-auth__actions form {
+    margin: 0;
+}
+
+/**
+ * .ss-auth__cards — kontener kart logowania; w wariancie centered jedna karta, w split dwie obok siebie.
+ */
+.ss-auth__cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    width: 100%;
+    max-width: var(--ss-auth-width);
+}
+
+/**
+ * .ss-auth--split — wariant AuthLayout::Split z klas design systemu: rama .ss-frame, w niej karta marki
+ * (.ss-card--inverse .ss-card--elevated, logo) i karta formularza (.ss-card--tinted); na telefonie karta
+ * marki jako niski pasek nad formularzem.
+ */
+.ss-auth--split .ss-auth__cards {
+    max-width: var(--ss-auth-split-width);
+    gap: var(--ss-frame-padding);
+}
+
+/* Pod 56rem karty split są jedna pod drugą: karta formularza na całą szerokość ramy, równo z kartą marki. */
+.ss-auth--split .ss-auth__card {
+    max-width: none;
+}
+
+.ss-auth__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 8rem;
+}
+
+.ss-auth__brand-logo {
+    width: 100%;
+    max-width: 14rem;
+    color: inherit;
+}
+
+@media (min-width: 40rem) {
+    .ss-auth__card {
+        padding: var(--ss-space-8);
+    }
+}
+
+@media (min-width: 56rem) {
+    .ss-auth--split .ss-auth__brand {
+        flex: 1;
+        min-height: 32rem;
+    }
+
+    .ss-auth--split .ss-auth__card {
+        flex: 0 0 var(--ss-auth-width);
+        justify-content: center;
+    }
+}
+
+/**
+ * .ss-auth--reversed — wariant AuthLayout::SplitReversed: od 56rem karty w odbiciu lustrzanym (formularz po lewej,
+ * marka po prawej); w kodzie i na telefonie marka zostaje przed formularzem. Potrójna klasa wygrywa z .ss-frame--row.
+ */
+@media (min-width: 56rem) {
+    .ss-auth--reversed .ss-frame.ss-frame--row {
+        flex-direction: row-reverse;
+    }
+}
+
+/**
+ * .ss-sr-only — tekst tylko dla czytników ekranu (np. stan etapu steppera, etykieta wyszukiwarki).
+ */
+.ss-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.ss-field__hint {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+textarea.ss-input {
+    resize: vertical;
+}
+
+/**
+ * .ss-brand-preview — podgląd pliku marki (logo, sygnet, ikona strony) w formularzu: wysokość 3rem, proporcje
+ * obrazu, na tle przytłumionej powierzchni z ramką, żeby było widać przezroczyste krawędzie.
+ */
+.ss-brand-preview {
+    display: block;
+    height: 3rem;
+    width: auto;
+    max-width: 100%;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+/**
+ * Warstwy layoutu aplikacji (docs/design-system.md §5): .ss-app (tło strony) → .ss-topbar → .ss-module-nav →
+ * .ss-main z nagłówkiem kontekstowym .ss-context, stepperem .ss-stepper i siatką kart .ss-grid.
+ */
+.ss-app {
+    background: var(--ss-color-bg);
+}
+
+.ss-topbar {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-bottom: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+}
+
+.ss-topbar__logo {
+    flex: none;
+    width: 7.5rem;
+}
+
+/**
+ * .ss-search — wyszukiwarka w pigułce surface-muted na środku top baru; na telefonie zwija się do ikony.
+ */
+.ss-search {
+    display: flex;
+    flex: 1;
+    gap: var(--ss-space-2);
+    align-items: center;
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+}
+
+.ss-search:focus-within {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-search__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ss-color-text);
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    font-size: 0.875rem;
+    outline: none;
+}
+
+/**
+ * .ss-avatar — awatar (x-mainboard::avatar): inicjały albo zdjęcie w kółku; --sm, --md, --lg; --accent dla
+ * bieżącego użytkownika.
+ */
+.ss-avatar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    overflow: hidden;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.ss-avatar--xs {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.5625rem;
+}
+
+.ss-avatar--sm {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.6875rem;
+}
+
+.ss-avatar--lg {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.25rem;
+}
+
+.ss-avatar--slate {
+    background: var(--ss-avatar-slate-bg);
+    color: var(--ss-avatar-slate-fg);
+}
+
+.ss-avatar--red {
+    background: var(--ss-avatar-red-bg);
+    color: var(--ss-avatar-red-fg);
+}
+
+.ss-avatar--amber {
+    background: var(--ss-avatar-amber-bg);
+    color: var(--ss-avatar-amber-fg);
+}
+
+.ss-avatar--green {
+    background: var(--ss-avatar-green-bg);
+    color: var(--ss-avatar-green-fg);
+}
+
+.ss-avatar--teal {
+    background: var(--ss-avatar-teal-bg);
+    color: var(--ss-avatar-teal-fg);
+}
+
+.ss-avatar--blue {
+    background: var(--ss-avatar-blue-bg);
+    color: var(--ss-avatar-blue-fg);
+}
+
+.ss-avatar--violet {
+    background: var(--ss-avatar-violet-bg);
+    color: var(--ss-avatar-violet-fg);
+}
+
+.ss-avatar--pink {
+    background: var(--ss-avatar-pink-bg);
+    color: var(--ss-avatar-pink-fg);
+}
+
+.ss-avatar--accent {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-avatar__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/**
+ * .ss-person — awatar z imieniem i nazwiskiem (i opcjonalnie drugą linią) w tabelach i listach.
+ */
+.ss-person {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-person__text {
+    display: flex;
+    flex-direction: column;
+}
+
+/**
+ * .ss-module-nav — nawigacja modułowa: ikona + etykieta; aktywna (aria-current) jako pigułka surface-muted,
+ * pozostałe muted; na telefonie przewijanie poziome bez łamania wiersza.
+ */
+.ss-module-nav {
+    display: flex;
+    gap: var(--ss-space-1);
+    padding: var(--ss-space-2) var(--ss-space-4);
+    overflow-x: auto;
+    border-bottom: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+    white-space: nowrap;
+}
+
+.ss-module-nav__link {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-radius: var(--ss-radius-pill);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.ss-module-nav__link:hover,
+.ss-module-nav__link[aria-current="page"] {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-module-nav__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-module-nav__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    padding: var(--ss-space-6) var(--ss-space-4) var(--ss-space-8);
+}
+
+/**
+ * .ss-context — nagłówek kontekstowy: powrót, metadane, duży tytuł, akcje po prawej (na telefonie pod tytułem).
+ */
+.ss-context {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.ss-context__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+}
+
+.ss-context__back {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    align-self: flex-start;
+    margin-bottom: var(--ss-space-2);
+    color: var(--ss-color-muted);
+    text-decoration: none;
+}
+
+.ss-context__back-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-context__meta {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-context__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.ss-context__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+}
+
+/**
+ * .ss-stepper — etapy procesu z przypadków enuma statusu: zakończony (akcent, haczyk), bieżący (akcent,
+ * wyróżniony, aria-current="step"), przyszły (border-strong); stan zawsze też tekstem (.ss-sr-only).
+ */
+.ss-stepper {
+    display: flex;
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    list-style: none;
+}
+
+.ss-stepper__step {
+    display: flex;
+    flex: 1;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: max-content;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-stepper__step + .ss-stepper__step::before {
+    content: "";
+    flex: 1;
+    min-width: var(--ss-space-4);
+    height: 1px;
+    margin-right: var(--ss-space-2);
+    background: var(--ss-color-border-strong);
+}
+
+.ss-stepper__step--done + .ss-stepper__step::before {
+    background: var(--ss-color-accent);
+}
+
+.ss-stepper__marker {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ss-stepper__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-stepper__step--done .ss-stepper__marker,
+.ss-stepper__step--current .ss-stepper__marker {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-stepper__step--done,
+.ss-stepper__step--current {
+    color: var(--ss-color-text);
+}
+
+.ss-stepper__step--current .ss-stepper__label {
+    font-weight: 600;
+}
+
+.ss-stepper__step--current .ss-stepper__marker {
+    box-shadow: 0 0 0 4px var(--ss-color-surface-muted);
+}
+
+/**
+ * .ss-grid — siatka niezależnych kart; na telefonie jedna kolumna.
+ */
+.ss-grid {
+    display: grid;
+    gap: var(--ss-space-4);
+}
+
+.ss-card__title {
+    margin: 0 0 var(--ss-space-4);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-card__lead {
+    margin: calc(-1 * var(--ss-space-2)) 0 var(--ss-space-4);
+    font-size: 0.875rem;
+}
+
+.ss-card--flush {
+    padding: 0;
+    overflow: hidden;
+}
+
+.ss-stat__label {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ss-stat__value {
+    margin: var(--ss-space-2) 0 var(--ss-space-1);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.ss-stat__note {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-list__item {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ss-space-3) 0;
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+}
+
+.ss-list__item:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.ss-list__main {
+    display: flex;
+    flex-direction: column;
+}
+
+.ss-list__side {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+.ss-list__value {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/**
+ * .ss-table — lista wielu rekordów (pojedynczy rekord zawsze w kartach, §4); kwoty wyrównane do prawej.
+ */
+.ss-table-wrap {
+    overflow-x: auto;
+}
+
+.ss-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.ss-table th,
+.ss-table td {
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-bottom: 1px solid var(--ss-color-border-strong);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.ss-table thead th {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.ss-table tbody th {
+    font-weight: 500;
+}
+
+.ss-table tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.ss-table .ss-table__number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/**
+ * .ss-pairs — pary etykieta (muted, lewa) → wartość (text, prawa); na telefonie etykieta nad wartością.
+ */
+.ss-pairs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-pairs__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+}
+
+.ss-pairs dt {
+    color: var(--ss-color-muted);
+}
+
+.ss-pairs dd {
+    margin: 0;
+    font-weight: 500;
+}
+
+.ss-pairs__row--total {
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-pairs__row--total dd {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-form-layout {
+    display: grid;
+    gap: var(--ss-space-4);
+}
+
+.ss-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    justify-content: flex-end;
+}
+
+@media (max-width: 39.99rem) {
+    .ss-search {
+        flex: none;
+        margin-left: auto;
+        padding: var(--ss-space-2);
+    }
+
+    .ss-search__input {
+        display: none;
+    }
+}
+
+@media (min-width: 40rem) {
+    .ss-main {
+        padding: var(--ss-space-8) var(--ss-space-6);
+    }
+
+    .ss-pairs__row {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .ss-pairs dd {
+        text-align: right;
+    }
+
+    .ss-form-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 40rem) {
+    .ss-grid--4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 64rem) {
+    .ss-grid--4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .ss-grid--3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ss-grid--wide {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/**
+ * .ss-shell — layout aplikacji z menu bocznym (x-mainboard::app.layout). Szeroki ekran: menu przyklejone po lewej,
+ * zwijane do ikon (.ss-shell--collapsed, etykiety zostają dla czytników ekranu i w title). Telefon ze skryptem
+ * (.ss-shell--js): menu wysuwane z lewej (.ss-shell--open) nad przyciemnionym tłem; bez skryptu nad treścią.
+ */
+/*
+ * Powłoka aplikacji jak „soft UI”: neutralne szare płótno (--ss-color-canvas), menu jako jaśniejszy, zaokrąglony panel
+ * (--ss-color-sidebar) unoszący się nad płótnem na szerokim ekranie, aktywna pozycja menu jako biała karta z miękkim
+ * cieniem, a karty treści białe bez ramki z tym samym cieniem (--ss-shadow-soft). Akcent zostaje ze strefy.
+ */
+.ss-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--ss-color-canvas);
+}
+
+.ss-shell .ss-card:not(.ss-card--muted, .ss-card--inverse) {
+    border-color: transparent;
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-shell .ss-search {
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    min-width: 0;
+    max-width: var(--ss-sidebar-width);
+    padding: var(--ss-space-4) var(--ss-space-3);
+    background: var(--ss-color-sidebar);
+}
+
+/**
+ * Nagłówek menu: tożsamość (awatar, imię i nazwisko albo nazwa, druga linia) otwierająca menu konta, pod nią akcje
+ * (zwijanie menu, powiadomienia). Menu ma stałą szerokość (--ss-sidebar-width, najwyżej), a dłuższe nazwy i pozycje
+ * zawijają się do kolejnych wierszy. Stopka: odnośnik do ustawień i subtelne logo simplysmart (najwyżej 35%
+ * szerokości) wysuwające stopkę simplysmart.
+ */
+.ss-sidebar__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+.ss-sidebar__account {
+    position: relative;
+}
+
+.ss-sidebar__identity {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    list-style: none;
+    cursor: pointer;
+}
+
+div.ss-sidebar__identity {
+    cursor: default;
+}
+
+.ss-sidebar__identity::-webkit-details-marker {
+    display: none;
+}
+
+summary.ss-sidebar__identity:hover {
+    background: var(--ss-color-sidebar-hover);
+}
+
+summary.ss-sidebar__identity:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-sidebar__identity-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-sidebar__identity-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.ss-sidebar__identity-subtitle {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+}
+
+.ss-sidebar__actions {
+    display: flex;
+    gap: var(--ss-space-2);
+    padding: 0 var(--ss-space-2);
+}
+
+.ss-sidebar__panel {
+    top: calc(100% + var(--ss-space-1));
+    right: auto;
+    left: 0;
+}
+
+/*
+ * Sekcje menu oddzielone kreskami z zaokrąglonymi końcami, odsuniętymi od krawędzi menu: pod nagłówkiem konta
+ * (tożsamość i akcje), nad każdą nazwaną grupą pozycji i nad odnośnikiem do ustawień w stopce menu (nad logo).
+ * --ss-sidebar-divider: kolor kreski (arkusz strefy może go zmienić).
+ */
+.ss-sidebar {
+    --ss-sidebar-divider: var(--ss-color-border-strong);
+}
+
+.ss-sidebar__header::after,
+.ss-sidebar__group::before,
+.ss-sidebar__settings::before {
+    content: "";
+    display: block;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--ss-sidebar-divider);
+}
+
+.ss-sidebar__header::after {
+    margin: var(--ss-space-1) var(--ss-space-2) 0;
+}
+
+.ss-sidebar__group::before {
+    margin: 0 calc(-1 * var(--ss-space-1)) var(--ss-space-4);
+}
+
+.ss-sidebar__settings::before {
+    margin: 0 var(--ss-space-2) var(--ss-space-2);
+}
+
+/*
+ * Stopka menu: wyśrodkowane, przygaszone logo simplysmart (.ss-sidebar__brand-toggle, 35% szerokości menu) odsłania
+ * pełnoszeroką stopkę strony simplysmart (x-mainboard::brand-footer, .ss-footer) jak na logowaniu strefy.
+ */
+.ss-sidebar__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--ss-space-3);
+}
+
+.ss-sidebar__settings ~ .ss-sidebar__brand {
+    margin-top: calc(-1 * var(--ss-space-2));
+}
+
+.ss-sidebar__brand-toggle {
+    width: 35%;
+    padding: var(--ss-space-1) 0;
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: transparent;
+    color: inherit;
+    opacity: 0.45;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.ss-sidebar__brand-toggle:hover,
+.ss-sidebar__brand-toggle[aria-expanded="true"] {
+    opacity: 0.8;
+}
+
+.ss-sidebar__brand-toggle:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-sidebar__logo {
+    display: block;
+    width: 100%;
+}
+
+.ss-sidebar__nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.ss-sidebar__group {
+    margin: var(--ss-space-4) 0 var(--ss-space-1);
+    padding: 0 var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-sidebar__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-sidebar__link {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-radius: var(--ss-radius-card);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-decoration: none;
+}
+
+.ss-sidebar__link:hover {
+    background: var(--ss-color-sidebar-hover);
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__link[aria-current="page"] {
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font-weight: 600;
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-sidebar__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-sidebar__icon {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-sidebar__label {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Tryb ustawień: powrót do aplikacji nad tytułem „Ustawienia”, potem grupy ustawień. */
+.ss-sidebar__back {
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__title {
+    margin: var(--ss-space-3) 0 0;
+    padding: 0 var(--ss-space-3);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-sidebar__badge {
+    padding: 0 var(--ss-space-2);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/**
+ * Gałąź menu (NavigationItem z podpozycjami): .ss-sidebar__tree — <details> rozwijany kliknięciem pozycji
+ * (.ss-sidebar__summary z chevronem obracanym po rozwinięciu), .ss-sidebar__sublist — podpozycje bez ikon,
+ * z etykietą równo z etykietami pozycji, połączone liniami drzewa: pionowa linia spod ikony pozycji i zaokrąglone
+ * łuki do każdej podpozycji (--ss-sidebar-tree-line, arkusz strefy może zmienić kolor). Bieżąca podpozycja ma kolor
+ * tekstu i pogrubienie. .ss-sidebar__branch-link — odnośnik pozycji widoczny tylko w menu zwiniętym do ikon.
+ */
+.ss-sidebar {
+    --ss-sidebar-tree-line: color-mix(in srgb, var(--ss-color-muted) 45%, transparent);
+    --ss-sidebar-tree-x: calc(var(--ss-space-3) + 0.625rem - 0.75px);
+}
+
+.ss-sidebar__branch-link {
+    display: none;
+}
+
+.ss-sidebar__summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+.ss-sidebar__summary::-webkit-details-marker {
+    display: none;
+}
+
+.ss-sidebar__summary--current {
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font-weight: 600;
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-sidebar__tree[open] > .ss-sidebar__summary {
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__chevron {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+    color: var(--ss-color-muted);
+    transition: transform 0.15s ease;
+}
+
+.ss-sidebar__tree[open] .ss-sidebar__chevron {
+    transform: rotate(180deg);
+}
+
+.ss-sidebar__sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 2px 0 var(--ss-space-1);
+    padding: 0;
+    list-style: none;
+}
+
+.ss-sidebar__sublist > li {
+    position: relative;
+}
+
+.ss-sidebar__sublist > li::before,
+.ss-sidebar__sublist > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--ss-sidebar-tree-x);
+    pointer-events: none;
+}
+
+.ss-sidebar__sublist > li::before {
+    width: var(--ss-space-3);
+    height: 50%;
+    border-bottom: 1.5px solid var(--ss-sidebar-tree-line);
+    border-left: 1.5px solid var(--ss-sidebar-tree-line);
+    border-bottom-left-radius: 0.625rem;
+}
+
+.ss-sidebar__sublist > li:not(:last-child)::after {
+    bottom: -2px;
+    border-left: 1.5px solid var(--ss-sidebar-tree-line);
+}
+
+.ss-sidebar__sublist > li:first-child::before,
+.ss-sidebar__sublist > li:first-child::after {
+    top: calc(-1 * var(--ss-space-1) - 2px);
+}
+
+.ss-sidebar__sublist > li:first-child::before {
+    height: calc(50% + var(--ss-space-1) + 2px);
+}
+
+.ss-sidebar__sublink {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    padding: var(--ss-space-2) var(--ss-space-3) var(--ss-space-2) calc(var(--ss-space-3) * 2 + 1.25rem);
+    border-radius: var(--ss-radius-card);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-decoration: none;
+}
+
+.ss-sidebar__sublink:hover {
+    background: var(--ss-color-sidebar-hover);
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__sublink[aria-current="page"] {
+    color: var(--ss-color-text);
+    font-weight: 600;
+}
+
+.ss-sidebar__sublink:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+@media (min-width: 64rem) {
+    .ss-shell--collapsed .ss-sidebar__tree {
+        display: none;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__branch-link {
+        display: flex;
+    }
+}
+
+.ss-shell__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-shell__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: var(--ss-color-backdrop);
+}
+
+.ss-shell__backdrop[hidden] {
+    display: none;
+}
+
+/**
+ * .ss-icon-button — przycisk z samą ikoną (np. zwijanie menu); nazwa w .ss-sr-only.
+ */
+.ss-icon-button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    cursor: pointer;
+}
+
+.ss-icon-button:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-icon-button:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-icon-button__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-search__kbd {
+    flex: none;
+    padding: 0 var(--ss-space-2);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: 0.375rem;
+    background: var(--ss-color-surface);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-shell .ss-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 0;
+    background: color-mix(in srgb, var(--ss-color-canvas) 85%, transparent);
+    backdrop-filter: blur(12px);
+}
+
+@media (max-width: 63.99rem) {
+    .ss-shell--js .ss-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 30;
+        width: var(--ss-sidebar-width);
+        box-shadow: var(--ss-shadow-overlay);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.2s ease, visibility 0.2s;
+    }
+
+    .ss-shell--js.ss-shell--open .ss-sidebar {
+        transform: none;
+        visibility: visible;
+    }
+
+    .ss-search__kbd {
+        display: none;
+    }
+}
+
+@media (min-width: 64rem) {
+    .ss-shell {
+        flex-direction: row;
+    }
+
+    .ss-sidebar {
+        position: sticky;
+        top: var(--ss-space-3);
+        flex: 0 0 var(--ss-sidebar-width);
+        height: calc(100vh - 2 * var(--ss-space-3));
+        margin: var(--ss-space-3) 0 var(--ss-space-3) var(--ss-space-3);
+        border-radius: var(--ss-radius-frame);
+        box-shadow: var(--ss-shadow-soft);
+        transition: flex-basis 0.2s ease;
+    }
+
+    .ss-topbar__menu {
+        display: none;
+    }
+
+    .ss-shell--collapsed .ss-sidebar {
+        flex-basis: var(--ss-sidebar-collapsed-width);
+    }
+
+    .ss-shell--collapsed .ss-sidebar__brand,
+    .ss-shell--collapsed .ss-sidebar__group {
+        visibility: hidden;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__identity {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__identity-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__actions {
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__title {
+        visibility: hidden;
+        height: 1px;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__group {
+        height: 1px;
+        margin: var(--ss-space-2) 0;
+        overflow: hidden;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__link {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__label,
+    .ss-shell--collapsed .ss-sidebar__badge {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-sidebar,
+    .ss-shell--js .ss-sidebar {
+        transition: none;
+    }
+}
+
+/**
+ * .ss-choices — wybór jednej opcji jako pigułki (np. wolne godziny): radio w .ss-choice, zaznaczona w kolorze akcentu.
+ */
+.ss-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.ss-choice {
+    position: relative;
+}
+
+.ss-choice input {
+    position: absolute;
+    opacity: 0;
+}
+
+.ss-choice span {
+    display: inline-flex;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+}
+
+.ss-choice input:checked + span {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-choice input:focus-visible + span {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-choice input:disabled + span {
+    color: var(--ss-color-muted);
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+.ss-table__sub {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+/**
+ * .ss-card__title--inset — tytuł karty bez wewnętrznego odstępu (.ss-card--flush, np. nad tabelą).
+ */
+.ss-card__title--inset {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+    padding: var(--ss-space-4) var(--ss-space-4) var(--ss-space-3);
+}
+
+/**
+ * .ss-table--grid — tabela-siatka (np. grafik: godziny × osoby): komórki od góry, pionowe linie między kolumnami.
+ */
+.ss-table--grid td,
+.ss-table--grid th {
+    vertical-align: top;
+}
+
+.ss-table--grid td + td,
+.ss-table--grid th + td,
+.ss-table--grid th + th {
+    border-left: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-table--grid td .ss-badge {
+    margin-top: var(--ss-space-1);
+}
+
+/**
+ * .ss-form-row — pola obok siebie (np. rodzaj i numer dokumentu z przyciskiem); na telefonie jedno pod drugim.
+ */
+.ss-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: flex-end;
+}
+
+.ss-form-row__grow {
+    flex: 1 1 12rem;
+}
+
+.ss-fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.ss-notice .ss-icon {
+    vertical-align: -0.15em;
+}
+
+.ss-notice--spaced {
+    margin-top: var(--ss-space-4);
+}
+
+/**
+ * .ss-account-menu — menu konta pod awatarem w top barze (<details>; skrypt zamyka je kliknięciem obok i Esc).
+ */
+.ss-account-menu {
+    position: relative;
+    flex: none;
+}
+
+.ss-account-menu__panel {
+    position: absolute;
+    top: calc(100% + var(--ss-space-2));
+    right: 0;
+    z-index: 40;
+    min-width: 15rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+}
+
+.ss-account-menu__name {
+    margin: 0;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-bottom: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-account-menu__list {
+    margin: var(--ss-space-1) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-account-menu__link {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+button.ss-account-menu__link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ss-account-menu__list form {
+    margin: 0;
+}
+
+.ss-account-menu__link:hover,
+.ss-account-menu__link[aria-current="page"] {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-account-menu__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -2px;
+}
+
+.ss-account-menu__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/**
+ * .ss-tabs — panel przycisków (przełącznik segmentowy: zakładki sekcji, zakres okresu, dostępność, motyw) w pigułce,
+ * bieżący segment przez aria-current w akcencie; na telefonie przewijanie poziome. Dwa rodzaje:
+ * - wypukły (domyślny, jak zakres okresu): podwójny obrys — ramka i zewnętrzny pierścień oddzielony tłem powierzchni
+ *   (--ss-segment-ring, --ss-segment-stroke, --ss-segment-gap) — tło przygaszone, wybrany segment przestrzenny
+ *   (--ss-shadow-segment);
+ * - klasyczny (.ss-tabs--classic, jak przełącznik motywu): pojedyncza ramka, tło powierzchni, płaski wybrany segment.
+ * Wygląd wynika z tokenów czytanych na samym panelu (--ss-segment-bg, --ss-segment-halo: pierścień albo none,
+ * --ss-segment-margin: miejsce na pierścień), więc arkusz strefy może dać jeden rodzaj wszystkim panelom.
+ */
+.ss-tabs {
+    display: flex;
+    gap: var(--ss-space-1);
+    margin: var(--ss-segment-margin, calc(var(--ss-segment-gap) + var(--ss-segment-stroke)));
+    padding: var(--ss-space-1);
+    overflow-x: auto;
+    border: var(--ss-segment-stroke) solid var(--ss-segment-ring);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-segment-bg, var(--ss-color-surface-muted));
+    box-shadow: var(--ss-segment-halo, 0 0 0 var(--ss-segment-gap) var(--ss-color-surface), 0 0 0 calc(var(--ss-segment-gap) + var(--ss-segment-stroke)) var(--ss-segment-ring));
+    list-style: none;
+    white-space: nowrap;
+}
+
+.ss-tabs--classic {
+    --ss-segment-ring: var(--ss-color-border-strong);
+    --ss-segment-stroke: 1px;
+    --ss-segment-margin: 0;
+    --ss-segment-halo: none;
+    --ss-segment-bg: var(--ss-color-surface);
+    --ss-shadow-segment: none;
+}
+
+.ss-tabs__link {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border-radius: var(--ss-radius-pill);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.ss-tabs__link:hover {
+    color: var(--ss-color-text);
+}
+
+/* Segment jako przycisk (np. wybór motywu albo widoku na stronie): bez stylu przycisku przeglądarki, stan przez aria-pressed. */
+button.ss-tabs__link {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ss-tabs__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-tabs__link[aria-current="page"],
+.ss-tabs__link[aria-current="true"],
+.ss-tabs__link[aria-pressed="true"] {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    box-shadow: var(--ss-shadow-segment);
+}
+
+.ss-tabs__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-switch — przełącznik włącz/wyłącz (checkbox z role="switch"): opis po lewej, tor po prawej; stan także
+ * w opisie i dla czytników ekranu (role, checked), nie samym kolorem.
+ */
+.ss-switch {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ss-space-3) 0;
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.ss-switch:first-child {
+    border-top: 0;
+}
+
+.ss-switch__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ss-switch__hint {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-switch input {
+    position: absolute;
+    opacity: 0;
+}
+
+.ss-switch__track {
+    position: relative;
+    flex: none;
+    width: 2.5rem;
+    height: 1.5rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-border-strong);
+    transition: background 0.15s ease;
+}
+
+.ss-switch__track::after {
+    content: "";
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-raised);
+    transition: transform 0.15s ease;
+}
+
+.ss-switch input:checked + .ss-switch__track {
+    background: var(--ss-color-accent);
+}
+
+.ss-switch input:checked + .ss-switch__track::after {
+    transform: translateX(1rem);
+}
+
+.ss-switch input:focus-visible + .ss-switch__track {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-switch__track,
+    .ss-switch__track::after {
+        transition: none;
+    }
+}
+
+/**
+ * .ss-card__footer — dolna część karty (akcja albo dodatkowe pole) z odstępem od treści powyżej.
+ */
+.ss-card__footer {
+    margin-top: var(--ss-space-4);
+}
+
+/**
+ * Strony błędów (x-mainboard::error.layout) na układzie logowania split: duży kod w karcie marki, akcje w pigułkach.
+ */
+.ss-error__brand {
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-error__code {
+    margin: 0;
+    font-family: var(--ss-font-mono);
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.ss-error__label {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-error__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+}
+
+@media (min-width: 56rem) {
+    .ss-error__code {
+        font-size: 6rem;
+    }
+}
+
+/**
+ * .ss-steps — numerowana lista kroków (np. instrukcja); numer w kółku w kolorze akcentu.
+ */
+.ss-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0;
+    padding: 0;
+    counter-reset: ss-step;
+    list-style: none;
+    font-size: 0.875rem;
+}
+
+.ss-steps li {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    counter-increment: ss-step;
+}
+
+.ss-steps li::before {
+    content: counter(ss-step);
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/**
+ * .ss-toasts — toasty (x-mainboard::toasts) na dole ekranu, wyśrodkowane, nad treścią (z odstępem od paska
+ * systemowego telefonu); kontener nie przechwytuje kliknięć poza toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
+ * znaczenie niosą też ikona i nazwa typu.
+ */
+.ss-toasts {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--ss-space-4) var(--ss-space-4) calc(var(--ss-space-6) + env(safe-area-inset-bottom, 0px));
+    pointer-events: none;
+}
+
+.ss-toast {
+    --ss-toast-color: var(--ss-color-info);
+    --ss-toast-surface: var(--ss-color-info-surface);
+
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--ss-space-4);
+    border: 1px solid color-mix(in srgb, var(--ss-toast-color) 35%, transparent);
+    border-left: 4px solid var(--ss-toast-color);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-toast-surface);
+    color: var(--ss-color-text);
+    box-shadow: var(--ss-shadow-elevated);
+    pointer-events: auto;
+    animation: ss-toast-in 0.2s ease-out;
+}
+
+.ss-toast--success {
+    --ss-toast-color: var(--ss-color-success);
+    --ss-toast-surface: var(--ss-color-success-surface);
+}
+
+.ss-toast--warning {
+    --ss-toast-color: var(--ss-color-warning);
+    --ss-toast-surface: var(--ss-color-warning-surface);
+}
+
+.ss-toast--danger {
+    --ss-toast-color: var(--ss-color-danger);
+    --ss-toast-surface: var(--ss-color-danger-surface);
+}
+
+.ss-toast--leaving {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ss-toast__icon {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--ss-toast-color);
+}
+
+.ss-toast__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-width: 0;
+}
+
+.ss-toast__title {
+    margin: 0;
+    color: var(--ss-toast-color);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.ss-toast__message {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-toast__action {
+    align-self: flex-start;
+    margin-top: var(--ss-space-1);
+    font-weight: 600;
+}
+
+.ss-toast__close {
+    display: inline-flex;
+    flex: none;
+    padding: var(--ss-space-1);
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: transparent;
+    color: var(--ss-color-muted);
+    cursor: pointer;
+}
+
+.ss-toast__close:hover {
+    background: color-mix(in srgb, var(--ss-toast-color) 12%, transparent);
+    color: var(--ss-color-text);
+}
+
+.ss-toast__close:focus-visible {
+    outline: 2px solid var(--ss-toast-color);
+    outline-offset: 2px;
+}
+
+.ss-toast__close-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/**
+ * .ss-toasts--inline — toasty w treści (próbki w design systemie), bez pozycjonowania nad stroną.
+ */
+.ss-toasts--inline {
+    position: static;
+    align-items: stretch;
+    padding: 0;
+}
+
+.ss-toasts--inline .ss-toast {
+    box-shadow: none;
+    animation: none;
+}
+
+@keyframes ss-toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem) scale(0.98);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-toast,
+    .ss-toast--leaving {
+        animation: none;
+        transition: none;
+    }
+}
+
+/**
+ * .ss-notifications — dzwonek w top barze (licznik nieprzeczytanych także w tekście dla czytników) z panelem;
+ * .ss-notification — pozycja panelu i listy powiadomień (nieprzeczytana: kropka akcentu i pogrubiony tytuł).
+ */
+.ss-notifications__toggle {
+    position: relative;
+    list-style: none;
+}
+
+.ss-notifications__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-notifications__count {
+    position: absolute;
+    top: -0.375rem;
+    right: -0.375rem;
+    min-width: 1.25rem;
+    padding: 0 0.3rem;
+    border: 2px solid var(--ss-color-surface);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-danger);
+    color: var(--ss-color-on-accent);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1rem;
+    text-align: center;
+}
+
+.ss-notifications__panel {
+    width: min(24rem, calc(100vw - 2rem));
+}
+
+.ss-notifications__list {
+    max-height: 22rem;
+    margin: var(--ss-space-1) 0 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.ss-notifications__empty {
+    margin: 0;
+    padding: var(--ss-space-4) var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-notifications__all {
+    display: block;
+    padding: var(--ss-space-2) var(--ss-space-3) var(--ss-space-1);
+    border-top: 1px solid var(--ss-color-border-strong);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.ss-notification {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    padding: var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+a.ss-notification:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+a.ss-notification:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -2px;
+}
+
+.ss-notification__icon {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.375rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+}
+
+.ss-notification--unread .ss-notification__icon {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-notification__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ss-notification--unread .ss-notification__title {
+    font-weight: 700;
+}
+
+.ss-notification__body {
+    color: var(--ss-color-muted);
+}
+
+.ss-notification__time {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-notification-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-notification-list > li + li {
+    border-top: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-switch:has(input:disabled) {
+    color: var(--ss-color-muted);
+    cursor: not-allowed;
+}
+
+.ss-switch input:disabled + .ss-switch__track {
+    opacity: 0.5;
+}
+
+/**
+ * .ss-input-wrap — pole z subtelną ikoną w tle po lewej (x-mainboard::input); ikona nie przechwytuje kliknięć.
+ */
+.ss-input-wrap {
+    position: relative;
+}
+
+.ss-input-wrap__icon {
+    position: absolute;
+    top: 50%;
+    left: var(--ss-space-3);
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--ss-color-muted);
+    opacity: 0.6;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.ss-input-wrap--icon .ss-input {
+    padding-left: 2.5rem;
+}
+
+/* Kod z ikoną: odstęp z obu stron, więc wyśrodkowane cyfry zostają na środku pola. */
+.ss-input-wrap--icon .ss-input--code {
+    padding-inline: 2.5rem;
+}
+
+.ss-input-wrap:focus-within .ss-input-wrap__icon {
+    opacity: 1;
+}
+
+/**
+ * .ss-input-wrap--keypad — pole PIN-u z przyciskiem klawiatury ekranowej po prawej (x-mainboard::pin-field):
+ * .ss-input-wrap__action w polu, tekst pola odsunięty od przycisku z obu stron, więc cyfry zostają wyśrodkowane.
+ */
+.ss-input-wrap--keypad .ss-input {
+    padding-inline: 3rem;
+}
+
+.ss-input-wrap__action {
+    position: absolute;
+    top: 50%;
+    right: var(--ss-space-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: transparent;
+    color: var(--ss-color-muted);
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.ss-input-wrap__action[hidden] {
+    display: none;
+}
+
+.ss-input-wrap__action:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-input-wrap__action:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-input-wrap__action-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/**
+ * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js): nagłówek z nazwą pola
+ * i zamknięciem, kropki wpisanych cyfr (__display, __dot), siatka 3 × 4 dużych klawiszy (__key; --muted — wyczyść
+ * i usuń ostatnią cyfrę) i „Gotowe” na całą szerokość.
+ */
+.ss-keypad {
+    width: min(100% - 2 * var(--ss-space-4), 20rem);
+    padding: var(--ss-space-6);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    box-shadow: var(--ss-shadow-elevated);
+}
+
+.ss-keypad[open] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-keypad::backdrop {
+    background: rgb(10 12 20 / 0.6);
+}
+
+.ss-keypad__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ss-space-4);
+}
+
+.ss-keypad__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-keypad__display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    margin: 0;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-keypad__dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: var(--ss-color-text);
+}
+
+.ss-keypad__keys {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--ss-space-2);
+}
+
+.ss-keypad__key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.25rem;
+    padding: 0;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-mono);
+    font-size: 1.375rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.ss-keypad__key:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-keypad__key:active {
+    border-color: var(--ss-color-accent);
+}
+
+.ss-keypad__key:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-keypad__key--muted {
+    border-color: transparent;
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    font-size: 1rem;
+}
+
+.ss-keypad__key-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/**
+ * .ss-context-switch — przełącznik kontekstu w rzędzie akcji menu (np. widok, organizacja): grupy z nagłówkami,
+ * bieżący kontekst oznaczony haczykiem i aria-current.
+ */
+.ss-context-switch__toggle {
+    list-style: none;
+}
+
+.ss-context-switch__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-context-switch__group {
+    margin: var(--ss-space-2) 0 0;
+    padding: 0 var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-context-switch__check {
+    width: 1rem;
+    height: 1rem;
+    margin-left: auto;
+}
+
+/**
+ * .ss-period — nagłówek okresu (np. grafik): zakładki zakresu, nawigacja poprzedni/następny i nazwa okresu.
+ */
+.ss-period {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-period__nav {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-period__label {
+    min-width: 12rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.ss-period__label::first-letter {
+    text-transform: uppercase;
+}
+
+/**
+ * .ss-meter — wskaźnik obłożenia (<meter>): niskie obłożenie w kolorze akcentu, wysokie ostrzeżenie, pełne błąd;
+ * wartość liczbowa zawsze obok w tekście.
+ */
+.ss-meter {
+    display: block;
+    width: 100%;
+    height: 0.375rem;
+    margin-top: var(--ss-space-1);
+    border: 0;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    appearance: none;
+}
+
+.ss-meter::-webkit-meter-bar {
+    height: 0.375rem;
+    border: 0;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-meter::-webkit-meter-optimum-value {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+}
+
+.ss-meter::-webkit-meter-suboptimum-value {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-warning);
+}
+
+.ss-meter::-webkit-meter-even-less-good-value {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-danger);
+}
+
+.ss-meter::-moz-meter-bar {
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+}
+
+.ss-meter:-moz-meter-sub-optimum::-moz-meter-bar {
+    background: var(--ss-color-warning);
+}
+
+.ss-meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    background: var(--ss-color-danger);
+}
+
+.ss-table .ss-table__today {
+    background: color-mix(in srgb, var(--ss-color-accent) 6%, transparent);
+}
+
+/**
+ * .ss-calendar — kalendarz miesiąca (tydzień od poniedziałku): dzień z numerem, treścią i wskaźnikiem; dziś
+ * (aria-current="date") z obwódką akcentu, dni spoza miesiąca przygaszone, nieczynne z opisem; święto / dzień wolny
+ * (.ss-calendar__day--holiday) z tłem ostrzeżenia, numerem w kolorze ostrzeżenia i nazwą (.ss-calendar__holiday).
+ */
+.ss-calendar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    overflow-x: auto;
+}
+
+.ss-calendar__row {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(5.5rem, 1fr));
+    gap: var(--ss-space-1);
+}
+
+.ss-calendar__weekday {
+    padding: var(--ss-space-1) var(--ss-space-2);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.ss-calendar__day {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-height: 5.5rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    font-size: 0.8125rem;
+}
+
+.ss-calendar__day--outside {
+    border-style: dashed;
+    background: transparent;
+    color: var(--ss-color-muted);
+}
+
+.ss-calendar__day--closed {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-calendar__day--today {
+    border: 2px solid var(--ss-color-accent);
+}
+
+.ss-calendar__date {
+    font-weight: 600;
+}
+
+.ss-calendar__day--today .ss-calendar__date {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-calendar__note {
+    color: var(--ss-color-muted);
+}
+
+.ss-calendar__day--holiday {
+    border-color: color-mix(in srgb, var(--ss-color-warning) 45%, var(--ss-color-border-strong));
+    background: var(--ss-color-warning-surface);
+}
+
+.ss-calendar__day--holiday .ss-calendar__date {
+    color: var(--ss-color-warning);
+}
+
+.ss-calendar__holiday {
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.ss-legend__swatch.ss-calendar__day--holiday {
+    border: 1px solid color-mix(in srgb, var(--ss-color-warning) 45%, var(--ss-color-border-strong));
+}
+
+.ss-calendar__link {
+    margin-top: auto;
+    font-variant-numeric: tabular-nums;
+}
+
+/**
+ * .ss-cell--open / .ss-cell--closed — dostępność w siatce (np. godziny przyjęć): bardzo lekkie tło akcentu albo
+ * subtelne ukośne kreskowanie; znaczenie także w legendzie (.ss-legend) i w tekście dla czytników ekranu.
+ */
+.ss-cell--open {
+    background: color-mix(in srgb, var(--ss-color-accent) 5%, transparent);
+}
+
+.ss-cell--closed {
+    background: repeating-linear-gradient(135deg, transparent 0 0.5rem, color-mix(in srgb, var(--ss-color-text) 5%, transparent) 0.5rem 0.5625rem);
+}
+
+.ss-cell__item + .ss-cell__item {
+    margin-top: var(--ss-space-2);
+    padding-top: var(--ss-space-2);
+    border-top: 1px dashed var(--ss-color-border-strong);
+}
+
+.ss-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-legend__item {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-legend__swatch {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: 0.25rem;
+}
+
+.ss-period__switches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+}
+
+.ss-tabs__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+/**
+ * .ss-avatars — nakładające się awatary (np. członkowie zespołu); .ss-choice--avatar — pigułka wyboru z awatarem.
+ */
+.ss-avatars {
+    display: inline-flex;
+}
+
+.ss-avatars .ss-avatar {
+    box-shadow: 0 0 0 2px var(--ss-color-surface);
+}
+
+.ss-avatars .ss-avatar + .ss-avatar {
+    margin-left: -0.375rem;
+}
+
+.ss-choice--avatar span {
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding-left: var(--ss-space-2);
+}
+
+.ss-cell__item .ss-avatar {
+    vertical-align: -0.3em;
+    margin-right: var(--ss-space-1);
+}
+
+.ss-page__logo {
+    width: 7rem;
+    margin-bottom: var(--ss-space-8);
+}
+
+.ss-page__title {
+    margin: 0 0 var(--ss-space-4);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/**
+ * .ss-auth__brand--image — karta marki z banerem strefy (auth.brand): na szerokim ekranie wysokość karty wynika
+ * z proporcji obrazu, więc baner jest widoczny cały (na telefonie niski pasek z górną częścią banera), bez ramki i tła karty (tło
+ * odwrócone prześwitywało w ciemnym motywie jasną obwódką). .ss-auth--image łączy baner z kartą formularza.
+ */
+.ss-auth__brand--image {
+    position: relative;
+    min-height: 12rem;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+}
+
+/* Karta formularza nachodzi na baner o promień karty, więc zakrywa jego zaokrąglenie i obie karty są połączone. */
+.ss-auth--image .ss-auth__cards {
+    gap: 0;
+}
+
+.ss-auth--image .ss-auth__card {
+    position: relative;
+    margin-top: calc(-1 * var(--ss-radius-nested));
+}
+
+@media (min-width: 56rem) {
+    .ss-auth--image .ss-auth__card {
+        margin-top: 0;
+        margin-left: calc(-1 * var(--ss-radius-nested));
+    }
+
+    .ss-auth--reversed.ss-auth--image .ss-auth__card {
+        margin-left: 0;
+        margin-right: calc(-1 * var(--ss-radius-nested));
+    }
+}
+
+.ss-auth__brand-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+/*
+ * Od 56rem baner płynie w karcie: jej wysokość wynika z proporcji obrazu (całe zdjęcie, bez obcinania), a karta
+ * formularza rozciąga się do niej; dopiero gdy formularz jest wyższy, obraz wypełnia kartę z przycięciem do środka.
+ */
+@media (min-width: 56rem) {
+    .ss-auth--split .ss-auth__brand--image {
+        min-height: 0;
+    }
+
+    .ss-auth__brand-image {
+        position: static;
+        vertical-align: top;
+        object-position: center;
+    }
+}
+
+/**
+ * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): przełącznik segmentowy z ikonami motywów
+ * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG); wybrany segment wypełniony akcentem (aria-pressed="true").
+ */
+.ss-theme-toggle {
+    display: inline-flex;
+    flex: none;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+}
+
+.ss-theme-toggle[hidden] {
+    display: none;
+}
+
+.ss-theme-toggle__option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: calc(var(--ss-radius-button) - 3px);
+    background: transparent;
+    color: var(--ss-color-muted);
+    cursor: pointer;
+}
+
+.ss-theme-toggle__option:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-theme-toggle__option:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+.ss-theme-toggle__option[aria-pressed="true"] {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+/* Wysoki kontrast: pełne ramki bez cieni i poświaty (pierścień w kolorze ramki). */
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) {
+    --ss-segment-ring: var(--ss-color-border);
+    --ss-shadow-segment: none;
+}
+
+.ss-theme-toggle__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-auth__card {
+    position: relative;
+}
+
+/**
+ * .ss-palette-switch — przełącznik kolorystyki (x-mainboard::palette-switch): próbka bieżącego akcentu na przycisku,
+ * w menu próbki kolorów bazowych strefy (--ss-color-accent-base) i kolorystyk (--ss-palette-<paleta>-accent);
+ * wybrana z haczykiem (aria-pressed).
+ */
+.ss-palette-switch[hidden] {
+    display: none;
+}
+
+.ss-palette-switch__toggle {
+    list-style: none;
+}
+
+.ss-palette-switch__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-palette-swatch {
+    display: inline-block;
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid var(--ss-color-surface);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    box-shadow: 0 0 0 1px var(--ss-color-border-strong);
+}
+
+.ss-palette-swatch--default {
+    background: var(--ss-color-accent-base);
+}
+
+.ss-palette-swatch--teal {
+    background: var(--ss-palette-teal-accent);
+}
+
+.ss-palette-swatch--indigo {
+    background: var(--ss-palette-indigo-accent);
+}
+
+.ss-palette-swatch--blue {
+    background: var(--ss-palette-blue-accent);
+}
+
+.ss-palette-swatch--emerald {
+    background: var(--ss-palette-emerald-accent);
+}
+
+.ss-palette-swatch--violet {
+    background: var(--ss-palette-violet-accent);
+}
+
+.ss-palette-switch__check {
+    visibility: hidden;
+}
+
+[aria-pressed="true"] > .ss-palette-switch__check {
+    visibility: visible;
+}
+
+/**
+ * .ss-signature — podpis odręczny (x-mainboard::signature-pad): ramka do rysowania na białym tle (podpis zawsze ciemny,
+ * także w motywie ciemnym), bez przewijania strony przy rysowaniu palcem.
+ */
+.ss-signature__canvas {
+    width: 100%;
+    max-width: 30rem;
+    height: auto;
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: #ffffff;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+/**
+ * .ss-theme-light / .ss-theme-dark — element tylko dla motywu jasnego albo ciemnego (np. dwa obrazy banera), zgodnie
+ * z wyborem w przełączniku (data-theme; kontrast czarno-biały liczy się jako jasny, żółto-czarny jako ciemny) albo
+ * z motywem systemu.
+ */
+.ss-theme-dark {
+    display: none;
+}
+
+:root[data-theme="dark"] .ss-theme-dark,
+:root[data-theme="contrast-yellow"] .ss-theme-dark {
+    display: revert;
+}
+
+:root[data-theme="dark"] .ss-theme-light,
+:root[data-theme="contrast-yellow"] .ss-theme-light {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"], [data-theme="contrast"]) .ss-theme-dark {
+        display: revert;
+    }
+
+    :root:not([data-theme="light"], [data-theme="contrast"]) .ss-theme-light {
+        display: none;
+    }
+}
+
+/**
+ * Wysoki kontrast (data-theme contrast i contrast-yellow): poza tokenami to, czego WCAG 2.2 wymaga od strony łatwej
+ * do zobaczenia — odnośniki podkreślone, nie tylko kolorem (1.4.1); gruby dwukolorowy fokus widoczny na każdym tle
+ * (2.4.7, 2.4.13: ramka w kolorze tekstu z obwódką w kolorze tła); pełne obramowania zamiast miękkich cieni, więc
+ * krawędź każdej kontrolki ma co najmniej 3:1 (1.4.11).
+ */
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) a:not(.ss-button, .ss-icon-button, .ss-sidebar__link, .ss-tabs__link, .ss-account-menu__link, .ss-card--link, .ss-ds__nav-link) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) :focus-visible {
+    outline: 3px solid var(--ss-color-text) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px var(--ss-color-bg) !important;
+}
+
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) :is(.ss-card, .ss-frame, .ss-sidebar, .ss-sidebar__link[aria-current="page"], .ss-account-menu__panel, .ss-notifications__panel, .ss-toast, .ss-input, .ss-button, .ss-icon-button) {
+    border: 2px solid var(--ss-color-border-strong);
+    box-shadow: none;
+}
+
+/**
+ * .ss-content-page — strona treści (x-mainboard::content.layout): pasek z powrotem i przełącznikiem motywu nad i pod
+ * treścią, spis treści (.ss-toc) w karcie obok karty dokumentu; na szerokim ekranie spis przyklejony przy przewijaniu.
+ */
+.ss-content-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    max-width: var(--ss-content-page-width);
+    margin: 0 auto;
+    padding: var(--ss-space-6) var(--ss-space-4) var(--ss-space-8);
+}
+
+.ss-content-page__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-content-page__back {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.ss-content-page__back-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Na stronach treści odnośniki .ss-link bez podkreślenia, podkreślone pod kursorem i przy fokusie (jak w treści). */
+.ss-content-page {
+    --ss-link-decoration: none;
+}
+
+.ss-content-page__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+}
+
+.ss-content-page__main {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+}
+
+.ss-content-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin-bottom: var(--ss-space-6);
+    padding-bottom: var(--ss-space-6);
+    border-bottom: 1px solid var(--ss-color-border-strong);
+}
+
+.ss-content-page__eyebrow {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-content-page__title {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.ss-content-page__title-icon {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-content-page__lead {
+    margin: 0;
+    color: var(--ss-color-muted);
+}
+
+@media (min-width: 40rem) {
+    .ss-content-page__card {
+        padding: var(--ss-space-8);
+    }
+}
+
+@media (min-width: 64rem) {
+    .ss-content-page__layout {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .ss-content-page__toc {
+        position: sticky;
+        top: var(--ss-space-6);
+        flex: 0 0 var(--ss-sidebar-width);
+    }
+}
+
+/**
+ * .ss-toc — spis treści strony: numerowana lista odnośników do nagłówków sekcji.
+ */
+.ss-toc__title {
+    margin: 0 0 var(--ss-space-3);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-toc__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-toc__link {
+    display: block;
+    padding: var(--ss-space-1) var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+.ss-toc__link:hover {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+}
+
+.ss-toc__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+/**
+ * .ss-prose — treść dokumentu (nagłówki h2/h3, akapity, listy, odnośniki) z wygodną długością wiersza (tekst do 70ch,
+ * panele i inne bloki na całą szerokość karty); nagłówki sekcji zostawiają odstęp przy skoku ze spisu treści.
+ * Odnośniki w treści: pogrubione w kolorze akcentu, bez podkreślenia — podkreślenie pod kursorem i przy fokusie.
+ */
+.ss-prose {
+    line-height: 1.7;
+}
+
+.ss-prose :where(h2, h3, p, ul:not(.ss-cookie-list), ol) {
+    max-width: 70ch;
+}
+
+.ss-prose > :first-child {
+    margin-top: 0;
+}
+
+.ss-prose h2 {
+    margin: var(--ss-space-8) 0 var(--ss-space-3);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    scroll-margin-top: var(--ss-space-6);
+}
+
+.ss-prose h3 {
+    margin: var(--ss-space-6) 0 var(--ss-space-2);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-prose p,
+.ss-prose ul,
+.ss-prose ol {
+    margin: 0 0 var(--ss-space-4);
+}
+
+.ss-prose ul,
+.ss-prose ol {
+    padding-left: var(--ss-space-6);
+}
+
+.ss-prose li + li {
+    margin-top: var(--ss-space-2);
+}
+
+.ss-prose a {
+    color: var(--ss-color-accent);
+    font-weight: 600;
+    text-decoration: none;
+    text-underline-offset: 2px;
+}
+
+.ss-prose a:hover,
+.ss-prose a:focus-visible {
+    text-decoration: underline;
+}
+
+.ss-prose a:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/**
+ * .ss-cookie-list — lista cookies na stronie polityki: każdy plik w panelu (.ss-card--muted) na całą szerokość treści,
+ * nazwa z kategorią (.ss-badge) w nagłówku, cel i czas przechowywania pod spodem; długie nazwy i opisy się zawijają.
+ */
+.ss-cookie-list,
+.ss-prose .ss-cookie-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0 0 var(--ss-space-4);
+    padding: 0;
+    list-style: none;
+}
+
+.ss-prose .ss-cookie-list li + li {
+    margin-top: 0;
+}
+
+.ss-cookie-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.ss-cookie-list__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-cookie-list__name {
+    font-family: var(--ss-font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-cookie-list__details {
+    display: grid;
+    gap: var(--ss-space-2);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-cookie-list__details dt {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ss-cookie-list__details dd {
+    margin: 0;
+}
+
+/**
+ * .ss-related — odnośnik do powiązanej strony (np. w karcie „Zobacz także”): ikona w kafelku, tytuł z opisem i strzałka.
+ */
+.ss-related {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    margin: 0 calc(-1 * var(--ss-space-3));
+    padding: var(--ss-space-3);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    text-decoration: none;
+}
+
+.ss-related:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-related:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+.ss-related__body {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.ss-related__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-related__text {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-related__arrow {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+/**
+ * Zgoda na cookies (x-mainboard::cookie-consent): .ss-consent__dialog — natywny <dialog> otwierany modalnie
+ * (fokus w oknie, tło ::backdrop przyciemnione), karta na środku z wewnętrznym przewijaniem; __banner — pierwszy
+ * kontakt z trzema przyciskami jeden pod drugim (__actions--stacked); __settings — okno ustawień z kategoriami
+ * (__category, przełącznik x-mainboard::switch, lista cookies w __details). .ss-cookie-links — odnośniki
+ * „Ustawienia cookies” i „Polityka cookies” w stopkach layoutów.
+ */
+.ss-consent__dialog {
+    width: min(100% - 2 * var(--ss-space-4), 32rem);
+    max-height: 86vh;
+    overflow-y: auto;
+    padding: var(--ss-space-6);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    box-shadow: var(--ss-shadow-elevated);
+}
+
+.ss-consent__settings {
+    width: min(100% - 2 * var(--ss-space-4), 40rem);
+}
+
+.ss-consent__dialog::backdrop {
+    background: rgb(10 12 20 / 0.6);
+}
+
+.ss-consent__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ss-space-4);
+}
+
+.ss-consent__title {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0 0 var(--ss-space-2);
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.ss-consent__title-icon {
+    flex: none;
+    width: 1.375rem;
+    height: 1.375rem;
+    color: var(--ss-color-accent);
+}
+
+.ss-consent__lead {
+    margin: 0 0 var(--ss-space-4);
+    color: var(--ss-color-muted);
+}
+
+.ss-consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    margin-top: var(--ss-space-4);
+}
+
+/* Przyciski banera: „Zezwól na wszystkie” (główny) na górze na całą szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj”
+   (drugorzędne) po połowie; na wąskim telefonie (poniżej 30rem) wszystkie jeden pod drugim. Kolejność w kodzie jest
+   taka sama jak na ekranie (także dla klawiatury). */
+.ss-consent__actions--stacked {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.ss-consent__actions--stacked .ss-button {
+    justify-content: center;
+    width: 100%;
+}
+
+@media (min-width: 30rem) {
+    .ss-consent__actions--stacked {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ss-consent__actions--stacked .ss-button--primary {
+        grid-column: 1 / -1;
+    }
+}
+
+.ss-consent__save {
+    margin-inline-start: auto;
+}
+
+.ss-consent__categories {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-consent__category {
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+}
+
+.ss-consent__details {
+    margin-top: var(--ss-space-2);
+}
+
+.ss-consent__links {
+    margin: var(--ss-space-4) 0 0;
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border);
+    font-size: 0.875rem;
+}
+
+
+.ss-cookie-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    justify-content: center;
+    margin: var(--ss-space-4) 0 0;
+    font-size: 0.875rem;
+}
+
+.ss-cookie-links__button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    cursor: pointer;
+}
+
+/**
+ * .ss-auth__note — notka pod formularzem logowania (np. blokada po błędnych PIN-ach), mniejsza i przygaszona;
+ * .ss-accent-text — wyróżniona część nagłówka (View\AccentText: fragment w *gwiazdkach*): kursywa w kolorze akcentu.
+ */
+.ss-auth__note {
+    margin: var(--ss-space-4) 0 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+/**
+ * .ss-auth__legal — odnośniki prawne strefy (`legal_links`) z polityką i ustawieniami cookies na dole karty
+ * formularza logowania: drobny, wyśrodkowany wiersz w kolorze przygaszonym, zawijany; .ss-auth__legal-cookies wtapia
+ * odnośniki cookies (x-mainboard::cookie-links) w ten wiersz. Bez żadnego odnośnika wiersz znika (razem z separatorem
+ * nad nim: --ss-auth-legal-border i --ss-auth-legal-space, domyślnie brak).
+ */
+.ss-auth__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-6);
+    justify-content: center;
+    margin-top: var(--ss-space-2);
+    padding-top: var(--ss-auth-legal-space);
+    border-top: var(--ss-auth-legal-border);
+    font-family: var(--ss-font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ss-auth__legal:not(:has(.ss-link)) {
+    display: none;
+}
+
+.ss-auth__legal-cookies {
+    display: contents;
+}
+
+.ss-auth__legal .ss-link {
+    color: var(--ss-color-muted);
+    text-decoration: none;
+}
+
+.ss-auth__legal .ss-link:hover,
+.ss-auth__legal .ss-link:focus-visible {
+    color: var(--ss-color-text);
+    text-decoration: underline;
+}
+
+/**
+ * .ss-footer — pełnoszeroka stopka strony simplysmart (x-mainboard::brand-footer), wspólna dla logowania stref
+ * i layoutu aplikacji. Korzeń .ss-footer-host (data-ss-footer-root) obejmuje warstwę treści .ss-footer-stage
+ * (.ss-auth__stage albo powłokę .ss-shell) i stopkę. Bez skryptu i na ekranach spoza data-ss-footer-media stopka jest
+ * zwykłą stopką na końcu strony. Gdzie zwijanie działa, js/footer-toggle.js dodaje .ss-footer-host--footer-ready:
+ * stopka stoi przy dole okna (fixed) schowana pod treścią, a przycisk [data-ss-footer-toggle] (logo simplysmart)
+ * dodaje .ss-footer-host--footer-open — treść łagodnie przesuwa się w górę o wysokość stopki (--ss-footer-height od
+ * skryptu; --ss-footer-duration, --ss-footer-easing) z cieniem przy dolnej krawędzi, a zawartość stopki i duże logo
+ * wyłaniają się z lekkim uniesieniem; przewijanie jej nie pokazuje, przy prefers-reduced-motion bez animacji.
+ * W środku .ss-footer__inner (szerokość --ss-auth-split-width) z .ss-footer__body: logo, odnośniki prawne i polityka
+ * cookies (.ss-footer__legal, .ss-footer__legal-cookies wtapia ją w wiersz), w dolnym wierszu (.ss-footer__meta)
+ * copyright, ustawienia cookies z ikoną (.ss-footer__cookie-settings) i przełącznik motywu (.ss-footer__actions);
+ * odnośniki bez podkreślenia, podkreślone przy najechaniu i fokusie. Na końcu .ss-footer__brand: duże logo
+ * simplysmart na szerokość kolumny, ucięte dolną krawędzią stopki, w lekkim odcieniu tekstu (tekstura, nie nagłówek).
+ */
+.ss-footer-host {
+    --ss-footer-duration: 0.7s;
+    --ss-footer-easing: cubic-bezier(0.22, 1, 0.36, 1);
+    --ss-footer-stage-shadow: 0 1px 0 var(--ss-color-border), 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 0.25);
+}
+
+.ss-footer-stage {
+    position: relative;
+    z-index: 1;
+    box-shadow: var(--ss-footer-stage-shadow);
+    transition: transform var(--ss-footer-duration) var(--ss-footer-easing), box-shadow var(--ss-footer-duration) var(--ss-footer-easing);
+}
+
+.ss-footer {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    background: var(--ss-color-surface);
+    color: var(--ss-color-muted);
+}
+
+.ss-footer__inner,
+.ss-footer__brand {
+    width: 100%;
+    max-width: var(--ss-auth-split-width);
+    margin-inline: auto;
+    padding-inline: var(--ss-space-4);
+}
+
+.ss-footer__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    padding-block: var(--ss-space-8) var(--ss-space-4);
+}
+
+.ss-footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3) var(--ss-space-6);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-footer__logo {
+    width: 6.5rem;
+}
+
+.ss-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-4);
+}
+
+.ss-footer .ss-link {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+    text-decoration: none;
+}
+
+.ss-footer .ss-link:hover,
+.ss-footer .ss-link:focus-visible {
+    color: var(--ss-color-text);
+    text-decoration: underline;
+}
+
+.ss-footer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4);
+    align-items: center;
+}
+
+.ss-footer__cookie-settings {
+    margin: 0;
+}
+
+.ss-footer__cookie-settings .ss-cookie-links__button {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-cookie-links__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-footer__legal-cookies {
+    display: contents;
+}
+
+.ss-footer__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border);
+}
+
+.ss-footer__copyright {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+/* Logo 792×159, linia bazowa ok. 125: ujemny margines 4,3cqw chowa dolne wydłużenia liter pod krawędzią stopki. */
+.ss-footer__brand {
+    margin-top: var(--ss-space-6);
+    container-type: inline-size;
+    pointer-events: none;
+    user-select: none;
+}
+
+.ss-footer__brand-logo {
+    display: block;
+    width: 100%;
+    margin-bottom: -4.3cqw;
+    color: color-mix(in srgb, var(--ss-color-text) 14%, transparent);
+}
+
+.ss-footer__brand-logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+@media (min-width: 40rem) {
+    .ss-footer__inner,
+    .ss-footer__brand {
+        padding-inline: var(--ss-space-6);
+    }
+}
+
+.ss-footer-host--footer-ready .ss-footer-stage {
+    box-shadow: none;
+}
+
+.ss-footer-host--footer-ready .ss-footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.ss-footer-host--footer-ready .ss-footer__inner,
+.ss-footer-host--footer-ready .ss-footer__brand {
+    opacity: 0;
+    transform: translateY(var(--ss-space-6));
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.ss-footer-host--footer-ready.ss-footer-host--footer-open .ss-footer__inner,
+.ss-footer-host--footer-ready.ss-footer-host--footer-open .ss-footer__brand {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s ease 0.15s, transform var(--ss-footer-duration) var(--ss-footer-easing) 0.15s;
+}
+
+.ss-footer-host--footer-ready.ss-footer-host--footer-open .ss-footer__brand {
+    transition-delay: 0.25s;
+}
+
+.ss-footer-host--footer-ready.ss-footer-host--footer-open .ss-footer-stage {
+    box-shadow: var(--ss-footer-stage-shadow);
+    transform: translateY(calc(-1 * var(--ss-footer-height, 0px)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-footer-stage,
+    .ss-footer__inner,
+    .ss-footer__brand {
+        transition: none !important;
+    }
+}
+
+.ss-accent-text {
+    color: var(--ss-color-accent-text);
+    font-family: var(--ss-font-accent);
+    font-style: italic;
+}
+
+/**
+ * Font interfejsu (--ss-font-sans) w menu bocznym, zakładkach, tabelach, odznakach, etykietach pól, przełącznikach
+ * i toastach — jak w przyciskach i polach; treść strony ma --ss-font-base (domyślnie ten sam font).
+ */
+.ss-sidebar,
+.ss-tabs,
+.ss-table,
+.ss-badge,
+.ss-field__label,
+.ss-switch,
+.ss-toast {
+    font-family: var(--ss-font-sans);
+}

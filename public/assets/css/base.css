@@ -1,0 +1,28 @@
+/**
+ * Reset i typografia bazowa. Zależy od tokens.css.
+ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--ss-color-bg);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-base);
+    line-height: 1.5;
+}
+
+img,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+code {
+    font-family: var(--ss-font-mono);
+}

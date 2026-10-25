@@ -1,6 +1,6 @@
 # Marka admiro
 
-Pliki źródłowe marki strefy administratorów. Nie są wdrażane (`export-ignore`); strefa używa ich
+Pliki źródłowe marki strefy administratorów (marka simplysmart, domyślna w Core: [simplysmart/](simplysmart/README.md)). Nie są wdrażane (`export-ignore`); strefa używa ich
 kopii w `public/images/`, podłączonych w `config/admiro.php` (`zone.brand`, `zone.favicon`).
 
 ## Zawartość

@@ -1,0 +1,33 @@
+{
+    "zone": "admiro",
+    "permissions": [
+        "zones.view",
+        "zones.configure",
+        "accounts.manage",
+        "organizations.view",
+        "organizations.manage",
+        "owners.view",
+        "owners.assign",
+        "settings.view",
+        "settings.manage",
+        "users.manage",
+        "audit.view",
+        "heroes.manage",
+        "system.maintenance"
+    ],
+    "roles": {
+        "guest": {
+            "permissions": []
+        },
+        "support": {
+            "permissions": ["zones.view", "organizations.view", "owners.view", "settings.view", "audit.view"]
+        },
+        "owner": {
+            "permissions": "*",
+            "except": ["heroes.manage", "system.maintenance"]
+        },
+        "hero": {
+            "permissions": "*"
+        }
+    }
+}
