@@ -7,6 +7,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 ### Changed
 
 - Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta z białym logotypem „admiro” na środku (w ciemnym motywie karta jasna z czarnym logotypem); na telefonie logotyp nad formularzem.
+- Tytuł logowania: „Kontrola, automatyzacja i precyzja w każdym wdrożeniu” — w kroju Space Grotesk, słowo „precyzja” wyróżnione kursywą Instrument Serif (fonty z polskimi literami serwowane przez strefę, licencja SIL OFL).
+- Formularz logowania: tytuł 2rem, pola i przyciski tej samej wysokości (52 px) z pełnym zaokrągleniem; ikony w całej strefie z grubszą, bardziej miękką kreską.
 - Nowa marka: w logotypie „admiro” złota korona (`#F5B301`) zamiast kropki nad „i”; awatar (sygnet) i ikony strony to złota korona z dolną kreską na czarnym tle.
 
 ## [0.3.0] - 2026-10-25

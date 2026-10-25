@@ -1,0 +1,23 @@
+/**
+ * Style strefy administratorów, dołączane przez Core po jego stylach (`stylesheets` w configu strefy,
+ * x-mainboard::zone-styles). Tylko tokeny Core (--ss-*).
+ *
+ * Fonty strefy (`fonts` w configu strefy, @font-face od Core; z polskimi literami, licencja SIL OFL w public/fonts/):
+ * Space Grotesk w tytule logowania (--ss-font-display), kursywa Instrument Serif we fragmencie w *gwiazdkach*
+ * (--ss-font-accent). Interfejs zostaje przy foncie Core.
+ *
+ * Ikony liniowe w całej strefie mają grubszą, bardziej miękką kreskę (zaokrąglone końce i łączenia Core).
+ * Logowanie: większy tytuł, pola i przyciski formularza tej samej wysokości i z pełnym zaokrągleniem (pigułka).
+ */
+:root {
+    --ss-font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --ss-font-accent: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --ss-icon-stroke: 2;
+}
+
+.ss-auth {
+    --ss-auth-title-size: 2rem;
+    --ss-auth-control-height: 3.25rem;
+    --ss-radius-input: var(--ss-radius-pill);
+    --ss-radius-button: var(--ss-radius-pill);
+}
