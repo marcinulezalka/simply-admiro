@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-use Simplysmart\Admiro\AdmiroServiceProvider;
+use Simplysmart\Admiro\Panel\PanelServiceProvider;
 use Simplysmart\Admiro\Models\AdmiroAccount;
 
 // Fonty logowania (latin i latin-ext z polskimi literami; licencja SIL OFL w public/fonts/).
@@ -68,7 +68,7 @@ return [
         'stylesheets' => [__DIR__ . '/../public/css/admiro.css'],
         'fonts' => $fonts,
         'legal_documents' => ['privacy', 'gdpr'],
-        'texts' => AdmiroServiceProvider::NAMESPACE,
+        'texts' => PanelServiceProvider::NAMESPACE,
         'favicon' => [
             'ico' => __DIR__ . '/../public/images/favicon.ico',
             'svg' => __DIR__ . '/../public/images/favicon.svg',

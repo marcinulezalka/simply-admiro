@@ -7,7 +7,7 @@ Paczka Composer: `simplysmart/admiro`, namespace `Simplysmart\Admiro\`. Mechaniz
 ## Wymagania
 
 - PHP ^8.4, Laravel 13
-- `simplysmart/mainboard`; provider `Simplysmart\Admiro\AdmiroServiceProvider` rejestruje się sam (auto-discovery)
+- `simplysmart/mainboard`; provider `Simplysmart\Admiro\Panel\PanelServiceProvider` rejestruje się sam (auto-discovery)
 
 ## Instalacja
 

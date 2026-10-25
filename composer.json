@@ -70,7 +70,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Simplysmart\\Admiro\\AdmiroServiceProvider"
+                "Simplysmart\\Admiro\\Panel\\PanelServiceProvider"
             ]
         }
     },
