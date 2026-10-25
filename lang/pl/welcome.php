@@ -18,7 +18,7 @@ return [
     'inside' => 'Co zyskujesz na starcie?',
     'built_on' => 'Zbudowane na',
     'admiro_version' => 'admiro :version',
-    'tagline' => 'Dopasowane aplikacje biznesowe na Laravelu',
+    'tagline' => 'Aplikacje biznesowe, które rosną razem z Twoją firmą',
 
     'features' => [
         'zones' => [

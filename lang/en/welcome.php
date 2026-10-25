@@ -18,7 +18,7 @@ return [
     'inside' => 'What you get from the start',
     'built_on' => 'Built on',
     'admiro_version' => 'admiro :version',
-    'tagline' => 'Tailored business applications on Laravel',
+    'tagline' => 'Business applications that grow with your company',
 
     'features' => [
         'zones' => [
