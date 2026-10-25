@@ -1,4 +1,4 @@
-{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page (docs/design-system.md): tytuł (fragment w *gwiazdkach* wyróżniony, View\AccentText; w <title> bez gwiazdek), opcjonalny wstęp (lead), komunikaty z sesji (np. po wylogowaniu) jako globalne toasty (Toast::fromFlash()), formularz w slocie, opcjonalna notka pod formularzem (note) i akcje drugorzędne (slot actions). Wariant (Enums\AuthLayout) z `auth.layout` strefy ($zoneAuthLayout z ZonesServiceProvider), prop layout go nadpisuje: centered — jedna karta .ss-card z logo; split — rama .ss-frame z kartą marki (.ss-card--inverse, .ss-card--elevated; logo albo baner strefy z `auth.brand` (wersja ciemna przełączana z motywem: .ss-theme-light / .ss-theme-dark), $zoneAuthBrand albo prop brand: ?array{light: string, dark: ?string, alt: string}) po lewej i kartą formularza (.ss-card--tinted) po prawej; z banerem (.ss-auth--image) karta banera nie ma ramki, a karta formularza nachodzi na nią i zakrywa jej zaokrąglenie. W prawym górnym rogu przełącznik motywu, a pod kartami odnośniki cookies; kolorystyka strefy ($zonePalettes, $zonePaletteScope) obowiązuje bez przełącznika. Strefa z odnośnikami prawnymi (`legal_links`, $zoneLegalLinks, prop legalLinks: list<array{url: string, label: string}>) dostaje stopkę simplysmart (.ss-auth__footer: logo, polityka cookies i odnośniki prawne, a w dolnym wierszu copyright, ustawienia cookies z ikoną suwaków i przełącznik motywu) wysuwaną spod dolnej krawędzi kart po kliknięciu nazwy simplysmart na banerze albo logo (.ss-auth__footer-trigger, js/footer-toggle.js; bez skryptu i na telefonie stopka jest stale widoczna), a przełącznik motywu jest w stopce obok copyrightu (.ss-auth__footer-meta). Props stylesheets (ścieżki CSS) i fontFaces (reguły @font-face) zastępują arkusze i fonty strefy żądania (podgląd strefy w design systemie). Wygląd wyłącznie z klas design systemu. Strony logowania nie są indeksowane. --}}
+{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page (docs/design-system.md): tytuł (fragment w *gwiazdkach* wyróżniony, View\AccentText; w <title> bez gwiazdek), opcjonalny wstęp (lead), komunikaty z sesji (np. po wylogowaniu) jako globalne toasty (Toast::fromFlash()), formularz w slocie, opcjonalna notka pod formularzem (note) i akcje drugorzędne (slot actions). Wariant (Enums\AuthLayout) z `auth.layout` strefy ($zoneAuthLayout z ZonesServiceProvider), prop layout go nadpisuje: centered — jedna karta .ss-card z logo; split — rama .ss-frame z kartą marki (.ss-card--inverse, .ss-card--elevated; logo albo baner strefy z `auth.brand` (wersja ciemna przełączana z motywem: .ss-theme-light / .ss-theme-dark), $zoneAuthBrand albo prop brand: ?array{light: string, dark: ?string, alt: string}) po lewej i kartą formularza (.ss-card--tinted) po prawej; z banerem (.ss-auth--image) karta banera nie ma ramki, a karta formularza nachodzi na nią i zakrywa jej zaokrąglenie. W prawym górnym rogu przełącznik motywu, a pod kartami odnośniki cookies; kolorystyka strefy ($zonePalettes, $zonePaletteScope) obowiązuje bez przełącznika. Strefa z odnośnikami prawnymi (`legal_links`, $zoneLegalLinks, prop legalLinks: list<array{url: string, label: string}>) dostaje pełnoszeroką stopkę strony simplysmart (.ss-auth__footer: logo, polityka cookies i odnośniki prawne, w dolnym wierszu copyright, ustawienia cookies z ikoną suwaków i przełącznik motywu, na końcu duże, ucięte dolną krawędzią logo simplysmart): stopka stoi przyklejona do dołu okna pod treścią (.ss-auth__stage), a strona przesuwa się nad nią i odsłania ją przy przewijaniu; nazwa simplysmart na banerze albo logo (.ss-auth__footer-trigger) to odnośnik do stopki. Props stylesheets (ścieżki CSS) i fontFaces (reguły @font-face) zastępują arkusze i fonty strefy żądania (podgląd strefy w design systemie). Wygląd wyłącznie z klas design systemu. Strony logowania nie są indeksowane. --}}
 @props(['title' => null, 'description' => null, 'lead' => null, 'note' => null, 'layout' => null, 'brand' => null, 'legalLinks' => null, 'stylesheets' => null, 'fontFaces' => null])
 @php
     $heading = $title ?? text('sign_in.title');
@@ -16,12 +16,14 @@
     </x-slot:head>
 
     @php($hasFooter = $legalLinks !== [])
-    <div @class(['ss-auth', 'ss-auth--split' => $isSplit, 'ss-auth--image' => $isSplit && $brand !== null, 'ss-auth--footer' => $hasFooter]) @if ($hasFooter) data-ss-footer-root="ss-auth" @endif>
-        @unless ($hasFooter)
+    <div @class(['ss-auth', 'ss-auth--split' => $isSplit, 'ss-auth--image' => $isSplit && $brand !== null, 'ss-auth--footer' => $hasFooter])>
+        @if ($hasFooter)
+            <div class="ss-auth__stage">
+        @else
             <div class="ss-auth__theme">
                 <x-mainboard::theme-toggle />
             </div>
-        @endunless
+        @endif
         <main @class(['ss-auth__cards', 'ss-frame ss-frame--row' => $isSplit])>
             @if ($isSplit)
                 @if ($brand !== null)
@@ -33,17 +35,17 @@
                             <img class="ss-auth__brand-image" src="{{ $brand['light'] }}" alt="{{ $brand['alt'] }}">
                         @endif
                         @if ($hasFooter)
-                            <button class="ss-auth__footer-trigger ss-auth__footer-trigger--image" type="button" aria-expanded="false" aria-controls="ss-auth-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
+                            <a class="ss-auth__footer-trigger ss-auth__footer-trigger--image" href="#ss-auth-footer" title="{{ text('layout.footer_toggle') }}">
                                 <span class="ss-sr-only">{{ text('layout.footer_toggle') }}</span>
-                            </button>
+                            </a>
                         @endif
                     </aside>
                 @else
                     <aside class="ss-card ss-card--inverse ss-card--elevated ss-auth__brand">
                         @if ($hasFooter)
-                            <button class="ss-auth__footer-trigger" type="button" aria-expanded="false" aria-controls="ss-auth-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
+                            <a class="ss-auth__footer-trigger" href="#ss-auth-footer" title="{{ text('layout.footer_toggle') }}">
                                 <x-mainboard::logo class="ss-auth__brand-logo" />
-                            </button>
+                            </a>
                         @else
                             <x-mainboard::logo class="ss-auth__brand-logo" />
                         @endif
@@ -54,9 +56,9 @@
             <div @class(['ss-card', 'ss-card--tinted' => $isSplit, 'ss-auth__card'])>
                 @unless ($isSplit)
                     @if ($hasFooter)
-                        <button class="ss-auth__footer-trigger ss-auth__footer-trigger--logo" type="button" aria-expanded="false" aria-controls="ss-auth-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
+                        <a class="ss-auth__footer-trigger ss-auth__footer-trigger--logo" href="#ss-auth-footer" title="{{ text('layout.footer_toggle') }}">
                             <x-mainboard::logo class="ss-auth__logo" />
-                        </button>
+                        </a>
                     @else
                         <x-mainboard::logo class="ss-auth__logo" />
                     @endif
@@ -81,7 +83,8 @@
             </div>
         </main>
         @if ($hasFooter)
-            <footer class="ss-auth__footer" id="ss-auth-footer" data-ss-footer>
+            </div>
+            <footer class="ss-auth__footer" id="ss-auth-footer">
                 <div class="ss-auth__footer-inner">
                     <div class="ss-auth__footer-body">
                         <div class="ss-auth__footer-row">
@@ -102,8 +105,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="ss-auth__footer-brand" aria-hidden="true">
+                    <x-mainboard::logo class="ss-auth__footer-brand-logo" />
+                </div>
             </footer>
-            <x-mainboard::scripts :files="['js/footer-toggle.js']" />
         @else
             <x-mainboard::cookie-links />
         @endif

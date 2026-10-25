@@ -1,6 +1,5 @@
 /**
- * Wysuwana stopka simplysmart (logowanie strefy z odnośnikami prawnymi — x-mainboard::auth.layout — i stopka menu
- * bocznego — x-mainboard::app.layout): przyciski [data-ss-footer-toggle] (nazwa simplysmart na banerze albo logo)
+ * Wysuwana stopka simplysmart (stopka menu bocznego — x-mainboard::app.layout): przyciski [data-ss-footer-toggle] (logo)
  * wysuwają i chowają stopkę [data-ss-footer] w obrębie [data-ss-footer-root]. Wartość data-ss-footer-root to klasa
  * bloku, któremu skrypt dodaje modyfikatory <blok>--footer-open (stopka wysunięta) i <blok>--footer-ready (CSS chowa
  * stopkę dopiero po starcie skryptu, więc bez niego jest stale widoczna); aria-expanded na przyciskach, inert na

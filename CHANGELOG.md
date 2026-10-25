@@ -6,6 +6,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Toasty wyświetlane na dole ekranu (wyśrodkowane, z odstępem od paska systemowego telefonu) zamiast na środku.
+- Stopka simplysmart na logowaniu stref z `legal_links` to pełnoszeroka stopka strony zamiast wysuwanej spod kart: stoi przyklejona do dołu okna pod warstwą treści (`.ss-auth__stage`, zaokrąglony dół z cieniem), która przesuwa się nad nią przy przewijaniu, i kończy się dużym, uciętym logo simplysmart (`.ss-auth__footer-brand`); nazwa simplysmart na banerze albo logo to odnośnik do stopki, a logowanie nie ładuje już `js/footer-toggle.js` (zostaje dla menu bocznego).
+- Logowanie w układzie dwóch kart na tablecie (poniżej 56rem): karta formularza na całą szerokość ramy, równo z kartą marki, zamiast wąskiej karty z pustym miejscem obok.
+
 - Powłoka aplikacji w stylu „soft UI”: szare płótno (`--ss-color-canvas`), menu boczne jako jaśniejszy panel bez ramki (`--ss-color-sidebar`, `--ss-color-sidebar-hover`), aktywna pozycja menu, karty i wyszukiwarka białe z miękkim cieniem (`--ss-shadow-soft`); motywy wysokiego kontrastu bez zmian.
 - Pod imieniem i nazwiskiem w menu aplikacji wyświetlana jest nazwa skrócona bieżącej organizacji, a bez niej pełna nazwa.
 - `OrganizationManagement::create()` i `update()` przyjmują `Organizations\OrganizationData` (nazwa, nazwa skrócona, dane firmy) zamiast nazwy; kontrakt `CodeAndPinAccount` rozszerza `HasRecoveryEmail`, a `AccountStore` ma `setRecoveryEmail()`.

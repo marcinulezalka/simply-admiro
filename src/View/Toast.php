@@ -16,7 +16,7 @@ namespace Simplysmart\Mainboard\View;
 use Simplysmart\Mainboard\Enums\ToastType;
 
 /**
- * Toast (alert aplikacji na środku ekranu): typ, treść, opcjonalny tytuł i akcja. Akcje flashują toasty do sesji
+ * Toast (alert aplikacji na dole ekranu): typ, treść, opcjonalny tytuł i akcja. Akcje flashują toasty do sesji
  * pod kluczem {@see self::SESSION_KEY} (toArray()), layout aplikacji odczytuje je przez fromSession().
  */
 final readonly class Toast

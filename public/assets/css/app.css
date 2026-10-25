@@ -597,6 +597,11 @@ button.ss-badge:focus-visible {
     gap: var(--ss-frame-padding);
 }
 
+/* Pod 56rem karty split są jedna pod drugą: karta formularza na całą szerokość ramy, równo z kartą marki. */
+.ss-auth--split .ss-auth__card {
+    max-width: none;
+}
+
 .ss-auth__brand {
     display: flex;
     align-items: center;
@@ -2112,8 +2117,8 @@ button.ss-account-menu__link {
 }
 
 /**
- * .ss-toasts — toasty (x-mainboard::toasts) na środku ekranu nad treścią; kontener nie przechwytuje kliknięć poza
- * toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
+ * .ss-toasts — toasty (x-mainboard::toasts) na dole ekranu, wyśrodkowane, nad treścią (z odstępem od paska
+ * systemowego telefonu); kontener nie przechwytuje kliknięć poza toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
  * znaczenie niosą też ikona i nazwa typu.
  */
 .ss-toasts {
@@ -2124,8 +2129,8 @@ button.ss-account-menu__link {
     flex-direction: column;
     gap: var(--ss-space-3);
     align-items: center;
-    justify-content: center;
-    padding: var(--ss-space-4);
+    justify-content: flex-end;
+    padding: var(--ss-space-4) var(--ss-space-4) calc(var(--ss-space-6) + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
 }
 
@@ -3476,45 +3481,68 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * Stopka simplysmart logowania strefy z odnośnikami prawnymi (`legal_links`): .ss-auth__footer pod ramą kart, węższa
- * o promień ramy i wysunięta spod jej dolnej krawędzi (rama nad stopką); w środku logo, odnośniki prawne i cookies
- * (.ss-auth__legal, .ss-auth__legal-cookies wtapia politykę cookies w wiersz), a w dolnym wierszu copyright, ustawienia cookies z ikoną (.ss-auth__cookie-settings) i przełącznik motywu; odnośniki bez podkreślenia, podkreślone przy najechaniu i fokusie. Na szerokim ekranie
- * po starcie js/footer-toggle.js (.ss-auth--footer-ready) stopka jest schowana (wiersz siatki 0fr) i wysuwa się
- * (.ss-auth--footer-open) po kliknięciu .ss-auth__footer-trigger: niewidocznego przycisku na nazwie simplysmart
- * banera (--image, pozycję zmienia arkusz strefy) albo logo; stopka składa się z .ss-auth__footer-inner (przycinanie przy zwijaniu) i .ss-auth__footer-body (wygląd). .ss-auth__footer-meta — dolny wiersz stopki, .ss-auth__footer-actions — ustawienia cookies i przełącznik motywu.
+ * Stopka simplysmart logowania strefy z odnośnikami prawnymi (`legal_links`): pełnoszeroka stopka strony pod treścią.
+ * .ss-auth--footer układa stronę w dwie warstwy: .ss-auth__stage (karty na środku, co najmniej wysokość okna, tło
+ * strony, zaokrąglony dół i cień) przesuwa się nad .ss-auth__footer, która stoi przyklejona do dołu okna (sticky)
+ * i odsłania się przy przewijaniu; stopka zachodzi pod zaokrąglenie warstwy treści. W środku .ss-auth__footer-inner
+ * (szerokość kart split) z .ss-auth__footer-body: logo, odnośniki prawne i cookies (.ss-auth__legal,
+ * .ss-auth__legal-cookies wtapia politykę cookies w wiersz), a w dolnym wierszu (.ss-auth__footer-meta) copyright,
+ * ustawienia cookies z ikoną (.ss-auth__cookie-settings) i przełącznik motywu (.ss-auth__footer-actions); odnośniki
+ * bez podkreślenia, podkreślone przy najechaniu i fokusie. Na końcu .ss-auth__footer-brand: duże logo simplysmart na
+ * szerokość kolumny, ucięte dolną krawędzią stopki, w lekkim odcieniu tekstu (tekstura, nie nagłówek).
+ * .ss-auth__footer-trigger — odnośnik do stopki: niewidoczny na nazwie simplysmart banera (--image, pozycję zmienia
+ * arkusz strefy) albo logo.
  */
 .ss-auth__cards {
     position: relative;
     z-index: 1;
 }
 
-.ss-auth__footer {
-    display: grid;
-    grid-template-rows: 1fr;
-    width: calc(100% - 2 * var(--ss-radius-frame));
-    max-width: calc(var(--ss-auth-split-width) - 2 * var(--ss-radius-frame));
-    margin-top: calc(-1 * var(--ss-radius-frame));
-    transition: grid-template-rows 0.3s ease, opacity 0.3s ease;
-}
-
-.ss-auth:not(.ss-auth--split) .ss-auth__footer {
-    max-width: calc(var(--ss-auth-width) - 2 * var(--ss-radius-frame));
-}
-
-.ss-auth__footer-inner {
+.ss-auth--footer {
+    display: block;
     min-height: 0;
+    padding: 0;
+}
+
+.ss-auth__stage {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100vh;
+    min-height: 100svh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-6) var(--ss-space-4) var(--ss-space-8);
+    border-radius: 0 0 var(--ss-radius-frame) var(--ss-radius-frame);
+    background: inherit;
+    box-shadow: 0 1px 0 var(--ss-color-border), 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 0.25);
+}
+
+.ss-auth__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 0;
+    margin-top: calc(-1 * var(--ss-radius-frame));
+    padding-top: var(--ss-radius-frame);
     overflow: hidden;
+    background: var(--ss-color-surface);
+    color: var(--ss-color-muted);
+}
+
+.ss-auth__footer-inner,
+.ss-auth__footer-brand {
+    width: 100%;
+    max-width: var(--ss-auth-split-width);
+    margin-inline: auto;
+    padding-inline: var(--ss-space-4);
 }
 
 .ss-auth__footer-body {
     display: flex;
     flex-direction: column;
-    gap: var(--ss-space-3);
-    padding: calc(var(--ss-radius-frame) + var(--ss-space-4)) var(--ss-space-6) var(--ss-space-4);
-    border: 1px solid var(--ss-color-border);
-    border-top: 0;
-    border-radius: 0 0 var(--ss-radius-frame) var(--ss-radius-frame);
-    background: var(--ss-color-surface-muted);
+    gap: var(--ss-space-4);
+    padding-block: var(--ss-space-8) var(--ss-space-4);
 }
 
 .ss-auth__footer-row {
@@ -3579,7 +3607,7 @@ a.ss-notification:focus-visible {
     gap: var(--ss-space-3);
     align-items: center;
     justify-content: space-between;
-    padding-top: var(--ss-space-3);
+    padding-top: var(--ss-space-4);
     border-top: 1px solid var(--ss-color-border);
 }
 
@@ -3588,6 +3616,27 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-muted);
     font-family: var(--ss-font-mono);
     font-size: 0.75rem;
+}
+
+/* Logo 792×159, linia bazowa ok. 125: ujemny margines 4,3cqw chowa dolne wydłużenia liter pod krawędzią stopki. */
+.ss-auth__footer-brand {
+    margin-top: var(--ss-space-6);
+    container-type: inline-size;
+    pointer-events: none;
+    user-select: none;
+}
+
+.ss-auth__footer-brand-logo {
+    display: block;
+    width: 100%;
+    margin-bottom: -4.3cqw;
+    color: color-mix(in srgb, var(--ss-color-text) 14%, transparent);
+}
+
+.ss-auth__footer-brand-logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 .ss-auth__footer-trigger {
@@ -3618,25 +3667,20 @@ a.ss-notification:focus-visible {
     align-self: flex-start;
 }
 
-@media (min-width: 56rem) {
-    .ss-auth__footer-trigger--image {
-        display: block;
+@media (min-width: 40rem) {
+    .ss-auth__stage {
+        padding: var(--ss-space-8) var(--ss-space-6) calc(var(--ss-space-8) + var(--ss-space-4));
     }
 
-    .ss-auth--footer-ready .ss-auth__footer {
-        grid-template-rows: 0fr;
-        opacity: 0;
-    }
-
-    .ss-auth--footer-ready.ss-auth--footer-open .ss-auth__footer {
-        grid-template-rows: 1fr;
-        opacity: 1;
+    .ss-auth__footer-inner,
+    .ss-auth__footer-brand {
+        padding-inline: var(--ss-space-6);
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .ss-auth__footer {
-        transition: none;
+@media (min-width: 56rem) {
+    .ss-auth__footer-trigger--image {
+        display: block;
     }
 }
 

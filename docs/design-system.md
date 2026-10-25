@@ -191,7 +191,7 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie jedna pod drugą); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie; tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; wygląd wyłącznie z klas design systemu |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie; tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; strefa z `legal_links` dostaje pełnoszeroką stopkę strony simplysmart (`.ss-auth__footer`: logo, odnośniki prawne i cookies, copyright, przełącznik motywu, duże logo simplysmart ucięte dolną krawędzią), przyklejoną do dołu okna pod warstwą treści (`.ss-auth__stage`, co najmniej wysokość okna, zaokrąglony dół z cieniem), która przesuwa się nad nią przy przewijaniu; wygląd wyłącznie z klas design systemu |
 | `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i przełącznikiem motywu nad i pod treścią, spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł, `lead`) i treścią w `.ss-prose`, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
@@ -269,8 +269,8 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 
 ### Toasty i powiadomienia
 
-- **Toasty** (`x-mainboard::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji na środku
-  ekranu. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
+- **Toasty** (`x-mainboard::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji na dole
+  ekranu, wyśrodkowane. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
   (tytuł albo prefiks dla czytników). Błąd (`danger`) ma `role="alert"` i zostaje do zamknięcia; pozostałe mają
   `role="status"` i znikają po 6 s (`js/toasts.js`; pauza przy najechaniu i fokusie). Toast może mieć jedną
   akcję (link, np. „Zobacz”, „Cofnij”). Layouty aplikacji, logowania i strony publicznej strefy pokazują toasty
@@ -342,7 +342,7 @@ i Esc); nagłówek kontekstowy
 pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Na dole menu odnośnik „Ustawienia”
 (`settings`: `View\Navigation\SettingsMenu`) i subtelne logo simplysmart (35% szerokości menu, `.ss-sidebar__brand-toggle`),
 które wysuwa od dołu stopkę simplysmart (`.ss-sidebar__footer`: ustawienia i polityka cookies, odnośniki prawne strefy
-`legalLinks`, copyright; `js/footer-toggle.js`, wspólny ze stopką logowania). Na stronie ustawień (`settings->active`)
+`legalLinks`, copyright; `js/footer-toggle.js`). Na stronie ustawień (`settings->active`)
 menu pokazuje zamiast pozycji aplikacji „Wróć do aplikacji”, tytuł „Ustawienia” i grupy ustawień (`docs/strefy.md`). Skrypt `public/assets/js/app-shell.js`
 osadza `x-mainboard::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.

@@ -38,10 +38,11 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     z CSP font-src 'self', a x-mainboard::page w strefie dodaje reguły @font-face; arkusz strefy przypisuje
        //     rodziny tokenom --ss-font-sans, --ss-font-display, --ss-font-accent; zły wpis zatrzymuje start),
        // 'legal_links' => [['route' => 'legal.privacy', 'label' => '<paczka>::legal.privacy.link'], ...]
-       //     (krótka nazwa trasy strefy i klucz tekstu; logowanie dostaje stopkę simplysmart z tymi odnośnikami
-       //     i cookies, wysuwaną kliknięciem nazwy simplysmart na banerze albo logo — pozycję przycisku na banerze
-       //     zmienia arkusz strefy (.ss-auth__footer-trigger--image) — i przełącznik motywu w tej stopce
-       //     formularza; bez nich odnośniki cookies są pod kartami; tylko strefa z logowaniem),
+       //     (krótka nazwa trasy strefy i klucz tekstu; logowanie dostaje pełnoszeroką stopkę strony simplysmart
+       //     z tymi odnośnikami, cookies i przełącznikiem motywu, przyklejoną do dołu okna pod treścią, która
+       //     odsłania ją przy przewijaniu; nazwa simplysmart na banerze albo logo prowadzi do niej — pozycję
+       //     odnośnika na banerze zmienia arkusz strefy (.ss-auth__footer-trigger--image); bez nich odnośniki
+       //     cookies są pod kartami; tylko strefa z logowaniem),
        // 'brand' => ['logo' => __DIR__.'/../public/images/logo.png', 'signet' => ...png]
        //     (marka strefy, PNG/JPG — klienci poczty nie pokazują SVG; logo trafia do e-maili, gdy organizacja nie ma
        //     własnego; brak pliku, zły format albo `favicon` w tej sekcji zatrzymuje start),

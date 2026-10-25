@@ -1,4 +1,4 @@
-{{-- Gotowy widok: powiadomienia (dzwonek z licznikiem i panelem w top barze, pełna lista z zakładkami) i toasty wszystkich typów na środku ekranu (Enums\ToastType: kolor, ikona, nazwa; błąd zostaje do zamknięcia), z legendą znaczeń kolorów. $view: DesignSystemView. --}}
+{{-- Gotowy widok: powiadomienia (dzwonek z licznikiem i panelem w top barze, pełna lista z zakładkami) i toasty wszystkich typów na dole ekranu (Enums\ToastType: kolor, ikona, nazwa; błąd zostaje do zamknięcia), z legendą znaczeń kolorów. $view: DesignSystemView. --}}
 @php
     use Simplysmart\Mainboard\Enums\DesignSystemView;
     use Simplysmart\Mainboard\Enums\ToastType;

@@ -1,4 +1,4 @@
-{{-- Toasty (alerty aplikacji) na środku ekranu: kolor stanu, ikona i nazwa typu (Enums\ToastType), treść, opcjonalna akcja, zamknięcie. Błąd ogłaszany jako alert i zostaje do zamknięcia; pozostałe znikają same (js/toasts.js, pauza przy najechaniu i fokusie). toasts: list<View\Toast>; inline: toasty w treści strony (próbki), bez nakładki i bez znikania. --}}
+{{-- Toasty (alerty aplikacji) na dole ekranu: kolor stanu, ikona i nazwa typu (Enums\ToastType), treść, opcjonalna akcja, zamknięcie. Błąd ogłaszany jako alert i zostaje do zamknięcia; pozostałe znikają same (js/toasts.js, pauza przy najechaniu i fokusie). toasts: list<View\Toast>; inline: toasty w treści strony (próbki), bez nakładki i bez znikania. --}}
 @props(['toasts' => [], 'inline' => false])
 @if ($toasts !== [])
     <div @class(['ss-toasts', 'ss-toasts--inline' => $inline]) aria-label="{{ text('layout.toasts') }}" data-ss-toasts>
