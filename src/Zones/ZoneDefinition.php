@@ -56,6 +56,8 @@ final readonly class ZoneDefinition
      * @param string|null $mailViews Prefiks widoków e-maili strefy (`mail.views`, np. `shop::mail.shop`): `<prefiks>.layout`
      *                               i `<prefiks>.<szablon>` zastępują widoki Core; null = layout i szablony Core.
      * @param MailPalette $mailPalette Kolory e-maili strefy (`mail.palette`); domyślnie paleta Core.
+     * @param string|null $logo Logo strefy do osadzenia inline na stronach (`logo`: ścieżka SVG z fill="currentColor",
+     *                          np. strona startowa View\ZoneLogos); domyślnie `auth.logo`; null = strefa bez logo.
      * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
      *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
      *                           są zawężone do niej; false = uprawnienia z sumy ról.
@@ -83,6 +85,7 @@ final readonly class ZoneDefinition
         public MailPalette $mailPalette = new MailPalette(),
         public bool $roleContexts = false,
         public array $legalDocuments = [],
+        public ?string $logo = null,
     ) {}
 
     /**

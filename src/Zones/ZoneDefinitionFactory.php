@@ -66,6 +66,7 @@ final readonly class ZoneDefinitionFactory
         }
 
         $model = $this->model($config['model'] ?? null, $name);
+        $authSettings = $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null;
 
         return new ZoneDefinition(
             name: $name,
@@ -76,7 +77,7 @@ final readonly class ZoneDefinitionFactory
             model: $model,
             routesPath: rtrim($routesPath, '/'),
             session: $this->session($name, $model !== null, Arr::array($config, 'session', [])),
-            authSettings: $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null,
+            authSettings: $authSettings,
             teams: $model !== null && Arr::boolean($config, 'teams', false),
             security: new ZoneSecuritySettings(
                 maskErrors: $this->nullableBool(Arr::array($config, 'security', []), 'mask_errors', null),
@@ -93,7 +94,26 @@ final readonly class ZoneDefinitionFactory
             mailViews: $this->mailViews($name, Arr::array($config, 'mail', [])),
             mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
             roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
+            logo: $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo,
         );
+    }
+
+    /**
+     * Logo strefy z klucza `logo` (ścieżka pliku SVG osadzanego inline) albo null, gdy strefa go nie podaje.
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest ścieżką istniejącego pliku SVG.
+     */
+    private function logo(string $zone, mixed $logo): ?string
+    {
+        if ($logo === null) {
+            return null;
+        }
+
+        if (! is_string($logo) || ! is_file($logo) || strtolower(pathinfo($logo, PATHINFO_EXTENSION)) !== 'svg') {
+            throw new InvalidArgumentException("Zone [{$zone}] logo must be the path of an existing SVG file.");
+        }
+
+        return $logo;
     }
 
     /**

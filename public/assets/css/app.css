@@ -343,6 +343,33 @@ button.ss-badge:focus-visible {
     opacity: 0.7;
 }
 
+/* Logo stref pod marką simplysmart: małe, w kolorze karty, przygaszone (pełna widoczność po najechaniu). */
+.ss-welcome__zones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3) var(--ss-space-6);
+    align-items: center;
+    margin: var(--ss-space-2) 0 0;
+    padding: var(--ss-space-4) 0 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+    list-style: none;
+}
+
+.ss-welcome__zone-logo {
+    display: flex;
+    opacity: 0.45;
+    transition: opacity 0.2s ease;
+}
+
+.ss-welcome__zone-logo:hover {
+    opacity: 0.8;
+}
+
+.ss-welcome__zone-logo svg {
+    width: auto;
+    height: 1.125rem;
+}
+
 @media (min-width: 64rem) {
     .ss-welcome__card {
         flex-direction: row;

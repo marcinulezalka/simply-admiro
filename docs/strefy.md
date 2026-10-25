@@ -50,6 +50,8 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'brand' => ['logo' => __DIR__.'/../public/images/logo.png', 'signet' => ...png]
        //     (marka strefy, PNG/JPG — klienci poczty nie pokazują SVG; logo trafia do e-maili, gdy organizacja nie ma
        //     własnego; brak pliku, zły format albo `favicon` w tej sekcji zatrzymuje start),
+       // 'logo' => __DIR__.'/../public/images/logo.svg' (logo strefy do osadzenia inline na stronach, np. pod marką
+       //     na stronie startowej — View\ZoneLogos; SVG z fill="currentColor", domyślnie `auth.logo`; zły plik zatrzymuje start),
        // 'mail' => ['views' => '<paczka>::mail.<strefa>', 'palette' => ['accent' => '#112a46', ...]]
        //     (e-maile strefy, patrz „E-maile strefy”; zły prefiks albo kolor spoza #rrggbb zatrzymuje start),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
