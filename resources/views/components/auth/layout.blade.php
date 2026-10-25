@@ -1,4 +1,4 @@
-{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page (docs/design-system.md): tytuł (fragment w *gwiazdkach* wyróżniony, View\AccentText; w <title> bez gwiazdek), opcjonalny wstęp (lead), komunikaty z sesji (np. po wylogowaniu) jako globalne toasty (Toast::fromFlash()), formularz w slocie, opcjonalna notka pod formularzem (note) i akcje drugorzędne (slot actions). Wariant (Enums\AuthLayout) z `auth.layout` strefy ($zoneAuthLayout z ZonesServiceProvider), prop layout go nadpisuje: centered — jedna karta .ss-card z logo; split — rama .ss-frame z kartą marki (.ss-card--inverse, .ss-card--elevated; logo albo baner strefy z `auth.brand` (wersja ciemna przełączana z motywem: .ss-theme-light / .ss-theme-dark), $zoneAuthBrand albo prop brand: ?array{light: string, dark: ?string, alt: string}) po lewej i kartą formularza (.ss-card--tinted) po prawej; z banerem (.ss-auth--image) karta banera nie ma ramki, a karta formularza nachodzi na nią i zakrywa jej zaokrąglenie. W prawym górnym rogu przełącznik motywu, a pod kartami odnośniki cookies; kolorystyka strefy ($zonePalettes, $zonePaletteScope) obowiązuje bez przełącznika. Strefa z odnośnikami prawnymi (`legal_links`, $zoneLegalLinks, prop legalLinks: list<array{url: string, label: string}>) dostaje pełnoszeroką stopkę strony simplysmart (x-mainboard::brand-footer, wspólna z layoutem aplikacji): na szerokim ekranie schowana pod treścią (.ss-auth__stage) i odsłaniana tylko kliknięciem nazwy simplysmart na banerze albo logo (.ss-auth__footer-trigger, js/footer-toggle.js): stopka stoi przy dole okna, a strona przesuwa się nad nią w górę; Escape albo ponowne kliknięcie ją chowa. Na telefonie (i bez skryptu) stopka jest zwykłą stopką na końcu strony. Props stylesheets (ścieżki CSS) i fontFaces (reguły @font-face) zastępują arkusze i fonty strefy żądania (podgląd strefy w design systemie). Wygląd wyłącznie z klas design systemu. Strony logowania nie są indeksowane. --}}
+{{-- Układ stron logowania stref na szablonie bazowym x-mainboard::page (docs/design-system.md): tytuł (fragment w *gwiazdkach* wyróżniony, View\AccentText; w <title> bez gwiazdek), opcjonalny wstęp (lead), komunikaty z sesji (np. po wylogowaniu) jako globalne toasty (Toast::fromFlash()), formularz w slocie, opcjonalna notka pod formularzem (note) i akcje drugorzędne (slot actions). Wariant (Enums\AuthLayout) z `auth.layout` strefy ($zoneAuthLayout z ZonesServiceProvider), prop layout go nadpisuje: centered — jedna karta .ss-card z logo; split — rama .ss-frame z kartą marki (.ss-card--inverse, .ss-card--elevated; logo albo baner strefy z `auth.brand` (wersja ciemna przełączana z motywem: .ss-theme-light / .ss-theme-dark), $zoneAuthBrand albo prop brand: ?array{light: string, dark: ?string, alt: string}) po lewej i kartą formularza (.ss-card--tinted) po prawej; z banerem (.ss-auth--image) karta banera nie ma ramki, a karta formularza nachodzi na nią i zakrywa jej zaokrąglenie. W prawym górnym rogu karty formularza przełącznik motywu, a na jej dole odnośniki prawne strefy (`legal_links`, $zoneLegalLinks, prop legalLinks: list<array{url: string, label: string}>) z polityką i ustawieniami cookies (.ss-auth__legal; bez stopki strony simplysmart); kolorystyka strefy ($zonePalettes, $zonePaletteScope) obowiązuje bez przełącznika. Props stylesheets (ścieżki CSS) i fontFaces (reguły @font-face) zastępują arkusze i fonty strefy żądania (podgląd strefy w design systemie). Wygląd wyłącznie z klas design systemu. Strony logowania nie są indeksowane. --}}
 @props(['title' => null, 'description' => null, 'lead' => null, 'note' => null, 'layout' => null, 'brand' => null, 'legalLinks' => null, 'stylesheets' => null, 'fontFaces' => null])
 @php
     $heading = $title ?? text('sign_in.title');
@@ -15,15 +15,7 @@
         <x-mainboard::scripts :files="['js/toasts.js', 'js/pin-keypad.js']" />
     </x-slot:head>
 
-    @php($hasFooter = $legalLinks !== [])
-    <div @class(['ss-auth', 'ss-auth--split' => $isSplit, 'ss-auth--image' => $isSplit && $brand !== null, 'ss-auth--footer ss-footer-host' => $hasFooter]) @if ($hasFooter) data-ss-footer-root="ss-footer-host" @endif>
-        @if ($hasFooter)
-            <div class="ss-auth__stage ss-footer-stage">
-        @else
-            <div class="ss-auth__theme">
-                <x-mainboard::theme-toggle />
-            </div>
-        @endif
+    <div @class(['ss-auth', 'ss-auth--split' => $isSplit, 'ss-auth--image' => $isSplit && $brand !== null])>
         <main @class(['ss-auth__cards', 'ss-frame ss-frame--row' => $isSplit])>
             @if ($isSplit)
                 @if ($brand !== null)
@@ -34,34 +26,21 @@
                         @else
                             <img class="ss-auth__brand-image" src="{{ $brand['light'] }}" alt="{{ $brand['alt'] }}">
                         @endif
-                        @if ($hasFooter)
-                            <button class="ss-auth__footer-trigger ss-auth__footer-trigger--image" type="button" aria-expanded="false" aria-controls="ss-auth-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
-                                <span class="ss-sr-only">{{ text('layout.footer_toggle') }}</span>
-                            </button>
-                        @endif
                     </aside>
                 @else
                     <aside class="ss-card ss-card--inverse ss-card--elevated ss-auth__brand">
-                        @if ($hasFooter)
-                            <button class="ss-auth__footer-trigger" type="button" aria-expanded="false" aria-controls="ss-auth-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
-                                <x-mainboard::logo class="ss-auth__brand-logo" />
-                            </button>
-                        @else
-                            <x-mainboard::logo class="ss-auth__brand-logo" />
-                        @endif
+                        <x-mainboard::logo class="ss-auth__brand-logo" />
                     </aside>
                 @endif
             @endif
 
             <div @class(['ss-card', 'ss-card--tinted' => $isSplit, 'ss-auth__card'])>
+                <div class="ss-auth__theme">
+                    <x-mainboard::theme-toggle />
+                </div>
+
                 @unless ($isSplit)
-                    @if ($hasFooter)
-                        <button class="ss-auth__footer-trigger ss-auth__footer-trigger--logo" type="button" aria-expanded="false" aria-controls="ss-auth-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
-                            <x-mainboard::logo class="ss-auth__logo" />
-                        </button>
-                    @else
-                        <x-mainboard::logo class="ss-auth__logo" />
-                    @endif
+                    <x-mainboard::logo class="ss-auth__logo" />
                 @endunless
 
                 <div class="ss-auth__header">
@@ -80,14 +59,15 @@
                 @isset($actions)
                     <div class="ss-auth__actions">{{ $actions }}</div>
                 @endisset
+
+                <nav class="ss-auth__legal" aria-label="{{ text('layout.legal') }}">
+                    @foreach ($legalLinks as $link)
+                        <a class="ss-link" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                    @endforeach
+                    <x-mainboard::cookie-links class="ss-auth__legal-cookies" />
+                </nav>
             </div>
         </main>
-        @if ($hasFooter)
-            </div>
-            <x-mainboard::brand-footer id="ss-auth-footer" :legal-links="$legalLinks" />
-        @else
-            <x-mainboard::cookie-links />
-        @endif
     </div>
 
     <x-mainboard::toasts :toasts="\Simplysmart\Mainboard\View\Toast::fromFlash(session(\Simplysmart\Mainboard\View\Toast::SESSION_KEY), session(\Simplysmart\Mainboard\View\Toast::STATUS_KEY))" />

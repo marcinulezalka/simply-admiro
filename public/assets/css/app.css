@@ -2887,7 +2887,7 @@ a.ss-notification:focus-visible {
 /**
  * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): przełącznik segmentowy z ikonami motywów
  * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG); wybrany segment wypełniony akcentem (aria-pressed="true").
- * .ss-auth__theme — przełącznik w prawym górnym rogu stron logowania.
+ * .ss-auth__theme — przełącznik w prawym górnym rogu karty formularza logowania (karta ma nad nagłówkiem miejsce na niego).
  */
 .ss-theme-toggle {
     display: inline-flex;
@@ -2937,8 +2937,12 @@ a.ss-notification:focus-visible {
     height: 1.125rem;
 }
 
-.ss-auth {
+.ss-auth__card {
     position: relative;
+}
+
+.ss-auth__card:has(> .ss-auth__theme) {
+    padding-top: calc(var(--ss-space-16) + var(--ss-space-2));
 }
 
 .ss-auth__theme {
@@ -3443,71 +3447,38 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * Stopka logowania strefy z odnośnikami prawnymi (`legal_links`): .ss-auth--footer układa stronę w warstwę treści
- * .ss-auth__stage (karty na środku, co najmniej wysokość okna, tło strony) i wspólną stopkę simplysmart (.ss-footer,
- * niżej). .ss-auth__footer-trigger — przycisk odsłaniający stopkę: niewidoczny na nazwie simplysmart banera (--image,
- * pozycję zmienia arkusz strefy, tylko od 56rem) albo logo.
+ * .ss-auth__legal — odnośniki prawne strefy (`legal_links`) z polityką i ustawieniami cookies na dole karty
+ * formularza logowania: drobny, wyśrodkowany wiersz w kolorze przygaszonym, zawijany; .ss-auth__legal-cookies wtapia
+ * odnośniki cookies (x-mainboard::cookie-links) w ten wiersz. Bez żadnego odnośnika wiersz znika.
  */
-.ss-auth__cards {
-    position: relative;
-    z-index: 1;
-}
-
-.ss-auth--footer {
-    display: block;
-    min-height: 0;
-    padding: 0;
-}
-
-.ss-auth__stage {
+.ss-auth__legal {
     display: flex;
-    min-height: 100vh;
-    min-height: 100svh;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-6);
     justify-content: center;
-    padding: var(--ss-space-6) var(--ss-space-4) var(--ss-space-8);
-    background: inherit;
+    margin-top: var(--ss-space-2);
+    font-family: var(--ss-font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
-.ss-auth__footer-trigger {
-    display: block;
-    padding: 0;
-    border: 0;
-    border-radius: var(--ss-radius-control);
-    background: none;
-    color: inherit;
-    cursor: pointer;
-}
-
-.ss-auth__footer-trigger:focus-visible {
-    outline: 2px solid var(--ss-color-accent);
-    outline-offset: 2px;
-}
-
-.ss-auth__footer-trigger--image {
+.ss-auth__legal:not(:has(.ss-link)) {
     display: none;
-    position: absolute;
-    top: 91%;
-    left: 38%;
-    width: 24%;
-    height: 7%;
 }
 
-.ss-auth__footer-trigger--logo {
-    align-self: flex-start;
+.ss-auth__legal-cookies {
+    display: contents;
 }
 
-@media (min-width: 40rem) {
-    .ss-auth__stage {
-        padding: var(--ss-space-8) var(--ss-space-6) calc(var(--ss-space-8) + var(--ss-space-4));
-    }
+.ss-auth__legal .ss-link {
+    color: var(--ss-color-muted);
+    text-decoration: none;
 }
 
-@media (min-width: 56rem) {
-    .ss-auth__footer-trigger--image {
-        display: block;
-    }
+.ss-auth__legal .ss-link:hover,
+.ss-auth__legal .ss-link:focus-visible {
+    color: var(--ss-color-text);
+    text-decoration: underline;
 }
 
 /**

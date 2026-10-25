@@ -139,7 +139,7 @@
 
     /* Promienie i cienie */
     --ss-radius-card: 1rem;
-    --ss-radius-control: 0.75rem;
+    --ss-radius-control: 0.875rem;
     --ss-radius-pill: 9999px;
     /* Przyciski (.ss-button, .ss-icon-button, przełącznik motywu, klawisze PIN); strefa może dać pigułkę (--ss-radius-pill) */
     --ss-radius-button: var(--ss-radius-control);
