@@ -20,6 +20,8 @@ return [
         'sign_out' => 'Sign-out',
         'access_revoked' => 'Sessions ended',
         'pin_changed' => 'PIN changed',
+        'recovery_email_set' => 'Recovery e-mail added',
+        'recovery_email_removed' => 'Recovery e-mail removed',
         'trusted_device_registered' => 'New trusted device',
         'trusted_devices_revoked' => 'Devices revoked',
         'role_assigned' => 'Role assigned',

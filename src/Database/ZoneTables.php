@@ -75,6 +75,43 @@ final readonly class ZoneTables
         });
     }
 
+    /**
+     * Kolumny zapasowego adresu e-mail w tabeli kont strefy, gdy ich brakuje (strefa utworzona przed ich
+     * wprowadzeniem); triggery historii są przebudowywane. W SQLite kolumny trafiają na koniec tabeli.
+     */
+    public function addRecoveryEmail(string $zone): void
+    {
+        $schema = $this->schema();
+        $accounts = ZoneTable::Accounts->for($zone);
+
+        if ($schema->hasColumn($accounts, AccountColumns::RECOVERY_EMAIL)) {
+            return;
+        }
+
+        $schema->table($accounts, static function (Blueprint $table): void {
+            self::recoveryEmailColumns($table, AccountColumns::LAST_LOGIN_IP);
+        });
+        $this->history->sync($accounts);
+    }
+
+    /**
+     * Usuwa kolumny zapasowego adresu e-mail (down() migracji z addRecoveryEmail()).
+     */
+    public function dropRecoveryEmail(string $zone): void
+    {
+        $schema = $this->schema();
+        $accounts = ZoneTable::Accounts->for($zone);
+
+        if (! $schema->hasColumn($accounts, AccountColumns::RECOVERY_EMAIL)) {
+            return;
+        }
+
+        $schema->table($accounts, static function (Blueprint $table): void {
+            $table->dropColumn([AccountColumns::RECOVERY_EMAIL, AccountColumns::RECOVERY_EMAIL_SET_AT]);
+        });
+        $this->history->sync($accounts);
+    }
+
     public function drop(string $zone): void
     {
         $schema = $this->schema();
@@ -107,7 +144,22 @@ final readonly class ZoneTables
         $table->unsignedInteger(AccountColumns::AUTH_EPOCH)->default(0);
         $table->timestamp(AccountColumns::LAST_LOGIN_AT)->nullable();
         $table->text(AccountColumns::LAST_LOGIN_IP)->nullable();
+        self::recoveryEmailColumns($table);
         Columns::closing($table);
+    }
+
+    /**
+     * Zapasowy adres e-mail konta (szyfrowany jak główny) i czas jego potwierdzenia.
+     */
+    public static function recoveryEmailColumns(Blueprint $table, ?string $after = null): void
+    {
+        $email = $table->text(AccountColumns::RECOVERY_EMAIL)->nullable();
+        $setAt = $table->timestamp(AccountColumns::RECOVERY_EMAIL_SET_AT)->nullable();
+
+        if ($after !== null) {
+            $email->after($after);
+            $setAt->after(AccountColumns::RECOVERY_EMAIL);
+        }
     }
 
     public static function loginChallengeColumns(Blueprint $table, string $accountsTable): void

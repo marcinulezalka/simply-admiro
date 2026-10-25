@@ -16,6 +16,7 @@ namespace Simplysmart\Mainboard\Http;
 use Illuminate\Routing\Router;
 use Simplysmart\Mainboard\Auth\SignIn\SignInFlow;
 use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
+use Simplysmart\Mainboard\Http\Controllers\Auth\ForgotPinController;
 use Simplysmart\Mainboard\Http\Controllers\Auth\LoginController;
 use Simplysmart\Mainboard\Http\Controllers\Auth\LogoutController;
 use Simplysmart\Mainboard\Http\Controllers\Auth\ResendCodeController;
@@ -28,7 +29,7 @@ use Simplysmart\Mainboard\Http\Controllers\Auth\AuthBrandController;
 
 /**
  * Trasy logowania strefy (wewnątrz grupy strefy): `auth.login`, `auth.<krok>` dla każdego kroku
- * z configu, `auth.code.resend` i `auth.logout`. Każdy POST ma limit `mainboard.sign-in`.
+ * z configu, `auth.code.resend`, „Nie pamiętam PIN-u” z resetem przez zapasowy adres i `auth.logout`. Każdy POST ma limit `mainboard.sign-in`.
  */
 final readonly class SignInRoutes
 {
@@ -36,8 +37,15 @@ final readonly class SignInRoutes
 
     private const string PREFIX = 'signin';
 
-    /** Strona „Nie pamiętam PIN-u” (nazwa względem prefiksu `auth.`): jak ustawić nowy PIN po resecie. */
+    /** Strona „Nie pamiętam PIN-u” (nazwa względem prefiksu `auth.`): jak ustawić nowy PIN, reset przez zapasowy adres. */
     public const string FORGOT_PIN = 'forgot-pin';
+
+    /** Kod resetu PIN-u na zapasowy adres, reset kodem i rezygnacja (nazwy względem prefiksu `auth.`). */
+    public const string FORGOT_PIN_CODE = 'forgot-pin.code';
+
+    public const string FORGOT_PIN_RESET = 'forgot-pin.reset';
+
+    public const string FORGOT_PIN_CANCEL = 'forgot-pin.cancel';
 
     private const string FORGOT_PIN_PATH = 'forgot-pin';
 
@@ -64,7 +72,10 @@ final readonly class SignInRoutes
         $this->router->middleware(AccessTier::GuestOnly->middleware($zone))->prefix(self::PREFIX)->name('auth.')->group(function () use ($zone, $throttle): void {
             $this->router->get('/', [LoginController::class, 'create'])->name('login');
             $this->router->post('/', [LoginController::class, 'store'])->middleware($throttle)->name('login.store');
-            $this->router->view(self::FORGOT_PIN_PATH, 'mainboard::auth.forgot-pin')->name(self::FORGOT_PIN);
+            $this->router->get(self::FORGOT_PIN_PATH, [ForgotPinController::class, 'show'])->name(self::FORGOT_PIN);
+            $this->router->post(self::FORGOT_PIN_PATH . '/code', [ForgotPinController::class, 'sendCode'])->middleware($throttle)->name(self::FORGOT_PIN_CODE);
+            $this->router->post(self::FORGOT_PIN_PATH, [ForgotPinController::class, 'reset'])->middleware($throttle)->name(self::FORGOT_PIN_RESET);
+            $this->router->delete(self::FORGOT_PIN_PATH . '/code', [ForgotPinController::class, 'cancel'])->middleware($throttle)->name(self::FORGOT_PIN_CANCEL);
 
             if ($zone->auth()->brand !== null) {
                 $this->router->get('brand/{variant}', AuthBrandController::class)->where('variant', AuthBrand::LIGHT . '|' . AuthBrand::DARK)->name(self::BRAND);

@@ -33,6 +33,19 @@ return [
         'warning' => 'Jeśli to nie Ty, ktoś może znać Twój adres i dostęp do skrzynki — zmień hasło do poczty, a po odblokowaniu PIN.',
     ],
 
+    'security_code' => [
+        'recovery_email' => [
+            'subject' => 'Potwierdź zapasowy adres e-mail',
+            'code_label' => 'Kod potwierdzenia zapasowego adresu e-mail:',
+            'ignore' => 'Jeśli to nie Ty dodajesz ten adres do konta, zignoruj tę wiadomość — bez kodu adres nie zostanie dodany.',
+        ],
+        'pin_reset' => [
+            'subject' => 'Reset PIN-u',
+            'code_label' => 'Kod resetu PIN-u:',
+            'ignore' => 'Jeśli to nie Ty resetujesz PIN, zignoruj tę wiadomość i zmień PIN po zalogowaniu.',
+        ],
+    ],
+
     'pin_changed' => [
         'subject' => 'PIN został zmieniony',
         'greeting' => 'Dzień dobry, :name!',

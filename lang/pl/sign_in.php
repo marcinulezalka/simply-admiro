@@ -52,7 +52,17 @@ return [
     'forgot_pin' => [
         'title' => 'Nie pamiętasz PIN-u?',
         'lead' => 'PIN-u nie da się odzyskać — nie zna go nikt, także administrator. Można go tylko ustawić od nowa.',
-        'steps_title' => 'Jak ustawić nowy PIN',
+        'steps_title' => 'Bez zapasowego adresu e-mail',
+        'recovery' => [
+            'title' => 'Masz zapasowy adres e-mail?',
+            'lead' => 'Podaj adres konta. Jeśli konto ma potwierdzony zapasowy adres, wyślemy na niego kod, którym usuniesz PIN. Nowy PIN ustawisz przy logowaniu kodem z adresu konta.',
+            'send' => 'Wyślij kod na zapasowy adres',
+            'code_sent' => 'Jeśli konto ma zapasowy adres e-mail, wysłaliśmy na niego kod.',
+            'code_lead' => 'Wpisz kod z wiadomości wysłanej na zapasowy adres. Reset wyloguje Cię ze wszystkich urządzeń.',
+            'reset' => 'Usuń PIN',
+            'other_address' => 'Podaj inny adres',
+            'done' => 'PIN usunięty. Zaloguj się adresem e-mail konta i ustaw nowy PIN.',
+        ],
         'steps' => [
             'admin' => 'Poproś administratora tej części aplikacji o reset PIN-u.',
             'revoked' => 'Reset wyloguje Cię ze wszystkich urządzeń i odwoła zaufane urządzenia.',

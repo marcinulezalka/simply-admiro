@@ -20,6 +20,8 @@ return [
         'sign_out' => 'Wylogowanie',
         'access_revoked' => 'Sesje zakończone',
         'pin_changed' => 'Zmiana PIN-u',
+        'recovery_email_set' => 'Dodany zapasowy adres e-mail',
+        'recovery_email_removed' => 'Usunięty zapasowy adres e-mail',
         'trusted_device_registered' => 'Nowe zaufane urządzenie',
         'trusted_devices_revoked' => 'Odwołane urządzenia',
         'role_assigned' => 'Nadana rola',

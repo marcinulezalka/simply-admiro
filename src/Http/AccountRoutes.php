@@ -16,6 +16,7 @@ namespace Simplysmart\Mainboard\Http;
 use Illuminate\Routing\Router;
 use Simplysmart\Mainboard\Http\Controllers\Account\OrganizationSwitchController;
 use Simplysmart\Mainboard\Http\Controllers\Account\PinChangeController;
+use Simplysmart\Mainboard\Http\Controllers\Account\RecoveryEmailController;
 use Simplysmart\Mainboard\Http\Controllers\Account\SecurityController;
 use Simplysmart\Mainboard\Http\Controllers\Account\TrustedDeviceController;
 use Simplysmart\Mainboard\Http\Controllers\Account\ProfileController;
@@ -25,7 +26,7 @@ use Simplysmart\Mainboard\Zones\ZoneDefinition;
 
 /**
  * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (imię i nazwisko, język, kolor
- * awatara), strona bezpieczeństwa (zmiana PIN-u, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
+ * awatara), strona bezpieczeństwa (zmiana PIN-u, zapasowy adres e-mail, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
  * przekierowują do jej sekcji), wygląd (motyw i kolorystyka), w strefie z zaufanymi urządzeniami ich odwołanie, w strefie
  * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli. Każda zmiana ma limit
  * `mainboard.sign-in`.
@@ -37,6 +38,13 @@ final readonly class AccountRoutes
     public const string PIN_CODE = 'account.pin.code';
 
     public const string PIN_UPDATE = 'account.pin.update';
+
+    /** Zapasowy adres e-mail: kod na nowy adres, potwierdzenie, usunięcie (sekcja `#recovery`). */
+    public const string RECOVERY_EMAIL_CODE = 'account.recovery-email.code';
+
+    public const string RECOVERY_EMAIL_UPDATE = 'account.recovery-email.update';
+
+    public const string RECOVERY_EMAIL_DESTROY = 'account.recovery-email.destroy';
 
     public const string DEVICES = 'account.devices';
 
@@ -64,10 +72,12 @@ final readonly class AccountRoutes
 
     public const string SIGN_OUT_EVERYWHERE = 'account.security.sign-out-everywhere';
 
-    /** Kotwice sekcji strony bezpieczeństwa (`#pin`, `#devices`). */
+    /** Kotwice sekcji strony bezpieczeństwa (`#pin`, `#devices`, `#recovery`). */
     public const string SECTION_PIN = 'pin';
 
     public const string SECTION_DEVICES = 'devices';
+
+    public const string SECTION_RECOVERY = 'recovery';
 
     private const string PREFIX = 'account';
 
@@ -88,6 +98,9 @@ final readonly class AccountRoutes
             $this->router->get('pin', [SecurityController::class, 'section'])->defaults('section', self::SECTION_PIN)->name(self::PIN);
             $this->router->post('pin/code', [PinChangeController::class, 'sendCode'])->middleware($throttle)->name(self::PIN_CODE);
             $this->router->put('pin', [PinChangeController::class, 'update'])->middleware($throttle)->name(self::PIN_UPDATE);
+            $this->router->post('recovery-email/code', [RecoveryEmailController::class, 'sendCode'])->middleware($throttle)->name(self::RECOVERY_EMAIL_CODE);
+            $this->router->put('recovery-email', [RecoveryEmailController::class, 'update'])->middleware($throttle)->name(self::RECOVERY_EMAIL_UPDATE);
+            $this->router->delete('recovery-email', [RecoveryEmailController::class, 'destroy'])->middleware($throttle)->name(self::RECOVERY_EMAIL_DESTROY);
 
             if ($zone->auth()->trustedDevicesEnabled) {
                 $this->router->get('devices', [SecurityController::class, 'section'])->defaults('section', self::SECTION_DEVICES)->name(self::DEVICES);

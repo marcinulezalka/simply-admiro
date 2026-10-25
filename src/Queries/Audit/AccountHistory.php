@@ -36,6 +36,8 @@ final class AccountHistory
         'sign-out',
         'access revoked',
         'pin changed',
+        'recovery email set',
+        'recovery email removed',
         'trusted device registered',
         'trusted devices revoked',
     ];

@@ -19,4 +19,4 @@ namespace Simplysmart\Mainboard\Contracts;
  *
  * @see \Simplysmart\Mainboard\Models\ZoneAccount
  */
-interface CodeAndPinAccount extends SignInAccount, HasPinCredential, LockableAccount, RevocableAccess {}
+interface CodeAndPinAccount extends SignInAccount, HasPinCredential, LockableAccount, RevocableAccess, HasRecoveryEmail {}

@@ -89,6 +89,15 @@ return [
         'short_name' => 'Nazwa skrócona',
         'name' => 'Nazwa organizacji',
         'parent_id' => 'Organizacja nadrzędna',
+        'nip' => 'NIP',
+        'regon' => 'REGON',
+        'krs' => 'KRS',
+        'street' => 'Ulica i numer',
+        'postal_code' => 'Kod pocztowy',
+        'city' => 'Miejscowość',
+        'phone' => 'Telefon',
+        'email' => 'E-mail',
+        'billing_email' => 'E-mail do rozliczeń',
     ],
 
     'role' => [

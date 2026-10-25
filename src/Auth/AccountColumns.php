@@ -46,4 +46,9 @@ final class AccountColumns
     public const string LAST_LOGIN_AT = 'last_login_at';
 
     public const string LAST_LOGIN_IP = 'last_login_ip';
+
+    /** Zapasowy adres e-mail (szyfrowany), potwierdzony kodem; służy do resetu PIN-u. */
+    public const string RECOVERY_EMAIL = 'recovery_email';
+
+    public const string RECOVERY_EMAIL_SET_AT = 'recovery_email_set_at';
 }

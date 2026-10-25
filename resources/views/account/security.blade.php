@@ -1,4 +1,4 @@
-{{-- Bezpieczeństwo zalogowanego konta (SecurityController): zmiana PIN-u (#pin: kod z e-maila, obecny i nowy PIN w zakresie strefy; pola PIN-u z klawiaturą ekranową x-mainboard::pin-field), zaufane urządzenia (#devices, gdy strefa je ma) z odwołaniem, wylogowanie ze wszystkich urządzeń i ostatnie zdarzenia konta (Queries\Audit\AccountHistory, bez adresów IP). $currentPinLength, $pinLength: Auth\PinLength; $codeLength: int; $devices: ?list<Auth\Devices\TrustedDeviceRecord> (null = strefa bez zaufanych urządzeń); $currentSelector: ?string; $history: Collection<int, Models\AuditEvent>; $zone daje Core. --}}
+{{-- Bezpieczeństwo zalogowanego konta (SecurityController): zmiana PIN-u (#pin: kod z e-maila, obecny i nowy PIN w zakresie strefy; pola PIN-u z klawiaturą ekranową x-mainboard::pin-field), zapasowy adres e-mail do resetu PIN-u (#recovery: kod na nowy adres, potwierdzenie, usunięcie; $recoveryEmail, $pendingRecoveryEmail: ?string), zaufane urządzenia (#devices, gdy strefa je ma) z odwołaniem, wylogowanie ze wszystkich urządzeń i ostatnie zdarzenia konta (Queries\Audit\AccountHistory, bez adresów IP). $currentPinLength, $pinLength: Auth\PinLength; $codeLength: int; $devices: ?list<Auth\Devices\TrustedDeviceRecord> (null = strefa bez zaufanych urządzeń); $currentSelector: ?string; $history: Collection<int, Models\AuditEvent>; $zone daje Core. --}}
 @php
     $routes = \Simplysmart\Mainboard\Http\AccountRoutes::class;
     $codeField = static fn (string $id, string $name, string $label, string $type, string $autocomplete, int $min, int $max, bool $keypad = true) => compact('id', 'name', 'label', 'type', 'autocomplete', 'min', 'max', 'keypad');
@@ -31,6 +31,41 @@
         </section>
 
         <div class="ss-grid">
+            <section class="ss-card" id="{{ $routes::SECTION_RECOVERY }}" aria-labelledby="security-recovery-title">
+                <h2 class="ss-card__title" id="security-recovery-title">{{ text('account.recovery.title') }}</h2>
+                <p class="ss-card__lead ss-muted">{{ text('account.recovery.intro') }}</p>
+                @if ($recoveryEmail !== null)
+                    <div class="ss-list__item">
+                        <span class="ss-list__main"><span>{{ $recoveryEmail }}</span><span class="ss-muted">{{ text('account.recovery.current') }}</span></span>
+                        <form method="POST" action="{{ route($zone->routeName($routes::RECOVERY_EMAIL_DESTROY)) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="ss-button" type="submit"><x-mainboard::icon name="trash" class="ss-button__icon" />{{ text_action('delete') }}</button>
+                        </form>
+                    </div>
+                @endif
+                <form class="ss-form ss-card__footer" method="POST" action="{{ route($zone->routeName($routes::RECOVERY_EMAIL_CODE)) }}">
+                    @csrf
+                    <x-mainboard::input id="security-recovery-email" name="recovery_email" type="email" :label="$recoveryEmail === null ? text('account.recovery.email') : text('account.recovery.new_email')" icon="mail" :value="old('recovery_email', $pendingRecoveryEmail)" :placeholder="text('placeholders.email')" :error="$errors->first('recovery_email')" required maxlength="255" autocomplete="email" />
+                    <div class="ss-form-actions">
+                        <button class="ss-button" type="submit"><x-mainboard::icon name="mail" class="ss-button__icon" />{{ text('account.send_code') }}</button>
+                    </div>
+                </form>
+                @if ($pendingRecoveryEmail !== null)
+                    <form class="ss-form ss-card__footer" method="POST" action="{{ route($zone->routeName($routes::RECOVERY_EMAIL_UPDATE)) }}">
+                        @csrf
+                        @method('PUT')
+                        <p class="ss-muted">{{ text('account.recovery.code_hint', ['email' => $pendingRecoveryEmail]) }}</p>
+                        <x-mainboard::pin-field id="security-recovery-code" name="recovery_code" :label="text('sign_in.code')" type="text" autocomplete="one-time-code" :min="$codeLength" :max="$codeLength" :keypad="false" :error="$errors->first('recovery_code')" />
+                        <div class="ss-form-actions">
+                            <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text('account.recovery.confirm') }}</button>
+                        </div>
+                    </form>
+                @elseif ($errors->has('recovery_code'))
+                    <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $errors->first('recovery_code') }}</p>
+                @endif
+            </section>
+
             @if ($devices !== null)
                 <section class="ss-card" id="{{ $routes::SECTION_DEVICES }}" aria-labelledby="security-devices-title">
                     <h2 class="ss-card__title" id="security-devices-title">{{ text('account.devices_title') }}</h2>

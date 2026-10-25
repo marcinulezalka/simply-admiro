@@ -79,4 +79,12 @@ final class EloquentAccountStore implements AccountStore
     {
         $account->forceFill([AccountColumns::IS_ACTIVE => false])->save();
     }
+
+    public function setRecoveryEmail(Model&CodeAndPinAccount $account, ?string $email): void
+    {
+        $account->forceFill([
+            AccountColumns::RECOVERY_EMAIL => $email === null ? null : EmailAddress::normalize($email),
+            AccountColumns::RECOVERY_EMAIL_SET_AT => $email === null ? null : Carbon::now(),
+        ])->save();
+    }
 }

@@ -60,6 +60,8 @@ trait SignsInWithCodeAndPin
             AccountColumns::IS_ACTIVE => 'boolean',
             AccountColumns::LAST_LOGIN_AT => 'datetime',
             AccountColumns::LAST_LOGIN_IP => 'encrypted',
+            AccountColumns::RECOVERY_EMAIL => 'encrypted',
+            AccountColumns::RECOVERY_EMAIL_SET_AT => 'datetime',
         ]);
 
         $this->mergeHidden([AccountColumns::PIN_HASH, AccountColumns::EMAIL_HASH]);
@@ -70,6 +72,13 @@ trait SignsInWithCodeAndPin
         $email = $this->getAttribute(AccountColumns::EMAIL);
 
         return is_string($email) ? $email : '';
+    }
+
+    public function recoveryEmail(): ?string
+    {
+        $email = $this->getAttribute(AccountColumns::RECOVERY_EMAIL);
+
+        return is_string($email) && $email !== '' ? $email : null;
     }
 
     public function displayName(): string

@@ -19,6 +19,7 @@ use Simplysmart\Mainboard\Audit\Events\RecordAccessed;
 use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
+use Simplysmart\Mainboard\Auth\Events\RecoveryEmailChanged;
 use Simplysmart\Mainboard\Auth\Events\SignedOut;
 use Simplysmart\Mainboard\Auth\Events\SignInRejected;
 use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
@@ -45,6 +46,7 @@ final class AuditEntries
         SignedOut::class,
         AccountAccessRevoked::class,
         PinChanged::class,
+        RecoveryEmailChanged::class,
         TrustedDeviceRegistered::class,
         TrustedDevicesRevoked::class,
         ZoneRoleChanged::class,
@@ -53,7 +55,7 @@ final class AuditEntries
     ];
 
     public function from(
-        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
+        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|RecoveryEmailChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
     ): AuditEntry {
         return match (true) {
             $event instanceof SignInSucceeded => new AuditEntry('sign-in', AuditLevel::Info, $event->zone, $this->id($event->account), ip: $event->ip),
@@ -62,6 +64,7 @@ final class AuditEntries
             $event instanceof SignedOut => new AuditEntry('sign-out', AuditLevel::Info, $event->zone, $event->accountId),
             $event instanceof AccountAccessRevoked => new AuditEntry('access revoked', AuditLevel::Notice, $event->zone, $this->id($event->account), $event->actor, context: ['reason' => $event->reason->value]),
             $event instanceof PinChanged => new AuditEntry('pin changed', AuditLevel::Info, $event->zone, $this->id($event->account), ip: $event->ip),
+            $event instanceof RecoveryEmailChanged => new AuditEntry($event->set ? 'recovery email set' : 'recovery email removed', AuditLevel::Notice, $event->zone, $this->id($event->account), ip: $event->ip),
             $event instanceof TrustedDeviceRegistered => new AuditEntry('trusted device registered', AuditLevel::Info, $event->zone, $this->id($event->account), ip: $event->ip, context: ['device' => $event->deviceName]),
             $event instanceof TrustedDevicesRevoked => new AuditEntry('trusted devices revoked', AuditLevel::Info, $event->zone, $event->accountId, context: ['count' => $event->count, 'cause' => $event->cause]),
             $event instanceof ZoneRoleChanged => new AuditEntry($event->assigned ? 'role assigned' : 'role revoked', AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: ['role' => $event->role]),

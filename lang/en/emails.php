@@ -33,6 +33,19 @@ return [
         'warning' => 'If this was not you, someone may know your address and have access to your mailbox — change your e-mail password, and your PIN once unlocked.',
     ],
 
+    'security_code' => [
+        'recovery_email' => [
+            'subject' => 'Confirm your recovery e-mail',
+            'code_label' => 'Code to confirm the recovery e-mail:',
+            'ignore' => 'If you are not adding this address to your account, ignore this message — without the code it will not be added.',
+        ],
+        'pin_reset' => [
+            'subject' => 'PIN reset',
+            'code_label' => 'PIN reset code:',
+            'ignore' => 'If you are not resetting your PIN, ignore this message and change your PIN after signing in.',
+        ],
+    ],
+
     'pin_changed' => [
         'subject' => 'Your PIN was changed',
         'greeting' => 'Hello, :name!',

@@ -17,8 +17,9 @@ use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Organization;
 
 /**
- * Zakładanie i zmiany organizacji (nazwa, opcjonalna nazwa skrócona, firma → oddział przez `parent_id`): drzewo bez cykli, organizacja nadrzędna
- * musi być aktywna, a organizacji operatora nie wolno wyłączyć ani przenieść pod inną. Wyłączona organizacja
+ * Zakładanie i zmiany organizacji (OrganizationData: nazwa, nazwa skrócona, dane firmy; firma → oddział przez
+ * `parent_id`): drzewo bez cykli, organizacja nadrzędna musi być aktywna, a organizacji operatora nie wolno wyłączyć
+ * ani przenieść pod inną. Nowa organizacja bez e-maila do rozliczeń dostaje e-mail organizacji. Wyłączona organizacja
  * znika z wyboru kont (ActiveMemberships), więc jej członkowie tracą w niej uprawnienia.
  */
 final class OrganizationManagement
@@ -26,14 +27,18 @@ final class OrganizationManagement
     /**
      * @throws OrganizationChangeRejected
      */
-    public function create(string $name, ?Organization $parent = null, ?string $shortName = null): Organization
+    public function create(OrganizationData $data, ?Organization $parent = null): Organization
     {
         $this->ensureActiveParent($parent);
 
+        $columns = $data->columns();
+        $columns[Organization::BILLING_EMAIL] ??= $columns[Organization::EMAIL];
+
         $organization = new Organization();
         $organization->forceFill([
-            ColumnNames::NAME => $name,
-            Organization::SHORT_NAME => $shortName,
+            ColumnNames::NAME => $data->name,
+            Organization::SHORT_NAME => $data->shortName,
+            ...$columns,
             ColumnNames::PARENT_ID => $parent?->id,
             ColumnNames::IS_ACTIVE => true,
         ])->save();
@@ -44,7 +49,7 @@ final class OrganizationManagement
     /**
      * @throws OrganizationChangeRejected
      */
-    public function update(Organization $organization, string $name, ?Organization $parent, ?string $shortName): void
+    public function update(Organization $organization, OrganizationData $data, ?Organization $parent): void
     {
         if ($parent !== null && $organization->id === Organization::OPERATOR_ID) {
             throw OrganizationChangeRejected::because('the operator organization cannot have a parent.');
@@ -53,7 +58,12 @@ final class OrganizationManagement
         $this->ensureActiveParent($parent);
         $this->ensureNoCycle($organization, $parent);
 
-        $organization->forceFill([ColumnNames::NAME => $name, Organization::SHORT_NAME => $shortName, ColumnNames::PARENT_ID => $parent?->id])->save();
+        $organization->forceFill([
+            ColumnNames::NAME => $data->name,
+            Organization::SHORT_NAME => $data->shortName,
+            ...$data->columns(),
+            ColumnNames::PARENT_ID => $parent?->id,
+        ])->save();
     }
 
     /**

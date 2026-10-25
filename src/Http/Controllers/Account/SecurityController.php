@@ -20,6 +20,7 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Mainboard\Auth\AccessRevocationReason;
 use Simplysmart\Mainboard\Auth\Devices\DeviceCookie;
 use Simplysmart\Mainboard\Auth\PinLength;
+use Simplysmart\Mainboard\Auth\Recovery\RecoveryEmailRegistration;
 use Simplysmart\Mainboard\Auth\RevokeAccountAccess;
 use Simplysmart\Mainboard\Auth\SignIn\SignOut;
 use Simplysmart\Mainboard\Contracts\CurrentAccount;
@@ -31,7 +32,8 @@ use Simplysmart\Mainboard\Zones\ZoneRedirects;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * Bezpieczeństwo zalogowanego konta na jednej stronie: zmiana PIN-u (sekcja `pin`), zaufane urządzenia
+ * Bezpieczeństwo zalogowanego konta na jednej stronie: zmiana PIN-u (sekcja `pin`), zapasowy adres e-mail
+ * (sekcja `recovery`, RecoveryEmailController), zaufane urządzenia
  * (sekcja `devices`, gdy strefa je ma), ostatnie zdarzenia konta i wylogowanie ze wszystkich urządzeń.
  * Dawne adresy sekcji (`account.pin`, `account.devices`) przekierowują do kotwicy na tej stronie.
  */
@@ -43,7 +45,7 @@ final readonly class SecurityController
         private Redirector $redirect,
     ) {}
 
-    public function show(Request $request, TrustedDeviceRepository $devices, DeviceCookie $cookie, AccountHistory $history): View
+    public function show(Request $request, TrustedDeviceRepository $devices, DeviceCookie $cookie, AccountHistory $history, RecoveryEmailRegistration $recovery): View
     {
         $zone = $this->zone->get();
         $settings = $zone->auth();
@@ -56,6 +58,8 @@ final readonly class SecurityController
             'devices' => $settings->trustedDevicesEnabled ? $devices->activeFor($accountId) : null,
             'currentSelector' => $settings->trustedDevicesEnabled ? $cookie->read($zone, $request)?->selector : null,
             'history' => $history->recent($zone->name, $accountId),
+            'recoveryEmail' => $this->account->require()->recoveryEmail(),
+            'pendingRecoveryEmail' => $recovery->pending($request),
         ]);
     }
 

@@ -21,6 +21,7 @@ use Simplysmart\Mainboard\Audit\Events\RecordAccessed;
 use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Mainboard\Auth\Events\AccountLocked;
 use Simplysmart\Mainboard\Auth\Events\PinChanged;
+use Simplysmart\Mainboard\Auth\Events\RecoveryEmailChanged;
 use Simplysmart\Mainboard\Auth\Events\SignedOut;
 use Simplysmart\Mainboard\Auth\Events\SignInRejected;
 use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
@@ -40,7 +41,7 @@ final readonly class WriteAuditLog
     ) {}
 
     public function handle(
-        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
+        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|RecoveryEmailChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
     ): void {
         $entry = $this->entries->from($event);
 

@@ -52,7 +52,17 @@ return [
     'forgot_pin' => [
         'title' => 'Forgot your PIN?',
         'lead' => 'A PIN cannot be recovered — nobody knows it, not even the administrator. It can only be set again.',
-        'steps_title' => 'How to set a new PIN',
+        'steps_title' => 'Without a recovery e-mail',
+        'recovery' => [
+            'title' => 'Do you have a recovery e-mail?',
+            'lead' => 'Enter your account address. If the account has a confirmed recovery address, we will send a code there to remove your PIN. You set a new PIN when you sign in with the code sent to your account address.',
+            'send' => 'Send code to the recovery address',
+            'code_sent' => 'If the account has a recovery e-mail, we have sent a code to it.',
+            'code_lead' => 'Enter the code from the message sent to your recovery address. The reset signs you out on all devices.',
+            'reset' => 'Remove PIN',
+            'other_address' => 'Use another address',
+            'done' => 'PIN removed. Sign in with your account e-mail and set a new PIN.',
+        ],
         'steps' => [
             'admin' => 'Ask the administrator of this part of the application to reset your PIN.',
             'revoked' => 'The reset signs you out on all devices and revokes trusted devices.',

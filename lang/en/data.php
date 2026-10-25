@@ -89,6 +89,15 @@ return [
         'short_name' => 'Short name',
         'name' => 'Organization name',
         'parent_id' => 'Parent organization',
+        'nip' => 'Tax ID (NIP)',
+        'regon' => 'REGON',
+        'krs' => 'KRS',
+        'street' => 'Street and number',
+        'postal_code' => 'Postal code',
+        'city' => 'City',
+        'phone' => 'Phone',
+        'email' => 'E-mail',
+        'billing_email' => 'Billing e-mail',
     ],
 
     'role' => [

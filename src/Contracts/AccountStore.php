@@ -57,4 +57,9 @@ interface AccountStore
      * Wyłącza logowanie konta (`is_active`).
      */
     public function deactivate(Model&CodeAndPinAccount $account): void;
+
+    /**
+     * Zapisuje potwierdzony zapasowy adres e-mail (null usuwa go).
+     */
+    public function setRecoveryEmail(Model&CodeAndPinAccount $account, ?string $email): void;
 }

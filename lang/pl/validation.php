@@ -54,6 +54,7 @@ return [
     'doesnt_end_with' => 'Pole :attribute nie może kończyć się żadną z wartości: :values.',
     'doesnt_start_with' => 'Pole :attribute nie może zaczynać się żadną z wartości: :values.',
     'email' => 'Pole :attribute musi być prawidłowym adresem e-mail.',
+    'nip' => 'Podaj prawidłowy NIP: 10 cyfr z poprawną cyfrą kontrolną.',
     'encoding' => 'Pole :attribute musi być zakodowane w :encoding.',
     'ends_with' => 'Pole :attribute musi kończyć się jedną z wartości: :values.',
     'enum' => 'Wybrana wartość pola :attribute jest nieprawidłowa.',
