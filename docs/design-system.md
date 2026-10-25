@@ -37,6 +37,10 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-radius-pill` | pigułki, awatar, wyszukiwarka | `9999px` | | `rounded-full` |
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
+| `--ss-color-canvas` | tło powłoki aplikacji (`.ss-shell`) | `#e8e9ed` | `#0b0d12` | `bg-gray-200` |
+| `--ss-color-sidebar` | panel menu bocznego | `#f3f4f6` | `#141821` | `bg-gray-100` |
+| `--ss-color-sidebar-hover` | pozycja menu pod kursorem | biel 65% | biel 6% | `bg-white/65` |
+| `--ss-shadow-soft` | aktywna pozycja menu, karty i wyszukiwarka w powłoce | | | `shadow-sm` + miękki cień |
 | `--ss-color-surface-inverse` | karta odwrócona (wyróżniona kolorem) | `#171717` | `#f3f4f6` | `bg-neutral-900` |
 | `--ss-color-on-inverse` | tekst na karcie odwróconej | `#ffffff` | `#111827` | `text-white` |
 | `--ss-color-muted-inverse` | etykiety na karcie odwróconej (7,2:1 / 6,9:1) | `#a3a3a3` | `#4b5563` | `text-neutral-400` |

@@ -86,6 +86,7 @@ return [
     ],
 
     'organization' => [
+        'short_name' => 'Short name',
         'name' => 'Organization name',
         'parent_id' => 'Parent organization',
     ],

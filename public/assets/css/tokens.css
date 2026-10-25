@@ -78,6 +78,12 @@
     --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));
     --ss-color-muted-inverse: light-dark(var(--ss-neutral-400), var(--ss-gray-600));
 
+    /* Powłoka aplikacji (x-mainboard::app.layout): neutralne szare płótno, jaśniejszy panel menu, delikatna biel
+       pod najechaniem pozycji menu; aktywna pozycja i karty mają --ss-color-surface z miękkim cieniem */
+    --ss-color-canvas: light-dark(#e8e9ed, #0b0d12);
+    --ss-color-sidebar: light-dark(#f3f4f6, #141821);
+    --ss-color-sidebar-hover: light-dark(rgb(255 255 255 / 0.65), rgb(255 255 255 / 0.06));
+
     /* Tło stron logowania: delikatny gradient z tła strony w odcień powierzchni */
     --ss-color-auth-from: light-dark(var(--ss-white), var(--ss-slate-900));
     --ss-color-auth-to: light-dark(var(--ss-slate-100), var(--ss-slate-950));
@@ -140,6 +146,7 @@
     --ss-frame-padding: 0.75rem;
     --ss-radius-nested: calc(var(--ss-radius-frame) - var(--ss-frame-padding));
     --ss-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --ss-shadow-soft: 0 1px 2px 0 light-dark(rgb(15 23 42 / 0.04), rgb(0 0 0 / 0.3)), 0 12px 32px -16px light-dark(rgb(15 23 42 / 0.16), rgb(0 0 0 / 0.6));
     --ss-shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --ss-shadow-frame: 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3)), 0 24px 48px -28px light-dark(rgb(0 0 0 / 0.18), rgb(0 0 0 / 0.6));
     --ss-shadow-elevated: 0 32px 64px -24px light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.7)), 0 12px 24px -12px light-dark(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.5));
@@ -259,6 +266,9 @@
     --ss-color-brand: var(--ss-black);
     --ss-color-on-brand: var(--ss-white);
     --ss-color-auth-from: var(--ss-white);
+    --ss-color-canvas: var(--ss-white);
+    --ss-color-sidebar: var(--ss-white);
+    --ss-color-sidebar-hover: var(--ss-white);
     --ss-color-auth-to: #f0f0f0;
 }
 
@@ -289,5 +299,8 @@
     --ss-color-brand: var(--ss-white);
     --ss-color-on-brand: var(--ss-black);
     --ss-color-auth-from: var(--ss-black);
+    --ss-color-canvas: var(--ss-black);
+    --ss-color-sidebar: var(--ss-black);
+    --ss-color-sidebar-hover: var(--ss-black);
     --ss-color-auth-to: #141400;
 }

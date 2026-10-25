@@ -96,7 +96,7 @@ final class ZonesServiceProvider extends ServiceProvider
 
     /**
      * Layout strefy dostaje strefę żądania, konto zalogowane w jej guardzie (albo null), w strefie z `teams`
-     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna), id i nazwę bieżącej organizacji, w strefie
+     * organizacje konta (przełącznik, gdy jest ich więcej niż jedna), id i nazwę skróconą (bez niej pełną) bieżącej organizacji, w strefie
      * z `role_contexts` role konta do przełączania (co najmniej dwie) i aktywną rolę, menu strefy z
      * Zones\ZoneNavigations oraz menu ustawień (Zones\ZoneSettingsMenu) dla zalogowanego konta.
      */
@@ -115,7 +115,7 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('account', $account)
             ->with('organizations', $organizations !== null && $organizations->count() > 1 ? $organizations : null)
             ->with('currentOrganizationId', $currentId)
-            ->with('currentOrganizationName', $organizations?->firstWhere('id', $currentId)?->name)
+            ->with('currentOrganizationName', $organizations?->firstWhere('id', $currentId)?->shortName())
             ->with('roles', $account instanceof ZoneAccount ? $this->app->make(RoleSelector::class)->choices($zone, $account, $currentId) : [])
             ->with('currentRole', $account !== null ? $this->app->make(CurrentRole::class)->of($account, $currentId) : null)
             ->with('navigation', $navigation)

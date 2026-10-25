@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Powłoka aplikacji w stylu „soft UI”: szare płótno (`--ss-color-canvas`), menu boczne jako jaśniejszy panel bez ramki (`--ss-color-sidebar`, `--ss-color-sidebar-hover`), aktywna pozycja menu, karty i wyszukiwarka białe z miękkim cieniem (`--ss-shadow-soft`); motywy wysokiego kontrastu bez zmian.
+- Pod imieniem i nazwiskiem w menu aplikacji wyświetlana jest nazwa skrócona bieżącej organizacji, a bez niej pełna nazwa. `OrganizationManagement::update()` przyjmuje nazwę skróconą jako wymagany argument (`null` ją czyści).
 - Komunikaty z sesji (np. „Wylogowano” po wylogowaniu) na stronach logowania i publicznych stronach stref to globalne toasty zamiast szarego panelu `.ss-notice` w karcie.
 - Menu boczne aplikacji ma najwyżej `--ss-sidebar-width`, a dłuższe pozycje, imię i druga linia zawijają się zamiast wielokropka; przełącznik motywu przeniesiony z menu do ustawień („Wygląd”), a ustawienia cookies z menu konta do stopki simplysmart.
 - `js/auth-footer.js` zastąpiony ogólnym `js/footer-toggle.js` (`data-ss-footer-root="<blok>"`, `data-ss-footer`, `data-ss-footer-toggle`), wspólnym dla logowania i menu bocznego.
@@ -15,6 +17,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Nazwa skrócona organizacji (`organizations.short_name`, do 40 znaków, opcjonalna; `Organization::shortName()`, etykieta `data.organization.short_name`), zapisywana w historii.
 - Wirtualna klawiatura numeryczna pól PIN-u: `x-mainboard::pin-field` (logowanie PIN-em, ustawienie PIN-u, zmiana PIN-u) z przyciskiem klawiatury w polu, który otwiera modal `.ss-keypad` (cyfry 0–9, czyszczenie, usuwanie ostatniej cyfry, „Gotowe”, kropki wpisanych cyfr; `js/pin-keypad.js`, nowe ikony `keypad` i `backspace`, teksty `layout.keypad.*`).
 - Menu ustawień każdej strefy: `ZoneNavigation::settings()` (grupy konfiguracji strefy) i grupa „Konto” Core (profil, bezpieczeństwo, nowa strona „Wygląd” `account.appearance` z motywem i kolorystyką) w `Zones\ZoneSettingsMenu` / `View\Navigation\SettingsMenu`; odnośnik „Ustawienia” na dole menu bocznego, a na stronach ustawień menu boczne pokazuje grupy ustawień z „Wróć do aplikacji” (teksty `layout.settings`, `layout.back_to_app`, `account.appearance_*`).
 - Role jako konteksty (`role_contexts` w configu strefy z `teams`): konto z kilkoma rolami w organizacji działa w jednej aktywnej roli (`Contracts\CurrentRole`, `Permissions\RoleSelector`, wybór w sesji strefy dla każdej organizacji, domyślnie pierwsza rola zapamiętana w sesji), uprawnienia są zawężone do niej (`HasZonePermissions`), przełącznik „Rola” w layoucie i trasa `account.role.switch` przekierowująca na pulpit.

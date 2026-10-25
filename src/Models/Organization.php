@@ -18,7 +18,10 @@ namespace Simplysmart\Mainboard\Models;
  * Jest zespołem spatie: role kont stref są przypisywane w obrębie organizacji (docs/baza-danych.md §15).
  *
  * Organizacja operatora aplikacji (OPERATOR_ID, seeder Core) jest zakresem stref bez firm klientów; strefa ustawia
- * ją jawnie jako bieżącą organizację spatie (domyślnej nie ma).
+ * ją jawnie jako bieżącą organizację spatie (domyślnej nie ma). `short_name` — opcjonalna nazwa skrócona (np. druga
+ * linia pod imieniem i nazwiskiem w menu), odczytywana przez shortName().
+ *
+ * @property ?string $short_name
  */
 final class Organization extends DataModel
 {
@@ -27,5 +30,25 @@ final class Organization extends DataModel
     /** Stałe id organizacji operatora z puli seederów (IdSlots, 1–999). */
     public const int OPERATOR_ID = 1;
 
+    public const string SHORT_NAME = 'short_name';
+
+    public const int SHORT_NAME_MAX_LENGTH = 40;
+
     protected $table = self::TABLE;
+
+    /**
+     * Nazwa skrócona, a bez niej pełna nazwa.
+     */
+    public function shortName(): string
+    {
+        return $this->short_name ?? $this->name;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [self::SHORT_NAME => 'string'];
+    }
 }

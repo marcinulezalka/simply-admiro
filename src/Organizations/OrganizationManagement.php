@@ -17,7 +17,7 @@ use Simplysmart\Mainboard\Database\ColumnNames;
 use Simplysmart\Mainboard\Models\Organization;
 
 /**
- * Zakładanie i zmiany organizacji (firma → oddział przez `parent_id`): drzewo bez cykli, organizacja nadrzędna
+ * Zakładanie i zmiany organizacji (nazwa, opcjonalna nazwa skrócona, firma → oddział przez `parent_id`): drzewo bez cykli, organizacja nadrzędna
  * musi być aktywna, a organizacji operatora nie wolno wyłączyć ani przenieść pod inną. Wyłączona organizacja
  * znika z wyboru kont (ActiveMemberships), więc jej członkowie tracą w niej uprawnienia.
  */
@@ -26,13 +26,14 @@ final class OrganizationManagement
     /**
      * @throws OrganizationChangeRejected
      */
-    public function create(string $name, ?Organization $parent = null): Organization
+    public function create(string $name, ?Organization $parent = null, ?string $shortName = null): Organization
     {
         $this->ensureActiveParent($parent);
 
         $organization = new Organization();
         $organization->forceFill([
             ColumnNames::NAME => $name,
+            Organization::SHORT_NAME => $shortName,
             ColumnNames::PARENT_ID => $parent?->id,
             ColumnNames::IS_ACTIVE => true,
         ])->save();
@@ -43,7 +44,7 @@ final class OrganizationManagement
     /**
      * @throws OrganizationChangeRejected
      */
-    public function update(Organization $organization, string $name, ?Organization $parent): void
+    public function update(Organization $organization, string $name, ?Organization $parent, ?string $shortName): void
     {
         if ($parent !== null && $organization->id === Organization::OPERATOR_ID) {
             throw OrganizationChangeRejected::because('the operator organization cannot have a parent.');
@@ -52,7 +53,7 @@ final class OrganizationManagement
         $this->ensureActiveParent($parent);
         $this->ensureNoCycle($organization, $parent);
 
-        $organization->forceFill([ColumnNames::NAME => $name, ColumnNames::PARENT_ID => $parent?->id])->save();
+        $organization->forceFill([ColumnNames::NAME => $name, Organization::SHORT_NAME => $shortName, ColumnNames::PARENT_ID => $parent?->id])->save();
     }
 
     /**
