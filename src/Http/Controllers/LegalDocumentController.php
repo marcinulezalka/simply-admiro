@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Publiczne strony dokumentów prawnych Core (bez sesji): bieżąca wersja polityki prywatności albo klauzuli RODO
- * w języku żądania (albo domyślnym), z odnośnikiem „Wstecz” i kartą „Zobacz także”; bez opublikowanej wersji 404.
+ * w języku żądania (albo domyślnym), ze spisem treści z nagłówków sekcji, odnośnikiem „Wstecz” i kartą „Zobacz także”; bez opublikowanej wersji 404.
  */
 final readonly class LegalDocumentController
 {
@@ -56,11 +56,14 @@ final readonly class LegalDocumentController
             $content = $document->content($this->locales->default());
         }
 
+        $body = PolicyMarkdown::document($content['body']);
+
         return view('admiro::legal.show', [
             'type' => $type,
             'document' => $document,
             'title' => $content['title'] !== '' ? $content['title'] : $type->label(),
-            'html' => PolicyMarkdown::html($content['body']),
+            'html' => $body['html'],
+            'toc' => $body['toc'],
             'back' => $this->back->for($request),
             'related' => $this->links->related($type->value),
         ]);

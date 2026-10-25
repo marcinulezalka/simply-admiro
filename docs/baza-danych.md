@@ -353,7 +353,7 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer dokumentu. Opublikowanej wersji się nie zmienia;
   wersje czyta `Queries\Legal\LegalDocumentVersions`.
 - Publiczne strony to trasy Core `admiro.legal.privacy` (`/polityka-prywatnosci`) i `admiro.legal.gdpr`
-  (`/rodo`); bez opublikowanej wersji 404. Strefa linkuje opublikowane dokumenty z `legal_documents` w configu
+  (`/rodo`); bez opublikowanej wersji 404. Spis treści strony powstaje z nagłówków sekcji `##` treści. Strefa linkuje opublikowane dokumenty z `legal_documents` w configu
   (`Legal\LegalLinks`: karta logowania, stopka layoutu aplikacji, e-maile).
 - Pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO publikuje `php artisan admiro:legal:seed`
   (`Database\Seeders\LegalDocumentsSeeder`, treść z `database/seeders/legal/<język>/<dokument>.md`, administrator danych
