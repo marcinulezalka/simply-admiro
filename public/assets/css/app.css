@@ -213,8 +213,8 @@ button.ss-badge:focus-visible {
 
 /**
  * .ss-welcome — domyślna strona startowa (app/welcome): rama .ss-frame na środku ekranu z dwiema kartami
- * o zagnieżdżonych zaokrągleniach — treść (.ss-card) obok karty marki (kolory marki, logo i hasło
- * na środku, pod nimi siatka kafelków z logo stref); na wąskim ekranie karta marki nad treścią.
+ * o zagnieżdżonych zaokrągleniach — treść (.ss-card) obok karty marki (kolory marki, logo
+ * na środku, pod nim kafelki z logo stref); na wąskim ekranie karta marki nad treścią.
  */
 .ss-welcome {
     display: flex;
@@ -337,11 +337,6 @@ button.ss-badge:focus-visible {
     color: inherit;
 }
 
-.ss-welcome__tagline {
-    margin: 0;
-    opacity: 0.7;
-}
-
 /* Logo stref pod marką simplysmart: kafelki na środku (po kilka w wierszu, zwężane do 6.5rem na telefonie), każdy z bardzo delikatnym gradientem w kolorze
    karty; logo małe i przygaszone (wyraźniejsze po najechaniu). */
 .ss-welcome__zones {
@@ -386,13 +381,27 @@ button.ss-badge:focus-visible {
     }
 }
 
+/* Od 64rem karta mieści się w oknie bez przewijania (także na laptopie 1280×720): węższa karta marki daje treści
+   miejsce na tytuły funkcji w jednej linii, a odstępy w pionie skalują się z wysokością okna (vh) w granicach tokenów. */
 @media (min-width: 64rem) {
     .ss-welcome__content {
-        padding: var(--ss-space-16);
+        padding: clamp(var(--ss-space-6), 7vh, var(--ss-space-16)) var(--ss-space-16);
+    }
+
+    .ss-welcome__heading {
+        margin-top: clamp(var(--ss-space-4), 4vh, var(--ss-space-8));
+    }
+
+    .ss-welcome__features {
+        row-gap: clamp(var(--ss-space-3), 2.5vh, var(--ss-space-4));
+    }
+
+    .ss-welcome__footer {
+        margin-top: clamp(var(--ss-space-4), 4vh, var(--ss-space-8));
     }
 
     .ss-frame--row > .ss-welcome__brand {
-        flex: 0 0 26rem;
+        flex: 0 0 22rem;
     }
 
     .ss-welcome__features {

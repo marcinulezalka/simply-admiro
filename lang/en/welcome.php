@@ -18,7 +18,6 @@ return [
     'inside' => 'What you get from the start',
     'built_on' => 'Built on',
     'admiro_version' => 'admiro :version',
-    'tagline' => "Business applications\nthat grow with your company.",
 
     'features' => [
         'zones' => [

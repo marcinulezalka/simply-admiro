@@ -18,7 +18,6 @@ return [
     'inside' => 'Co zyskujesz na starcie?',
     'built_on' => 'Zbudowane na',
     'admiro_version' => 'admiro :version',
-    'tagline' => "Aplikacje biznesowe,\nktóre rosną razem z Twoją firmą.",
 
     'features' => [
         'zones' => [
