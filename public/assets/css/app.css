@@ -420,22 +420,48 @@ button.ss-badge:focus-visible {
 /**
  * .ss-button — przycisk drugorzędny (ramka, tło karty); .ss-button--primary — jedyna akcja główna
  * widoku w kolorze akcentu; .ss-button--block — na całą szerokość formularza.
+ * Rozmiary (tokeny --ss-button-*): średni domyślny — wysokość 40px, wcięcie 16px, ikona 20px, odstęp ikony 8px,
+ * tekst 16px; .ss-button--sm — 36px, 12px, ikona 16px, odstęp 6px, tekst 14px (gęste miejsca: tabele, karty);
+ * .ss-button--lg — 56px, 20px, ikona 24px, odstęp 8px, tekst 18px (jedna duża akcja ekranu).
  */
 .ss-button {
+    --ss-button-height: 2.5rem;
+    --ss-button-padding: 1rem;
+    --ss-button-icon: 1.25rem;
+    --ss-button-gap: 0.5rem;
+    --ss-button-font: 1rem;
     display: inline-flex;
     text-decoration: none;
     align-items: center;
     justify-content: center;
-    padding: var(--ss-space-3) var(--ss-space-4);
+    min-height: var(--ss-button-height);
+    padding: 0.25rem var(--ss-button-padding);
+    line-height: 1.25;
     border: 1px solid var(--ss-color-border-strong);
     border-radius: var(--ss-radius-button);
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     font: inherit;
     font-family: var(--ss-font-sans);
-    font-size: 0.875rem;
+    font-size: var(--ss-button-font);
     font-weight: 600;
     cursor: pointer;
+}
+
+.ss-button--sm {
+    --ss-button-height: 2.25rem;
+    --ss-button-padding: 0.75rem;
+    --ss-button-icon: 1rem;
+    --ss-button-gap: 0.375rem;
+    --ss-button-font: 0.875rem;
+}
+
+.ss-button--lg {
+    --ss-button-height: 3.5rem;
+    --ss-button-padding: 1.25rem;
+    --ss-button-icon: 1.5rem;
+    --ss-button-gap: 0.5rem;
+    --ss-button-font: 1.125rem;
 }
 
 .ss-button:hover:not(:disabled) {
@@ -467,14 +493,14 @@ button.ss-badge:focus-visible {
  * w pigułce (np. akcje w ramie z kartami).
  */
 .ss-button {
-    gap: var(--ss-space-2);
+    gap: var(--ss-button-gap);
 }
 
 .ss-button__icon,
 .ss-badge__icon {
     flex: none;
-    width: 1.125rem;
-    height: 1.125rem;
+    width: var(--ss-button-icon, 1.125rem);
+    height: var(--ss-button-icon, 1.125rem);
 }
 
 .ss-badge__icon {
@@ -484,7 +510,6 @@ button.ss-badge:focus-visible {
 
 .ss-button--pill {
     border-radius: var(--ss-radius-pill);
-    padding-inline: var(--ss-space-6);
 }
 
 .ss-link {
@@ -1508,6 +1533,137 @@ summary.ss-sidebar__identity:focus-visible {
     font-weight: 600;
 }
 
+/**
+ * Gałąź menu (NavigationItem z podpozycjami): .ss-sidebar__tree — <details> rozwijany kliknięciem pozycji
+ * (.ss-sidebar__summary z chevronem obracanym po rozwinięciu), .ss-sidebar__sublist — podpozycje bez ikon,
+ * z etykietą równo z etykietami pozycji, połączone liniami drzewa: pionowa linia spod ikony pozycji i zaokrąglone
+ * łuki do każdej podpozycji (--ss-sidebar-tree-line, arkusz strefy może zmienić kolor). Bieżąca podpozycja ma kolor
+ * tekstu i pogrubienie. .ss-sidebar__branch-link — odnośnik pozycji widoczny tylko w menu zwiniętym do ikon.
+ */
+.ss-sidebar {
+    --ss-sidebar-tree-line: color-mix(in srgb, var(--ss-color-muted) 45%, transparent);
+    --ss-sidebar-tree-x: calc(var(--ss-space-3) + 0.625rem - 0.75px);
+}
+
+.ss-sidebar__branch-link {
+    display: none;
+}
+
+.ss-sidebar__summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+.ss-sidebar__summary::-webkit-details-marker {
+    display: none;
+}
+
+.ss-sidebar__summary--current {
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font-weight: 600;
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-sidebar__tree[open] > .ss-sidebar__summary {
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__chevron {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+    color: var(--ss-color-muted);
+    transition: transform 0.15s ease;
+}
+
+.ss-sidebar__tree[open] .ss-sidebar__chevron {
+    transform: rotate(180deg);
+}
+
+.ss-sidebar__sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 2px 0 var(--ss-space-1);
+    padding: 0;
+    list-style: none;
+}
+
+.ss-sidebar__sublist > li {
+    position: relative;
+}
+
+.ss-sidebar__sublist > li::before,
+.ss-sidebar__sublist > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--ss-sidebar-tree-x);
+    pointer-events: none;
+}
+
+.ss-sidebar__sublist > li::before {
+    width: var(--ss-space-3);
+    height: 50%;
+    border-bottom: 1.5px solid var(--ss-sidebar-tree-line);
+    border-left: 1.5px solid var(--ss-sidebar-tree-line);
+    border-bottom-left-radius: 0.625rem;
+}
+
+.ss-sidebar__sublist > li:not(:last-child)::after {
+    bottom: -2px;
+    border-left: 1.5px solid var(--ss-sidebar-tree-line);
+}
+
+.ss-sidebar__sublist > li:first-child::before,
+.ss-sidebar__sublist > li:first-child::after {
+    top: calc(-1 * var(--ss-space-1) - 2px);
+}
+
+.ss-sidebar__sublist > li:first-child::before {
+    height: calc(50% + var(--ss-space-1) + 2px);
+}
+
+.ss-sidebar__sublink {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+    padding: var(--ss-space-2) var(--ss-space-3) var(--ss-space-2) calc(var(--ss-space-3) * 2 + 1.25rem);
+    border-radius: var(--ss-radius-card);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-decoration: none;
+}
+
+.ss-sidebar__sublink:hover {
+    background: var(--ss-color-sidebar-hover);
+    color: var(--ss-color-text);
+}
+
+.ss-sidebar__sublink[aria-current="page"] {
+    color: var(--ss-color-text);
+    font-weight: 600;
+}
+
+.ss-sidebar__sublink:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+@media (min-width: 64rem) {
+    .ss-shell--collapsed .ss-sidebar__tree {
+        display: none;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__branch-link {
+        display: flex;
+    }
+}
+
 .ss-shell__main {
     display: flex;
     flex: 1;
@@ -1875,18 +2031,20 @@ button.ss-account-menu__link {
 }
 
 /**
- * .ss-tabs — zakładki sekcji widoku (np. ustawienia): pigułki, bieżąca przez aria-current, na telefonie
- * przewijanie poziome.
+ * .ss-tabs — zakładki sekcji widoku (np. ustawienia): przełącznik segmentowy w pigułce z podwójnym obrysem
+ * (--ss-segment-ring, odstęp --ss-segment-gap), tło przygaszone, bieżąca zakładka przez aria-current
+ * w akcencie z cieniem --ss-shadow-segment; na telefonie przewijanie poziome.
  */
 .ss-tabs {
     display: flex;
     gap: var(--ss-space-1);
-    margin: 0;
+    margin: calc(var(--ss-segment-gap) + var(--ss-segment-stroke));
     padding: var(--ss-space-1);
     overflow-x: auto;
-    border: 1px solid var(--ss-color-border);
+    border: var(--ss-segment-stroke) solid var(--ss-segment-ring);
     border-radius: var(--ss-radius-pill);
-    background: var(--ss-color-surface);
+    background: var(--ss-color-surface-muted);
+    box-shadow: 0 0 0 var(--ss-segment-gap) var(--ss-color-surface), 0 0 0 calc(var(--ss-segment-gap) + var(--ss-segment-stroke)) var(--ss-segment-ring);
     list-style: none;
     white-space: nowrap;
 }
@@ -1911,6 +2069,7 @@ button.ss-account-menu__link {
 .ss-tabs__link[aria-current="true"] {
     background: var(--ss-color-accent);
     color: var(--ss-color-on-accent);
+    box-shadow: var(--ss-shadow-segment);
 }
 
 .ss-tabs__link:focus-visible {
@@ -2886,17 +3045,20 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): przełącznik segmentowy z ikonami motywów
- * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG); wybrany segment wypełniony akcentem (aria-pressed="true").
+ * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG) z podwójnym obrysem jak .ss-tabs; wybrany segment wypełniony
+ * akcentem, przestrzenny (--ss-shadow-segment, aria-pressed="true").
  * .ss-auth__theme — przełącznik w prawym górnym rogu karty formularza logowania (karta ma nad nagłówkiem miejsce na niego).
  */
 .ss-theme-toggle {
     display: inline-flex;
     flex: none;
     gap: 2px;
+    margin: calc(var(--ss-segment-gap) + var(--ss-segment-stroke));
     padding: 2px;
-    border: 1px solid var(--ss-color-border-strong);
+    border: var(--ss-segment-stroke) solid var(--ss-segment-ring);
     border-radius: var(--ss-radius-button);
-    background: var(--ss-color-surface);
+    background: var(--ss-color-surface-muted);
+    box-shadow: 0 0 0 var(--ss-segment-gap) var(--ss-color-surface), 0 0 0 calc(var(--ss-segment-gap) + var(--ss-segment-stroke)) var(--ss-segment-ring);
 }
 
 .ss-theme-toggle[hidden] {
@@ -2930,6 +3092,13 @@ a.ss-notification:focus-visible {
 .ss-theme-toggle__option[aria-pressed="true"] {
     background: var(--ss-color-accent);
     color: var(--ss-color-on-accent);
+    box-shadow: var(--ss-shadow-segment);
+}
+
+/* Wysoki kontrast: pełne ramki bez cieni i poświaty (pierścień w kolorze ramki). */
+:root:is([data-theme="contrast"], [data-theme="contrast-yellow"]) {
+    --ss-segment-ring: var(--ss-color-border);
+    --ss-shadow-segment: none;
 }
 
 .ss-theme-toggle__icon {

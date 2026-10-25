@@ -152,6 +152,13 @@
     --ss-shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --ss-shadow-frame: 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3)), 0 24px 48px -28px light-dark(rgb(0 0 0 / 0.18), rgb(0 0 0 / 0.6));
     --ss-shadow-elevated: 0 32px 64px -24px light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.7)), 0 12px 24px -12px light-dark(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.5));
+    /* Przełącznik segmentowy (.ss-tabs, .ss-theme-toggle): podwójny obrys — wewnętrzny owal (ramka) i zewnętrzny
+       pierścień oddzielony tłem — w jasnym odcieniu akcentu; wybrany segment w akcencie, przestrzenny (trzy cienie
+       wewnętrzne: ciemniejszy u góry, jasny i w kolorze akcentu u dołu) z poświatą akcentu pod spodem */
+    --ss-segment-ring: color-mix(in srgb, var(--ss-color-accent) 45%, var(--ss-color-surface));
+    --ss-segment-stroke: 1.5px;
+    --ss-segment-gap: 3px;
+    --ss-shadow-segment: inset 0 5px 16px color-mix(in srgb, var(--ss-color-accent), #000000 35%), inset 0 -5px 8px rgb(255 255 255 / 0.25), inset 0 -2px 2px var(--ss-color-accent), 0 8px 18px -4px color-mix(in srgb, var(--ss-color-accent) 50%, transparent);
 
     /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/). --ss-font-sans to font
        interfejsu (przyciski, pola, menu, zakładki, tabele, odznaki), --ss-font-base — treść strony (body) */

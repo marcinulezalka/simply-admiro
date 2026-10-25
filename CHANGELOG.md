@@ -4,29 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
-### Changed
-
-- Logowanie stref bez stopki strony simplysmart: odnośniki prawne strefy (`legal_links`) z polityką i ustawieniami cookies są drobnym, wyśrodkowanym wierszem na dole karty formularza (`.ss-auth__legal`), a przełącznik motywu stoi w prawym górnym rogu karty formularza (`.ss-auth__theme`) w każdym układzie. Usunięto klasy `.ss-auth--footer`, `.ss-auth__stage` i `.ss-auth__footer-trigger*`.
-- Pola formularzy i kontrolki delikatnie bardziej zaokrąglone: `--ss-radius-control` 0,875rem zamiast 0,75rem.
-- Toasty wyświetlane na dole ekranu (wyśrodkowane, z odstępem od paska systemowego telefonu) zamiast na środku.
-- Stopka simplysmart na logowaniu stref z `legal_links` to pełnoszeroka stopka strony zamiast wysuwanej spod kart, zakończona dużym, uciętym logo simplysmart (`.ss-auth__footer-brand`). Na szerokim ekranie jest schowana pod warstwą treści (`.ss-auth__stage`) i pokazuje się tylko po kliknięciu nazwy simplysmart na banerze albo logo: stopka stoi przy dole okna, a treść łagodnie przesuwa się nad nią w górę, zawartość stopki wyłania się z lekkim uniesieniem (przewijanie jej nie pokazuje; bez animacji przy ograniczeniu ruchu); na telefonie jest zwykłą stopką na końcu strony. `js/footer-toggle.js` ustawia `--ss-footer-height` i obsługuje `data-ss-footer-media` (zwijanie tylko na pasujących ekranach).
-- Stopka simplysmart w layoucie aplikacji taka sama jak na logowaniu (wspólny komponent `x-mainboard::brand-footer`, klasy `.ss-footer*` zamiast `.ss-auth__footer*` i `.ss-sidebar__footer*`): wyśrodkowane logo simplysmart na dole menu odsłania pełnoszeroką stopkę strony — powłoka przesuwa się nad nią w górę, dłuższa strona najpierw płynnie przewija się na dół, a przewinięcie w górę chowa stopkę; na telefonie i tablecie stopka jest na końcu strony, a logo przewija do niej. Stopka panelu ma też przełącznik motywu.
-- Token `--ss-radius-button` (przyciski, przyciski z ikoną, przełącznik motywu, klawisze PIN; domyślnie `--ss-radius-control`), którym strefa może dać wszystkim przyciskom jeden kształt, np. pigułkę.
-- Menu boczne aplikacji: sekcje (nagłówek konta, nazwane grupy, ustawienia) oddzielone kreskami z zaokrąglonymi końcami (`--ss-sidebar-divider`) zamiast prostej linii nad ustawieniami; w demo konta design systemu nazwa skrócona organizacji. `x-mainboard::app.layout` przyjmuje `fontFaces` (fonty strefy w podglądach design systemu).
-- Logowanie w układzie dwóch kart na tablecie (poniżej 56rem): karta formularza na całą szerokość ramy, równo z kartą marki, zamiast wąskiej karty z pustym miejscem obok.
-
-- Powłoka aplikacji w stylu „soft UI”: szare płótno (`--ss-color-canvas`), menu boczne jako jaśniejszy panel bez ramki (`--ss-color-sidebar`, `--ss-color-sidebar-hover`), aktywna pozycja menu, karty i wyszukiwarka białe z miękkim cieniem (`--ss-shadow-soft`); motywy wysokiego kontrastu bez zmian.
-- Pod imieniem i nazwiskiem w menu aplikacji wyświetlana jest nazwa skrócona bieżącej organizacji, a bez niej pełna nazwa.
-- `OrganizationManagement::create()` i `update()` przyjmują `Organizations\OrganizationData` (nazwa, nazwa skrócona, dane firmy) zamiast nazwy; kontrakt `CodeAndPinAccount` rozszerza `HasRecoveryEmail`, a `AccountStore` ma `setRecoveryEmail()`.
-- Komunikaty z sesji (np. „Wylogowano” po wylogowaniu) na stronach logowania i publicznych stronach stref to globalne toasty zamiast szarego panelu `.ss-notice` w karcie.
-- Menu boczne aplikacji ma najwyżej `--ss-sidebar-width`, a dłuższe pozycje, imię i druga linia zawijają się zamiast wielokropka; przełącznik motywu przeniesiony z menu do ustawień („Wygląd”), a ustawienia cookies z menu konta do stopki simplysmart.
-- `js/auth-footer.js` zastąpiony ogólnym `js/footer-toggle.js` (`data-ss-footer-root="<blok>"`, `data-ss-footer`, `data-ss-footer-toggle`), wspólnym dla logowania i menu bocznego.
-- Kontrakt `Contracts\ZoneNavigation` ma nową metodę `settings()` (grupy ustawień strefy); każda implementacja musi ją dodać.
-- Podpowiedzi w polach (placeholder) to sam przykład, bez „np.” / „e.g.” (`placeholders.*`, wzór `placeholders.example`, maski `InputMask::placeholder()`).
-- Logowanie w układzie dwóch kart z banerem strefy (`.ss-auth__brand--image`): na szerokim ekranie wysokość karty marki wynika z proporcji obrazu, więc baner nie jest obcinany, a karta formularza dopasowuje się do niego.
-
 ### Added
 
+- Podpozycje menu bocznego: `NavigationItem` z `children` jest rozwijaną gałęzią z chevronem (rozwinięta, gdy ona albo podpozycja jest bieżąca), a podpozycje łączą linie drzewa spod ikony pozycji z zaokrąglonym łukiem do każdej; w menu zwiniętym do ikon gałąź prowadzi do adresu pozycji. Te same linie łączą widoki obszarów w nawigacji design systemu, a menu demo ma gałąź „Faktury”. Ikona `chevron-down`.
+- Rozmiary przycisków: `.ss-button--sm` (36px, tekst 14px, ikona 16px) i `.ss-button--lg` (56px, tekst 18px, ikona 24px) obok domyślnego średniego; próbki w sekcji przycisków design systemu.
 - Token `--ss-font-base` (treść strony, `body`; domyślnie `--ss-font-sans`): strefa może dać treści inny font niż interfejsowi. `--ss-font-sans` jest odtąd fontem interfejsu — przyciski, pola, wyszukiwarka, menu boczne i konta, zakładki, tabele, odznaki, etykiety pól, przełączniki i toasty mają go jawnie, także w treści w innym foncie.
 - Departamenty organizacji (`organizations.is_department`, wewnętrzna agregacja): `OrganizationManagement::createDepartment()` zakłada dział bezpośrednio pod jednostką (organizacją bez flagi), bez organizacji pod nim; departament ma własnych członków i role (osobny kontekst w przełączniku, nazwa „Jednostka · Departament” z `Organization::contextName()`, relacja `parent()`), a dane czyta z jednostki — wiązanie tras `OrganizationDataModel` działa w jednostce bieżącej organizacji. `Queries\Organizations\OrganizationUnits`: jednostka organizacji i jej departamenty.
 - Dane firmy organizacji (opcjonalne): NIP z walidacją sumy kontrolnej (`Rules\Nip`), REGON, KRS, telefon, e-mail, e-mail do rozliczeń (nowa organizacja bez niego dostaje e-mail organizacji), ulica, kod pocztowy i miejscowość (`Organization::DETAIL_LENGTHS`, `Organization::address()`); wspólna walidacja paneli `Organizations\OrganizationForm` i komponent `x-mainboard::organization.fields` z kartami „Dane organizacji”, „Dane kontaktowe” i „Dane adresowe”.
@@ -49,6 +30,29 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - Strona treści w strefie (`x-mainboard::content.layout`) dostaje arkusze strefy żądania, jak logowanie.
 - `x-mainboard::cookie-links` przyjmuje `parts` (`settings`, `policy`) i `icon` (ikona `settings` przy ustawieniach). Okna zgody na cookies mają w tytule nową ikonę `cookie`, a przyciski ikony (zezwól, odrzuć, dostosuj, zapisz).
 - Lista pakietów Composera do strony licencji: `Queries\InstalledPackages` — tylko bezpośrednie zależności aplikacji i jej własnych paczek (bez dalszych zależności, np. pakietów samego Laravela, bez pakietów platformy i własnych paczek), z wersją, licencją, opisem i stroną domową.
+
+### Changed
+
+- Przycisk domyślny ma wymiary średniego rozmiaru: 40px wysokości, wcięcie 16px, tekst 16px, ikona 20px z odstępem 8px (wcześniej tekst 14px, ikona 18px); pigułka już nie ma szerszego wcięcia.
+- Zakładki (`.ss-tabs`) i przełącznik motywu jako przełącznik segmentowy z podwójnym obrysem w jasnym odcieniu akcentu i przestrzennym wybranym segmentem (cienie wewnętrzne i poświata akcentu; tokeny `--ss-segment-ring`, `--ss-segment-stroke`, `--ss-segment-gap`, `--ss-shadow-segment`), w motywach wysokiego kontrastu bez cieni.
+- Logowanie stref bez stopki strony simplysmart: odnośniki prawne strefy (`legal_links`) z polityką i ustawieniami cookies są drobnym, wyśrodkowanym wierszem na dole karty formularza (`.ss-auth__legal`), a przełącznik motywu stoi w prawym górnym rogu karty formularza (`.ss-auth__theme`) w każdym układzie. Usunięto klasy `.ss-auth--footer`, `.ss-auth__stage` i `.ss-auth__footer-trigger*`.
+- Pola formularzy i kontrolki delikatnie bardziej zaokrąglone: `--ss-radius-control` 0,875rem zamiast 0,75rem.
+- Toasty wyświetlane na dole ekranu (wyśrodkowane, z odstępem od paska systemowego telefonu) zamiast na środku.
+- Stopka simplysmart na logowaniu stref z `legal_links` to pełnoszeroka stopka strony zamiast wysuwanej spod kart, zakończona dużym, uciętym logo simplysmart (`.ss-auth__footer-brand`). Na szerokim ekranie jest schowana pod warstwą treści (`.ss-auth__stage`) i pokazuje się tylko po kliknięciu nazwy simplysmart na banerze albo logo: stopka stoi przy dole okna, a treść łagodnie przesuwa się nad nią w górę, zawartość stopki wyłania się z lekkim uniesieniem (przewijanie jej nie pokazuje; bez animacji przy ograniczeniu ruchu); na telefonie jest zwykłą stopką na końcu strony. `js/footer-toggle.js` ustawia `--ss-footer-height` i obsługuje `data-ss-footer-media` (zwijanie tylko na pasujących ekranach).
+- Stopka simplysmart w layoucie aplikacji taka sama jak na logowaniu (wspólny komponent `x-mainboard::brand-footer`, klasy `.ss-footer*` zamiast `.ss-auth__footer*` i `.ss-sidebar__footer*`): wyśrodkowane logo simplysmart na dole menu odsłania pełnoszeroką stopkę strony — powłoka przesuwa się nad nią w górę, dłuższa strona najpierw płynnie przewija się na dół, a przewinięcie w górę chowa stopkę; na telefonie i tablecie stopka jest na końcu strony, a logo przewija do niej. Stopka panelu ma też przełącznik motywu.
+- Token `--ss-radius-button` (przyciski, przyciski z ikoną, przełącznik motywu, klawisze PIN; domyślnie `--ss-radius-control`), którym strefa może dać wszystkim przyciskom jeden kształt, np. pigułkę.
+- Menu boczne aplikacji: sekcje (nagłówek konta, nazwane grupy, ustawienia) oddzielone kreskami z zaokrąglonymi końcami (`--ss-sidebar-divider`) zamiast prostej linii nad ustawieniami; w demo konta design systemu nazwa skrócona organizacji. `x-mainboard::app.layout` przyjmuje `fontFaces` (fonty strefy w podglądach design systemu).
+- Logowanie w układzie dwóch kart na tablecie (poniżej 56rem): karta formularza na całą szerokość ramy, równo z kartą marki, zamiast wąskiej karty z pustym miejscem obok.
+
+- Powłoka aplikacji w stylu „soft UI”: szare płótno (`--ss-color-canvas`), menu boczne jako jaśniejszy panel bez ramki (`--ss-color-sidebar`, `--ss-color-sidebar-hover`), aktywna pozycja menu, karty i wyszukiwarka białe z miękkim cieniem (`--ss-shadow-soft`); motywy wysokiego kontrastu bez zmian.
+- Pod imieniem i nazwiskiem w menu aplikacji wyświetlana jest nazwa skrócona bieżącej organizacji, a bez niej pełna nazwa.
+- `OrganizationManagement::create()` i `update()` przyjmują `Organizations\OrganizationData` (nazwa, nazwa skrócona, dane firmy) zamiast nazwy; kontrakt `CodeAndPinAccount` rozszerza `HasRecoveryEmail`, a `AccountStore` ma `setRecoveryEmail()`.
+- Komunikaty z sesji (np. „Wylogowano” po wylogowaniu) na stronach logowania i publicznych stronach stref to globalne toasty zamiast szarego panelu `.ss-notice` w karcie.
+- Menu boczne aplikacji ma najwyżej `--ss-sidebar-width`, a dłuższe pozycje, imię i druga linia zawijają się zamiast wielokropka; przełącznik motywu przeniesiony z menu do ustawień („Wygląd”), a ustawienia cookies z menu konta do stopki simplysmart.
+- `js/auth-footer.js` zastąpiony ogólnym `js/footer-toggle.js` (`data-ss-footer-root="<blok>"`, `data-ss-footer`, `data-ss-footer-toggle`), wspólnym dla logowania i menu bocznego.
+- Kontrakt `Contracts\ZoneNavigation` ma nową metodę `settings()` (grupy ustawień strefy); każda implementacja musi ją dodać.
+- Podpowiedzi w polach (placeholder) to sam przykład, bez „np.” / „e.g.” (`placeholders.*`, wzór `placeholders.example`, maski `InputMask::placeholder()`).
+- Logowanie w układzie dwóch kart z banerem strefy (`.ss-auth__brand--image`): na szerokim ekranie wysokość karty marki wynika z proporcji obrazu, więc baner nie jest obcinany, a karta formularza dopasowuje się do niego.
 
 ## [0.2.0] - 2026-10-24
 

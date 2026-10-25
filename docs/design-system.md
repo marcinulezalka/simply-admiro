@@ -136,7 +136,16 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   jedyny wyjątek od „karta bez cienia”.
 - **Przyciski z ikonami**: `x-mainboard::icon` z klasą `.ss-button__icon` przed tekstem (akcja, np. odśwież)
   albo po nim (przejście dalej, strzałka); `.ss-button--pill` dla akcji w ramie. Na karcie odwróconej akcja
-  główna odwraca kolory sama. Plakietka może mieć ikonę `.ss-badge__icon` (np. stan „bezpieczne”).
+  główna odwraca kolory sama.
+- **Rozmiary przycisków** (tokeny `--ss-button-height`, `-padding`, `-icon`, `-gap`, `-font` ustawiane przez
+  modyfikator): `.ss-button--sm` — 36px wysokości, wcięcie 12px, ikona 16px, odstęp ikony 6px, tekst 14px (tabele,
+  karty); domyślny średni — 40px, 16px, ikona 20px, odstęp 8px, tekst 16px; `.ss-button--lg` — 56px, 20px, ikona
+  24px, odstęp 8px, tekst 18px (jedna duża akcja ekranu). Pigułka (`--pill`) ma te same wymiary.
+- **Przełącznik segmentowy** (`.ss-tabs`, `x-mainboard::theme-toggle`): pigułka z podwójnym obrysem — wewnętrzna
+  ramka i zewnętrzny pierścień oddzielony tłem powierzchni (`--ss-segment-ring`, jasny odcień akcentu;
+  `--ss-segment-stroke`, `--ss-segment-gap`), tło przygaszone; wybrany segment w akcencie, przestrzenny
+  (`--ss-shadow-segment`: cienie wewnętrzne — ciemniejszy u góry, jasny i w kolorze akcentu u dołu — i poświata
+  akcentu pod spodem); w motywach wysokiego kontrastu bez cieni, pierścień w kolorze ramki. Plakietka może mieć ikonę `.ss-badge__icon` (np. stan „bezpieczne”).
 - Tabele tylko dla list wielu rekordów; pojedynczy rekord pokazujemy w kartach (punkt 5).
 
 ## 5. Warstwy layoutu
@@ -337,7 +346,11 @@ sobą pasek `x-mainboard::design-system.strip` (powrót i widoki tego samego obs
 źródło `View\Demo\DemoInvoices`.
 
 **Layout aplikacji z menu bocznym** `x-mainboard::app.layout`: menu po lewej (`View\Navigation\NavigationGroup`
-z `NavigationItem`: etykieta, adres, ikona, bieżąca pozycja przez `aria-current`, licznik), zwijane do ikon
+z `NavigationItem`: etykieta, adres, ikona, bieżąca pozycja przez `aria-current`, licznik, podpozycje `children` —
+pozycja z nimi jest gałęzią `.ss-sidebar__tree` (`<details>` z chevronem, rozwinięta, gdy ona albo podpozycja jest
+bieżąca), a podpozycje bez ikon (`.ss-sidebar__sublist`) łączą linie drzewa spod ikony pozycji z zaokrąglonym łukiem
+do każdej (`--ss-sidebar-tree-line`); w menu zwiniętym do ikon gałąź jest zwykłym odnośnikiem pozycji; obszary widoków
+w nawigacji design systemu mają te same linie), zwijane do ikon
 i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
 globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy

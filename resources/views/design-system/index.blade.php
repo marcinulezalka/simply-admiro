@@ -168,6 +168,11 @@
                         <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.pill') }}</button>
                         <button class="ss-button ss-button--pill" type="button">{{ text('design_system.sample.pill') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
                     </div>
+                    <div class="ss-ds__row ss-ds__spaced">
+                        <button class="ss-button ss-button--primary ss-button--pill ss-button--lg" type="button"><x-mainboard::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_lg') }}</button>
+                        <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-mainboard::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_md') }}</button>
+                        <button class="ss-button ss-button--primary ss-button--pill ss-button--sm" type="button"><x-mainboard::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_sm') }}</button>
+                    </div>
                     <div class="ss-ds__narrow">
                         <button class="ss-button ss-button--primary ss-button--block" type="button">.ss-button--block<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
                     </div>

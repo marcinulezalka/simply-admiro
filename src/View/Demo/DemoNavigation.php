@@ -33,7 +33,10 @@ final class DemoNavigation
         return [
             new NavigationGroup(null, [
                 $item(text('design_system.demo.modules.dashboard'), DesignSystemView::Dashboard, 'home'),
-                $item(text('design_system.demo.modules.invoices'), DesignSystemView::Sidebar, 'invoice', local_number(count(DemoInvoices::overdue()))),
+                new NavigationItem(text('design_system.demo.modules.invoices'), route('mainboard.design-system.view', DesignSystemView::Sidebar), 'invoice', false, local_number(count(DemoInvoices::overdue())), [
+                    $item(text('design_system.demo.modules.invoices_all'), DesignSystemView::Sidebar, 'invoice'),
+                    $item(text('design_system.demo.modules.invoices_list'), DesignSystemView::List, 'invoice'),
+                ]),
                 $item(text('design_system.demo.modules.clients'), DesignSystemView::Form, 'users'),
                 $item(text('design_system.demo.notifications.title'), DesignSystemView::Notifications, 'bell', local_number(DemoNotifications::panel()->unreadCount())),
             ]),

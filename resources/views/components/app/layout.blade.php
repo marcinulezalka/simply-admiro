@@ -1,4 +1,4 @@
-{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole odnośnik „Ustawienia” i subtelne, wyśrodkowane logo simplysmart (35% szerokości), które odsłania pełnoszeroką stopkę strony simplysmart jak na logowaniu (x-mainboard::brand-footer: powłoka .ss-shell przesuwa się w górę nad stopką; na ekranach bez stałego menu stopka na końcu strony). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; fontFaces: reguły @font-face strefy (podgląd strefy w design systemie, poza strefą); palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
+{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu (pozycja z podpozycjami — NavigationItem::$children — jest gałęzią rozwijaną <details> z chevronem, podpozycje połączone liniami drzewa; w menu zwiniętym do ikon zamiast niej odnośnik pozycji); na dole odnośnik „Ustawienia” i subtelne, wyśrodkowane logo simplysmart (35% szerokości), które odsłania pełnoszeroką stopkę strony simplysmart jak na logowaniu (x-mainboard::brand-footer: powłoka .ss-shell przesuwa się w górę nad stopką; na ekranach bez stałego menu stopka na końcu strony). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; fontFaces: reguły @font-face strefy (podgląd strefy w design systemie, poza strefą); palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
 @props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'settings' => null, 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'legalLinks' => [], 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => [], 'palettes' => [], 'paletteScope' => '', 'fontFaces' => null])
 @php($toasts ??= \Simplysmart\Mainboard\View\Toast::fromSession(session(\Simplysmart\Mainboard\View\Toast::SESSION_KEY)))
 <x-mainboard::page :title="$title" :description="$description" robots="noindex, nofollow" :palettes="$palettes" :palette-scope="$paletteScope" :font-faces="$fontFaces">
@@ -151,15 +151,46 @@
                     @endif
                     <ul class="ss-sidebar__list">
                         @foreach ($group->items as $item)
-                            <li>
-                                <a class="ss-sidebar__link" href="{{ $item->url }}" title="{{ $item->label }}" @if ($item->current) aria-current="page" @endif>
-                                    <x-mainboard::icon :name="$item->icon" class="ss-sidebar__icon" />
-                                    <span class="ss-sidebar__label">{{ $item->label }}</span>
-                                    @if (filled($item->badge))
-                                        <span class="ss-sidebar__badge">{{ $item->badge }}</span>
-                                    @endif
-                                </a>
-                            </li>
+                            @if ($item->children !== [])
+                                <li class="ss-sidebar__branch">
+                                    <a class="ss-sidebar__link ss-sidebar__branch-link" href="{{ $item->url }}" title="{{ $item->label }}" @if ($item->isExpanded()) aria-current="page" @endif>
+                                        <x-mainboard::icon :name="$item->icon" class="ss-sidebar__icon" />
+                                        <span class="ss-sidebar__label">{{ $item->label }}</span>
+                                    </a>
+                                    <details class="ss-sidebar__tree" @if ($item->isExpanded()) open @endif>
+                                        <summary @class(['ss-sidebar__link', 'ss-sidebar__summary', 'ss-sidebar__summary--current' => $item->current]) title="{{ $item->label }}">
+                                            <x-mainboard::icon :name="$item->icon" class="ss-sidebar__icon" />
+                                            <span class="ss-sidebar__label">{{ $item->label }}</span>
+                                            @if (filled($item->badge))
+                                                <span class="ss-sidebar__badge">{{ $item->badge }}</span>
+                                            @endif
+                                            <x-mainboard::icon name="chevron-down" class="ss-sidebar__chevron" />
+                                        </summary>
+                                        <ul class="ss-sidebar__sublist">
+                                            @foreach ($item->children as $child)
+                                                <li>
+                                                    <a class="ss-sidebar__sublink" href="{{ $child->url }}" @if ($child->current) aria-current="page" @endif>
+                                                        <span class="ss-sidebar__label">{{ $child->label }}</span>
+                                                        @if (filled($child->badge))
+                                                            <span class="ss-sidebar__badge">{{ $child->badge }}</span>
+                                                        @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </details>
+                                </li>
+                            @else
+                                <li>
+                                    <a class="ss-sidebar__link" href="{{ $item->url }}" title="{{ $item->label }}" @if ($item->current) aria-current="page" @endif>
+                                        <x-mainboard::icon :name="$item->icon" class="ss-sidebar__icon" />
+                                        <span class="ss-sidebar__label">{{ $item->label }}</span>
+                                        @if (filled($item->badge))
+                                            <span class="ss-sidebar__badge">{{ $item->badge }}</span>
+                                        @endif
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 @endforeach
