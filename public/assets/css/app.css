@@ -133,7 +133,10 @@
  * .ss-frame — rama grupująca karty (np. dwie karty obok siebie): tło surface, odstęp --ss-frame-padding,
  * promień --ss-radius-frame i miękki cień; karty w ramie dostają promień zagnieżdżony (rama minus odstęp).
  */
+/* Promień kart w ramie liczony na samej ramie: rama (albo jej przodek) może zmienić --ss-radius-frame
+   i --ss-frame-padding, a zewnętrzny promień zostaje równy wewnętrznemu plus odstęp. */
 .ss-frame {
+    --ss-radius-nested: calc(var(--ss-radius-frame) - var(--ss-frame-padding));
     display: flex;
     flex-direction: column;
     gap: var(--ss-frame-padding);
