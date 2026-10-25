@@ -1,15 +1,13 @@
-{{-- Nowa organizacja albo zmiana organizacji: nazwa, nazwa skrócona (druga linia pod imieniem i nazwiskiem w menu) i organizacja nadrzędna na karcie formularza, a przy edycji karta marki (logo, sygnet, ikona strony: podgląd, wgranie, usunięcie; logo trafia do e-maili organizacji). $organization: ?Organization (null = nowa), $parents: Collection<Organization> (aktywne, bez edytowanej), $brandAssets: list<array{asset: BrandAsset, set: bool}> (tylko edycja). --}}
+{{-- Nowa organizacja albo zmiana organizacji: karty danych organizacji (z organizacją nadrzędną), kontaktowych i adresowych (x-mainboard::organization.fields), a przy edycji karta marki (logo, sygnet, ikona strony: podgląd, wgranie, usunięcie; logo trafia do e-maili organizacji). $organization: ?Organization (null = nowa), $parents: Collection<Organization> (aktywne, bez edytowanej), $brandAssets: list<array{asset: BrandAsset, set: bool}> (tylko edycja). --}}
 <x-mainboard::zone.layout :title="$organization === null ? text('admiro::admin.organization_create') : text_action('edit') . ': ' . $organization->name" :back="route('admiro.organizations.index')">
     @error('organization') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
-    <form class="ss-card" method="POST" action="{{ $organization === null ? route('admiro.organizations.store') : route('admiro.organizations.update', ['organization' => $organization->token]) }}">
+    <form class="ss-form" method="POST" action="{{ $organization === null ? route('admiro.organizations.store') : route('admiro.organizations.update', ['organization' => $organization->token]) }}">
         @csrf
         @if ($organization !== null)
             @method('PUT')
         @endif
-        <div class="ss-form">
-            <x-mainboard::input id="name" name="name" :label="text('admiro::admin.organization')" icon="building" :value="old('name', $organization?->name)" :error="$errors->first('name')" required maxlength="255" />
-            <x-mainboard::input id="short_name" name="short_name" :label="text_data(\Simplysmart\Mainboard\Models\Organization::class, \Simplysmart\Mainboard\Models\Organization::SHORT_NAME)" icon="building" :hint="text('admiro::admin.organization_short_name_hint')" :value="old('short_name', $organization?->short_name)" :error="$errors->first('short_name')" :maxlength="\Simplysmart\Mainboard\Models\Organization::SHORT_NAME_MAX_LENGTH" />
+        <x-mainboard::organization.fields :organization="$organization">
             <div class="ss-field">
                 <label class="ss-field__label" for="parent">{{ text('admiro::admin.organization_parent') }}</label>
                 <select class="ss-input" id="parent" name="parent">
@@ -19,9 +17,9 @@
                     @endforeach
                 </select>
             </div>
-            <div class="ss-form-actions">
-                <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text_action('save') }}</button>
-            </div>
+        </x-mainboard::organization.fields>
+        <div class="ss-form-actions">
+            <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text_action('save') }}</button>
         </div>
     </form>
 

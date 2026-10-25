@@ -37,7 +37,6 @@ return [
     'own_account' => 'Własnego konta nie zmienia się w panelu; użyj ustawień konta.',
     'owner_intro' => 'Konto właściciela powstaje w strefie docelowej (albo dostaje rolę, jeśli adres ma już konto). Właściciel ustawi PIN przy pierwszym logowaniu.',
     'organization' => 'Organizacja',
-    'organization_short_name_hint' => 'Krótka nazwa pod imieniem i nazwiskiem w menu aplikacji. Bez niej wyświetlana jest pełna nazwa.',
     'organization_operator' => '— organizacja operatora (strefy bez organizacji klientów) —',
     'owner_organization_required' => 'Ta strefa działa w organizacjach klientów: wybierz organizację.',
     'owner_created' => 'Właściciel założony.',

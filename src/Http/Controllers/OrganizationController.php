@@ -25,6 +25,8 @@ use Simplysmart\Mainboard\Enums\BrandAsset;
 use Simplysmart\Mainboard\Models\Organization;
 use Simplysmart\Mainboard\Organizations\OrganizationBranding;
 use Simplysmart\Mainboard\Organizations\OrganizationChangeRejected;
+use Simplysmart\Mainboard\Organizations\OrganizationData;
+use Simplysmart\Mainboard\Organizations\OrganizationForm;
 use Simplysmart\Mainboard\Organizations\OrganizationManagement;
 use Simplysmart\Mainboard\Queries\Organizations\ActiveOrganizations;
 use Simplysmart\Mainboard\Queries\Organizations\OrganizationList;
@@ -40,6 +42,7 @@ final readonly class OrganizationController
     public function __construct(
         private OrganizationList $organizations,
         private OrganizationManagement $management,
+        private OrganizationForm $form,
         private AdminContext $context,
         private AdminAudit $audit,
         private Redirector $redirect,
@@ -63,10 +66,10 @@ final readonly class OrganizationController
 
     public function store(Request $request, ActiveOrganizations $active): RedirectResponse
     {
-        [$name, $parent, $shortName] = $this->validated($request, $active);
+        [$data, $parent] = $this->validated($request, $active);
 
         try {
-            $organization = $this->management->create($name, $parent, $shortName);
+            $organization = $this->management->create($data, $parent);
         } catch (OrganizationChangeRejected) {
             return $this->rejected();
         }
@@ -90,10 +93,10 @@ final readonly class OrganizationController
     public function update(Request $request, string $organization, ActiveOrganizations $active): RedirectResponse
     {
         $current = $this->organization($organization);
-        [$name, $parent, $shortName] = $this->validated($request, $active);
+        [$data, $parent] = $this->validated($request, $active);
 
         try {
-            $this->management->update($current, $name, $parent, $shortName);
+            $this->management->update($current, $data, $parent);
         } catch (OrganizationChangeRejected) {
             return $this->rejected();
         }
@@ -120,19 +123,19 @@ final readonly class OrganizationController
     }
 
     /**
-     * @return array{string, Organization|null, string|null}
+     * Dane organizacji (Organizations\OrganizationForm) i organizacja nadrzędna w jednej walidacji.
+     *
+     * @return array{OrganizationData, Organization|null}
      */
     private function validated(Request $request, ActiveOrganizations $active): array
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            Organization::SHORT_NAME => ['nullable', 'string', 'max:' . Organization::SHORT_NAME_MAX_LENGTH],
+            ...$this->form->rules(),
             'parent' => ['nullable', 'string', 'max:' . Organization::TOKEN_LENGTH],
         ]);
         $parent = is_string($validated['parent'] ?? null) ? $active->find($validated['parent']) : null;
-        $shortName = is_string($validated[Organization::SHORT_NAME] ?? null) ? $validated[Organization::SHORT_NAME] : null;
 
-        return [is_string($validated['name']) ? $validated['name'] : '', $parent, $shortName];
+        return [$this->form->data($validated), $parent];
     }
 
     private function organization(string $token): Organization
