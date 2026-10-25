@@ -3,7 +3,7 @@
     $colors = $tokens->group('color');
     $paletteTokens = $tokens->group('palette');
     $palettes = \Simplysmart\Mainboard\Enums\Palette::cases();
-    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'buttons', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
+    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'buttons', 'segmented', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
     $highlight = \Simplysmart\Mainboard\View\BrandNames::highlight(...);
 @endphp
 <x-mainboard::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow" :palettes="$palettes" palette-scope="design-system">
@@ -176,6 +176,32 @@
                     <div class="ss-ds__narrow">
                         <button class="ss-button ss-button--primary ss-button--block" type="button">.ss-button--block<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
                     </div>
+                </section>
+
+                <section class="ss-card" id="segmented" aria-labelledby="segmented-title">
+                    <h2 class="ss-ds__section-title" id="segmented-title">{{ text('design_system.sections.segmented') }}</h2>
+                    <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.segmented_lead') }}</p>
+                    @foreach (['classic' => 'ss-tabs ss-tabs--classic', 'raised' => 'ss-tabs'] as $kind => $class)
+                        <div class="ss-ds__stack ss-ds__spaced">
+                            <p class="ss-field__label">{{ text('design_system.sample.segmented.' . $kind) }} · .{{ str_replace(' ', '.', $class) }}</p>
+                            <div class="ss-ds__row">
+                                <div class="{{ $class }}" role="group" aria-label="{{ text('layout.theme') }}">
+                                    @foreach (\Simplysmart\Mainboard\Enums\Theme::cases() as $theme)
+                                        <button class="ss-tabs__link" type="button" aria-pressed="{{ $loop->first ? 'true' : 'false' }}" title="{{ $theme->label() }}"><x-mainboard::icon :name="$theme->icon()" class="ss-tabs__icon" /><span class="ss-sr-only">{{ $theme->label() }}</span></button>
+                                    @endforeach
+                                </div>
+                                <ul class="{{ $class }}">
+                                    @foreach (['day', 'week', 'month'] as $range)
+                                        <li><a class="ss-tabs__link" href="#segmented" @if ($loop->iteration === 2) aria-current="page" @endif>{{ text('design_system.sample.ranges.' . $range) }}</a></li>
+                                    @endforeach
+                                </ul>
+                                <div class="{{ $class }}" role="group" aria-label="{{ text('design_system.sample.segmented.availability') }}">
+                                    <button class="ss-tabs__link" type="button" aria-pressed="true"><x-mainboard::icon name="check-circle" class="ss-tabs__icon" />{{ text('design_system.sample.available') }}</button>
+                                    <button class="ss-tabs__link" type="button" aria-pressed="false"><x-mainboard::icon name="close" class="ss-tabs__icon" />{{ text('design_system.sample.unavailable') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </section>
 
                 <section class="ss-card" id="forms" aria-labelledby="forms-title">

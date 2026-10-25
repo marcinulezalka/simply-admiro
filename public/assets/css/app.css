@@ -2034,22 +2034,36 @@ button.ss-account-menu__link {
 }
 
 /**
- * .ss-tabs — zakładki sekcji widoku (np. ustawienia): przełącznik segmentowy w pigułce z podwójnym obrysem
- * (--ss-segment-ring, odstęp --ss-segment-gap), tło przygaszone, bieżąca zakładka przez aria-current
- * w akcencie z cieniem --ss-shadow-segment; na telefonie przewijanie poziome.
+ * .ss-tabs — panel przycisków (przełącznik segmentowy: zakładki sekcji, zakres okresu, dostępność, motyw) w pigułce,
+ * bieżący segment przez aria-current w akcencie; na telefonie przewijanie poziome. Dwa rodzaje:
+ * - wypukły (domyślny, jak zakres okresu): podwójny obrys — ramka i zewnętrzny pierścień oddzielony tłem powierzchni
+ *   (--ss-segment-ring, --ss-segment-stroke, --ss-segment-gap) — tło przygaszone, wybrany segment przestrzenny
+ *   (--ss-shadow-segment);
+ * - klasyczny (.ss-tabs--classic, jak przełącznik motywu): pojedyncza ramka, tło powierzchni, płaski wybrany segment.
+ * Wygląd wynika z tokenów czytanych na samym panelu (--ss-segment-bg, --ss-segment-halo: pierścień albo none,
+ * --ss-segment-margin: miejsce na pierścień), więc arkusz strefy może dać jeden rodzaj wszystkim panelom.
  */
 .ss-tabs {
     display: flex;
     gap: var(--ss-space-1);
-    margin: calc(var(--ss-segment-gap) + var(--ss-segment-stroke));
+    margin: var(--ss-segment-margin, calc(var(--ss-segment-gap) + var(--ss-segment-stroke)));
     padding: var(--ss-space-1);
     overflow-x: auto;
     border: var(--ss-segment-stroke) solid var(--ss-segment-ring);
     border-radius: var(--ss-radius-pill);
-    background: var(--ss-color-surface-muted);
-    box-shadow: 0 0 0 var(--ss-segment-gap) var(--ss-color-surface), 0 0 0 calc(var(--ss-segment-gap) + var(--ss-segment-stroke)) var(--ss-segment-ring);
+    background: var(--ss-segment-bg, var(--ss-color-surface-muted));
+    box-shadow: var(--ss-segment-halo, 0 0 0 var(--ss-segment-gap) var(--ss-color-surface), 0 0 0 calc(var(--ss-segment-gap) + var(--ss-segment-stroke)) var(--ss-segment-ring));
     list-style: none;
     white-space: nowrap;
+}
+
+.ss-tabs--classic {
+    --ss-segment-ring: var(--ss-color-border-strong);
+    --ss-segment-stroke: 1px;
+    --ss-segment-margin: 0;
+    --ss-segment-halo: none;
+    --ss-segment-bg: var(--ss-color-surface);
+    --ss-shadow-segment: none;
 }
 
 .ss-tabs__link {
@@ -2068,8 +2082,26 @@ button.ss-account-menu__link {
     color: var(--ss-color-text);
 }
 
+/* Segment jako przycisk (np. wybór motywu albo widoku na stronie): bez stylu przycisku przeglądarki, stan przez aria-pressed. */
+button.ss-tabs__link {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ss-tabs__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
 .ss-tabs__link[aria-current="page"],
-.ss-tabs__link[aria-current="true"] {
+.ss-tabs__link[aria-current="true"],
+.ss-tabs__link[aria-pressed="true"] {
     background: var(--ss-color-accent);
     color: var(--ss-color-on-accent);
     box-shadow: var(--ss-shadow-segment);

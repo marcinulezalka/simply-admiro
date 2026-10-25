@@ -38,6 +38,8 @@ return [
         'icons' => 'Ikony',
         'brand' => 'Marka',
         'periods' => 'Okresy i dostępność',
+        'segmented' => 'Panele przycisków',
+        'segmented_lead' => 'Przełącznik segmentowy (.ss-tabs) do wyboru jednej opcji: motyw, zakres okresu, dostępność, sekcja widoku. Klasyczny — pojedyncza ramka i płaski wybrany segment (jak przełącznik motywu); wypukły — podwójny obrys i przestrzenny wybrany segment (jak zakres okresu). Strefa może dać jeden rodzaj wszystkim panelom tokenami --ss-segment-*.',
     ],
 
     'sample' => [
@@ -86,6 +88,11 @@ return [
             'tax-id' => 'NIP',
             'pesel' => 'PESEL',
             'bank-account' => 'Numer rachunku',
+        ],
+        'segmented' => [
+            'classic' => 'Klasyczny',
+            'raised' => 'Wypukły',
+            'availability' => 'Dostępność',
         ],
         'ranges' => [
             'day' => 'Dzień',

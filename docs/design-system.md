@@ -140,11 +140,11 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   modyfikator): `.ss-button--sm` — 36px wysokości, wcięcie 12px, ikona 16px, odstęp ikony 6px, tekst 14px (tabele,
   karty); domyślny średni — 40px, 16px, ikona 20px, odstęp 8px, tekst 16px; `.ss-button--lg` — 56px, 20px, ikona
   24px, odstęp 8px, tekst 18px (jedna duża akcja ekranu). Pigułka (`--pill`) ma te same wymiary.
-- **Przełącznik segmentowy** (`.ss-tabs`): pigułka z podwójnym obrysem — wewnętrzna
+- **Panel przycisków (przełącznik segmentowy)** `.ss-tabs` — wybór jednej opcji (motyw, zakres okresu, dostępność, sekcja); segmenty jako odnośniki (`aria-current`) albo przyciski (`button.ss-tabs__link`, `aria-pressed`), ikona `.ss-tabs__icon`; sekcja „Panele przycisków” w design systemie. Dwa rodzaje: klasyczny `.ss-tabs--classic` — pojedyncza ramka, tło powierzchni, płaski wybrany segment (jak przełącznik motywu); wypukły (domyślny): pigułka z podwójnym obrysem — wewnętrzna
   ramka i zewnętrzny pierścień oddzielony tłem powierzchni (`--ss-segment-ring`, jasny odcień akcentu;
   `--ss-segment-stroke`, `--ss-segment-gap`), tło przygaszone; wybrany segment w akcencie, przestrzenny
   (`--ss-shadow-segment`: cienie wewnętrzne — ciemniejszy u góry, jasny i w kolorze akcentu u dołu — i poświata
-  akcentu pod spodem); w motywach wysokiego kontrastu bez cieni, pierścień w kolorze ramki. Plakietka może mieć ikonę `.ss-badge__icon` (np. stan „bezpieczne”).
+  akcentu pod spodem); w motywach wysokiego kontrastu bez cieni, pierścień w kolorze ramki. Wygląd czytany z tokenów na panelu (`--ss-segment-bg`, `--ss-segment-halo`, `--ss-segment-margin` i powyższe), więc arkusz strefy daje jeden rodzaj wszystkim panelom. Plakietka może mieć ikonę `.ss-badge__icon` (np. stan „bezpieczne”).
 - Tabele tylko dla list wielu rekordów; pojedynczy rekord pokazujemy w kartach (punkt 5).
 
 ## 5. Warstwy layoutu

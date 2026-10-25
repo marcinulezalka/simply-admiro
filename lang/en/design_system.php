@@ -38,6 +38,8 @@ return [
         'icons' => 'Icons',
         'brand' => 'Brand',
         'periods' => 'Periods and availability',
+        'segmented' => 'Button panels',
+        'segmented_lead' => 'Segmented control (.ss-tabs) for choosing one option: theme, period range, availability, view section. Classic — a single border and a flat selected segment (like the theme toggle); raised — a double outline and a three-dimensional selected segment (like the period range). A zone can give every panel one kind with the --ss-segment-* tokens.',
     ],
 
     'sample' => [
@@ -86,6 +88,11 @@ return [
             'tax-id' => 'Tax ID (NIP)',
             'pesel' => 'PESEL',
             'bank-account' => 'Bank account number',
+        ],
+        'segmented' => [
+            'classic' => 'Classic',
+            'raised' => 'Raised',
+            'availability' => 'Availability',
         ],
         'ranges' => [
             'day' => 'Day',
