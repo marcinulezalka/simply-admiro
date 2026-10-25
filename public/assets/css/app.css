@@ -238,7 +238,7 @@ button.ss-badge:focus-visible {
 
 .ss-welcome__card {
     width: 100%;
-    max-width: 72rem;
+    max-width: 90rem;
 }
 
 .ss-welcome__content {
@@ -393,11 +393,12 @@ button.ss-badge:focus-visible {
     }
 }
 
-/* Od 64rem karta mieści się w oknie bez przewijania (także na laptopie 1280×720): węższa karta marki daje treści
-   miejsce na tytuły funkcji w jednej linii, a odstępy w pionie skalują się z wysokością okna (vh) w granicach tokenów. */
+/* Od 64rem karta mieści się w oknie bez przewijania (także na laptopie 1280×720): szeroka rama i węższa karta marki
+   dają treści miejsce na tytuły funkcji w jednej linii i opisy w dwóch, a odstępy skalują się z oknem (vh, vw)
+   w granicach tokenów. */
 @media (min-width: 64rem) {
     .ss-welcome__content {
-        padding: clamp(var(--ss-space-6), 7vh, var(--ss-space-16)) var(--ss-space-16);
+        padding: clamp(var(--ss-space-6), 7vh, var(--ss-space-16)) clamp(var(--ss-space-8), 3vw, var(--ss-space-16));
     }
 
     .ss-welcome__heading {
@@ -413,12 +414,13 @@ button.ss-badge:focus-visible {
     }
 
     .ss-frame--row > .ss-welcome__brand {
-        flex: 0 0 22rem;
+        flex: 0 0 18rem;
+        padding-inline: var(--ss-space-6);
     }
 
     .ss-welcome__features {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        column-gap: var(--ss-space-8);
+        column-gap: var(--ss-space-6);
     }
 }
 
