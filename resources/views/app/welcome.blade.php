@@ -36,7 +36,7 @@
 
             <aside class="ss-card ss-card--elevated ss-welcome__brand">
                 <x-admiro::logo />
-                <p class="ss-welcome__tagline">{{ text('welcome.tagline') }}</p>
+                <p class="ss-welcome__tagline">{!! nl2br(e(text('welcome.tagline')), false) !!}</p>
                 @php($zoneLogos = app(\Simplysmart\Admiro\View\ZoneLogos::class)->svgs())
                 @if ($zoneLogos !== [])
                     <ul class="ss-welcome__zones">
