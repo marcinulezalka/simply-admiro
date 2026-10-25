@@ -2,12 +2,17 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "simplysmart/admiro",
     "type": "library",
-    "description": "Admiro: the administrators' zone of simplysmart applications.",
+    "description": "Admiro: the administrators' zone of simplysmart applications and the developer toolbox (SemVer releases, private packages, deployment).",
     "keywords": [
         "simplysmart",
         "admiro",
         "zone",
-        "administration"
+        "administration",
+        "tools",
+        "semver",
+        "changelog",
+        "release",
+        "deploy"
     ],
     "homepage": "https://github.com/marcinulezalka/simply-admiro",
     "license": "proprietary",
@@ -29,7 +34,8 @@
     },
     "require-dev": {
         "laravel/pint": "^1.27",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12.5"
     },
     "repositories": [
         {
@@ -45,7 +51,18 @@
             "Simplysmart\\Admiro\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Simplysmart\\Admiro\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/simplysmart",
+        "bin/version-release",
+        "bin/composer-private"
+    ],
     "scripts": {
+        "test": "phpunit",
         "lint": "pint --test",
         "format": "pint",
         "analyse": "phpstan analyse --memory-limit=512M"

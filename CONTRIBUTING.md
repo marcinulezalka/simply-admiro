@@ -19,9 +19,9 @@ Wpisy zmian dodawaj w `CHANGELOG.md` pod `## [Unreleased]`, w sekcjach
 `### Added`, `### Changed`, `### Deprecated`, `### Removed`, `### Fixed`, `### Security`.
 Zmianę łamiącą oznacz na początku wpisu: `- **BREAKING** …`.
 
-Pakiet nie ma własnego skryptu wydań — używa wspólnego przybornika
-[`simplysmart/tools`](https://github.com/marcinulezalka/simply-tools) zainstalowanego w projekcie
-głównym, w którym jest rozwijany (`packages/simplysmart/admiro`). Z katalogu projektu głównego:
+Wspólny skrypt wydań projektu głównego i wszystkich paczek jest częścią tej paczki
+(`bin/version-release`, `src/Tools/Release/`, opis w [docs/narzedzia.md](docs/narzedzia.md)). Z katalogu projektu
+głównego, w którym paczka jest rozwijana (`packages/simplysmart/admiro`):
 
 ```bash
 vendor/bin/version-release --root=packages/simplysmart/admiro                  # PATCH / MINOR
@@ -29,4 +29,10 @@ vendor/bin/version-release --root=packages/simplysmart/admiro --major-confirm  #
 ```
 
 Skrypt podbija `VERSION` i zamienia `[Unreleased]` na datowaną sekcję wydania. Regułę
-podbijania (MAJOR / MINOR / PATCH) i strefę czasową daty opisuje README pakietu `simplysmart/tools`.
+podbijania (MAJOR / MINOR / PATCH) i strefę czasową daty opisuje [docs/narzedzia.md](docs/narzedzia.md).
+
+## Narzędzia deweloperskie
+
+Kod w `src/Tools/` to czysty PHP CLI: bez Laravela, Core i klas strefy (uruchamia się przed frameworkiem). Operacje
+zapisujące pliki albo działające na serwerze mają `--dry-run`, a `deploy:fresh` dodatkowo `--confirm=<DEPLOY_SSH>`.
+Testy narzędzi są w `tests/Tools/` (`composer test`) i działają tylko w katalogach tymczasowych.

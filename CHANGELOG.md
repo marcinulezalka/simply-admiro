@@ -9,6 +9,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - Nazwa skrócona w formularzu organizacji (opcjonalna, do 40 znaków): wyświetlana pod imieniem i nazwiskiem w menu aplikacji zamiast pełnej nazwy.
 - Dane firmy w formularzu organizacji: NIP, REGON, KRS, telefon, e-mail, e-mail do rozliczeń (pusty przy zakładaniu dostaje e-mail organizacji) i adres; formularz podzielony na karty „Dane organizacji” (z organizacją nadrzędną), „Dane kontaktowe” i „Dane adresowe”.
 - Marka organizacji w edycji organizacji (`organizations.manage`): logo, sygnet i ikona strony — podgląd, wgranie (PNG/JPG, ikona PNG/ICO, limit rozmiaru) i usunięcie, każda zmiana w dzienniku. Logo organizacji trafia do e-maili wysyłanych w jej imieniu.
+- Narzędzia deweloperskie przeniesione z pakietu `simplysmart/tools` (który przestaje być rozwijany): `vendor/bin/simplysmart` (wydania, paczki prywatne, wdrożenie, onboarding), `vendor/bin/version-release`, `vendor/bin/composer-private` i wspólne skille AI dla Laravel Boost (`boost.json`: `simplysmart/admiro`). Opis w `docs/narzedzia.md`.
+- Polecenie `vendor/bin/simplysmart deploy:fresh`: wdrożenie od zera — `migrate:fresh` na serwerze (usuwa wszystkie tabele i dane), seedery i konta z `deploy.onboarding.env`; uruchamia się tylko z `--confirm=<DEPLOY_SSH>`, `--dry-run` pokazuje plan z ostrzeżeniem.
 - Marka strefy admiro: logotyp „admiro” w kroju Zen Dots (SVG i PNG) w e-mailach strefy, sygnet „a” jako awatar oraz ikony strony (SVG, ICO, apple-touch-icon); źródła w `brand/`.
 
 ### Changed

@@ -61,6 +61,20 @@ zarządzaniem superadministratorami i konserwacją systemu) i `hero` (wszystko).
 `Enums\Permission`, a przypisania w pliku ról Core `database/seeders/permissions/admiro.json`, zapisywanym
 komendą `php artisan mainboard:permissions:sync`. Strefa działa w organizacji operatora aplikacji.
 
+## Narzędzia deweloperskie
+
+admiro dostarcza też przybornik deweloperski dla projektu głównego i wszystkich paczek (dawniej `simplysmart/tools`):
+`vendor/bin/simplysmart` z poleceniami `release`, `private:install`, `deploy:lock`, `deploy`, `deploy:onboarding`
+i `deploy:fresh` (wdrożenie od zera: `migrate:fresh`, wymaga `--confirm=<DEPLOY_SSH>`), a także
+`vendor/bin/version-release` i `vendor/bin/composer-private`. Do tego wspólne skille AI dla Laravel Boost. Opis opcji
+i konfiguracji: [docs/narzedzia.md](docs/narzedzia.md).
+
+```bash
+vendor/bin/version-release --dry-run                       # podgląd wydania projektu
+vendor/bin/simplysmart deploy --dry-run                    # plan wdrożenia
+vendor/bin/simplysmart deploy:fresh --confirm=<DEPLOY_SSH> # wdrożenie od zera (usuwa wszystkie dane na serwerze)
+```
+
 ## Nadpisywanie
 
 Teksty (`lang/{pl,en}/dashboard.php`) aplikacja zmienia plikiem `lang/vendor/admiro/<locale>/dashboard.php`, a widoki plikiem w `resources/views/vendor/admiro/`. Config — tylko przez `.env`.
@@ -69,12 +83,13 @@ Teksty (`lang/{pl,en}/dashboard.php`) aplikacja zmienia plikiem `lang/vendor/adm
 
 ```bash
 composer install   # zależności paczki; Core z ../mainboard (repozytorium typu path)
+composer test      # PHPUnit: narzędzia deweloperskie (tests/Tools/)
 composer lint      # styl, strict types, nagłówek copyright
 composer format    # poprawia powyższe
 composer analyse   # PHPStan, poziom max
 ```
 
-Testy integracji są w projekcie głównym (`tests/Feature/Admiro/`).
+Testy integracji strefy są w projekcie głównym (`tests/Feature/Admiro/`).
 
 ## Licencja
 

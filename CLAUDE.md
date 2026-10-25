@@ -1,7 +1,7 @@
 # Package: simplysmart/admiro
 
 ## Context & Responsibility
-Standalone Laravel Composer package (`laravel/framework` ^13): the **administrators' zone** (`admiro`) of simplysmart applications. It only configures the zone mechanism of Core `simplysmart/mainboard` (`docs/strefy.md` there): its own guard, accounts, session, URL slug and route-name prefix, plus the admin screens. Sign-in (e-mailed code + PIN), the zone tables and the security mechanisms come from Core. Developed inside the skeleton at `packages/simplysmart/admiro/` (symlinked into its `vendor/`), but it is its own Git repository and must work without the skeleton.
+Standalone Laravel Composer package (`laravel/framework` ^13): the **administrators' zone** (`admiro`) of simplysmart applications. It only configures the zone mechanism of Core `simplysmart/mainboard` (`docs/strefy.md` there): its own guard, accounts, session, URL slug and route-name prefix, plus the admin screens. Sign-in (e-mailed code + PIN), the zone tables and the security mechanisms come from Core. Developed inside the skeleton at `packages/simplysmart/admiro/` (symlinked into its `vendor/`), but it is its own Git repository and must work without the skeleton. It also ships the developer toolbox of the whole ecosystem (see Developer Tools).
 
 ## Architectural Boundaries
 - **Core first**: Depend on Core contracts (`Simplysmart\Mainboard\Contracts\*`) and its public base classes (`Zones\ZoneServiceProvider`, `Models\ZoneAccount`). Never reference skeleton classes (`App\...`) or other zone packages. A mechanism every zone could use (account creation `Console\CreateZoneAccountCommand`, the zone layout `x-mainboard::zone.layout`) goes to Core, not here; this package only configures it.
@@ -15,6 +15,13 @@ Standalone Laravel Composer package (`laravel/framework` ^13): the **administrat
 - **Navigation**: the zone menu is `Http\AdmiroNavigation` (each item only with the admin's permission, admin roles as the subtitle, no search; settings, cookie policy, dictionaries, exchange rates and days off are in `settings()`, Core's settings menu, not in the main menu), registered in `AdmiroServiceProvider` through Core's `Zones\ZoneNavigations`; panel views use design-system cards, tables, `x-mainboard::pagination` and the dictionaries tabs `dictionaries/tabs`.
 - **Views & texts**: Views in `resources/views/` (`view('admiro::...')`, simple pages as `Route::view`), built on Core's `x-mainboard::zone.layout` (title, signed-in account, sign-out); texts in `lang/<locale>/` read via `text('admiro::...')`, falling back to Core texts. No inline scripts or styles (CSP). Never publish them into the skeleton; it overrides single files only.
 
+## Developer Tools (`src/Tools/`)
+The package also ships the ecosystem's developer toolbox (formerly `simplysmart/tools`), the single release and deployment implementation for the skeleton and every package — never copy it elsewhere. Entry point `vendor/bin/simplysmart <command>` (`list`, `release`, `private:install`, `deploy:lock`, `deploy`, `deploy:onboarding`, `deploy:fresh`); `bin/version-release` and `bin/composer-private` stay as aliases. Details: `docs/narzedzia.md`.
+- **Plain PHP CLI**: `src/Tools/` (`Simplysmart\Admiro\Tools\`) runs on the developer machine before and without Laravel: no framework, Core or zone classes, no dependencies beyond PHP; `AdmiroServiceProvider` never loads it.
+- **Layout**: `bin/` holds thin entry points that only compose objects; `Tools/Console/` parses options and prints messages; `Tools/Release/` the SemVer release from `## [Unreleased]` (`CHANGELOG.md`/`VERSION` I/O); `Tools/PrivatePackages/` the private-package installer and deploy manifest (composer behind `ComposerRunner`, remotes via `RepositorySource`); `Tools/Deploy/` deployment (`EnvFile` parses config without a shell, `RemoteScript` quotes every value through `ShellArgument`, `RepositoryCheck`, `DeployMode`); `Tools/Process/` runs git/scp/ssh behind `ProcessRunner`; `resources/deploy/remote.sh` is the server script streamed over `ssh … 'bash -s'`; `resources/boost/skills/` the shared AI skills.
+- **Safety first**: Exit code `0`/`1`, errors to STDERR as clear Polish messages. `version-release`, `deploy*` have `--dry-run` (nothing written, sent or run on the server); `version-release` refuses MAJOR without `--major-confirm`; `deploy:fresh` (`migrate:fresh` on the server) runs only with `--confirm=<DEPLOY_SSH>`, and `remote.sh` lifts Core's destructive-command block (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true`) only for that one process. File writes stay atomic (temporary file, then `rename()`).
+- **Shared AI skills**: `resources/boost/skills/<name>/SKILL.md` (`solid-dry`, `docs-after-tests`, `changelog-before-commit`) is their single source; Laravel Boost copies them into a host project's `.claude/skills/` (`boost.json` → `packages: ["simplysmart/admiro"]`, then `php artisan boost:update`). Keep them project-agnostic and format Markdown with a blank line after every heading.
+
 ## Development Rules
 - **Strict Typing & header**: Every PHP file starts with `declare(strict_types=1);` and the PHPDoc copyright header (both enforced by Pint).
 - **Coding Standards**: PHP ^8.4, PSR-4 (`Simplysmart\Admiro\` → `src/`), PER Coding Style via Laravel Pint `per` preset (`pint.json`).
@@ -23,9 +30,10 @@ Standalone Laravel Composer package (`laravel/framework` ^13): the **administrat
 ## Testing & Quality
 Run in this directory before finishing (`composer install` first; Core comes from `../mainboard`):
 - `composer lint` — style, strict types and header (`composer format` fixes them).
-- `composer analyse` — PHPStan at level `max` (`phpstan.neon`: `src/`, `config/`, `routes/`). Fix the cause; no ignores or baseline.
+- `composer analyse` — PHPStan at level `max` (`phpstan.neon`: `src/`, `config/`, `routes/`, `bin/`, `tests/`). Fix the cause; no ignores or baseline.
 - Intelephense — no diagnostics in changed files (see the skeleton's Quality Gates).
-- No package test suite; integration tests live in the skeleton's `tests/Feature/Admiro/` (`composer test` in the skeleton root).
+- `composer test` — PHPUnit for the developer tools (`tests/Tools/`); tests run releases and deployments only in temporary directories with stubbed processes — never against a real project or server.
+- Zone integration tests live in the skeleton's `tests/Feature/Admiro/` (`composer test` in the skeleton root).
 
 ## Releasing
 From the skeleton root: `vendor/bin/version-release --root=packages/simplysmart/admiro` (add `--dry-run` to preview without changing files). It really releases — never run it without `--dry-run` just to test.
