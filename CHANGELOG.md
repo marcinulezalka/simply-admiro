@@ -34,6 +34,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Ikony liniowe Core z zestawu Lucide (ISC; część ikon z Feather na MIT) zamiast własnych rysunków: bardziej zaokrąglone kształty, te same nazwy plików, więc widoki się nie zmieniają (np. `home` to `house`, `settings` to suwaki `sliders-horizontal`, `sign-in` to `log-in`); licencja w `public/assets/img/icons/LICENSE-lucide.txt`, źródło w `docs/zaleznosci.md`.
 - Przycisk domyślny ma wymiary średniego rozmiaru: 40px wysokości, wcięcie 16px, tekst 16px, ikona 20px z odstępem 8px (wcześniej tekst 14px, ikona 18px); pigułka już nie ma szerszego wcięcia.
 - Zakładki (`.ss-tabs`) jako przełącznik segmentowy z podwójnym obrysem w jasnym odcieniu akcentu i przestrzennym wybranym segmentem (cienie wewnętrzne i poświata akcentu; tokeny `--ss-segment-ring`, `--ss-segment-stroke`, `--ss-segment-gap`, `--ss-shadow-segment`), w motywach wysokiego kontrastu bez cieni.
 - Logowanie stref bez stopki strony simplysmart: polityka cookies, odnośniki prawne strefy (`legal_links`) i ustawienia cookies są (w tej kolejności) drobnym, wyśrodkowanym wierszem na dole karty formularza (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody); logowanie nie ma przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór). Usunięto klasy `.ss-auth--footer`, `.ss-auth__stage`, `.ss-auth__theme` i `.ss-auth__footer-trigger*`.

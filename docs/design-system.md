@@ -196,7 +196,7 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `logo`, `styles` | logo SVG inline (`currentColor`) i style Core inline z nonce CSP (zaimplementowane; do czasu builda z §8) |
 | `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem, funkcjami Core jako ikona, tytuł i opis, stopką z logo Laravela i plakietką wersji mainboard (`View\CoreVersion`, plik `VERSION`) oraz panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
 | `BrandNames::highlight()` | wyróżnienie nazw simplysmart i mainboard w tekście (`View\BrandNames`, klasa `.ss-brand-name`): najpierw escapuje, potem pogrubia; w treściach piszemy „mainboard”, nie `simplysmart/mainboard` ani „Core” |
-| `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); nowa ikona to nowy plik SVG 24×24 w tym samym stylu |
+| `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); rysunki z zestawu [Lucide](https://lucide.dev) (ISC, zaokrąglone końce i łączenia, kreska 1,75 we wspólnym nagłówku Core; źródło i licencja w `docs/zaleznosci.md`); nowa ikona to plik SVG 24×24 z Lucide z tym samym nagłówkiem |
 | `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
