@@ -1,16 +1,18 @@
-{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole odnośnik „Ustawienia” i subtelne logo simplysmart (35% szerokości), które wysuwa od dołu stopkę simplysmart (cookies, odnośniki prawne, copyright; js/footer-toggle.js). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
-@props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'settings' => null, 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'legalLinks' => [], 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => [], 'palettes' => [], 'paletteScope' => ''])
+{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu; na dole odnośnik „Ustawienia” i subtelne, wyśrodkowane logo simplysmart (35% szerokości), które odsłania pełnoszeroką stopkę strony simplysmart jak na logowaniu (x-mainboard::brand-footer: powłoka .ss-shell przesuwa się w górę nad stopką; na ekranach bez stałego menu stopka na końcu strony). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; fontFaces: reguły @font-face strefy (podgląd strefy w design systemie, poza strefą); palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
+@props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'settings' => null, 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'legalLinks' => [], 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => [], 'palettes' => [], 'paletteScope' => '', 'fontFaces' => null])
 @php($toasts ??= \Simplysmart\Mainboard\View\Toast::fromSession(session(\Simplysmart\Mainboard\View\Toast::SESSION_KEY)))
-<x-mainboard::page :title="$title" :description="$description" robots="noindex, nofollow" :palettes="$palettes" :palette-scope="$paletteScope">
+<x-mainboard::page :title="$title" :description="$description" robots="noindex, nofollow" :palettes="$palettes" :palette-scope="$paletteScope" :font-faces="$fontFaces">
     <x-slot:head>
         <x-mainboard::styles :files="[...\Simplysmart\Mainboard\View\CoreAssets::STYLESHEETS, ...$stylesheets]" />
         <x-mainboard::zone-styles :paths="$zoneStylesheets" />
-        <x-mainboard::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js', 'js/pin-keypad.js', 'js/footer-toggle.js']" />
+        <x-mainboard::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js', 'js/pin-keypad.js']" />
     </x-slot:head>
 
     {{ $before ?? '' }}
 
-    <div class="ss-shell" data-ss-shell>
+    @php($hasFooter = ! isset($brand))
+    <div class="ss-footer-host"@if ($hasFooter) data-ss-footer-root="ss-footer-host"@endif>
+    <div class="ss-shell ss-footer-stage" data-ss-shell>
         <aside class="ss-sidebar" id="ss-sidebar">
             <div class="ss-sidebar__header">
                 @if ($account !== null)
@@ -177,21 +179,8 @@
             @isset($brand)
                 <div class="ss-sidebar__brand">{{ $brand }}</div>
             @else
-                <div class="ss-sidebar__brand" data-ss-footer-root="ss-sidebar__brand">
-                    <footer class="ss-sidebar__footer" id="ss-sidebar-footer" data-ss-footer>
-                        <div class="ss-sidebar__footer-inner">
-                            <div class="ss-sidebar__footer-body">
-                                <nav class="ss-sidebar__legal" aria-label="{{ text('layout.legal') }}">
-                                    <x-mainboard::cookie-links class="ss-sidebar__cookies" />
-                                    @foreach ($legalLinks as $link)
-                                        <a class="ss-link" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
-                                    @endforeach
-                                </nav>
-                                <p class="ss-sidebar__copyright">{{ text('layout.copyright', ['year' => (string) now()->year]) }}</p>
-                            </div>
-                        </div>
-                    </footer>
-                    <button class="ss-sidebar__brand-toggle" type="button" aria-expanded="false" aria-controls="ss-sidebar-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
+                <div class="ss-sidebar__brand">
+                    <button class="ss-sidebar__brand-toggle" type="button" aria-expanded="false" aria-controls="ss-app-footer" title="{{ text('layout.footer_toggle') }}" data-ss-footer-toggle>
                         <x-mainboard::logo class="ss-sidebar__logo" />
                         <span class="ss-sr-only">{{ text('layout.footer_toggle') }}</span>
                     </button>
@@ -228,6 +217,10 @@
                 {{ $slot }}
             </main>
         </div>
+    </div>
+    @if ($hasFooter)
+        <x-mainboard::brand-footer id="ss-app-footer" :legal-links="$legalLinks" media="(min-width: 64rem)" />
+    @endif
     </div>
 
     <x-mainboard::toasts :toasts="$toasts" />

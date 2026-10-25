@@ -141,6 +141,8 @@
     --ss-radius-card: 1rem;
     --ss-radius-control: 0.75rem;
     --ss-radius-pill: 9999px;
+    /* Przyciski (.ss-button, .ss-icon-button, przełącznik motywu, klawisze PIN); strefa może dać pigułkę (--ss-radius-pill) */
+    --ss-radius-button: var(--ss-radius-control);
     /* Rama z kartami: karta w ramie ma promień ramy minus jej odstęp, więc krawędzie są równoległe */
     --ss-radius-frame: 1.75rem;
     --ss-frame-padding: 0.75rem;

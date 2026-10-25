@@ -176,7 +176,7 @@ return [
         ],
         'search' => 'Search invoices and clients',
         'account' => 'Anna Nowak',
-        'account_subtitle' => 'Accounting · Nowak Accounting Office',
+        'account_subtitle' => 'Accounting · Nowak Office',
         'modules' => [
             'dashboard' => 'Dashboard',
             'invoices' => 'Invoices',

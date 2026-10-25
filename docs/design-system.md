@@ -33,7 +33,8 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-color-accent-hover` | hover akcji głównej | `#111827` | `#ffffff` | `bg-gray-900` |
 | `--ss-color-on-accent` | tekst na akcencie | `#ffffff` | `#111827` | `text-white` |
 | `--ss-radius-card` | karty, panele, modale | `1rem` | | `rounded-2xl` |
-| `--ss-radius-control` | przyciski, pola | `0.75rem` | | `rounded-xl` |
+| `--ss-radius-control` | pola, kontrolki | `0.75rem` | | `rounded-xl` |
+| `--ss-radius-button` | przyciski, przyciski z ikoną, przełącznik motywu, klawisze PIN (strefa może dać `--ss-radius-pill`) | `var(--ss-radius-control)` | | `rounded-xl` |
 | `--ss-radius-pill` | pigułki, awatar, wyszukiwarka | `9999px` | | `rounded-full` |
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
@@ -191,7 +192,7 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie; tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; strefa z `legal_links` dostaje pełnoszeroką stopkę strony simplysmart (`.ss-auth__footer`: logo, odnośniki prawne i cookies, copyright, przełącznik motywu, duże logo simplysmart ucięte dolną krawędzią), przyklejoną do dołu okna pod warstwą treści (`.ss-auth__stage`, co najmniej wysokość okna, zaokrąglony dół z cieniem), która przesuwa się nad nią przy przewijaniu; wygląd wyłącznie z klas design systemu |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne; dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie; tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; strefa z `legal_links` dostaje pełnoszeroką stopkę strony simplysmart (`x-mainboard::brand-footer`, `.ss-footer`, wspólna z layoutem aplikacji: logo, odnośniki prawne i cookies, copyright, przełącznik motywu, duże logo simplysmart ucięte dolną krawędzią), na szerokim ekranie schowaną pod warstwą treści (`.ss-auth__stage`, co najmniej wysokość okna) i odsłanianą tylko kliknięciem nazwy simplysmart na banerze albo logo (`js/footer-toggle.js`): stopka stoi przy dole okna, a treść przesuwa się nad nią w górę z cieniem przy dolnej krawędzi (przewijanie jej nie pokazuje; na telefonie zwykła stopka na końcu strony); wygląd wyłącznie z klas design systemu |
 | `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i przełącznikiem motywu nad i pod treścią, spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł, `lead`) i treścią w `.ss-prose`, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
@@ -339,10 +340,13 @@ i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwa
 globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy
 `x-mainboard::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
-pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Na dole menu odnośnik „Ustawienia”
-(`settings`: `View\Navigation\SettingsMenu`) i subtelne logo simplysmart (35% szerokości menu, `.ss-sidebar__brand-toggle`),
-które wysuwa od dołu stopkę simplysmart (`.ss-sidebar__footer`: ustawienia i polityka cookies, odnośniki prawne strefy
-`legalLinks`, copyright; `js/footer-toggle.js`). Na stronie ustawień (`settings->active`)
+pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Sekcje menu (nagłówek konta, nazwane
+grupy, ustawienia) oddzielają kreski z zaokrąglonymi końcami (`--ss-sidebar-divider`). Na dole menu odnośnik „Ustawienia”
+(`settings`: `View\Navigation\SettingsMenu`) i subtelne, wyśrodkowane logo simplysmart (35% szerokości menu,
+`.ss-sidebar__brand-toggle`), które odsłania tę samą pełnoszeroką stopkę strony co logowanie (`x-mainboard::brand-footer`,
+`.ss-footer`: odnośniki prawne strefy `legalLinks`, cookies, copyright, przełącznik motywu, duże logo): powłoka `.ss-shell`
+przesuwa się w górę nad stopką, dłuższa strona najpierw płynnie przewija się na dół, a przewinięcie w górę chowa stopkę;
+bez stałego menu (poniżej 64rem) stopka jest na końcu strony. Na stronie ustawień (`settings->active`)
 menu pokazuje zamiast pozycji aplikacji „Wróć do aplikacji”, tytuł „Ustawienia” i grupy ustawień (`docs/strefy.md`). Skrypt `public/assets/js/app-shell.js`
 osadza `x-mainboard::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.

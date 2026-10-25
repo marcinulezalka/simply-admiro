@@ -176,7 +176,7 @@ return [
         ],
         'search' => 'Szukaj faktur i klientów',
         'account' => 'Anna Nowak',
-        'account_subtitle' => 'Księgowość · Biuro Rachunkowe Nowak',
+        'account_subtitle' => 'Księgowość · Biuro Nowak',
         'modules' => [
             'dashboard' => 'Pulpit',
             'invoices' => 'Faktury',
