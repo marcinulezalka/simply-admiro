@@ -21,6 +21,7 @@ use Simplysmart\Admiro\Http\Controllers\CookiePolicyController;
 use Simplysmart\Admiro\Http\Controllers\DictionaryController;
 use Simplysmart\Admiro\Http\Controllers\ExchangeRateController;
 use Simplysmart\Admiro\Http\Controllers\HolidayController;
+use Simplysmart\Admiro\Http\Controllers\LegalDocumentController;
 use Simplysmart\Admiro\Http\Controllers\TaxRateController;
 use Simplysmart\Admiro\Http\Controllers\SettingsController;
 use Simplysmart\Admiro\Http\Controllers\OrganizationBrandController;
@@ -84,6 +85,7 @@ Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(s
     Route::get('tax-rates/{country}', [TaxRateController::class, 'index'])->name('tax-rates.index');
     Route::get('exchange-rates', [ExchangeRateController::class, 'index'])->name('exchange-rates.index');
     Route::get('cookie-policy', [CookiePolicyController::class, 'index'])->name('cookie-policy.index');
+    Route::get('legal-documents/{document}', [LegalDocumentController::class, 'index'])->name('legal-documents.index');
     Route::get('holidays', [HolidayController::class, 'index'])->name('holidays.index');
 });
 
@@ -96,6 +98,8 @@ Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'thro
     Route::delete('exchange-rates/{rate}', [ExchangeRateController::class, 'destroy'])->name('exchange-rates.destroy');
     Route::put('cookie-policy', [CookiePolicyController::class, 'update'])->name('cookie-policy.update');
     Route::post('cookie-policy/publish', [CookiePolicyController::class, 'publish'])->name('cookie-policy.publish');
+    Route::put('legal-documents/{document}', [LegalDocumentController::class, 'update'])->name('legal-documents.update');
+    Route::post('legal-documents/{document}/publish', [LegalDocumentController::class, 'publish'])->name('legal-documents.publish');
     Route::post('holidays/sync', [HolidayController::class, 'sync'])->name('holidays.sync');
     Route::post('holidays', [HolidayController::class, 'store'])->name('holidays.store');
     Route::delete('holidays/{country}/{holiday}', [HolidayController::class, 'destroy'])->name('holidays.destroy');

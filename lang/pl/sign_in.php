@@ -14,5 +14,6 @@ declare(strict_types=1);
 return [
 
     'title' => 'Kontrola, automatyzacja i *precyzja* w każdym wdrożeniu',
+    'page_title' => 'admiro',
 
 ];

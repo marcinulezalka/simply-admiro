@@ -130,6 +130,12 @@ final class RemoteScriptTest extends TestCase
     }
 
     #[Test]
+    public function skrypt_serwerowy_publikuje_pierwsze_wersje_polityk(): void
+    {
+        $this->assertStringContainsString('artisan mainboard:legal:seed', RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app')));
+    }
+
+    #[Test]
     public function skrypt_serwerowy_tworzy_skrypt_crona_po_cache_z_php_wdrozenia(): void
     {
         $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'));

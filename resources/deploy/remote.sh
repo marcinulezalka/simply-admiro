@@ -82,11 +82,12 @@ else
     "$php_bin" artisan migrate --force
 fi
 
-step "Słowniki, organizacja operatora i role"
+step "Słowniki, organizacja operatora, role i polityki"
 # Kolejność z docs/wdrozenie.md mainboard: role stref bez firm klientów nadawane są w organizacji operatora.
 "$php_bin" artisan mainboard:localization:seed
 "$php_bin" artisan mainboard:organizations:seed
 "$php_bin" artisan mainboard:permissions:sync
+"$php_bin" artisan mainboard:legal:seed
 for command in $("$php_bin" artisan list --raw | awk '{print $1}' | grep -E ':dictionaries:sync$' || true); do
     "$php_bin" artisan "$command"
 done

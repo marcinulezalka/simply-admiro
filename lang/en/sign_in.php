@@ -14,5 +14,6 @@ declare(strict_types=1);
 return [
 
     'title' => 'Control, automation and *precision* in every deployment',
+    'page_title' => 'admiro',
 
 ];

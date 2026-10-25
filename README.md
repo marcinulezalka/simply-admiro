@@ -53,6 +53,7 @@ Pierwszy administrator dostaje rolę z komendy (`--role=hero`), kolejnym role na
 | Logowanie | zawsze kod z e-maila i PIN; zaufane urządzenia wyłączone (`ADMIRO_TRUSTED_DEVICES=true` je włącza) |
 | PIN | od 8 do 16 cyfr (minimum `ADMIRO_PIN_MIN_LENGTH`, domyślnie 8; maksimum 16 z mainboard) |
 | Ciasteczko sesji | `admiro_session` |
+| Dokumenty prawne | polityka prywatności i RODO z Core (`legal_documents`, strony `mainboard.legal.*`), edycja w ustawieniach panelu: `admiro.legal-documents.index` |
 
 Zmiana `ADMIRO_SLUG` zmienia tylko adres; nazwy tras zostają `admiro.*`. Slug nie może być kodem języka.
 

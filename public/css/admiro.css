@@ -6,18 +6,32 @@
  * Space Grotesk w tytule logowania (--ss-font-display), kursywa Instrument Serif we fragmencie w *gwiazdkach*
  * (--ss-font-accent). Interfejs zostaje przy foncie Core.
  *
+ * Kolor bazowy w jasnym motywie: subtelny grafit zamiast czerni (przyciski #3f3f46 — biały tekst ma kontrast ok. 10:1 —
+ * i karta marki #2b2b30); ciemny motyw i motywy wysokiego kontrastu zostają przy wartościach Core.
+ *
+ * Odnośniki bez podkreślenia, podkreślone dopiero pod kursorem i przy fokusie z klawiatury.
+ *
  * Ikony liniowe w całej strefie mają grubszą, bardziej miękką kreskę (zaokrąglone końce i łączenia Core).
- * Logowanie: większy tytuł, pola i przyciski formularza tej samej wysokości i z pełnym zaokrągleniem (pigułka).
+ * Logowanie: większy tytuł z większym odstępem od formularza, wyróżnione słowo w złocie korony z logotypu (#F5B301),
+ * pola formularza 44 px, przycisk 52 px, oba z zaokrągleniem kontrolek Core; pod przyciskami separator nad odnośnikami
+ * do polityk na dole karty.
  */
 :root {
     --ss-font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
     --ss-font-accent: "Instrument Serif", Georgia, "Times New Roman", serif;
     --ss-icon-stroke: 2;
+    --ss-link-decoration: none;
+    --ss-color-accent-base: light-dark(#3f3f46, var(--ss-gray-100));
+    --ss-color-accent-hover: light-dark(#27272a, var(--ss-white));
+    --ss-color-surface-inverse: light-dark(#2b2b30, var(--ss-gray-100));
 }
 
 .ss-auth {
     --ss-auth-title-size: 2rem;
-    --ss-auth-control-height: 3.25rem;
-    --ss-radius-input: var(--ss-radius-pill);
-    --ss-radius-button: var(--ss-radius-pill);
+    --ss-auth-control-height: 2.75rem;
+    --ss-auth-button-height: 3.25rem;
+    --ss-auth-header-space: var(--ss-space-4);
+    --ss-color-accent-text: #f5b301;
+    --ss-auth-legal-border: 1px solid var(--ss-color-border-strong);
+    --ss-auth-legal-space: var(--ss-space-6);
 }

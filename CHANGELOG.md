@@ -4,11 +4,19 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Polityka prywatności i klauzula RODO w panelu (Ustawienia → Polityka prywatności, RODO; `settings.view`, zmiany `settings.manage`): szkic z tytułem i treścią Markdown w językach interfejsu, publikacja nowej wersji i lista wersji, każda zmiana w dzienniku. Strefa linkuje opublikowane dokumenty Core (`legal_documents`) na dole karty logowania pod separatorem, razem z polityką i ustawieniami cookies.
+
 ### Changed
 
 - Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta z białym logotypem „admiro” na środku (w ciemnym motywie karta jasna z czarnym logotypem); na telefonie logotyp nad formularzem.
-- Tytuł logowania: „Kontrola, automatyzacja i precyzja w każdym wdrożeniu” — w kroju Space Grotesk, słowo „precyzja” wyróżnione kursywą Instrument Serif (fonty z polskimi literami serwowane przez strefę, licencja SIL OFL).
-- Formularz logowania: tytuł 2rem, pola i przyciski tej samej wysokości (52 px) z pełnym zaokrągleniem; ikony w całej strefie z grubszą, bardziej miękką kreską.
+- Odnośniki w całej strefie bez podkreślenia; podkreślenie pojawia się pod kursorem i przy fokusie z klawiatury.
+- Kolor bazowy strefy w jasnym motywie: subtelny grafit zamiast czerni w przyciskach i karcie marki logowania.
+- Wdrożenie (`vendor/bin/simplysmart deploy`) publikuje pierwsze wersje polityk (`mainboard:legal:seed`), gdy ich jeszcze nie ma.
+- Tytuł karty przeglądarki na ekranach logowania: „admiro”.
+- Tytuł logowania: „Kontrola, automatyzacja i precyzja w każdym wdrożeniu” — w kroju Space Grotesk, słowo „precyzja” wyróżnione kursywą Instrument Serif w złocie korony (`#F5B301`) (fonty z polskimi literami serwowane przez strefę, licencja SIL OFL).
+- Formularz logowania: tytuł 2rem z większym odstępem od formularza, pola 44 px i przyciski 52 px z zaokrąglonymi rogami, pod przyciskami separator nad odnośnikami do polityk; ikony w całej strefie z grubszą, bardziej miękką kreską.
 - Nowa marka: w logotypie „admiro” złota korona (`#F5B301`) zamiast kropki nad „i”; awatar (sygnet) i ikony strony to złota korona z dolną kreską na czarnym tle.
 
 ## [0.3.0] - 2026-10-25

@@ -16,6 +16,7 @@ namespace Simplysmart\Admiro\Http;
 use Illuminate\Http\Request;
 use Simplysmart\Admiro\Enums\Permission;
 use Simplysmart\Mainboard\Contracts\ZoneNavigation;
+use Simplysmart\Mainboard\Enums\LegalDocumentType;
 use Simplysmart\Mainboard\Models\Organization;
 use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Mainboard\View\Navigation\NavigationGroup;
@@ -24,7 +25,7 @@ use Simplysmart\Mainboard\View\Navigation\SearchBox;
 
 /**
  * Menu strefy administratorów w layoucie aplikacji: pulpit oraz grupy stref i kont, organizacji i systemu (dziennik
- * zdarzeń); w ustawieniach grupy aplikacji (ustawienia, polityka cookies) i słowników (słowniki, kursy walut, dni wolne)
+ * zdarzeń); w ustawieniach grupy aplikacji (ustawienia, polityka cookies, polityka prywatności, RODO) i słowników (słowniki, kursy walut, dni wolne)
  * — każda pozycja tylko z uprawnieniem administratora (puste grupy znikają); druga linia pod nazwą konta: role
  * administratora w organizacji operatora. Bez wyszukiwarki (konta szuka się w strefie).
  */
@@ -61,7 +62,8 @@ final readonly class AdmiroNavigation implements ZoneNavigation
         return $this->nonEmpty([
             new NavigationGroup(text('admiro::navigation.groups.application'), $this->items(
                 $this->itemIf(Permission::SettingsView, 'settings.show', 'admiro::admin.settings_title', 'settings', 'settings.*'),
-                $this->itemIf(Permission::SettingsView, 'cookie-policy.index', 'admiro::admin.cookie_policy_title', 'shield-check', 'cookie-policy.*'),
+                $this->itemIf(Permission::SettingsView, 'cookie-policy.index', 'admiro::admin.cookie_policy_title', 'cookie', 'cookie-policy.*'),
+                ...array_map($this->legalDocumentItem(...), LegalDocumentType::cases()),
             )),
             new NavigationGroup(text('admiro::navigation.groups.dictionaries'), $this->items(
                 $this->itemIf(Permission::SettingsView, 'dictionaries.index', 'admiro::admin.dictionaries_title', 'dictionaries', 'dictionaries.*', ['dictionary' => 'countries']),
@@ -101,6 +103,22 @@ final readonly class AdmiroNavigation implements ZoneNavigation
     private function items(?NavigationItem ...$items): array
     {
         return array_values(array_filter($items));
+    }
+
+    /**
+     * Dokument prawny Core w ustawieniach (`settings.view`), aktywny tylko na stronie tego dokumentu.
+     */
+    private function legalDocumentItem(LegalDocumentType $document): ?NavigationItem
+    {
+        if (! $this->context->can(Permission::SettingsView)) {
+            return null;
+        }
+
+        $zone = $this->context->zone();
+        $active = $this->request->routeIs($zone->routeName('legal-documents.*'))
+            && in_array($this->request->route('document'), [$document, $document->value], true);
+
+        return new NavigationItem($document->label(), route($zone->routeName('legal-documents.index'), ['document' => $document->value]), $document->icon(), $active);
     }
 
     /**

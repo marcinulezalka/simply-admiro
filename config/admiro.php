@@ -67,6 +67,7 @@ return [
         ],
         'stylesheets' => [__DIR__ . '/../public/css/admiro.css'],
         'fonts' => $fonts,
+        'legal_documents' => ['privacy', 'gdpr'],
         'texts' => AdmiroServiceProvider::NAMESPACE,
         'favicon' => [
             'ico' => __DIR__ . '/../public/images/favicon.ico',
