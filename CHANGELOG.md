@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta z białym logotypem „admiro” na środku (w ciemnym motywie karta jasna z czarnym logotypem); na telefonie logotyp nad formularzem.
+
 ## [0.3.0] - 2026-10-25
 
 ### Added
