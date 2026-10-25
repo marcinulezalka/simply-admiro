@@ -153,8 +153,10 @@
     --ss-shadow-frame: 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3)), 0 24px 48px -28px light-dark(rgb(0 0 0 / 0.18), rgb(0 0 0 / 0.6));
     --ss-shadow-elevated: 0 32px 64px -24px light-dark(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.7)), 0 12px 24px -12px light-dark(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.5));
 
-    /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/) */
+    /* Typografia: font systemowy, dopóki marka nie ma własnego (woff2 → assets/fonts/). --ss-font-sans to font
+       interfejsu (przyciski, pola, menu, zakładki, tabele, odznaki), --ss-font-base — treść strony (body) */
     --ss-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --ss-font-base: var(--ss-font-sans);
     --ss-font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
     /* Nagłówki wyróżnione (tytuł logowania) i fragment w *gwiazdkach*; strefa podmienia je fontami z `fonts` */
     --ss-font-display: var(--ss-font-sans);

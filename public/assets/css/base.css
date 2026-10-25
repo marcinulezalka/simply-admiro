@@ -12,7 +12,7 @@ body {
     margin: 0;
     background: var(--ss-color-bg);
     color: var(--ss-color-text);
-    font-family: var(--ss-font-sans);
+    font-family: var(--ss-font-base);
     line-height: 1.5;
 }
 

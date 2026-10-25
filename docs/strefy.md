@@ -36,7 +36,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     'file' => __DIR__.'/../public/fonts/brand-latin.woff2', 'unicode_range' => 'U+0000-00FF']]
        //     (pliki .woff2 strefy; Core serwuje je trasą <strefa>.font z wersją w adresie i publicznym cache, zgodnie
        //     z CSP font-src 'self', a x-mainboard::page w strefie dodaje reguły @font-face; arkusz strefy przypisuje
-       //     rodziny tokenom --ss-font-sans, --ss-font-display, --ss-font-accent; zły wpis zatrzymuje start),
+       //     rodziny tokenom --ss-font-sans, --ss-font-base, --ss-font-display, --ss-font-accent; zły wpis zatrzymuje start),
        // 'legal_links' => [['route' => 'legal.privacy', 'label' => '<paczka>::legal.privacy.link'], ...]
        //     (krótka nazwa trasy strefy i klucz tekstu; logowanie dostaje pełnoszeroką stopkę strony simplysmart
        //     z tymi odnośnikami, cookies i przełącznikiem motywu, schowaną pod treścią i odsłanianą tylko

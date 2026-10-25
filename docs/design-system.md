@@ -70,7 +70,9 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
   Tokeny: `--ss-color-<stan>` i `--ss-color-<stan>-surface`.
 - Logo i panel marki używają `--ss-color-brand` / `--ss-color-on-brand` (czerń albo biel), nie
   `--ss-color-text`, bo grafitowy tekst nie jest kolorem marki.
-- Typografia: `--ss-font-sans` (font systemowy, dopóki marka nie ma własnego), `--ss-font-display` (tytuł
+- Typografia: `--ss-font-sans` (font interfejsu: przyciski, pola, menu boczne, zakładki, tabele, odznaki, etykiety,
+  przełączniki, toasty; font systemowy, dopóki marka nie ma własnego), `--ss-font-base` (treść strony, `body`;
+  domyślnie `--ss-font-sans`, np. szeryfowy font treści przy bezszeryfowych kontrolkach), `--ss-font-display` (tytuł
   logowania, domyślnie `--ss-font-sans`) i `--ss-font-accent` (fragment w `*gwiazdkach*`, domyślnie font otoczenia);
   strefa podmienia je w swoim arkuszu fontami z `fonts` w configu strefy. Skala:
 

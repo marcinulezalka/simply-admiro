@@ -390,6 +390,7 @@ button.ss-badge:focus-visible {
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     font: inherit;
+    font-family: var(--ss-font-sans);
 }
 
 /**
@@ -431,6 +432,7 @@ button.ss-badge:focus-visible {
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     font: inherit;
+    font-family: var(--ss-font-sans);
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
@@ -729,6 +731,7 @@ textarea.ss-input {
     background: transparent;
     color: var(--ss-color-text);
     font: inherit;
+    font-family: var(--ss-font-sans);
     font-size: 0.875rem;
     outline: none;
 }
@@ -1846,6 +1849,7 @@ button.ss-account-menu__link {
     border: 0;
     background: transparent;
     font: inherit;
+    font-family: var(--ss-font-sans);
     font-size: 0.875rem;
     text-align: left;
     cursor: pointer;
@@ -3424,6 +3428,7 @@ a.ss-notification:focus-visible {
     border: 0;
     background: none;
     font: inherit;
+    font-family: var(--ss-font-sans);
     cursor: pointer;
 }
 
@@ -3703,4 +3708,18 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-accent);
     font-family: var(--ss-font-accent);
     font-style: italic;
+}
+
+/**
+ * Font interfejsu (--ss-font-sans) w menu bocznym, zakładkach, tabelach, odznakach, etykietach pól, przełącznikach
+ * i toastach — jak w przyciskach i polach; treść strony ma --ss-font-base (domyślnie ten sam font).
+ */
+.ss-sidebar,
+.ss-tabs,
+.ss-table,
+.ss-badge,
+.ss-field__label,
+.ss-switch,
+.ss-toast {
+    font-family: var(--ss-font-sans);
 }
