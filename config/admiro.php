@@ -25,8 +25,8 @@ return [
     | Administratorzy domyślnie zawsze logują się kodem z e-maila i PIN-em (bez zaufanych urządzeń).
     | PIN administratorów ma co najmniej 8 cyfr zamiast 4 z mainboard (ADMIRO_PIN_MIN_LENGTH); maksimum 16 z mainboard.
     | Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta marki z logotypem „admiro” na środku.
-    | Marka strefy (public/images/, źródła w brand/): logotyp „admiro” w kroju Zen Dots na logowaniu i w e-mailach,
-    | sygnet „a” jako awatar i ikony strony.
+    | Marka strefy (public/images/, źródła w brand/): logotyp „admiro” w kroju Zen Dots ze złotą koroną nad „i”
+    | na logowaniu i w e-mailach, złota korona z dolną kreską jako awatar i ikony strony.
     |
     */
 

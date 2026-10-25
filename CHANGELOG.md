@@ -7,6 +7,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 ### Changed
 
 - Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta z białym logotypem „admiro” na środku (w ciemnym motywie karta jasna z czarnym logotypem); na telefonie logotyp nad formularzem.
+- Nowa marka: w logotypie „admiro” złota korona (`#F5B301`) zamiast kropki nad „i”; awatar (sygnet) i ikony strony to złota korona z dolną kreską na czarnym tle.
 
 ## [0.3.0] - 2026-10-25
 
