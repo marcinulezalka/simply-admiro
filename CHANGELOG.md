@@ -4,6 +4,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-25
+
 ### Added
 
 - Nazwa skrócona w formularzu organizacji (opcjonalna, do 40 znaków): wyświetlana pod imieniem i nazwiskiem w menu aplikacji zamiast pełnej nazwy.
