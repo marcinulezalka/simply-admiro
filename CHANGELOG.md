@@ -4,6 +4,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-25
+
 ### Added
 
 - Świadome zdjęcie blokady destrukcyjnych komend bazy na produkcji: `mainboard.security.allow_destructive_commands` (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS`, domyślnie `false`). Ustawia je tylko wdrożenie od zera `vendor/bin/simplysmart deploy:fresh` (admiro) dla jednego procesu `migrate:fresh`; nie wpisuje się go do `.env`.
