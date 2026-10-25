@@ -35,11 +35,15 @@ php84 ~/bin/composer config -g github-oauth.github.com <token>
 ```
 
 Wdrożenie jednym poleceniem z komputera deweloperskiego robi `vendor/bin/simplysmart deploy` z pakietu
-`simplysmart/tools` (konfiguracja w `infrastructure/deploy.env`: konto SSH, katalog, PHP, jednorazowo token).
-Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go i uruchamia na serwerze skrypt serwerowy z tools
+`simplysmart/admiro` (narzędzia deweloperskie, `docs/narzedzia.md` tam; konfiguracja w `infrastructure/deploy.env`:
+konto SSH, katalog, PHP, jednorazowo token). Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go i uruchamia
+na serwerze skrypt serwerowy z admiro
 (Composer, `git pull`, instalacja, `APP_KEY`, migracje, role, słowniki, cache). Pierwszą instalację robi
 `vendor/bin/simplysmart deploy:onboarding`: to samo wdrożenie plus konta z `infrastructure/deploy.onboarding.env`
-(`<strefa>:account:create --skip-existing`, więc można je powtarzać). `--dry-run` pokazuje plan bez wysyłania.
+(`<strefa>:account:create --skip-existing`, więc można je powtarzać). `vendor/bin/simplysmart deploy:fresh
+--confirm=<DEPLOY_SSH>` to onboarding na pustej bazie: `migrate:fresh` **usuwa wszystkie tabele i dane**, a blokadę
+destrukcyjnych komend zdejmuje tylko dla tego jednego procesu (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true`, nigdy
+w `.env`). `--dry-run` pokazuje plan bez wysyłania.
 Ręcznie te same kroki wyglądają tak.
 
 Przy każdym wdrożeniu:
@@ -97,7 +101,7 @@ Skrypt nie zawiera sekretów; wartości wstawiane przy generowaniu:
 | `CRON_QUEUE_TRIES` | `3` | próby zadania kolejki |
 | `CRON_QUEUE_WORKER` | `true` | `false` pomija worker (też przy `QUEUE_CONNECTION=sync`) |
 
-`vendor/bin/simplysmart deploy` (tools) odtwarza skrypt przy każdym wdrożeniu z `--php=<DEPLOY_PHP>`. W panelu
+`vendor/bin/simplysmart deploy` (admiro) odtwarza skrypt przy każdym wdrożeniu z `--php=<DEPLOY_PHP>`. W panelu
 hostingu: program BASH, plik `<katalog aplikacji>/storage/app/cron.sh`, interwał równy `CRON_INTERVAL_MINUTES`.
 
 Zgoda na cookies (`COOKIE_CONSENT`, domyślnie włączona): baner pojawia się po opublikowaniu polityki cookies

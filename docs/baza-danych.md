@@ -29,7 +29,9 @@ niezależnie od paczki, do której należy jej logika.
   `2026_10_20_120000_create_locale_languages_table.php`.
 - Bezpieczeństwo:
   - Core wywołuje `DB::prohibitDestructiveCommands(app()->isProduction())`, więc na produkcji
-    nie działają `migrate:fresh`, `migrate:refresh`, `migrate:reset`, `db:wipe`.
+    nie działają `migrate:fresh`, `migrate:refresh`, `migrate:reset`, `db:wipe`. Blokadę zdejmuje tylko
+    `mainboard.security.allow_destructive_commands` (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true`), które ustawia
+    wdrożenie od zera `vendor/bin/simplysmart deploy:fresh` dla jednego procesu `migrate:fresh`; nigdy w `.env`.
   - Seedery dzielą się na **referencyjne** (słowniki: idempotentne, rekord szukany po kodzie z `codeColumn()`,
     nowy dostaje id z puli seederów (§2), zapis przez model, więc dostaje token, checksum i historię; wolno je uruchomić na produkcji) i **demo**
     (dane przykładowe, na produkcji odmawiają pracy).

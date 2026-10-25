@@ -53,7 +53,7 @@ final class SecurityServiceProvider extends ServiceProvider
     public function boot(TrustedProxies $trustedProxies, RateLimiter $limiter, Repository $config): void
     {
         $trustedProxies->apply();
-        DB::prohibitDestructiveCommands($this->app->environment('production') === true);
+        DB::prohibitDestructiveCommands($this->app->environment('production') === true && ! $config->boolean('mainboard.security.allow_destructive_commands'));
 
         $this->callAfterResolving(ExceptionHandler::class, $this->maskErrors(...));
 

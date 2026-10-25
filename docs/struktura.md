@@ -30,10 +30,10 @@ mainboard/
 │   ├── helpers.php      helpery text_* i local_* (autoload "files")
 │   └── MainboardServiceProvider.php   config, teksty, zasoby paczki i rejestracja providerów obszarów (auto-discovery)
 ├── docs/                dokumentacja
-├── .claude/skills/      skille AI tylko dla domeny paczki (wspólne dostarcza simplysmart/tools)
+├── .claude/skills/      skille AI tylko dla domeny paczki (wspólne dostarcza simplysmart/admiro)
 ├── CHANGELOG.md         historia zmian (Keep a Changelog)
 ├── CONTRIBUTING.md      zasady rozwoju i wydawania wersji
-├── VERSION              bieżąca wersja (SemVer), aktualizowana przez simplysmart/tools (zob. CONTRIBUTING.md)
+├── VERSION              bieżąca wersja (SemVer), aktualizowana przez version-release z simplysmart/admiro (zob. CONTRIBUTING.md)
 ├── composer.json        metadane paczki simplysmart/mainboard, autoload PSR-4, extra.laravel.providers
 ├── phpstan.neon         konfiguracja PHPStan (poziom max)
 ├── CLAUDE.md            instrukcje dla agentów AI

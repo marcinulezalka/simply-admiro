@@ -16,7 +16,7 @@ namespace Simplysmart\Mainboard\View;
 use RuntimeException;
 
 /**
- * Wersja Core z pliku `VERSION` paczki (zapisywanego przez `version-release` z simplysmart/tools), np. do
+ * Wersja Core z pliku `VERSION` paczki (zapisywanego przez `version-release` z simplysmart/admiro), np. do
  * plakietki na stronie startowej. Composer przy instalacji z repozytorium ścieżkowego zna tylko `dev-main`.
  */
 final class CoreVersion

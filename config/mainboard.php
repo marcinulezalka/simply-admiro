@@ -283,6 +283,13 @@ return [
         'trusted_proxies' => env('TRUSTED_PROXIES'),
 
         /*
+         * Na produkcji Core blokuje destrukcyjne komendy bazy (migrate:fresh, migrate:refresh, migrate:reset, db:wipe).
+         * true zdejmuje blokadę: ustawia ją tylko `deploy:fresh` z admiro dla jednego procesu migrate:fresh
+         * (zmienna środowiska przed komendą, config bez cache). Nigdy nie wpisuj jej do .env.
+         */
+        'allow_destructive_commands' => (bool) env('MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS', false),
+
+        /*
          * Strict-Transport-Security dla żądań HTTPS.
          */
         'hsts' => [

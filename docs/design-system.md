@@ -394,7 +394,7 @@ Każda paczka (także mainboard) ma własny Vite, a szkielet tylko je uruchamia.
 - **Szkielet:** jedna, ogólna zmiana — w `package.json` `"workspaces": ["packages/simplysmart/*"]`
   i skrypty `dev`/`build` wołające orkiestrator. `vite.config.js` szkieletu zostaje stockowy.
   Nowa paczka nie wymaga żadnej zmiany w szkielecie.
-- **Orkiestrator** (`simplysmart/tools`, skrypt Node `bin/assets.mjs {dev|build}`): znajduje
+- **Orkiestrator** (narzędzia deweloperskie `simplysmart/admiro`, skrypt Node `bin/assets.mjs {dev|build}`): znajduje
   paczki z `package.json`. `build` buduje je kolejno, a na końcu szkielet; błąd jednej paczki
   kończy build kodem ≠ 0. `dev` uruchamia równolegle Vite szkieletu i `dev` każdej paczki —
   samo `npm run dev --workspaces` nie wystarczy, bo npm uruchamia workspace'y po kolei, a tryb

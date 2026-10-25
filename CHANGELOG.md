@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Świadome zdjęcie blokady destrukcyjnych komend bazy na produkcji: `mainboard.security.allow_destructive_commands` (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS`, domyślnie `false`). Ustawia je tylko wdrożenie od zera `vendor/bin/simplysmart deploy:fresh` (admiro) dla jednego procesu `migrate:fresh`; nie wpisuje się go do `.env`.
+
 - Podpozycje menu bocznego: `NavigationItem` z `children` jest rozwijaną gałęzią z chevronem (rozwinięta, gdy ona albo podpozycja jest bieżąca), a podpozycje łączą linie drzewa spod ikony pozycji z zaokrąglonym łukiem do każdej; w menu zwiniętym do ikon gałąź prowadzi do adresu pozycji. Te same linie łączą widoki obszarów w nawigacji design systemu, a menu demo ma gałąź „Faktury”. Ikona `chevron-down`.
 - Panele przycisków w dwóch rodzajach: wypukły (domyślny `.ss-tabs`, jak zakres okresu) i klasyczny `.ss-tabs--classic` (jak przełącznik motywu: pojedyncza ramka, płaski wybrany segment); segmenty także jako przyciski z `aria-pressed` i ikoną `.ss-tabs__icon`; tokeny `--ss-segment-bg`, `--ss-segment-halo`, `--ss-segment-margin` pozwalają strefie dać jeden rodzaj wszystkim panelom; sekcja „Panele przycisków” w design systemie.
 - Rozmiary przycisków: `.ss-button--sm` (36px, tekst 14px, ikona 16px) i `.ss-button--lg` (56px, tekst 18px, ikona 24px) obok domyślnego średniego; próbki w sekcji przycisków design systemu.
