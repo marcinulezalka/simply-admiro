@@ -89,6 +89,7 @@ return [
         'short_name' => 'Short name',
         'name' => 'Organization name',
         'parent_id' => 'Parent organization',
+        'is_department' => 'Department',
         'nip' => 'Tax ID (NIP)',
         'regon' => 'REGON',
         'krs' => 'KRS',

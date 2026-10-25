@@ -5,7 +5,7 @@
         $accountItems = app(\Simplysmart\Mainboard\Zones\ZoneSettingsMenu::class)->accountItems($zone);
         $contexts = array_values(array_filter([
             $organizations === null ? null : new \Simplysmart\Mainboard\View\Navigation\NavigationGroup(text('account.organization'), $organizations->map(
-                static fn ($organization): \Simplysmart\Mainboard\View\Navigation\NavigationForm => new \Simplysmart\Mainboard\View\Navigation\NavigationForm($organization->name, route($zone->routeName(\Simplysmart\Mainboard\Http\AccountRoutes::ORGANIZATION_SWITCH)), \Simplysmart\Mainboard\Http\Controllers\Account\OrganizationSwitchController::FIELD, $organization->token, 'building', $organization->id === $currentOrganizationId),
+                static fn ($organization): \Simplysmart\Mainboard\View\Navigation\NavigationForm => new \Simplysmart\Mainboard\View\Navigation\NavigationForm($organization->contextName(), route($zone->routeName(\Simplysmart\Mainboard\Http\AccountRoutes::ORGANIZATION_SWITCH)), \Simplysmart\Mainboard\Http\Controllers\Account\OrganizationSwitchController::FIELD, $organization->token, 'building', $organization->id === $currentOrganizationId),
             )->values()->all()),
             $roles === [] ? null : new \Simplysmart\Mainboard\View\Navigation\NavigationGroup(text('account.role'), array_map(
                 static fn (string $role): \Simplysmart\Mainboard\View\Navigation\NavigationForm => new \Simplysmart\Mainboard\View\Navigation\NavigationForm($zone->roleLabel($role), route($zone->routeName(\Simplysmart\Mainboard\Http\AccountRoutes::ROLE_SWITCH)), \Simplysmart\Mainboard\Http\Controllers\Account\RoleSwitchController::FIELD, $role, 'user', $role === $currentRole),

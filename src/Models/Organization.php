@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Mainboard\Models;
 
+use Simplysmart\Mainboard\Models\Relations\BelongsToParentOrganization;
+
 /**
  * Organizacja: firma korzystająca z aplikacji (drzewo przez `parent_id`, np. firma → oddział), wspólna dla stref.
  * Jest zespołem spatie: role kont stref są przypisywane w obrębie organizacji (docs/baza-danych.md §15).
@@ -22,6 +24,12 @@ namespace Simplysmart\Mainboard\Models;
  * pod imieniem i nazwiskiem w menu, shortName()), NIP (10 cyfr, Rules\Nip; oddział może mieć NIP firmy), REGON, KRS,
  * adres, telefon, e-mail i e-mail do rozliczeń (przy zakładaniu bez niego — e-mail organizacji).
  *
+ * Departament (`is_department`, isDepartment()) to wewnętrzna agregacja: dział jednostki nadrzędnej (organizacji bez
+ * flagi), z własnymi członkami i rolami, ale bez własnych danych — dane trzyma jego jednostka
+ * (Queries\Organizations\OrganizationUnits). Departament nie ma pod sobą innych organizacji.
+ *
+ * @property bool $is_department
+ * @property-read Organization|null $parent
  * @property ?string $short_name
  * @property ?string $nip
  * @property ?string $regon
@@ -35,12 +43,16 @@ namespace Simplysmart\Mainboard\Models;
  */
 final class Organization extends DataModel
 {
+    use BelongsToParentOrganization;
+
     public const string TABLE = 'organizations';
 
     /** Stałe id organizacji operatora z puli seederów (IdSlots, 1–999). */
     public const int OPERATOR_ID = 1;
 
     public const string SHORT_NAME = 'short_name';
+
+    public const string IS_DEPARTMENT = 'is_department';
 
     public const int SHORT_NAME_MAX_LENGTH = 40;
 
@@ -81,12 +93,30 @@ final class Organization extends DataModel
 
     protected $table = self::TABLE;
 
+    protected $attributes = [self::IS_DEPARTMENT => false];
+
+    public function isDepartment(): bool
+    {
+        return $this->getAttribute(self::IS_DEPARTMENT) === true;
+    }
+
     /**
      * Nazwa skrócona, a bez niej pełna nazwa.
      */
     public function shortName(): string
     {
         return $this->short_name ?? $this->name;
+    }
+
+    /**
+     * Nazwa w przełączniku kontekstu: departament z nazwą skróconą jednostki („Jednostka · Departament”), bo nazwy
+     * departamentów powtarzają się między jednostkami; `$short` bierze nazwy skrócone (menu konta).
+     */
+    public function contextName(bool $short = false): string
+    {
+        $name = $short ? $this->shortName() : $this->name;
+
+        return $this->isDepartment() && $this->parent !== null ? $this->parent->shortName() . ' · ' . $name : $name;
     }
 
     /**
@@ -102,6 +132,6 @@ final class Organization extends DataModel
      */
     protected function casts(): array
     {
-        return [self::SHORT_NAME => 'string', ...array_fill_keys(array_keys(self::DETAIL_LENGTHS), 'string')];
+        return [self::SHORT_NAME => 'string', self::IS_DEPARTMENT => 'boolean', ...array_fill_keys(array_keys(self::DETAIL_LENGTHS), 'string')];
     }
 }

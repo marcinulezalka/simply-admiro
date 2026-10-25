@@ -14,14 +14,15 @@ declare(strict_types=1);
 namespace Simplysmart\Mainboard\Models;
 
 use Illuminate\Container\Container;
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
 use Simplysmart\Mainboard\Models\Relations\BelongsToOrganization;
 use Simplysmart\Mainboard\Permissions\PermissionTables;
+use Simplysmart\Mainboard\Queries\Organizations\OrganizationUnits;
 
 /**
  * Model danych należących do jednej organizacji (kolumna `organization_id` po kolumnach Columns::base()).
- * Wiązanie trasy działa tylko w bieżącej organizacji: rekord innej organizacji albo żądanie bez organizacji
- * daje 404, zanim zadziała uprawnienie czy Policy.
+ * Wiązanie trasy działa tylko w jednostce bieżącej organizacji (w departamencie — w jego jednostce,
+ * Queries\Organizations\OrganizationUnits): rekord innej jednostki albo żądanie bez organizacji daje 404, zanim
+ * zadziała uprawnienie czy Policy.
  *
  * @property int $organization_id
  */
@@ -35,7 +36,7 @@ abstract class OrganizationDataModel extends DataModel
      */
     public function resolveRouteBindingQuery($query, $value, $field = null)
     {
-        $organization = Container::getInstance()->make(CurrentOrganization::class)->id();
+        $organization = Container::getInstance()->make(OrganizationUnits::class)->currentUnitId();
         $query = parent::resolveRouteBindingQuery($query, $value, $field);
 
         if ($organization === null) {

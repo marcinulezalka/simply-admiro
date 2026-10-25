@@ -21,6 +21,9 @@ use Simplysmart\Mainboard\Models\Organization;
  * `parent_id`): drzewo bez cykli, organizacja nadrzędna musi być aktywna, a organizacji operatora nie wolno wyłączyć
  * ani przenieść pod inną. Nowa organizacja bez e-maila do rozliczeń dostaje e-mail organizacji. Wyłączona organizacja
  * znika z wyboru kont (ActiveMemberships), więc jej członkowie tracą w niej uprawnienia.
+ *
+ * Departament (createDepartment(), Organization::IS_DEPARTMENT) leży zawsze bezpośrednio pod jednostką — organizacją
+ * bez flagi — i nie ma pod sobą żadnej organizacji; flagi nie zmienia się po założeniu.
  */
 final class OrganizationManagement
 {
@@ -29,21 +32,17 @@ final class OrganizationManagement
      */
     public function create(OrganizationData $data, ?Organization $parent = null): Organization
     {
-        $this->ensureActiveParent($parent);
+        return $this->store($data, $parent, false);
+    }
 
-        $columns = $data->columns();
-        $columns[Organization::BILLING_EMAIL] ??= $columns[Organization::EMAIL];
-
-        $organization = new Organization();
-        $organization->forceFill([
-            ColumnNames::NAME => $data->name,
-            Organization::SHORT_NAME => $data->shortName,
-            ...$columns,
-            ColumnNames::PARENT_ID => $parent?->id,
-            ColumnNames::IS_ACTIVE => true,
-        ])->save();
-
-        return $organization;
+    /**
+     * Departament jednostki: osobny kontekst członków i ról, dane w jednostce (OrganizationUnits).
+     *
+     * @throws OrganizationChangeRejected
+     */
+    public function createDepartment(OrganizationData $data, Organization $unit): Organization
+    {
+        return $this->store($data, $unit, true);
     }
 
     /**
@@ -55,7 +54,12 @@ final class OrganizationManagement
             throw OrganizationChangeRejected::because('the operator organization cannot have a parent.');
         }
 
+        if ($parent === null && $organization->isDepartment()) {
+            throw OrganizationChangeRejected::because('a department must stay under its unit.');
+        }
+
         $this->ensureActiveParent($parent);
+        $this->ensureUnitParent($parent);
         $this->ensureNoCycle($organization, $parent);
 
         $organization->forceFill([
@@ -64,6 +68,30 @@ final class OrganizationManagement
             ...$data->columns(),
             ColumnNames::PARENT_ID => $parent?->id,
         ])->save();
+    }
+
+    /**
+     * @throws OrganizationChangeRejected
+     */
+    private function store(OrganizationData $data, ?Organization $parent, bool $department): Organization
+    {
+        $this->ensureActiveParent($parent);
+        $this->ensureUnitParent($parent);
+
+        $columns = $data->columns();
+        $columns[Organization::BILLING_EMAIL] ??= $columns[Organization::EMAIL];
+
+        $organization = new Organization();
+        $organization->forceFill([
+            ColumnNames::NAME => $data->name,
+            Organization::SHORT_NAME => $data->shortName,
+            ...$columns,
+            ColumnNames::PARENT_ID => $parent?->id,
+            Organization::IS_DEPARTMENT => $department,
+            ColumnNames::IS_ACTIVE => true,
+        ])->save();
+
+        return $organization;
     }
 
     /**
@@ -82,6 +110,13 @@ final class OrganizationManagement
     {
         if ($parent !== null && $parent->getAttribute(ColumnNames::IS_ACTIVE) !== true) {
             throw OrganizationChangeRejected::because('the parent organization is disabled.');
+        }
+    }
+
+    private function ensureUnitParent(?Organization $parent): void
+    {
+        if ($parent?->isDepartment() === true) {
+            throw OrganizationChangeRejected::because('a department cannot have organizations under it.');
         }
     }
 

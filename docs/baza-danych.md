@@ -350,7 +350,7 @@ i kolumn są w `Permissions\PermissionTables`.
 
 | Tabela | Model | Standard | Kolumny domenowe |
 | --- | --- | --- | --- |
-| `organizations` | `Models\Organization` | pełny, drzewo przez `parent_id` | — |
+| `organizations` | `Models\Organization` | pełny, drzewo przez `parent_id` | `is_department`, nazwa skrócona, dane firmy |
 | `permissions` | `Models\Permissions\Permission` | pełny | `guard_name` |
 | `roles` | `Models\Permissions\Role` | pełny | `organization_id` (null = rola globalna), `guard_name` |
 | `model_has_roles`, `model_has_permissions` | — (spatie) | łącząca | `role_id`/`permission_id`, `model_type`, `model_id`, `organization_id` |
@@ -371,6 +371,14 @@ i kolumn są w `Permissions\PermissionTables`.
   organizacja bez niego dostaje `email`), `street`, `postal_code`, `city` (`Organization::address()`). Formularz
   w panelach: walidacja `Organizations\OrganizationForm` → `OrganizationData`, widok
   `x-mainboard::organization.fields` (karty: dane organizacji, kontaktowe, adresowe).
+- **Departamenty** (`is_department`, `Organization::isDepartment()`): wewnętrzna agregacja, czyli dział
+  jednostki — organizacji bez flagi. Departament zakłada `OrganizationManagement::createDepartment($dane, $jednostka)`;
+  leży zawsze bezpośrednio pod jednostką, nie ma pod sobą żadnej organizacji i nie staje się korzeniem drzewa (każde
+  naruszenie to `OrganizationChangeRejected`). Ma własnych członków i role (osobny kontekst w przełączniku, nazwa
+  „Jednostka · Departament” z `Organization::contextName()`), ale nie ma własnych danych: rekordy
+  `OrganizationDataModel` należą do jednostki. `Queries\Organizations\OrganizationUnits` daje jednostkę organizacji
+  (`unitIdOf()`, `currentUnitId()` dla bieżącej) i departamenty jednostki (`departments()` aktywne po
+  nazwie, `department()` po tokenie). Wyłączenie departamentu (`setActive(false)`) usuwa go z wyboru kont.
 - **Organizacja operatora** (`Organization::OPERATOR_ID` = 1, nazwa z `app.name`) jest zakresem stref
   bez firm klientów. Tworzy ją idempotentnie `php artisan mainboard:organizations:seed`.
 - **Usunięcie organizacji** (fizyczne) kasuje jej role i przypisania (`cascadeOnDelete`), więc rola
@@ -391,7 +399,7 @@ i kolumn są w `Permissions\PermissionTables`.
   uprawnienia bezpośrednie i odmowy w tej organizacji oraz unieważnia jego sesje. Bieżącą organizację
   żądania wybiera strefa (`docs/strefy.md`, „Uprawnienia”).
 - **Dane organizacji:** model rekordów jednej organizacji dziedziczy po `Models\OrganizationDataModel`
-  (kolumna `organization_id` po `Columns::base()`, relacja `organization()`, wiązanie trasy tylko w bieżącej
+  (kolumna `organization_id` po `Columns::base()`, relacja `organization()`, wiązanie trasy tylko w jednostce bieżącej
   organizacji).
 
 ### Role stref z plików JSON

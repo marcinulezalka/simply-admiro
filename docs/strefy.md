@@ -295,6 +295,7 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
   `zone.permission:<uprawnienie>`, który sprawdza konto z guardu strefy przez `ZonePermissionChecker`
   (z odmowami); brak uprawnienia to 403. W kodzie: `ZonePermissionChecker::allows($zone, $account, $permission)`.
 - **Rekordy organizacji:** model dziedziczący po `Models\OrganizationDataModel` wiąże się w trasie tylko
-  w bieżącej organizacji (rekord innej organizacji to 404, zanim zadziała uprawnienie czy Policy).
+  w jednostce bieżącej organizacji — w kontekście departamentu w jego jednostce (`docs/baza-danych.md` §15,
+  „Departamenty”); rekord innej jednostki to 404, zanim zadziała uprawnienie czy Policy.
 - **Role i ich nadawanie:** pliki JSON, synchronizacja, nadawanie bez eskalacji i zakładanie właścicieli
   opisuje `docs/baza-danych.md` §15.

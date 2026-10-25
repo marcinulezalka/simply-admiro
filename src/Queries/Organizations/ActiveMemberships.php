@@ -44,13 +44,15 @@ final class ActiveMemberships
     }
 
     /**
-     * Aktywne organizacje konta (np. przełącznik organizacji w layoucie strefy), po nazwie.
+     * Aktywne organizacje konta (np. przełącznik organizacji w layoucie strefy) z organizacją nadrzędną
+     * (Organization::contextName()), po nazwie.
      *
      * @return Collection<int, Organization>
      */
     public function organizations(Model $account): Collection
     {
         $query = Organization::query();
+        $query->with('parent');
         $query->whereIn(ColumnNames::ID, $this->ids($account));
         $query->orderBy(ColumnNames::NAME);
 

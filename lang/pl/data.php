@@ -89,6 +89,7 @@ return [
         'short_name' => 'Nazwa skrócona',
         'name' => 'Nazwa organizacji',
         'parent_id' => 'Organizacja nadrzędna',
+        'is_department' => 'Departament',
         'nip' => 'NIP',
         'regon' => 'REGON',
         'krs' => 'KRS',
