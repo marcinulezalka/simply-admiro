@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Console\SeedLegalDocuments;
+use Simplysmart\Admiro\Console\SeedLegalDocuments;
 
 /**
- * Dokumenty prawne: polecenie `mainboard:legal:seed` (pierwsze wersje polityk). Strony dokumentów to trasy Core
+ * Dokumenty prawne: polecenie `admiro:legal:seed` (pierwsze wersje polityk). Strony dokumentów to trasy Core
  * (routes/web.php), odnośniki w strefach składa Legal\LegalLinks.
  */
 final class LegalServiceProvider extends ServiceProvider

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -14,7 +14,7 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Simplysmart\Mainboard\Database\History;
+use Simplysmart\Admiro\Database\History;
 
 /**
  * Języki urzędowe krajów (jeden główny); tabela łącząca, bez kolumn standardowych, z historią.

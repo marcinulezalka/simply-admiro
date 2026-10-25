@@ -20,11 +20,11 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Enums\LegalDocumentType;
-use Simplysmart\Mainboard\Legal\LegalDocumentRejected;
-use Simplysmart\Mainboard\Legal\LegalDocuments;
-use Simplysmart\Mainboard\Queries\Legal\LegalDocumentVersions;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Legal\LegalDocumentRejected;
+use Simplysmart\Admiro\Legal\LegalDocuments;
+use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 
 /**
  * Dokumenty prawne Core (`settings.view`; polityka prywatności, klauzula RODO — dokument z adresu, nieznany → 404):

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
@@ -23,29 +23,29 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use LogicException;
-use Simplysmart\Mainboard\Auth\AuthBrand;
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Contracts\CurrentRole;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Enums\AuthLayout;
-use Simplysmart\Mainboard\Enums\FaviconType;
-use Simplysmart\Mainboard\Http\SignInRoutes;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Legal\LegalLinks;
-use Simplysmart\Mainboard\Permissions\RoleSelector;
-use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
-use Simplysmart\Mainboard\Translation\CascadeTextTranslator;
-use Simplysmart\Mainboard\Zones\InMemoryZoneRegistry;
-use Simplysmart\Mainboard\Zones\RequestAccount;
-use Simplysmart\Mainboard\Zones\RequestZone;
-use Simplysmart\Mainboard\Zones\ZoneNavigations;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
-use Simplysmart\Mainboard\Zones\ZoneRouteRegistrar;
-use Simplysmart\Mainboard\Zones\ZoneSessionConfigurator;
-use Simplysmart\Mainboard\Zones\ZoneSessionManager;
-use Simplysmart\Mainboard\Zones\ZoneSettingsMenu;
+use Simplysmart\Admiro\Auth\AuthBrand;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Contracts\CurrentRole;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Enums\AuthLayout;
+use Simplysmart\Admiro\Enums\FaviconType;
+use Simplysmart\Admiro\Http\SignInRoutes;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Legal\LegalLinks;
+use Simplysmart\Admiro\Permissions\RoleSelector;
+use Simplysmart\Admiro\Queries\Organizations\ActiveMemberships;
+use Simplysmart\Admiro\Translation\CascadeTextTranslator;
+use Simplysmart\Admiro\Zones\InMemoryZoneRegistry;
+use Simplysmart\Admiro\Zones\RequestAccount;
+use Simplysmart\Admiro\Zones\RequestZone;
+use Simplysmart\Admiro\Zones\ZoneNavigations;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Zones\ZoneRouteRegistrar;
+use Simplysmart\Admiro\Zones\ZoneSessionConfigurator;
+use Simplysmart\Admiro\Zones\ZoneSessionManager;
+use Simplysmart\Admiro\Zones\ZoneSettingsMenu;
 
 /**
  * Mechanizm stref: rejestr (singleton), strefa i konto żądania, osobny magazyn sesji każdej strefy,

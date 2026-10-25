@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Localization;
+namespace Simplysmart\Admiro\Localization;
 
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
-use Simplysmart\Mainboard\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Models\Dictionaries\Language;
 
 /**
  * Słowniki lokalizacji zarządzane w panelu (wartość = segment URL).

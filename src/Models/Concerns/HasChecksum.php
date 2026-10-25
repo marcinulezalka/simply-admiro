@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Concerns;
+namespace Simplysmart\Admiro\Models\Concerns;
 
 use BackedEnum;
 use DateTimeInterface;
-use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Admiro\Database\ColumnNames;
 
 /**
  * `checksum` = SHA-256 kanonicznego JSON kolumn domenowych (docs/baza-danych.md §10), liczona przy

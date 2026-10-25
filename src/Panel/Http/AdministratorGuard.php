@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel\Http;
 
 use Simplysmart\Admiro\Panel\Enums\Permission;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Permissions\PermissionCoverage;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Permissions\PermissionCoverage;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Czy zalogowany administrator może zmienić konto (akcje na koncie, usunięcie z organizacji): nigdy własne,

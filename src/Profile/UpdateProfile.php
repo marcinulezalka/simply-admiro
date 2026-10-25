@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Profile;
+namespace Simplysmart\Admiro\Profile;
 
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Enums\AvatarColor;
-use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Enums\AvatarColor;
+use Simplysmart\Admiro\Models\ZoneAccount;
 
 /**
  * Zmiana profilu przez właściciela konta: imię i nazwisko, kolor awatara i język interfejsu (null = bez wyboru).

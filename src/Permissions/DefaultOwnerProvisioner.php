@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use Illuminate\Database\ConnectionInterface;
 use LogicException;
-use Simplysmart\Mainboard\Contracts\ZoneOwnerProvisioner;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Organizations\EnrollMember;
+use Simplysmart\Admiro\Contracts\ZoneOwnerProvisioner;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Organizations\EnrollMember;
 
 /**
  * Właściciel strefy z kontem Core (ZoneAccount): konto o tym adresie albo nowe (aktywne, bez PIN-u),

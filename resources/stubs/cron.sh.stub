@@ -1,6 +1,6 @@
 #!/bin/bash
 # Cron aplikacji: harmonogram Laravela i worker kolejki (hosting bez supervisora).
-# Wygenerowano komendą `php artisan mainboard:cron:script` — nie edytuj ręcznie, zmień zmienne CRON_* w .env
+# Wygenerowano komendą `php artisan admiro:cron:script` — nie edytuj ręcznie, zmień zmienne CRON_* w .env
 # i wygeneruj ponownie. Skrypt nie zawiera sekretów: baza i poczta są czytane z .env przez Laravela.
 # Panel hostingu: program BASH, ten plik, interwał co {{interval}} min.
 set -u

@@ -29,8 +29,8 @@ use Simplysmart\Admiro\Panel\Http\Controllers\OrganizationController;
 use Simplysmart\Admiro\Panel\Http\Controllers\OrganizationMemberController;
 use Simplysmart\Admiro\Panel\Http\Controllers\OwnerController;
 use Simplysmart\Admiro\Panel\Http\Controllers\ZoneController;
-use Simplysmart\Mainboard\Enums\BrandAsset;
-use Simplysmart\Mainboard\Zones\ZonePermission;
+use Simplysmart\Admiro\Enums\BrandAsset;
+use Simplysmart\Admiro\Zones\ZonePermission;
 
 /*
 | Sekcje panelu z uprawnieniem (poziom Authenticated: Core dodaje auth:<guard>; uprawnienie sprawdza
@@ -44,30 +44,30 @@ Route::middleware(ZonePermission::middleware(Permission::ZonesView))->group(stat
 
 Route::post('zones/{managedZone}/accounts/{account}/{action}', AccountActionController::class)
     ->whereIn('action', array_column(AccountAction::cases(), 'value'))
-    ->middleware([ZonePermission::middleware(Permission::AccountsManage), 'throttle:mainboard.sign-in'])
+    ->middleware([ZonePermission::middleware(Permission::AccountsManage), 'throttle:admiro.sign-in'])
     ->name('zones.accounts.action');
 
 Route::middleware(ZonePermission::middleware(Permission::OwnersAssign))->group(static function (): void {
     Route::get('owners/create', [OwnerController::class, 'create'])->name('owners.create');
-    Route::post('owners', [OwnerController::class, 'store'])->middleware('throttle:mainboard.sign-in')->name('owners.store');
+    Route::post('owners', [OwnerController::class, 'store'])->middleware('throttle:admiro.sign-in')->name('owners.store');
 });
 
 Route::middleware(ZonePermission::middleware(Permission::UsersManage))->group(static function (): void {
     Route::get('administrators', [AdministratorController::class, 'index'])->name('administrators.index');
-    Route::post('administrators/{account}/roles', [AdministratorController::class, 'assign'])->middleware('throttle:mainboard.sign-in')->name('administrators.roles.assign');
-    Route::delete('administrators/{account}/roles/{role}', [AdministratorController::class, 'revoke'])->middleware('throttle:mainboard.sign-in')->name('administrators.roles.revoke');
+    Route::post('administrators/{account}/roles', [AdministratorController::class, 'assign'])->middleware('throttle:admiro.sign-in')->name('administrators.roles.assign');
+    Route::delete('administrators/{account}/roles/{role}', [AdministratorController::class, 'revoke'])->middleware('throttle:admiro.sign-in')->name('administrators.roles.revoke');
 });
 
 Route::middleware(ZonePermission::middleware(Permission::OrganizationsManage))->group(static function (): void {
     Route::get('organizations/create', [OrganizationController::class, 'create'])->name('organizations.create');
-    Route::post('organizations', [OrganizationController::class, 'store'])->middleware('throttle:mainboard.sign-in')->name('organizations.store');
+    Route::post('organizations', [OrganizationController::class, 'store'])->middleware('throttle:admiro.sign-in')->name('organizations.store');
     Route::get('organizations/{organization}/edit', [OrganizationController::class, 'edit'])->name('organizations.edit');
-    Route::put('organizations/{organization}', [OrganizationController::class, 'update'])->middleware('throttle:mainboard.sign-in')->name('organizations.update');
-    Route::post('organizations/{organization}/toggle', [OrganizationController::class, 'toggle'])->middleware('throttle:mainboard.sign-in')->name('organizations.toggle');
-    Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationMemberController::class, 'remove'])->middleware('throttle:mainboard.sign-in')->name('organizations.members.remove');
+    Route::put('organizations/{organization}', [OrganizationController::class, 'update'])->middleware('throttle:admiro.sign-in')->name('organizations.update');
+    Route::post('organizations/{organization}/toggle', [OrganizationController::class, 'toggle'])->middleware('throttle:admiro.sign-in')->name('organizations.toggle');
+    Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationMemberController::class, 'remove'])->middleware('throttle:admiro.sign-in')->name('organizations.members.remove');
     Route::get('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'show'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->name('organizations.brand.show');
-    Route::post('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'store'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:mainboard.sign-in')->name('organizations.brand.store');
-    Route::delete('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'destroy'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:mainboard.sign-in')->name('organizations.brand.destroy');
+    Route::post('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'store'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:admiro.sign-in')->name('organizations.brand.store');
+    Route::delete('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'destroy'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:admiro.sign-in')->name('organizations.brand.destroy');
 });
 
 Route::middleware(ZonePermission::middleware(Permission::OrganizationsView))->group(static function (): void {
@@ -78,7 +78,7 @@ Route::middleware(ZonePermission::middleware(Permission::OrganizationsView))->gr
 Route::get('audit', AuditController::class)->middleware(ZonePermission::middleware(Permission::AuditView))->name('audit.index');
 
 Route::get('settings', [SettingsController::class, 'show'])->middleware(ZonePermission::middleware(Permission::SettingsView))->name('settings.show');
-Route::put('settings', [SettingsController::class, 'update'])->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:mainboard.sign-in'])->name('settings.update');
+Route::put('settings', [SettingsController::class, 'update'])->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:admiro.sign-in'])->name('settings.update');
 
 Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(static function (): void {
     Route::get('dictionaries/{dictionary}', [DictionaryController::class, 'index'])->name('dictionaries.index');
@@ -89,7 +89,7 @@ Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(s
     Route::get('holidays', [HolidayController::class, 'index'])->name('holidays.index');
 });
 
-Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:mainboard.sign-in'])->group(static function (): void {
+Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:admiro.sign-in'])->group(static function (): void {
     Route::post('dictionaries/{dictionary}/{code}/toggle', [DictionaryController::class, 'toggle'])->name('dictionaries.toggle');
     Route::post('tax-rates/{country}', [TaxRateController::class, 'store'])->name('tax-rates.store');
     Route::put('tax-rates/{country}/{rate}', [TaxRateController::class, 'end'])->name('tax-rates.end');

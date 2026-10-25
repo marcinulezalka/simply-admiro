@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use InvalidArgumentException;
 
 /**
  * Fonty strefy (`fonts` w configu strefy: klucz pliku → `family`, `weight`, `style`, `file` (.woff2), opcjonalnie
- * `unicode_range`). Pliki serwuje trasa `<strefa>.font` z wersją w adresie (CSP `font-src 'self'`); `x-mainboard::page`
+ * `unicode_range`). Pliki serwuje trasa `<strefa>.font` z wersją w adresie (CSP `font-src 'self'`); `x-admiro::page`
  * w strefie dostaje reguły `@font-face`, a arkusz strefy (`stylesheets`) przypisuje rodziny tokenom (np. --ss-font-sans).
  */
 final readonly class ZoneFonts

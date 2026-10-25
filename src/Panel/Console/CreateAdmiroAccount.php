@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Panel\Console;
 
-use Simplysmart\Mainboard\Console\CreateZoneAccountCommand;
+use Simplysmart\Admiro\Console\CreateZoneAccountCommand;
 
 /**
  * Zakłada konto administratora: strefa nie ma rejestracji (wspólna logika w Core).

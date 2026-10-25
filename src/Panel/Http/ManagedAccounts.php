@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Panel\Http;
 
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Queries\Accounts\ZoneAccounts;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Queries\Accounts\ZoneAccounts;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,22 +11,22 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use Simplysmart\Mainboard\Auth\ZoneAuthSettingsFactory;
-use Simplysmart\Mainboard\Enums\LegalDocumentType;
-use Simplysmart\Mainboard\Enums\Palette;
-use Simplysmart\Mainboard\Mail\MailPalette;
+use Simplysmart\Admiro\Auth\ZoneAuthSettingsFactory;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Enums\Palette;
+use Simplysmart\Admiro\Mail\MailPalette;
 
 /**
  * Buduje ZoneDefinition z configu paczki strefy, uzupełniając go domyślnymi wartościami Core.
  *
  * Config strefy: name (wymagane), slug, guard, provider, model, session (klucze ZoneSessionSettings),
- * auth (nadpisania `mainboard.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem),
+ * auth (nadpisania `admiro.auth`, tylko strefa z modelem), teams (organizacje klientów, tylko strefa z modelem),
  * security (`mask_errors`, `block_ai_agents`; agenci AI domyślnie blokowani w strefach z logowaniem), stylesheets
  * (arkusze CSS strefy), palettes (kolorystyki do wyboru: wartości Enums\Palette), favicon (ikony strony: `ico`, `svg`,
  * `apple` — ścieżki plików), texts (namespace tekstów paczki strefy, np. etykiety ról), fonts (pliki .woff2 strefy:
@@ -123,7 +123,7 @@ final readonly class ZoneDefinitionFactory
         return new ZoneSessionSettings(
             cookie: Arr::string($session, 'cookie', $zone . '_session'),
             table: $this->nullableString($session, 'table', $requiresLogin ? ZoneTable::Sessions->for($zone) : null),
-            lifetime: $this->nullableInt($session, 'lifetime', $requiresLogin ? $this->config->integer('mainboard.zones.session_lifetime') : null),
+            lifetime: $this->nullableInt($session, 'lifetime', $requiresLogin ? $this->config->integer('admiro.zones.session_lifetime') : null),
             expireOnClose: $this->nullableBool($session, 'expire_on_close', $requiresLogin ? true : null),
             sameSite: $this->nullableString($session, 'same_site', $requiresLogin ? 'strict' : 'lax'),
             encrypt: $this->nullableBool($session, 'encrypt', $requiresLogin ? true : null),

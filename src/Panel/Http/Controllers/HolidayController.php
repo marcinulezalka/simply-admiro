@@ -21,14 +21,14 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Holidays\HolidaySync;
-use Simplysmart\Mainboard\Holidays\HolidaysRejected;
-use Simplysmart\Mainboard\Holidays\HolidaysUnavailable;
-use Simplysmart\Mainboard\Holidays\ManualHolidays;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Queries\Dictionaries\DefaultEntries;
-use Simplysmart\Mainboard\Queries\Dictionaries\HolidaysIn;
-use Simplysmart\Mainboard\Queries\Dictionaries\LocalizationChoices;
+use Simplysmart\Admiro\Holidays\HolidaySync;
+use Simplysmart\Admiro\Holidays\HolidaysRejected;
+use Simplysmart\Admiro\Holidays\HolidaysUnavailable;
+use Simplysmart\Admiro\Holidays\ManualHolidays;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
+use Simplysmart\Admiro\Queries\Dictionaries\HolidaysIn;
+use Simplysmart\Admiro\Queries\Dictionaries\LocalizationChoices;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

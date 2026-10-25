@@ -1,7 +1,7 @@
 /**
- * Maski pól (x-mainboard::input z `data-ss-mask`): w trakcie pisania wartość jest formatowana według wzoru —
+ * Maski pól (x-admiro::input z `data-ss-mask`): w trakcie pisania wartość jest formatowana według wzoru —
  * `9` cyfra, `A` litera, pozostałe znaki wzoru wstawiane same. Wklejony tekst też jest formatowany. Bez skryptu
- * pole przyjmuje dowolny tekst (format podaje podpowiedź). Osadzany inline z nonce CSP (x-mainboard::scripts).
+ * pole przyjmuje dowolny tekst (format podaje podpowiedź). Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const SLOTS = { 9: /\d/, A: /\p{L}/u };

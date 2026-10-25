@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Dictionaries;
+namespace Simplysmart\Admiro\Models\Dictionaries;
 
-use Simplysmart\Mainboard\Contracts\DictionaryEntry;
-use Simplysmart\Mainboard\Database\CodeColumns;
-use Simplysmart\Mainboard\Enums\Continent;
-use Simplysmart\Mainboard\Models\Concerns\HasI18n;
-use Simplysmart\Mainboard\Models\DataModel;
-use Simplysmart\Mainboard\Models\Relations\BelongsToCurrency;
-use Simplysmart\Mainboard\Models\Relations\HasOfficialLanguages;
-use Simplysmart\Mainboard\Models\Relations\HasTaxRates;
+use Simplysmart\Admiro\Contracts\DictionaryEntry;
+use Simplysmart\Admiro\Database\CodeColumns;
+use Simplysmart\Admiro\Enums\Continent;
+use Simplysmart\Admiro\Models\Concerns\HasI18n;
+use Simplysmart\Admiro\Models\DataModel;
+use Simplysmart\Admiro\Models\Relations\BelongsToCurrency;
+use Simplysmart\Admiro\Models\Relations\HasOfficialLanguages;
+use Simplysmart\Admiro\Models\Relations\HasTaxRates;
 
 /**
  * Kraj (ISO 3166-1: `alpha_code_2` `PL`, `alpha_code_3` `POL`, `numeric_code` `616`) z numerem kierunkowym, walutą, językami urzędowymi, członkostwem w UE

@@ -19,7 +19,7 @@ use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AccountAction;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
 use Simplysmart\Admiro\Panel\Http\ManagedAccounts;
-use Simplysmart\Mainboard\Queries\Accounts\ZoneAccounts;
+use Simplysmart\Admiro\Queries\Accounts\ZoneAccounts;
 
 /**
  * Strefy z kontami i konta wybranej strefy (wyszukiwanie po dokładnym adresie e-mail).

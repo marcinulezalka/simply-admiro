@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Relations;
+namespace Simplysmart\Admiro\Models\Relations;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Simplysmart\Mainboard\Models\Dictionaries\CountryLanguage;
-use Simplysmart\Mainboard\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Models\Dictionaries\CountryLanguage;
+use Simplysmart\Admiro\Models\Dictionaries\Language;
 
 /**
  * Języki urzędowe kraju, główny pierwszy (`locale_country_language.is_primary`).

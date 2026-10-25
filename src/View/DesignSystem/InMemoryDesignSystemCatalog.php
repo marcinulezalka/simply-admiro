@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\View\DesignSystem;
+namespace Simplysmart\Admiro\View\DesignSystem;
 
 use Closure;
 use LogicException;
-use Simplysmart\Mainboard\Contracts\DesignSystemCatalog;
+use Simplysmart\Admiro\Contracts\DesignSystemCatalog;
 
 /**
  * Katalog design systemu w pamięci (singleton): obszary i widoki rejestrowane przez providery przy starcie.

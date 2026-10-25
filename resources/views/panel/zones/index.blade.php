@@ -1,5 +1,5 @@
-{{-- Strefy z kontami: nazwa (odnośnik do kont), adres i organizacje klientów. $zones: list<Simplysmart\Mainboard\Zones\ZoneDefinition>. --}}
-<x-mainboard::zone.layout :title="text('admiro::admin.zones_title')">
+{{-- Strefy z kontami: nazwa (odnośnik do kont), adres i organizacje klientów. $zones: list<Simplysmart\Admiro\Zones\ZoneDefinition>. --}}
+<x-admiro::zone.layout :title="text('admiro::admin.zones_title')">
     <section class="ss-card ss-card--flush">
         <div class="ss-table-wrap">
             <table class="ss-table">
@@ -22,4 +22,4 @@
             </table>
         </div>
     </section>
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

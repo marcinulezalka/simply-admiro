@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Holidays;
+namespace Simplysmart\Admiro\Holidays;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Config\Repository;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory as HttpFactory;
-use Simplysmart\Mainboard\Contracts\HolidayProvider;
+use Simplysmart\Admiro\Contracts\HolidayProvider;
 
 /**
  * Święta z publicznego API Nager.Date (`/api/v3/PublicHolidays/{rok}/{kraj}`, bez klucza; wysyłany jest tylko kod
@@ -37,10 +37,10 @@ final readonly class NagerDate implements HolidayProvider
 
     public function forYear(string $countryCode, int $year): array
     {
-        $url = rtrim($this->config->string('mainboard.holidays.nager_url'), '/') . '/PublicHolidays/' . $year . '/' . strtoupper($countryCode);
+        $url = rtrim($this->config->string('admiro.holidays.nager_url'), '/') . '/PublicHolidays/' . $year . '/' . strtoupper($countryCode);
 
         try {
-            $response = $this->http->acceptJson()->timeout($this->config->integer('mainboard.holidays.timeout_seconds'))->get($url);
+            $response = $this->http->acceptJson()->timeout($this->config->integer('admiro.holidays.timeout_seconds'))->get($url);
         } catch (ConnectionException $exception) {
             throw HolidaysUnavailable::because($exception->getMessage());
         }

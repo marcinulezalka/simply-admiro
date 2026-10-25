@@ -1,7 +1,7 @@
 {{-- Style Core osadzone inline z nonce CSP (bez osobnego serwowania plików): tokeny, baza i komponenty z public/assets/css/. --}}
-@props(['files' => \Simplysmart\Mainboard\View\CoreAssets::STYLESHEETS])
+@props(['files' => \Simplysmart\Admiro\View\CoreAssets::STYLESHEETS])
 <style nonce="{{ \Illuminate\Support\Facades\Vite::cspNonce() }}">
 @foreach ($files as $file)
-{!! \Simplysmart\Mainboard\View\CoreAssets::contents($file) !!}
+{!! \Simplysmart\Admiro\View\CoreAssets::contents($file) !!}
 @endforeach
 </style>

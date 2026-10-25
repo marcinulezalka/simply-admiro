@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models;
+namespace Simplysmart\Admiro\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Simplysmart\Mainboard\Models\Concerns\HasAvatarColor;
-use Simplysmart\Mainboard\Models\Concerns\HasChecksum;
-use Simplysmart\Mainboard\Models\Concerns\HasStandardColumns;
+use Simplysmart\Admiro\Models\Concerns\HasAvatarColor;
+use Simplysmart\Admiro\Models\Concerns\HasChecksum;
+use Simplysmart\Admiro\Models\Concerns\HasStandardColumns;
 
 /**
  * Baza modeli kont stref (każda strefa ma własną tabelę kont i własny model). Tabela kont ma pełny standard

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Organizations;
+namespace Simplysmart\Admiro\Organizations;
 
 use LogicException;
-use Simplysmart\Mainboard\Auth\CreateZoneAccount;
-use Simplysmart\Mainboard\Contracts\AccountLocator;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Permissions\OrganizationMembership;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Auth\CreateZoneAccount;
+use Simplysmart\Admiro\Contracts\AccountLocator;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Permissions\OrganizationMembership;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Dopisuje osobę do organizacji w strefie: istniejące konto o tym adresie albo nowe (aktywne, bez PIN-u),

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
-use Simplysmart\Mainboard\Database\ZoneTables;
-use Simplysmart\Mainboard\Zones\ZoneTable;
+use Simplysmart\Admiro\Database\ZoneTables;
+use Simplysmart\Admiro\Zones\ZoneTable;
 
 /**
  * Tabela zaufanych urządzeń strefy `admiro` dla baz utworzonych przed jej wprowadzeniem; nowa instalacja

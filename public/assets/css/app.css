@@ -26,7 +26,7 @@
 }
 
 /**
- * .ss-icon — ikona liniowa (x-mainboard::icon), kwadrat 2.5rem; SVG wypełnia kontener.
+ * .ss-icon — ikona liniowa (x-admiro::icon), kwadrat 2.5rem; SVG wypełnia kontener.
  */
 .ss-icon {
     display: inline-flex;
@@ -200,7 +200,7 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-flag — flaga kraju lub języka (x-mainboard::flag), 4:3 w wysokości tekstu obok.
+ * .ss-flag — flaga kraju lub języka (x-admiro::flag), 4:3 w wysokości tekstu obok.
  */
 .ss-flag {
     display: inline-block;
@@ -497,7 +497,7 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-button__icon — ikona w przycisku (x-mainboard::icon) przed tekstem albo po nim; .ss-button--pill — przycisk
+ * .ss-button__icon — ikona w przycisku (x-admiro::icon) przed tekstem albo po nim; .ss-button--pill — przycisk
  * w pigułce (np. akcje w ramie z kartami).
  */
 .ss-button {
@@ -552,7 +552,7 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-auth — strony logowania stref (x-mainboard::auth.layout): wąska karta na środku ekranu,
+ * .ss-auth — strony logowania stref (x-admiro::auth.layout): wąska karta na środku ekranu,
  * logo nad tytułem, pod formularzem akcje drugorzędne. Karta bez cienia (§4). Tło: delikatny gradient
  * (--ss-color-auth-from → --ss-color-auth-to, w rogu odrobina akcentu strefy) w każdym motywie.
  */
@@ -796,7 +796,7 @@ textarea.ss-input {
 }
 
 /**
- * .ss-avatar — awatar (x-mainboard::avatar): inicjały albo zdjęcie w kółku; --sm, --md, --lg; --accent dla
+ * .ss-avatar — awatar (x-admiro::avatar): inicjały albo zdjęcie w kółku; --sm, --md, --lg; --accent dla
  * bieżącego użytkownika.
  */
 .ss-avatar {
@@ -1294,7 +1294,7 @@ textarea.ss-input {
 }
 
 /**
- * .ss-shell — layout aplikacji z menu bocznym (x-mainboard::app.layout). Szeroki ekran: menu przyklejone po lewej,
+ * .ss-shell — layout aplikacji z menu bocznym (x-admiro::app.layout). Szeroki ekran: menu przyklejone po lewej,
  * zwijane do ikon (.ss-shell--collapsed, etykiety zostają dla czytników ekranu i w title). Telefon ze skryptem
  * (.ss-shell--js): menu wysuwane z lewej (.ss-shell--open) nad przyciemnionym tłem; bez skryptu nad treścią.
  */
@@ -1436,7 +1436,7 @@ summary.ss-sidebar__identity:focus-visible {
 
 /*
  * Stopka menu: wyśrodkowane, przygaszone logo simplysmart (.ss-sidebar__brand-toggle, 35% szerokości menu) odsłania
- * pełnoszeroką stopkę strony simplysmart (x-mainboard::brand-footer, .ss-footer) jak na logowaniu strefy.
+ * pełnoszeroką stopkę strony simplysmart (x-admiro::brand-footer, .ss-footer) jak na logowaniu strefy.
  */
 .ss-sidebar__brand {
     display: flex;
@@ -2229,7 +2229,7 @@ button.ss-tabs__link {
 }
 
 /**
- * Strony błędów (x-mainboard::error.layout) na układzie logowania split: duży kod w karcie marki, akcje w pigułkach.
+ * Strony błędów (x-admiro::error.layout) na układzie logowania split: duży kod w karcie marki, akcje w pigułkach.
  */
 .ss-error__brand {
     flex-direction: column;
@@ -2303,7 +2303,7 @@ button.ss-tabs__link {
 }
 
 /**
- * .ss-toasts — toasty (x-mainboard::toasts) na dole ekranu, wyśrodkowane, nad treścią (z odstępem od paska
+ * .ss-toasts — toasty (x-admiro::toasts) na dole ekranu, wyśrodkowane, nad treścią (z odstępem od paska
  * systemowego telefonu); kontener nie przechwytuje kliknięć poza toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
  * znaczenie niosą też ikona i nazwa typu.
  */
@@ -2581,7 +2581,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-input-wrap — pole z subtelną ikoną w tle po lewej (x-mainboard::input); ikona nie przechwytuje kliknięć.
+ * .ss-input-wrap — pole z subtelną ikoną w tle po lewej (x-admiro::input); ikona nie przechwytuje kliknięć.
  */
 .ss-input-wrap {
     position: relative;
@@ -2613,7 +2613,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-input-wrap--keypad — pole PIN-u z przyciskiem klawiatury ekranowej po prawej (x-mainboard::pin-field):
+ * .ss-input-wrap--keypad — pole PIN-u z przyciskiem klawiatury ekranowej po prawej (x-admiro::pin-field):
  * .ss-input-wrap__action w polu, tekst pola odsunięty od przycisku z obu stron, więc cyfry zostają wyśrodkowane.
  */
 .ss-input-wrap--keypad .ss-input {
@@ -3120,7 +3120,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-theme-toggle — przełącznik motywu (x-mainboard::theme-toggle): przełącznik segmentowy z ikonami motywów
+ * .ss-theme-toggle — przełącznik motywu (x-admiro::theme-toggle): przełącznik segmentowy z ikonami motywów
  * (jasny, ciemny, kontrast WCAG, duży kontrast WCAG); wybrany segment wypełniony akcentem (aria-pressed="true").
  */
 .ss-theme-toggle {
@@ -3182,7 +3182,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-palette-switch — przełącznik kolorystyki (x-mainboard::palette-switch): próbka bieżącego akcentu na przycisku,
+ * .ss-palette-switch — przełącznik kolorystyki (x-admiro::palette-switch): próbka bieżącego akcentu na przycisku,
  * w menu próbki kolorów bazowych strefy (--ss-color-accent-base) i kolorystyk (--ss-palette-<paleta>-accent);
  * wybrana z haczykiem (aria-pressed).
  */
@@ -3242,7 +3242,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-signature — podpis odręczny (x-mainboard::signature-pad): ramka do rysowania na białym tle (podpis zawsze ciemny,
+ * .ss-signature — podpis odręczny (x-admiro::signature-pad): ramka do rysowania na białym tle (podpis zawsze ciemny,
  * także w motywie ciemnym), bez przewijania strony przy rysowaniu palcem.
  */
 .ss-signature__canvas {
@@ -3308,7 +3308,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-content-page — strona treści (x-mainboard::content.layout): pasek z powrotem i przełącznikiem motywu nad i pod
+ * .ss-content-page — strona treści (x-admiro::content.layout): pasek z powrotem i przełącznikiem motywu nad i pod
  * treścią, spis treści (.ss-toc) w karcie obok karty dokumentu; na szerokim ekranie spis przyklejony przy przewijaniu.
  */
 .ss-content-page {
@@ -3623,10 +3623,10 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * Zgoda na cookies (x-mainboard::cookie-consent): .ss-consent__dialog — natywny <dialog> otwierany modalnie
+ * Zgoda na cookies (x-admiro::cookie-consent): .ss-consent__dialog — natywny <dialog> otwierany modalnie
  * (fokus w oknie, tło ::backdrop przyciemnione), karta na środku z wewnętrznym przewijaniem; __banner — pierwszy
  * kontakt z trzema przyciskami jeden pod drugim (__actions--stacked); __settings — okno ustawień z kategoriami
- * (__category, przełącznik x-mainboard::switch, lista cookies w __details). .ss-cookie-links — odnośniki
+ * (__category, przełącznik x-admiro::switch, lista cookies w __details). .ss-cookie-links — odnośniki
  * „Ustawienia cookies” i „Polityka cookies” w stopkach layoutów.
  */
 .ss-consent__dialog {
@@ -3769,7 +3769,7 @@ a.ss-notification:focus-visible {
 /**
  * .ss-auth__legal — odnośniki prawne strefy (`legal_links`) z polityką i ustawieniami cookies na dole karty
  * formularza logowania: drobny, wyśrodkowany wiersz w kolorze przygaszonym, zawijany; .ss-auth__legal-cookies wtapia
- * odnośniki cookies (x-mainboard::cookie-links) w ten wiersz. Bez żadnego odnośnika wiersz znika (razem z separatorem
+ * odnośniki cookies (x-admiro::cookie-links) w ten wiersz. Bez żadnego odnośnika wiersz znika (razem z separatorem
  * nad nim: --ss-auth-legal-border i --ss-auth-legal-space, domyślnie brak).
  */
 .ss-auth__legal {
@@ -3805,7 +3805,7 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-footer — pełnoszeroka stopka strony simplysmart (x-mainboard::brand-footer), wspólna dla logowania stref
+ * .ss-footer — pełnoszeroka stopka strony simplysmart (x-admiro::brand-footer), wspólna dla logowania stref
  * i layoutu aplikacji. Korzeń .ss-footer-host (data-ss-footer-root) obejmuje warstwę treści .ss-footer-stage
  * (.ss-auth__stage albo powłokę .ss-shell) i stopkę. Bez skryptu i na ekranach spoza data-ss-footer-media stopka jest
  * zwykłą stopką na końcu strony. Gdzie zwijanie działa, js/footer-toggle.js dodaje .ss-footer-host--footer-ready:

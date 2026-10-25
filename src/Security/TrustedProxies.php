@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Security;
+namespace Simplysmart\Admiro\Security;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Middleware\TrustProxies;
 
 /**
- * Przekazuje mainboard.security.trusted_proxies do globalnego middleware TrustProxies,
+ * Przekazuje admiro.security.trusted_proxies do globalnego middleware TrustProxies,
  * żeby IP klienta (limity, logi) pochodziło z X-Forwarded-For tylko od zaufanego proxy.
  */
 final readonly class TrustedProxies
@@ -30,7 +30,7 @@ final readonly class TrustedProxies
 
     public function apply(): void
     {
-        $proxies = $this->config->get('mainboard.security.trusted_proxies');
+        $proxies = $this->config->get('admiro.security.trusted_proxies');
 
         if (! is_string($proxies) || trim($proxies) === '') {
             return;

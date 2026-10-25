@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Account;
+namespace Simplysmart\Admiro\Http\Controllers\Account;
 
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Permissions\OrganizationSelector;
-use Simplysmart\Mainboard\Queries\Organizations\ActiveOrganizations;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Permissions\OrganizationSelector;
+use Simplysmart\Admiro\Queries\Organizations\ActiveOrganizations;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

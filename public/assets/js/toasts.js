@@ -1,7 +1,7 @@
 /**
- * Toasty (x-mainboard::toasts): przycisk zamknięcia i samoczynne znikanie toastów z `data-ss-toast-auto` po
+ * Toasty (x-admiro::toasts): przycisk zamknięcia i samoczynne znikanie toastów z `data-ss-toast-auto` po
  * DISMISS_AFTER ms (błąd zostaje do zamknięcia). Odliczanie zatrzymuje najechanie i fokus w toaście, żeby można
- * było przeczytać treść i użyć akcji. Osadzany inline z nonce CSP (x-mainboard::scripts).
+ * było przeczytać treść i użyć akcji. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const DISMISS_AFTER = 6000;

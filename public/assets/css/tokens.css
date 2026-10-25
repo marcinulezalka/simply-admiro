@@ -80,7 +80,7 @@
     --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));
     --ss-color-muted-inverse: light-dark(var(--ss-neutral-400), var(--ss-gray-600));
 
-    /* Powłoka aplikacji (x-mainboard::app.layout): neutralne szare płótno, jaśniejszy panel menu, delikatna biel
+    /* Powłoka aplikacji (x-admiro::app.layout): neutralne szare płótno, jaśniejszy panel menu, delikatna biel
        pod najechaniem pozycji menu; aktywna pozycja i karty mają --ss-color-surface z miękkim cieniem */
     --ss-color-canvas: light-dark(#e8e9ed, #0b0d12);
     --ss-color-sidebar: light-dark(#f3f4f6, #141821);
@@ -197,7 +197,7 @@
     --ss-auth-legal-space: 0rem;
     /* Podkreślenie odnośników .ss-link poza najechaniem i fokusem; strefa może dać none (podkreślenie tylko pod kursorem) */
     --ss-link-decoration: underline;
-    /* Grubość kreski ikon liniowych (x-mainboard::icon); strefa może dać grubszą, bardziej miękką kreskę */
+    /* Grubość kreski ikon liniowych (x-admiro::icon); strefa może dać grubszą, bardziej miękką kreskę */
     --ss-icon-stroke: 1.75;
     --ss-content-page-width: 72rem;
     --ss-sidebar-width: 16rem;
@@ -205,7 +205,7 @@
 }
 
 /**
- * Wybór motywu (x-mainboard::theme-toggle, js/theme.js): atrybut data-theme na <html> wymusza schemat kolorów, więc
+ * Wybór motywu (x-admiro::theme-toggle, js/theme.js): atrybut data-theme na <html> wymusza schemat kolorów, więc
  * light-dark() w tokenach wybiera wartość jasną albo ciemną; bez atrybutu obowiązuje motyw systemu. Motywy
  * wysokiego kontrastu (contrast, contrast-yellow) są na końcu pliku, po kolorystykach, bo je wyłączają.
  */
@@ -218,7 +218,7 @@
 }
 
 /**
- * Kolorystyka strefy (x-mainboard::palette-switch, js/theme.js): data-palette na <html> podmienia akcent, informację
+ * Kolorystyka strefy (x-admiro::palette-switch, js/theme.js): data-palette na <html> podmienia akcent, informację
  * i kartę odwróconą na kolory palety, w obu motywach. Selektor :root[...] wygrywa z nadpisaniami tokenów w arkuszu
  * strefy (`stylesheets`, sam :root), więc strefa zmienia bazę, a wybrana kolorystyka i tak się nakłada.
  */
@@ -264,7 +264,7 @@
 }
 
 /**
- * Motywy wysokiego kontrastu WCAG 2.2 (x-mainboard::theme-toggle): contrast — czerń na bieli, contrast-yellow — żółty
+ * Motywy wysokiego kontrastu WCAG 2.2 (x-admiro::theme-toggle): contrast — czerń na bieli, contrast-yellow — żółty
  * na czarnym (duży kontrast). Tekst, ramki i akcent mają kontrast co najmniej 7:1 (AAA), ramki są pełne, a
  * kolorystyka strefy (data-palette) nie działa, bo te bloki stoją po niej i podmieniają te same tokeny.
  */

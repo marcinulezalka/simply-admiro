@@ -17,7 +17,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Simplysmart\Admiro\Panel\Http\ManagedAccounts;
-use Simplysmart\Mainboard\Queries\Audit\AuditLog;
+use Simplysmart\Admiro\Queries\Audit\AuditLog;
 use Throwable;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Http\SignInRoutes;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Http\SignInRoutes;
 
 /**
  * Po każdym kroku: przekierowanie na następny wymagany krok albo zakończenie logowania.

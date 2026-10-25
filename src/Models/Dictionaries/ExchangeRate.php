@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Dictionaries;
+namespace Simplysmart\Admiro\Models\Dictionaries;
 
 use Carbon\CarbonImmutable;
-use Simplysmart\Mainboard\Enums\ExchangeRateSource;
-use Simplysmart\Mainboard\Models\DataModel;
-use Simplysmart\Mainboard\Models\Relations\BelongsToCurrency;
+use Simplysmart\Admiro\Enums\ExchangeRateSource;
+use Simplysmart\Admiro\Models\DataModel;
+use Simplysmart\Admiro\Models\Relations\BelongsToCurrency;
 
 /**
  * Kurs waluty w złotych z dnia `rate_date` (PLN za 1 jednostkę waluty, 6 miejsc po przecinku): z tabeli NBP

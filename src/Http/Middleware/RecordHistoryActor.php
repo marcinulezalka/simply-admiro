@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Database\HistoryActor;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Database\HistoryActor;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

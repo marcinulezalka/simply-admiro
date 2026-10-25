@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
@@ -19,8 +19,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Localization\LocaleRouting;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Localization\LocaleRouting;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Permissions;
+namespace Simplysmart\Admiro\Models\Permissions;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Simplysmart\Mainboard\Models\Concerns\HasChecksum;
-use Simplysmart\Mainboard\Models\Concerns\HasRouteToken;
-use Simplysmart\Mainboard\Models\Concerns\HasStandardColumns;
-use Simplysmart\Mainboard\Permissions\PermissionTables;
+use Simplysmart\Admiro\Models\Concerns\HasChecksum;
+use Simplysmart\Admiro\Models\Concerns\HasRouteToken;
+use Simplysmart\Admiro\Models\Concerns\HasStandardColumns;
+use Simplysmart\Admiro\Permissions\PermissionTables;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 
 /**

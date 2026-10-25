@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use Illuminate\Contracts\Session\Session;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Wybiera aktywną rolę (kontekst) konta w organizacji strefy z `role_contexts`: rolę wybraną przez konto (sesja strefy,
@@ -25,7 +25,7 @@ use Simplysmart\Mainboard\Zones\ZoneDefinition;
  */
 final readonly class RoleSelector
 {
-    public const string SESSION_KEY = 'mainboard.role';
+    public const string SESSION_KEY = 'admiro.role';
 
     public function __construct(
         private ZoneRoleNames $roles,

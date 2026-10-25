@@ -1,12 +1,12 @@
-{{-- Gotowy widok: layout aplikacji z menu bocznym (x-mainboard::app.layout) — menu zwijane do ikon, globalna wyszukiwarka i powiadomienia w top barze, nagłówek kontekstowy i treść; przykładowe dane faktur. $view: DesignSystemView, $invoices: list<DemoInvoice>. --}}
+{{-- Gotowy widok: layout aplikacji z menu bocznym (x-admiro::app.layout) — menu zwijane do ikon, globalna wyszukiwarka i powiadomienia w top barze, nagłówek kontekstowy i treść; przykładowe dane faktur. $view: DesignSystemView, $invoices: list<DemoInvoice>. --}}
 @php
-    use Simplysmart\Mainboard\Enums\DesignSystemView;
-    use Simplysmart\Mainboard\View\Demo\DemoInvoices;
-    use Simplysmart\Mainboard\View\Demo\DemoNavigation;
-    use Simplysmart\Mainboard\View\Demo\DemoNotifications;
-    $link = static fn (DesignSystemView $target): string => route('mainboard.design-system.view', $target);
+    use Simplysmart\Admiro\Enums\DesignSystemView;
+    use Simplysmart\Admiro\View\Demo\DemoInvoices;
+    use Simplysmart\Admiro\View\Demo\DemoNavigation;
+    use Simplysmart\Admiro\View\Demo\DemoNotifications;
+    $link = static fn (DesignSystemView $target): string => route('simplysmart.design-system.view', $target);
 @endphp
-<x-mainboard::app.layout
+<x-admiro::app.layout
     :title="text('design_system.demo.invoices_title')"
     :meta="text('design_system.demo.invoices_meta', ['count' => local_number(count($invoices))])"
     :navigation="DemoNavigation::groups($view)"
@@ -17,11 +17,11 @@
     :stylesheets="['css/design-system.css']"
 >
     <x-slot:before>
-        <x-mainboard::design-system.strip :current="$view->value" />
+        <x-admiro::design-system.strip :current="$view->value" />
     </x-slot:before>
 
     <x-slot:actions>
-        <a class="ss-button ss-button--primary" href="{{ $link(DesignSystemView::Form) }}"><x-mainboard::icon name="invoice" class="ss-button__icon" />{{ text('design_system.demo.new_invoice') }}</a>
+        <a class="ss-button ss-button--primary" href="{{ $link(DesignSystemView::Form) }}"><x-admiro::icon name="invoice" class="ss-button__icon" />{{ text('design_system.demo.new_invoice') }}</a>
     </x-slot:actions>
 
     <section class="ss-card ss-card--flush">
@@ -50,4 +50,4 @@
             </table>
         </div>
     </section>
-</x-mainboard::app.layout>
+</x-admiro::app.layout>

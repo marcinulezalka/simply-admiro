@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 use Illuminate\Database\Migrations\Migration;
-use Simplysmart\Mainboard\Database\ZoneTables;
+use Simplysmart\Admiro\Database\ZoneTables;
 
 /**
  * Tabele strefy administratorów admiro (paczka simplysmart/admiro): konta, kody logowania, sesje.

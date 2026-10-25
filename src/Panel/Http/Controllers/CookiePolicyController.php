@@ -20,10 +20,10 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Cookies\CookiePolicies;
-use Simplysmart\Mainboard\Cookies\CookiePolicyRejected;
-use Simplysmart\Mainboard\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Cookies\CookiePolicies;
+use Simplysmart\Admiro\Cookies\CookiePolicyRejected;
+use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
 
 /**
  * Polityka cookies (`settings.view`): szkic z tytułem i treścią Markdown w każdym języku interfejsu, opublikowane

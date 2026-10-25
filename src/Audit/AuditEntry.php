@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,9 +11,9 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Audit;
+namespace Simplysmart\Admiro\Audit;
 
-use Simplysmart\Mainboard\Auth\AccountActor;
+use Simplysmart\Admiro\Auth\AccountActor;
 
 /**
  * Wpis dziennika zdarzeń: co się stało, w której strefie, którego konta dotyczy, kto to zrobił (null = konto

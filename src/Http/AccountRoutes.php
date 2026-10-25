@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,25 +11,25 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http;
+namespace Simplysmart\Admiro\Http;
 
 use Illuminate\Routing\Router;
-use Simplysmart\Mainboard\Http\Controllers\Account\OrganizationSwitchController;
-use Simplysmart\Mainboard\Http\Controllers\Account\PinChangeController;
-use Simplysmart\Mainboard\Http\Controllers\Account\RecoveryEmailController;
-use Simplysmart\Mainboard\Http\Controllers\Account\SecurityController;
-use Simplysmart\Mainboard\Http\Controllers\Account\TrustedDeviceController;
-use Simplysmart\Mainboard\Http\Controllers\Account\ProfileController;
-use Simplysmart\Mainboard\Http\Controllers\Account\RoleSwitchController;
-use Simplysmart\Mainboard\Zones\AccessTier;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Http\Controllers\Account\OrganizationSwitchController;
+use Simplysmart\Admiro\Http\Controllers\Account\PinChangeController;
+use Simplysmart\Admiro\Http\Controllers\Account\RecoveryEmailController;
+use Simplysmart\Admiro\Http\Controllers\Account\SecurityController;
+use Simplysmart\Admiro\Http\Controllers\Account\TrustedDeviceController;
+use Simplysmart\Admiro\Http\Controllers\Account\ProfileController;
+use Simplysmart\Admiro\Http\Controllers\Account\RoleSwitchController;
+use Simplysmart\Admiro\Zones\AccessTier;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (imię i nazwisko, język, kolor
  * awatara), strona bezpieczeństwa (zmiana PIN-u, zapasowy adres e-mail, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
  * przekierowują do jej sekcji), wygląd (motyw i kolorystyka), w strefie z zaufanymi urządzeniami ich odwołanie, w strefie
  * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli. Każda zmiana ma limit
- * `mainboard.sign-in`.
+ * `admiro.sign-in`.
  */
 final readonly class AccountRoutes
 {
@@ -61,7 +61,7 @@ final readonly class AccountRoutes
     public const string APPEARANCE = 'account.appearance';
 
     /** Widok strony wyglądu. */
-    public const string APPEARANCE_VIEW = 'mainboard::account.appearance';
+    public const string APPEARANCE_VIEW = 'admiro::account.appearance';
 
     public const string PROFILE = 'account.profile';
 

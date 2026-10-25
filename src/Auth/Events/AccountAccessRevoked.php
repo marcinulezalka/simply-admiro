@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Events;
+namespace Simplysmart\Admiro\Auth\Events;
 
-use Simplysmart\Mainboard\Auth\AccessRevocationReason;
-use Simplysmart\Mainboard\Auth\AccountActor;
-use Simplysmart\Mainboard\Contracts\SignInAccount;
+use Simplysmart\Admiro\Auth\AccessRevocationReason;
+use Simplysmart\Admiro\Auth\AccountActor;
+use Simplysmart\Admiro\Contracts\SignInAccount;
 
 /**
  * Wszystkie sesje konta zostały unieważnione (nowa epoka); Core odwołuje też jego zaufane urządzenia.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models;
+namespace Simplysmart\Admiro\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Simplysmart\Mainboard\Models\Concerns\HasChecksum;
-use Simplysmart\Mainboard\Models\Concerns\HasStandardColumns;
+use Simplysmart\Admiro\Models\Concerns\HasChecksum;
+use Simplysmart\Admiro\Models\Concerns\HasStandardColumns;
 
 /**
  * Baza modeli tabel z kolumnami standardowymi (Database\Columns): token jako klucz trasy, soft delete,

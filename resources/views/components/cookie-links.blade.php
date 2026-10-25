@@ -3,7 +3,7 @@
 @if ($cookieConsent !== null && ($parts !== ['policy'] || $cookieConsent->policyUrl !== null))
     <p class="{{ $class }}">
         @if (in_array('settings', $parts, true))
-            <button class="ss-link ss-cookie-links__button" type="button" data-ss-cookie-settings>@if ($icon)<x-mainboard::icon name="settings" class="ss-cookie-links__icon" />@endif{{ text('cookies.links.settings') }}</button>
+            <button class="ss-link ss-cookie-links__button" type="button" data-ss-cookie-settings>@if ($icon)<x-admiro::icon name="settings" class="ss-cookie-links__icon" />@endif{{ text('cookies.links.settings') }}</button>
         @endif
         @if (in_array('policy', $parts, true) && $cookieConsent->policyUrl !== null)
             <a class="ss-link" href="{{ $cookieConsent->policyUrl }}">{{ text('cookies.links.policy') }}</a>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models;
+namespace Simplysmart\Admiro\Models;
 
 use Illuminate\Container\Container;
-use Simplysmart\Mainboard\Models\Relations\BelongsToOrganization;
-use Simplysmart\Mainboard\Permissions\PermissionTables;
-use Simplysmart\Mainboard\Queries\Organizations\OrganizationUnits;
+use Simplysmart\Admiro\Models\Relations\BelongsToOrganization;
+use Simplysmart\Admiro\Permissions\PermissionTables;
+use Simplysmart\Admiro\Queries\Organizations\OrganizationUnits;
 
 /**
  * Model danych należących do jednej organizacji (kolumna `organization_id` po kolumnach Columns::base()).

@@ -1,16 +1,20 @@
 # Struktura projektu
 
 ```
-mainboard/
-├── brand/               źródła marki: logo, sygnet, kolory (zob. brand/README.md)
-├── config/mainboard.php konfiguracja Core (strefy, logowanie, bezpieczeństwo, dziennik, honeypot), tylko przez .env
+admiro/
+├── bin/                 punkty wejścia narzędzi deweloperskich (simplysmart, version-release, composer-private)
+├── brand/               źródła marki: logo admiro, marka simplysmart w simplysmart/ (zob. brand/README.md)
+├── config/admiro.php    konfiguracja rdzenia (strefy, logowanie, bezpieczeństwo, dziennik, honeypot) i strefy administratorów (zone), tylko przez .env
 ├── database/
 │   ├── migrations/      migracje wszystkich tabel Core i stref publicznych (zob. baza-danych.md)
 │   └── seeders/permissions/   pliki ról stref publicznych (JSON, baza-danych.md §15)
-├── lang/                tłumaczenia Core: lang/<locale>/<plik>.php (text_*, etykiety kolumn, e-maile)
+├── lang/                tłumaczenia: lang/<locale>/<plik>.php (text_*, etykiety kolumn, e-maile, teksty panelu)
 ├── public/              document root, punkt wejścia: public/index.php, assety (zob. niżej)
-├── resources/views/     widoki Core: logowanie, konto, maile, komponenty, layouty, domyślna strona startowa (app/)
-├── src/                 kod paczki, namespace Simplysmart\Mainboard\ (PSR-4)
+├── resources/views/     widoki: logowanie, konto, maile, komponenty, layouty, domyślna strona startowa (app/), panel administratorów (panel/)
+├── resources/deploy/    skrypt serwerowy wdrożenia (remote.sh)
+├── resources/boost/skills/   wspólne skille AI (jedyne źródło, instalowane przez Laravel Boost)
+├── routes/              trasy rdzenia: web.php (admiro.*), design-system.php (simplysmart.*); trasy panelu w panel/
+├── src/                 kod paczki, namespace Simplysmart\Admiro\ (PSR-4)
 │   ├── Contracts/       kontrakty (interfejsy) paczki — jedyne, od czego zależą inne pakiety i aplikacja
 │   ├── Providers/       providery obszarów: strefy, logowanie, uprawnienia, dziennik zdarzeń, bezpieczeństwo
 │   ├── Zones/           mechanizm stref: definicja, rejestr, registrary guardu, middleware i tras, sesja, strefa i konto żądania
@@ -25,17 +29,21 @@ mainboard/
 │   ├── Models/          modele danych (DataModel, OrganizationDataModel), konta stref, słowniki, uprawnienia; relacje w Relations/
 │   ├── Queries/         odczyty dla paneli i usług (konta, organizacje, uprawnienia, słowniki, dziennik)
 │   ├── Http/            middleware, kontrolery Core (logowanie, konto), trasy logowania, konta i pułapek
-│   ├── Console/         komendy mainboard:* (seedy, synchronizacja ról, czyszczenie, honeypot)
+│   ├── Console/         komendy admiro:* (seedy, synchronizacja ról, czyszczenie, honeypot)
 │   ├── Mail/, Logging/, Listeners/, Enums/, Rules/, View/   e-maile, kanały logów, listenery, enumy, reguły walidacji, komponenty widoków
 │   ├── helpers.php      helpery text_* i local_* (autoload "files")
-│   └── MainboardServiceProvider.php   config, teksty, zasoby paczki i rejestracja providerów obszarów (auto-discovery)
+│   ├── Panel/           strefa administratorów: PanelServiceProvider, kontrolery i menu (Http/), role i uprawnienia (Enums/), komenda kont (Console/)
+│   ├── Tools/           narzędzia deweloperskie: czysty PHP CLI bez Laravela (wydania, paczki prywatne, wdrożenie; docs/narzedzia.md)
+│   └── AdmiroServiceProvider.php   config, teksty, zasoby paczki i rejestracja providerów obszarów (auto-discovery)
+├── tests/Tools/         testy PHPUnit narzędzi deweloperskich
 ├── docs/                dokumentacja
-├── .claude/skills/      skille AI tylko dla domeny paczki (wspólne dostarcza simplysmart/admiro)
+├── .claude/skills/      skille AI tylko dla domeny paczki (wspólne są w resources/boost/skills/)
 ├── CHANGELOG.md         historia zmian (Keep a Changelog)
 ├── CONTRIBUTING.md      zasady rozwoju i wydawania wersji
-├── VERSION              bieżąca wersja (SemVer), aktualizowana przez version-release z simplysmart/admiro (zob. CONTRIBUTING.md)
-├── composer.json        metadane paczki simplysmart/mainboard, autoload PSR-4, extra.laravel.providers
+├── VERSION              bieżąca wersja (SemVer), aktualizowana przez version-release (zob. CONTRIBUTING.md)
+├── composer.json        metadane paczki simplysmart/admiro, autoload PSR-4, extra.laravel.providers
 ├── phpstan.neon         konfiguracja PHPStan (poziom max)
+├── phpunit.xml.dist     konfiguracja PHPUnit (tests/Tools/)
 ├── CLAUDE.md            instrukcje dla agentów AI
 ├── LICENSE              licencja Simplysmart Restricted Source License 1.0
 └── THIRD_PARTY.md       wzór deklaracji użycia komercyjnego
@@ -69,8 +77,8 @@ Katalogi bez plików (`js/`, `img/ui/`, `fonts/`) zakładamy przy pierwszym plik
   Wtedy dochodzą:
 
   ```
-  mainboard/
-  ├── package.json         workspace npm @simplysmart/mainboard, skrypty dev i build
+  admiro/
+  ├── package.json         workspace npm @simplysmart/admiro, skrypty dev i build
   ├── vite.config.js       build assetów paczki
   ├── resources/css|js/    źródła stylów i skryptów (Tailwind 4, @theme z tokenami)
   └── public/build/        wynik builda z manifest.json (nie jest commitowany)

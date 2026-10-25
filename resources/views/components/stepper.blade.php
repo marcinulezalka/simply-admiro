@@ -6,7 +6,7 @@
         <li {{ new \Illuminate\View\ComponentAttributeBag(array_filter(['class' => 'ss-stepper__step ss-stepper__step--' . $state, 'aria-current' => $state === 'current' ? 'step' : null])) }}>
             <span class="ss-stepper__marker" aria-hidden="true">
                 @if ($state === 'done')
-                    <x-mainboard::icon name="check" class="ss-stepper__icon" />
+                    <x-admiro::icon name="check" class="ss-stepper__icon" />
                 @else
                     {{ $index + 1 }}
                 @endif

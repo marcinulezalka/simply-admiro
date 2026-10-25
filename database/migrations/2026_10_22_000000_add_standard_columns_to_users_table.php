@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -16,10 +16,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Database\History;
-use Simplysmart\Mainboard\Database\IdSlots;
-use Simplysmart\Mainboard\Models\MainModel;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Database\History;
+use Simplysmart\Admiro\Database\IdSlots;
+use Simplysmart\Admiro\Models\MainModel;
 
 /**
  * Wyrównuje stockową tabelę `users` aplikacji do kolumn standardowych (Columns::base()/closing()) w tej samej

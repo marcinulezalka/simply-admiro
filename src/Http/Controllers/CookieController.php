@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,23 +11,23 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers;
+namespace Simplysmart\Admiro\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
-use Simplysmart\Mainboard\Contracts\CookieCatalog;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Cookies\ConsentRegistry;
-use Simplysmart\Mainboard\Cookies\CookiePolicyRejected;
-use Simplysmart\Mainboard\Cookies\PolicyMarkdown;
-use Simplysmart\Mainboard\Enums\ConsentDecision;
-use Simplysmart\Mainboard\Enums\CookieCategory;
-use Simplysmart\Mainboard\Legal\BackLink;
-use Simplysmart\Mainboard\Legal\LegalLinks;
-use Simplysmart\Mainboard\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Contracts\CookieCatalog;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Cookies\ConsentRegistry;
+use Simplysmart\Admiro\Cookies\CookiePolicyRejected;
+use Simplysmart\Admiro\Cookies\PolicyMarkdown;
+use Simplysmart\Admiro\Enums\ConsentDecision;
+use Simplysmart\Admiro\Enums\CookieCategory;
+use Simplysmart\Admiro\Legal\BackLink;
+use Simplysmart\Admiro\Legal\LegalLinks;
+use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -49,7 +49,7 @@ final readonly class CookieController
             $content = $policy->content($locales->default());
         }
 
-        return view('mainboard::cookies.policy', [
+        return view('admiro::cookies.policy', [
             'policy' => $policy,
             'title' => $content['title'],
             'html' => PolicyMarkdown::html($content['body']),

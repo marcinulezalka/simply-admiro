@@ -3,10 +3,10 @@
 <fieldset class="ss-field ss-fieldset">
     <legend class="ss-field__label">{{ text('account.avatar_color') }}</legend>
     <div class="ss-choices">
-        @foreach (\Simplysmart\Mainboard\Enums\AvatarColor::cases() as $color)
+        @foreach (\Simplysmart\Admiro\Enums\AvatarColor::cases() as $color)
             <label class="ss-choice ss-choice--avatar">
                 <input type="radio" name="{{ $field }}" value="{{ $color->value }}" @checked($color === $current)>
-                <span><x-mainboard::avatar :name="$name" :color="$color" size="xs" />{{ $color->label() }}</span>
+                <span><x-admiro::avatar :name="$name" :color="$color" size="xs" />{{ $color->label() }}</span>
             </label>
         @endforeach
     </div>

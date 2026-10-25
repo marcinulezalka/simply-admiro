@@ -1,5 +1,5 @@
 /**
- * Wysuwana stopka simplysmart (x-mainboard::brand-footer na logowaniu strefy i w layoucie aplikacji): przyciski
+ * Wysuwana stopka simplysmart (x-admiro::brand-footer na logowaniu strefy i w layoucie aplikacji): przyciski
  * [data-ss-footer-toggle] (logo simplysmart) odsłaniają i chowają stopkę [data-ss-footer] w obrębie
  * [data-ss-footer-root]. Wartość data-ss-footer-root to klasa bloku, któremu skrypt dodaje modyfikatory
  * <blok>--footer-open (stopka odsłonięta) i <blok>--footer-ready (zwijanie działa: CSS chowa stopkę dopiero wtedy, więc
@@ -8,7 +8,7 @@
  * przesuwa treść nad stopką. Dłuższa strona przy otwarciu płynnie przewija się na dół (treść musi kończyć się przy
  * dole okna, żeby odsłonić stopkę), a przewinięcie w górę chowa stopkę. data-ss-footer-media na stopce (media query) ogranicza zwijanie do pasujących ekranów:
  * poza nimi nie ma <blok>--footer-ready ani inert (stopka jest zwykłą stopką na końcu strony, a przycisk przewija do niej). Osadzany inline z nonce
- * CSP (x-mainboard::scripts).
+ * CSP (x-admiro::scripts).
  */
 (() => {
     const start = () => {

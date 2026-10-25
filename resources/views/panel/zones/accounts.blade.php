@@ -1,11 +1,11 @@
 {{-- Konta strefy: wyszukiwanie po adresie e-mail, tabela kont (awatar, nazwa, adres, stan jako plakietka, ostatnie logowanie) z akcjami administratora (accounts.manage) i stronicowanie. $managedZone: ZoneDefinition, $accounts: LengthAwarePaginator kont (CodeAndPinAccount), $email: string (szukany adres), $actions: list<Simplysmart\Admiro\Panel\Http\AccountAction> (puste bez accounts.manage). --}}
-<x-mainboard::zone.layout :title="text('admiro::admin.accounts_title', ['zone' => $managedZone->name])" :back="route('admiro.zones.index')">
+<x-admiro::zone.layout :title="text('admiro::admin.accounts_title', ['zone' => $managedZone->name])" :back="route('admiro.zones.index')">
     <form class="ss-card ss-form-row" method="GET" action="{{ route('admiro.zones.accounts', ['managedZone' => $managedZone->name]) }}" role="search">
-        <x-mainboard::input id="email" name="email" type="email" field-class="ss-form-row__grow" :label="text('admiro::admin.search_email')" icon="search" :value="$email" :placeholder="text('placeholders.email')" />
-        <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="search" class="ss-button__icon" />{{ text_action('search') }}</button>
+        <x-admiro::input id="email" name="email" type="email" field-class="ss-form-row__grow" :label="text('admiro::admin.search_email')" icon="search" :value="$email" :placeholder="text('placeholders.email')" />
+        <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="search" class="ss-button__icon" />{{ text_action('search') }}</button>
     </form>
 
-    @error('account') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+    @error('account') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <section class="ss-card ss-card--flush">
         <div class="ss-table-wrap">
@@ -25,7 +25,7 @@
                         <tr>
                             <th scope="row">
                                 <span class="ss-person">
-                                    <x-mainboard::avatar :name="$managedAccount->displayName()" size="sm" />
+                                    <x-admiro::avatar :name="$managedAccount->displayName()" size="sm" />
                                     <span class="ss-person__text"><span>{{ $managedAccount->displayName() }}</span><span class="ss-muted">{{ $managedAccount->emailAddress() }}</span></span>
                                 </span>
                             </th>
@@ -64,5 +64,5 @@
         </div>
     </section>
 
-    <x-mainboard::pagination :paginator="$accounts" />
-</x-mainboard::zone.layout>
+    <x-admiro::pagination :paginator="$accounts" />
+</x-admiro::zone.layout>

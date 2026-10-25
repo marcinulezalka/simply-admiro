@@ -32,7 +32,7 @@ zapisuje nową wersję do `VERSION` i zamienia `[Unreleased]` na datowaną sekcj
 
 ```bash
 vendor/bin/version-release                                        # bieżący katalog
-vendor/bin/version-release --root=packages/simplysmart/mainboard  # inny projekt lub pakiet
+vendor/bin/version-release --root=packages/simplysmart/admiro  # inny projekt lub pakiet
 vendor/bin/version-release --major-confirm                        # gdy wymagany MAJOR
 vendor/bin/version-release --dry-run                              # podgląd: pokazuje wersję, nie zmienia plików
 ```
@@ -93,7 +93,7 @@ Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z rep
 3. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`),
 4. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`,
    `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje, role, słowniki, cache
-   i skrypt crona `storage/app/cron.sh` (`mainboard:cron:script --php=<DEPLOY_PHP>`, gdy Core ma tę komendę; w panelu
+   i skrypt crona `storage/app/cron.sh` (`admiro:cron:script --php=<DEPLOY_PHP>`, gdy Core ma tę komendę; w panelu
    hostingu: program BASH, ten plik, co minutę).
    Skrypt i token idą standardowym wejściem, więc serwer nie uruchamia narzędzi z admiro, a token nie trafia do listy procesów.
 
@@ -146,8 +146,8 @@ vendor/bin/simplysmart deploy:fresh --confirm=<DEPLOY_SSH> # uruchomienie: warto
 ```
 
 Bez `--confirm=` albo z inną wartością niż `DEPLOY_SSH` polecenie kończy się błędem, zanim cokolwiek trafi na serwer.
-mainboard blokuje destrukcyjne komendy bazy w środowisku `production`. Skrypt serwerowy zdejmuje tę blokadę tylko dla
-procesu `migrate:fresh` (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true` przed komendą, po `config:clear`). Tej zmiennej
+admiro blokuje destrukcyjne komendy bazy w środowisku `production`. Skrypt serwerowy zdejmuje tę blokadę tylko dla
+procesu `migrate:fresh` (`ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS=true` przed komendą, po `config:clear`). Tej zmiennej
 nie wpisuje się do `.env`.
 
 ## Skille AI

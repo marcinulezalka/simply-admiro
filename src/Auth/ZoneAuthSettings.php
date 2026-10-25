@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Admiro\Auth;
 
-use Simplysmart\Mainboard\Contracts\SignInStep;
-use Simplysmart\Mainboard\Enums\AuthLayout;
+use Simplysmart\Admiro\Contracts\SignInStep;
+use Simplysmart\Admiro\Enums\AuthLayout;
 
 /**
- * Ustawienia logowania strefy: domyślne z `mainboard.auth`, nadpisane kluczem `auth` configu strefy.
+ * Ustawienia logowania strefy: domyślne z `admiro.auth`, nadpisane kluczem `auth` configu strefy.
  */
 final readonly class ZoneAuthSettings
 {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
 use Closure;
 use Illuminate\Config\Repository;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\CurrentZone;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * W strefie z `security.block_ai_agents` agenci AI (`mainboard.security.ai_agents`, fragmenty User-Agent)
+ * W strefie z `security.block_ai_agents` agenci AI (`admiro.security.ai_agents`, fragmenty User-Agent)
  * dostają 403 przed uruchomieniem sesji, niezależnie od nagłówka X-Robots-Tag.
  */
 final readonly class BlockAiAgents
@@ -45,7 +45,7 @@ final readonly class BlockAiAgents
 
     private function isAiAgent(string $userAgent): bool
     {
-        foreach ($this->config->array('mainboard.security.ai_agents') as $agent) {
+        foreach ($this->config->array('admiro.security.ai_agents') as $agent) {
             if (is_string($agent) && $agent !== '' && stripos($userAgent, $agent) !== false) {
                 return true;
             }

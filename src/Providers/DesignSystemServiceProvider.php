@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Contracts\DesignSystemCatalog;
-use Simplysmart\Mainboard\Enums\DesignSystemArea;
-use Simplysmart\Mainboard\Enums\DesignSystemView;
-use Simplysmart\Mainboard\View\DesignSystem\InMemoryDesignSystemCatalog;
-use Simplysmart\Mainboard\View\DesignSystem\SignInPreviews;
-use Simplysmart\Mainboard\View\Demo\DemoInvoices;
+use Simplysmart\Admiro\Contracts\DesignSystemCatalog;
+use Simplysmart\Admiro\Enums\DesignSystemArea;
+use Simplysmart\Admiro\Enums\DesignSystemView;
+use Simplysmart\Admiro\View\DesignSystem\InMemoryDesignSystemCatalog;
+use Simplysmart\Admiro\View\DesignSystem\SignInPreviews;
+use Simplysmart\Admiro\View\Demo\DemoInvoices;
 
 /**
  * Katalog design systemu: wiązanie kontraktu (singleton) i widoki Core z enumów DesignSystemArea/DesignSystemView.

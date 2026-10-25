@@ -12,7 +12,7 @@ niezależnie od paczki, do której należy jej logika.
 ## 1. Jedno miejsce schematu
 
 - Migracje **wszystkich** tabel (Core i stref publicznych) leżą w Core: `database/migrations/`
-  tej paczki, ładowane przez `MainboardServiceProvider` (`loadMigrationsFrom`). Publiczne paczki
+  tej paczki, ładowane przez `AdmiroServiceProvider` (`loadMigrationsFrom`). Publiczne paczki
   stref nie mają własnych migracji.
 - Wyjątek: paczka **prywatna** (prywatne repozytorium) trzyma własne migracje i seedery, zbudowane
   publicznym API Core (`ZoneTables`, `Columns`, `History`), bo nic o niej nie może trafić do
@@ -30,13 +30,13 @@ niezależnie od paczki, do której należy jej logika.
 - Bezpieczeństwo:
   - Core wywołuje `DB::prohibitDestructiveCommands(app()->isProduction())`, więc na produkcji
     nie działają `migrate:fresh`, `migrate:refresh`, `migrate:reset`, `db:wipe`. Blokadę zdejmuje tylko
-    `mainboard.security.allow_destructive_commands` (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true`), które ustawia
+    `admiro.security.allow_destructive_commands` (`ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS=true`), które ustawia
     wdrożenie od zera `vendor/bin/simplysmart deploy:fresh` dla jednego procesu `migrate:fresh`; nigdy w `.env`.
   - Seedery dzielą się na **referencyjne** (słowniki: idempotentne, rekord szukany po kodzie z `codeColumn()`,
     nowy dostaje id z puli seederów (§2), zapis przez model, więc dostaje token, checksum i historię; wolno je uruchomić na produkcji) i **demo**
     (dane przykładowe, na produkcji odmawiają pracy).
-  - Seedery to klasy w `src/Database/Seeders/` (`Simplysmart\Mainboard\Database\Seeders`, autoload
-    paczki), uruchamiane komendami Core (np. `mainboard:localization:seed`); szkieletowy
+  - Seedery to klasy w `src/Database/Seeders/` (`Simplysmart\Admiro\Database\Seeders`, autoload
+    paczki), uruchamiane komendami Core (np. `admiro:localization:seed`); szkieletowy
     `DatabaseSeeder` zostaje stockowy.
   - Seedery nie zawierają sekretów ani prawdziwych danych osobowych.
 
@@ -125,9 +125,9 @@ Bez historii są tylko tabele techniczne (`cache*`, `sessions`, `jobs*`, `failed
 
 ```
 Illuminate\Database\Eloquent\Model
-  └─ Simplysmart\Mainboard\Models\MainModel            (abstract, Core: token jako klucz trasy)
-       ├─ Simplysmart\Mainboard\Models\MainAuthenticatable   (konta stref, ZoneTables: to samo co DataModel)
-       └─ Simplysmart\Mainboard\Models\DataModel             (abstract: tabele z kolumnami standardowymi)
+  └─ Simplysmart\Admiro\Models\MainModel            (abstract, Core: token jako klucz trasy)
+       ├─ Simplysmart\Admiro\Models\MainAuthenticatable   (konta stref, ZoneTables: to samo co DataModel)
+       └─ Simplysmart\Admiro\Models\DataModel             (abstract: tabele z kolumnami standardowymi)
             └─ modele paczek (Core i stref), np. Models\Dictionaries\Country
 ```
 
@@ -182,7 +182,7 @@ Kontroler → Form Request (walidacja) → Action (zapis) / Query (odczyt) → D
 
 | Dane | Gdzie | Odczyt |
 | --- | --- | --- |
-| Stałe teksty: interfejs, nazwy kolumn, akcje | pliki `lang/<locale>/` paczki | `text_*` (kaskada strefa → mainboard → aplikacja) |
+| Stałe teksty: interfejs, nazwy kolumn, akcje | pliki `lang/<locale>/` paczki | `text_*` (kaskada strefa → admiro → aplikacja) |
 | Krótkie słowniki: statusy, typy, jednostki | kolumna `json_i18n` (`{"pl": "polski", "en": "Polish"}`) | cast `array`, wartość dla bieżącego języka |
 | Treści dynamiczne: produkt, opis, artykuł | tabela `<tabela>_i18n` | relacja z traitu `HasTranslations` |
 
@@ -227,7 +227,7 @@ Kontroler → Form Request (walidacja) → Action (zapis) / Query (odczyt) → D
 | --- | --- |
 | `json_attributes` | dodatkowe atrybuty bez własnej kolumny |
 | `json_default_settings` | wartości domyślne, które rekord daje procesom aplikacji (np. kraj: termin płatności faktury); odczyt `defaultSetting('klucz.z.kropkami', $domyślna)`, nie stałe w kodzie |
-| `json_tags` | lista tagów rekordu (`["eu", "b2b"]`): wyszukiwanie `JSON_CONTAINS`, meta `article:tag` w `x-mainboard::page` |
+| `json_tags` | lista tagów rekordu (`["eu", "b2b"]`): wyszukiwanie `JSON_CONTAINS`, meta `article:tag` w `x-admiro::page` |
 | `json_i18n` | tłumaczenia krótkich słowników (punkt 7) |
 | `json_migrations` | metadane integracji: źródło, `external_id`, czas synchronizacji, wersja |
 | `json_archive` | stare wartości i pola wycofane po migracjach danych |
@@ -295,8 +295,8 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 - `name` jest w języku aplikacji, `json_i18n` ma nazwy w językach interfejsu (`translatedName()`).
 - `is_active` — wpis do wyboru w treściach i dokumentach; `is_default` (kolumna standardowa) — kraj,
   język i waluta aplikacji (po jednym). `Queries\Dictionaries\DefaultEntries` zwraca wpis `is_default`, a bez
-  niego wpis o kodzie (`codeColumn()`) z configu (`mainboard.localization.country`, `app.locale`,
-  `mainboard.locale.currency`).
+  niego wpis o kodzie (`codeColumn()`) z configu (`admiro.localization.country`, `app.locale`,
+  `admiro.locale.currency`).
 - Kody ISO mają jedną konwencję (`Database\CodeColumns`): `alpha_code_2`, `alpha_code_3` (wielkie
   litery), `numeric_code` (trzy cyfry z zerami wiodącymi). Języki zostają przy `code`, bo ich kody
   mieszają ISO 639-1, -2 i -3. Kolumnę kodu modelu zwraca `DictionaryEntry::codeColumn()`.
@@ -311,22 +311,22 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   `flag:<kod>-4x3`). Kraj dostaje swój kod ISO, język — flagę kraju: wyjątek z
   `LocalizationData::LANGUAGE_FLAGS` (`en` → `gb`, `ar` → `sa`), kraj o tym samym kodzie, w którym
   język jest urzędowy, albo kraj z największą liczbą mówiących (ICU). Seeder nie nadpisuje ustawionej
-  ikony. Widok: `<x-mainboard::flag :icon="$country->flag_icon" />` (`docs/design-system.md` §7).
+  ikony. Widok: `<x-admiro::flag :icon="$country->flag_icon" />` (`docs/design-system.md` §7).
 - Stawki VAT obowiązują od `valid_from` do `valid_to` włącznie; `Queries\Dictionaries\TaxRatesInForce`
   zwraca stawki kraju w danym dniu, podstawową i stawkę aplikacji (bez słownika:
-  `mainboard.localization.vat_percent`).
+  `admiro.localization.vat_percent`).
 - Kursy walut są w złotych: tabela A NBP (`Contracts\ExchangeRateProvider`, domyślnie `ExchangeRates\NbpTableA`,
   zapytania po najwyżej 93 dni, 404 = dni bez publikacji) zapisywana przez `ExchangeRates\ExchangeRateSync` tylko
   dla aktywnych walut, bez nadpisywania kursów ręcznych (`ExchangeRates\ManualExchangeRates`).
   `Queries\Dictionaries\ExchangeRatesOn` zwraca kurs z dnia, kurs z ostatniego dnia publikacji przed datą
   (`lastBefore()` — reguła przeliczeń faktur) i przelicza kwoty przez PLN (`convert()`, bcmath, zaokrąglenie do
-  `decimals` waluty docelowej). Synchronizacja: `php artisan mainboard:exchange-rates:sync [--from= --to=]`.
+  `decimals` waluty docelowej). Synchronizacja: `php artisan admiro:exchange-rates:sync [--from= --to=]`.
 - Dni wolne krajów: ogólnokrajowe święta „Public” z publicznego API Nager.Date (`Contracts\HolidayProvider`,
   domyślnie `Holidays\NagerDate`; wysyłany jest tylko kod kraju i rok) zapisywane przez `Holidays\HolidaySync`
   bez nadpisywania dni wolnych ręcznych (`Holidays\ManualHolidays`); dwa święta jednego dnia mają wspólny wpis.
   `Queries\Dictionaries\HolidaysIn` zwraca dni wolne w okresie (także kraju aplikacji — kalendarze stref je
-  oznaczają) i mówi, czy dzień jest roboczy. Synchronizacja: `php artisan mainboard:holidays:sync [--year=] [--country=]`.
-- Dane startowe: `php artisan mainboard:localization:seed` (seedery w `src/Database/Seeders/`, nazwy
+  oznaczają) i mówi, czy dzień jest roboczy. Synchronizacja: `php artisan admiro:holidays:sync [--year=] [--country=]`.
+- Dane startowe: `php artisan admiro:localization:seed` (seedery w `src/Database/Seeders/`, nazwy
   z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
   wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.
 
@@ -340,7 +340,7 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 - Szkic jest jeden; zaczyna się od treści bieżącej wersji, publikacja (`Cookies\CookiePolicies::publish()`)
   wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer. Opublikowanej wersji się nie zmienia.
 - Rejestr zgód (`Cookies\ConsentRegistry`) nie ma IP, przeglądarki ani danych osobowych; przyjmuje tylko zgodę na
-  bieżącą wersję polityki. `mainboard:cookies:prune` (codziennie) usuwa wpisy starsze niż
+  bieżącą wersję polityki. `admiro:cookies:prune` (codziennie) usuwa wpisy starsze niż
   `COOKIE_CONSENT_RETENTION_DAYS` (domyślnie 1826 dni).
 
 ## 14b. Dokumenty prawne
@@ -352,10 +352,10 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 - Każdy dokument ma jeden szkic; zaczyna się od treści bieżącej wersji, publikacja (`Legal\LegalDocuments::publish()`)
   wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer dokumentu. Opublikowanej wersji się nie zmienia;
   wersje czyta `Queries\Legal\LegalDocumentVersions`.
-- Publiczne strony to trasy Core `mainboard.legal.privacy` (`/polityka-prywatnosci`) i `mainboard.legal.gdpr`
+- Publiczne strony to trasy Core `admiro.legal.privacy` (`/polityka-prywatnosci`) i `admiro.legal.gdpr`
   (`/rodo`); bez opublikowanej wersji 404. Strefa linkuje opublikowane dokumenty z `legal_documents` w configu
   (`Legal\LegalLinks`: karta logowania, stopka layoutu aplikacji, e-maile).
-- Pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO publikuje `php artisan mainboard:legal:seed`
+- Pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO publikuje `php artisan admiro:legal:seed`
   (`Database\Seeders\LegalDocumentsSeeder`, treść z `database/seeders/legal/<język>/<dokument>.md`, administrator danych
   z `LEGAL_CONTROLLER_NAME` i `LEGAL_CONTROLLER_EMAIL`); idempotentnie — dokument z wersją albo szkicem zostaje.
 
@@ -388,7 +388,7 @@ i kolumn są w `Permissions\PermissionTables`.
   oddział może mieć NIP firmy), `regon`, `krs`, `phone`, `email`, `billing_email` (e-mail do rozliczeń; nowa
   organizacja bez niego dostaje `email`), `street`, `postal_code`, `city` (`Organization::address()`). Formularz
   w panelach: walidacja `Organizations\OrganizationForm` → `OrganizationData`, widok
-  `x-mainboard::organization.fields` (karty: dane organizacji, kontaktowe, adresowe).
+  `x-admiro::organization.fields` (karty: dane organizacji, kontaktowe, adresowe).
 - **Departamenty** (`is_department`, `Organization::isDepartment()`): wewnętrzna agregacja, czyli dział
   jednostki — organizacji bez flagi. Departament zakłada `OrganizationManagement::createDepartment($dane, $jednostka)`;
   leży zawsze bezpośrednio pod jednostką, nie ma pod sobą żadnej organizacji i nie staje się korzeniem drzewa (każde
@@ -398,7 +398,7 @@ i kolumn są w `Permissions\PermissionTables`.
   (`unitIdOf()`, `currentUnitId()` dla bieżącej) i departamenty jednostki (`departments()` aktywne po
   nazwie, `department()` po tokenie). Wyłączenie departamentu (`setActive(false)`) usuwa go z wyboru kont.
 - **Organizacja operatora** (`Organization::OPERATOR_ID` = 1, nazwa z `app.name`) jest zakresem stref
-  bez firm klientów. Tworzy ją idempotentnie `php artisan mainboard:organizations:seed`.
+  bez firm klientów. Tworzy ją idempotentnie `php artisan admiro:organizations:seed`.
 - **Usunięcie organizacji** (fizyczne) kasuje jej role i przypisania (`cascadeOnDelete`), więc rola
   organizacji nigdy nie staje się globalna. Zwykle organizację usuwa się miękko.
 - **Odmowy:** wpis w `permission_denials` wygrywa z uprawnieniem z ról i bezpośrednim w tej samej
@@ -452,7 +452,7 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
   uprawnień i ról, a test sprawdza jego zgodność z plikiem.
 - `Permissions\PermissionFileParser` waliduje plik przed zapisem (nieznana strefa, brak roli obowiązkowej,
   nieznane uprawnienie w roli lub `except`, zła nazwa, duplikat, nieznana rola w `inherits` lub `assigns`, cykl).
-- `php artisan mainboard:permissions:sync [--zone=]` (oraz seeder `ZonePermissionsSeeder`) najpierw waliduje
+- `php artisan admiro:permissions:sync [--zone=]` (oraz seeder `ZonePermissionsSeeder`) najpierw waliduje
   wszystkie pliki, potem w jednej transakcji zapisuje uprawnienia i role globalne guardu strefy z id z puli
   seederów, przywraca usunięte i synchronizuje uprawnienia ról. Jest idempotentna. Rekordy strefy spoza
   pliku tylko raportuje; usuwa je (soft delete) `--prune` z potwierdzeniem, a na produkcji z `--force`.
@@ -482,7 +482,7 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
   wyłączone wpisy) daje `Queries\Dictionaries\DictionaryList`.
 - **Dziennik zdarzeń** (`audit_events`, `Models\AuditEvent`): wyjątek od standardu tabel danych — tylko
   dopisywanie, bez kolumn standardowych i historii, konto i aktor jako identyfikator ze strefą (bez klucza obcego),
-  IP szyfrowane; odczyt `Queries\Audit\AuditLog`, czyszczenie `mainboard:audit:prune`.
+  IP szyfrowane; odczyt `Queries\Audit\AuditLog`, czyszczenie `admiro:audit:prune`.
 - **Zarządzanie organizacjami** (`Organizations\OrganizationManagement`): zakładanie, zmiana nazwy i organizacji
   nadrzędnej (drzewo bez cykli, nadrzędna musi być aktywna), włączanie i wyłączanie; organizacji operatora nie
   wolno wyłączyć ani przenieść (`OrganizationChangeRejected`). Wyłączona organizacja znika z aktywnych członkostw.

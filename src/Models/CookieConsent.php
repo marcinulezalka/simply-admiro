@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models;
+namespace Simplysmart\Admiro\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Enums\ConsentDecision;
+use Simplysmart\Admiro\Enums\ConsentDecision;
 
 /**
  * Wpis rejestru zgód na cookies (tabela `cookie_consents`): tylko dopisywanie, bez kolumn standardowych i historii,
  * bez IP i danych osobowych — losowy identyfikator zgody z ciasteczka, wersja polityki, decyzja i kategorie.
- * Starsze niż `mainboard.cookies.retention_days` usuwa `mainboard:cookies:prune`.
+ * Starsze niż `admiro.cookies.retention_days` usuwa `admiro:cookies:prune`.
  *
  * @property int $id
  * @property Carbon $recorded_at

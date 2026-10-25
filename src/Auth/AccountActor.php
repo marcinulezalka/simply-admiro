@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Admiro\Auth;
 
-use Simplysmart\Mainboard\Contracts\SignInAccount;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\SignInAccount;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Kto wykonał akcję na koncie (dziennik): konto ze swoją strefą; brak aktora (null) to system lub konsola.

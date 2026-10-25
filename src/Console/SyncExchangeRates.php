@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,29 +11,29 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRateSync;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRatesUnavailable;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRateSync;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRatesUnavailable;
 
 /**
  * Pobiera kursy walut (tabela A NBP) dla aktywnych walut słownika: domyślnie ostatnie
- * `mainboard.exchange_rates.days_back` dni do dziś (uzupełnia braki po świętach i awariach), albo okres --from/--to.
+ * `admiro.exchange_rates.days_back` dni do dziś (uzupełnia braki po świętach i awariach), albo okres --from/--to.
  * Idempotentna; uruchamiana przez scheduler w dni robocze.
  */
 final class SyncExchangeRates extends Command
 {
-    protected $signature = 'mainboard:exchange-rates:sync {--from= : Data początkowa (RRRR-MM-DD)} {--to= : Data końcowa (RRRR-MM-DD), domyślnie dziś}';
+    protected $signature = 'admiro:exchange-rates:sync {--from= : Data początkowa (RRRR-MM-DD)} {--to= : Data końcowa (RRRR-MM-DD), domyślnie dziś}';
 
     protected $description = 'Pobiera kursy walut z tabeli A NBP';
 
     public function handle(ExchangeRateSync $sync, Repository $config): int
     {
         $to = $this->date('to') ?? CarbonImmutable::today();
-        $from = $this->date('from') ?? $to->subDays($config->integer('mainboard.exchange_rates.days_back'));
+        $from = $this->date('from') ?? $to->subDays($config->integer('admiro.exchange_rates.days_back'));
 
         if ($from->gt($to)) {
             $this->error('--from musi być przed --to.');

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Dictionaries;
+namespace Simplysmart\Admiro\Models\Dictionaries;
 
 use Carbon\CarbonImmutable;
-use Simplysmart\Mainboard\Enums\HolidaySource;
-use Simplysmart\Mainboard\Models\Concerns\HasI18n;
-use Simplysmart\Mainboard\Models\DataModel;
-use Simplysmart\Mainboard\Models\Relations\BelongsToCountry;
+use Simplysmart\Admiro\Enums\HolidaySource;
+use Simplysmart\Admiro\Models\Concerns\HasI18n;
+use Simplysmart\Admiro\Models\DataModel;
+use Simplysmart\Admiro\Models\Relations\BelongsToCountry;
 
 /**
  * Święto albo dzień wolny kraju w dniu `holiday_date`: `name` w języku kraju, `json_i18n` z nazwą angielską,

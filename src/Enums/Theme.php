@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Enums;
+namespace Simplysmart\Admiro\Enums;
 
 /**
- * Motyw strony wybierany w przełączniku x-mainboard::theme-toggle (atrybut `data-theme` na `<html>`, js/theme.js):
+ * Motyw strony wybierany w przełączniku x-admiro::theme-toggle (atrybut `data-theme` na `<html>`, js/theme.js):
  * jasny, ciemny i dwa motywy wysokiego kontrastu WCAG 2.2 (tokens.css, kontrast co najmniej 7:1). Kolejność
  * przypadków to kolejność przycisków; lista wartości w js/theme.js musi być taka sama.
  */

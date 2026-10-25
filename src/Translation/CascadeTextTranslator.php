@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Translation;
+namespace Simplysmart\Admiro\Translation;
 
 use Illuminate\Support\Str;
 use Illuminate\Translation\Translator;
-use Simplysmart\Mainboard\Contracts\TextTranslator;
+use Simplysmart\Admiro\Contracts\TextTranslator;
 
 /**
- * Kaskada tłumaczeń: paczka strefy (z nadpisaniem lang/vendor/<paczka>/) → mainboard → skeleton.
+ * Kaskada tłumaczeń: paczka strefy (z nadpisaniem lang/vendor/<paczka>/) → admiro → skeleton.
  *
  * Każdy krok pyta tylko o bieżący język (bez języka zapasowego); gdy klucza nie ma nigdzie,
  * zwraca klucz w postaci, w jakiej go podano.
  */
 final readonly class CascadeTextTranslator implements TextTranslator
 {
-    public const string CORE_NAMESPACE = 'mainboard';
+    public const string CORE_NAMESPACE = 'admiro';
 
     private const string NAMESPACE_SEPARATOR = '::';
 
@@ -71,7 +71,7 @@ final readonly class CascadeTextTranslator implements TextTranslator
     }
 
     /**
-     * Klucze do sprawdzenia po kolei: paczka (gdy podano namespace), mainboard, skeleton.
+     * Klucze do sprawdzenia po kolei: paczka (gdy podano namespace), admiro, skeleton.
      *
      * @return list<string>
      */

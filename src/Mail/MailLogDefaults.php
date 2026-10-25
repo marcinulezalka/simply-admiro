@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Mail;
+namespace Simplysmart\Admiro\Mail;
 
 use Illuminate\Contracts\Config\Repository;
 
@@ -51,7 +51,7 @@ final readonly class MailLogDefaults
                 'driver' => 'daily',
                 'path' => $this->storagePath . '/' . self::LOG_FILE,
                 'level' => 'debug',
-                'days' => $this->config->get('mainboard.mail.log_days'),
+                'days' => $this->config->get('admiro.mail.log_days'),
                 'replace_placeholders' => true,
             ]);
         }
@@ -61,7 +61,7 @@ final readonly class MailLogDefaults
         }
 
         if (! $this->config->has(self::SMTP_REQUIRE_TLS)) {
-            $this->config->set(self::SMTP_REQUIRE_TLS, (bool) $this->config->get('mainboard.mail.require_tls'));
+            $this->config->set(self::SMTP_REQUIRE_TLS, (bool) $this->config->get('admiro.mail.require_tls'));
         }
     }
 
@@ -70,7 +70,7 @@ final readonly class MailLogDefaults
      */
     private function logChannel(): string
     {
-        $channel = $this->config->get(self::LOG_MAILER_CHANNEL) ?? $this->config->get('mainboard.mail.log_channel');
+        $channel = $this->config->get(self::LOG_MAILER_CHANNEL) ?? $this->config->get('admiro.mail.log_channel');
 
         return is_string($channel) && $channel !== '' ? $channel : self::DEFAULT_CHANNEL;
     }

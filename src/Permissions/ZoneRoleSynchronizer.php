@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Builder;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Database\IdSlots;
-use Simplysmart\Mainboard\Models\Permissions\Permission;
-use Simplysmart\Mainboard\Models\Permissions\Role;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Database\IdSlots;
+use Simplysmart\Admiro\Models\Permissions\Permission;
+use Simplysmart\Admiro\Models\Permissions\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 /**

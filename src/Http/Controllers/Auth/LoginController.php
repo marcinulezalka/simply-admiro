@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Auth;
+namespace Simplysmart\Admiro\Http\Controllers\Auth;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Auth\SignIn\SignInFlowNavigator;
-use Simplysmart\Mainboard\Auth\SignIn\StartSignIn;
+use Simplysmart\Admiro\Auth\SignIn\SignInFlowNavigator;
+use Simplysmart\Admiro\Auth\SignIn\StartSignIn;
 
 /**
  * Formularz adresu e-mail (początek logowania strefy).
@@ -26,7 +26,7 @@ final readonly class LoginController
 {
     public function create(): View
     {
-        return view('mainboard::auth.login');
+        return view('admiro::auth.login');
     }
 
     public function store(Request $request, StartSignIn $start, SignInFlowNavigator $navigator): RedirectResponse

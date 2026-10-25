@@ -3,7 +3,7 @@
 <div class="ss-context">
     <div class="ss-context__text">
         @if ($back !== null)
-            <a class="ss-context__back ss-link" href="{{ $back }}"><x-mainboard::icon name="arrow-left" class="ss-context__back-icon" />{{ text_action('back') }}</a>
+            <a class="ss-context__back ss-link" href="{{ $back }}"><x-admiro::icon name="arrow-left" class="ss-context__back-icon" />{{ text_action('back') }}</a>
         @endif
         @if (filled($meta))
             <p class="ss-context__meta">{{ $meta }}</p>

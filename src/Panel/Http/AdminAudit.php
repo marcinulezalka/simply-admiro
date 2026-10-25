@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel\Http;
 
 use Illuminate\Contracts\Events\Dispatcher;
-use Simplysmart\Mainboard\Audit\Events\AdminActionPerformed;
+use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
 
 /**
  * Akcja administratora w dzienniku zdarzeń Core (plik i tabela), zawsze z aktorem.

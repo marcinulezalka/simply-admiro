@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Localization;
+namespace Simplysmart\Admiro\Localization;
 
 use Illuminate\Config\Repository;
 
@@ -27,14 +27,14 @@ final readonly class LocaleRouting
     ) {}
 
     /**
-     * Włączone języki (mainboard.locale.enabled); pusta lista oznacza sam język aplikacji.
+     * Włączone języki (admiro.locale.enabled); pusta lista oznacza sam język aplikacji.
      *
      * @return list<string>
      */
     public function enabled(): array
     {
         $enabled = array_values(array_filter(
-            $this->config->array('mainboard.locale.enabled', []),
+            $this->config->array('admiro.locale.enabled', []),
             static fn(mixed $locale): bool => is_string($locale) && $locale !== '',
         ));
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,25 +11,25 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Audit;
+namespace Simplysmart\Admiro\Audit;
 
-use Simplysmart\Mainboard\Auth\AccountKey;
-use Simplysmart\Mainboard\Audit\Events\AdminActionPerformed;
-use Simplysmart\Mainboard\Audit\Events\RecordAccessed;
-use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
-use Simplysmart\Mainboard\Auth\Events\AccountLocked;
-use Simplysmart\Mainboard\Auth\Events\PinChanged;
-use Simplysmart\Mainboard\Auth\Events\RecoveryEmailChanged;
-use Simplysmart\Mainboard\Auth\Events\SignedOut;
-use Simplysmart\Mainboard\Auth\Events\SignInRejected;
-use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
-use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
-use Simplysmart\Mainboard\Auth\Events\TrustedDevicesRevoked;
-use Simplysmart\Mainboard\Contracts\SignInAccount;
-use Simplysmart\Mainboard\Permissions\Events\ZoneRoleChanged;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
+use Simplysmart\Admiro\Audit\Events\RecordAccessed;
+use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
+use Simplysmart\Admiro\Auth\Events\AccountLocked;
+use Simplysmart\Admiro\Auth\Events\PinChanged;
+use Simplysmart\Admiro\Auth\Events\RecoveryEmailChanged;
+use Simplysmart\Admiro\Auth\Events\SignedOut;
+use Simplysmart\Admiro\Auth\Events\SignInRejected;
+use Simplysmart\Admiro\Auth\Events\SignInSucceeded;
+use Simplysmart\Admiro\Auth\Events\TrustedDeviceRegistered;
+use Simplysmart\Admiro\Auth\Events\TrustedDevicesRevoked;
+use Simplysmart\Admiro\Contracts\SignInAccount;
+use Simplysmart\Admiro\Permissions\Events\ZoneRoleChanged;
 
 /**
- * Jedyne miejsce, które zamienia zdarzenia Core na wpisy dziennika (plik `mainboard.auth.log_channel`
+ * Jedyne miejsce, które zamienia zdarzenia Core na wpisy dziennika (plik `admiro.auth.log_channel`
  * i tabela `audit_events`), więc oba dzienniki mówią to samo.
  */
 final class AuditEntries

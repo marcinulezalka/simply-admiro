@@ -1,8 +1,8 @@
 {{-- Słownik lokalizacji: zakładki ustawień i słowników, tabela wpisów (kod, nazwa, stan i wpis domyślny jako plakietki; przy krajach odnośnik do stawek VAT) z włączaniem i wyłączaniem (settings.manage). $dictionary: Dictionary (bieżący), $dictionaries: list<Dictionary>, $entries: Collection wpisów (także wyłączonych), $codeColumn: string, $canManage: bool. --}}
-<x-mainboard::zone.layout :title="text('admiro::admin.dictionary.' . $dictionary->value)">
+<x-admiro::zone.layout :title="text('admiro::admin.dictionary.' . $dictionary->value)">
     @include('admiro::panel.dictionaries.tabs', ['current' => $dictionary])
 
-    @error('dictionary') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+    @error('dictionary') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <section class="ss-card ss-card--flush">
         <div class="ss-table-wrap">
@@ -23,14 +23,14 @@
                             <td class="ss-table__number">{{ $entry->getAttribute($codeColumn) }}</td>
                             <th scope="row">
                                 {{ $entry->translatedName() }}
-                                @if ($dictionary === \Simplysmart\Mainboard\Localization\Dictionary::Countries)
+                                @if ($dictionary === \Simplysmart\Admiro\Localization\Dictionary::Countries)
                                     <span class="ss-table__sub"><a class="ss-link" href="{{ route('admiro.tax-rates.index', ['country' => $entry->getAttribute($codeColumn)]) }}">{{ text('admiro::admin.tax_rates_title') }}</a></span>
                                 @endif
                             </th>
                             <td>
                                 <span class="ss-badge">{{ $entry->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive') }}</span>
                                 @if ($entry->is_default)
-                                    <span class="ss-badge"><x-mainboard::icon name="check" class="ss-badge__icon" />{{ text('admiro::admin.dictionary_default') }}</span>
+                                    <span class="ss-badge"><x-admiro::icon name="check" class="ss-badge__icon" />{{ text('admiro::admin.dictionary_default') }}</span>
                                 @endif
                             </td>
                             @if ($canManage)
@@ -47,4 +47,4 @@
             </table>
         </div>
     </section>
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

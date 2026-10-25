@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use BackedEnum;
-use Simplysmart\Mainboard\Contracts\HasZoneRoles;
-use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\HasZoneRoles;
+use Simplysmart\Admiro\Contracts\ZonePermissionChecker;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 /**

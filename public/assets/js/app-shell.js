@@ -1,8 +1,8 @@
 /**
- * Layout aplikacji (x-mainboard::app.layout): zwijanie menu bocznego na szerokim ekranie (stan w localStorage),
+ * Layout aplikacji (x-admiro::app.layout): zwijanie menu bocznego na szerokim ekranie (stan w localStorage),
  * wysuwane menu na telefonie (tło i Esc zamykają), skrót „/” do globalnej wyszukiwarki i menu rozwijane top baru
  * (<details data-ss-dropdown>: powiadomienia, konto) — otwarcie jednego zamyka inne, klik obok i Esc zamykają. Bez skryptu menu
- * zostaje rozwinięte, a na telefonie stoi nad treścią. Osadzany inline z nonce CSP (x-mainboard::scripts).
+ * zostaje rozwinięte, a na telefonie stoi nad treścią. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const STORAGE_KEY = 'ss-sidebar-collapsed';

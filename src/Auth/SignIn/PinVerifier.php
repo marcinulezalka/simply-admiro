@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Auth\Events\AccountLocked;
-use Simplysmart\Mainboard\Auth\Events\SignInRejected;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Admiro\Auth\Events\AccountLocked;
+use Simplysmart\Admiro\Auth\Events\SignInRejected;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Contracts\CurrentZone;
 
 /**
  * Sprawdza PIN konta: przy poprawnym aktualizuje przestarzały hash, przy błędnym liczy próby

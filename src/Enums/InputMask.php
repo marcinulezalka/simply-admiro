@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Enums;
+namespace Simplysmart\Admiro\Enums;
 
 /**
- * Maska popularnych pól (x-mainboard::input, js/input-mask.js): wzór (`9` cyfra, `A` litera, pozostałe znaki
+ * Maska popularnych pól (x-admiro::input, js/input-mask.js): wzór (`9` cyfra, `A` litera, pozostałe znaki
  * wstawiane same), klawiatura, ikona i przykład. Formaty polskie; wzór jest też podany w podpowiedzi pola.
  */
 enum InputMask: string

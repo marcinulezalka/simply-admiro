@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Models;
 
-use Simplysmart\Mainboard\Models\ZoneAccount;
-
 /**
  * Konto administratora (tabela z migracji Core `create_admiro_tables`).
  */

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Enums;
+namespace Simplysmart\Admiro\Enums;
 
 /**
- * Gotowe widoki aplikacji Core na stronie design systemu (`mainboard.design-system.view`; rejestrowane w katalogu
+ * Gotowe widoki aplikacji Core na stronie design systemu (`simplysmart.design-system.view`; rejestrowane w katalogu
  * Contracts\DesignSystemCatalog przez Providers\DesignSystemServiceProvider), złożone z tokenów
  * i komponentów Core, pogrupowane w nawigacji według obszaru (area()). Kolejność przypadków to kolejność w grupie;
  * nowy widok = nowy przypadek, jego obszar i plik Blade.
@@ -46,19 +46,19 @@ enum DesignSystemView: string
     case Error503 = 'error-503';
 
     /**
-     * Szablon widoku: prawdziwe ekrany logowania (`mainboard::auth.*`) i strony błędów (`mainboard::app.errors.*`)
+     * Szablon widoku: prawdziwe ekrany logowania (`admiro::auth.*`) i strony błędów (`admiro::app.errors.*`)
      * są pokazywane z produkcyjnych plików, pozostałe to widoki design systemu.
      */
     public function template(): string
     {
         return match ($this) {
             self::SignInSplit => self::SignIn->template(),
-            self::SignInCode, self::SignInCodeInvalid => 'mainboard::auth.code',
-            self::SignInPin, self::SignInPinLimit => 'mainboard::auth.pin',
-            self::SignInPinSetup => 'mainboard::auth.pin-setup',
-            self::SignInExpired => 'mainboard::auth.login',
-            self::ForgotPin => 'mainboard::auth.forgot-pin',
-            default => $this->errorCode() !== null ? 'mainboard::app.errors.' . $this->errorCode() : 'mainboard::design-system.views.' . $this->value,
+            self::SignInCode, self::SignInCodeInvalid => 'admiro::auth.code',
+            self::SignInPin, self::SignInPinLimit => 'admiro::auth.pin',
+            self::SignInPinSetup => 'admiro::auth.pin-setup',
+            self::SignInExpired => 'admiro::auth.login',
+            self::ForgotPin => 'admiro::auth.forgot-pin',
+            default => $this->errorCode() !== null ? 'admiro::app.errors.' . $this->errorCode() : 'admiro::design-system.views.' . $this->value,
         };
     }
 
@@ -86,7 +86,7 @@ enum DesignSystemView: string
      */
     public function isZoneSignIn(): bool
     {
-        return str_starts_with($this->template(), 'mainboard::auth.');
+        return str_starts_with($this->template(), 'admiro::auth.');
     }
 
     /**

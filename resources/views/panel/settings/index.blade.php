@@ -1,8 +1,8 @@
 {{-- Ustawienia systemu: zakładki ustawień i słowników, kraj, waluta, języki interfejsu (przełączniki) i język domyślny na karcie formularza; tylko do odczytu bez settings.manage. $countries, $currencies: Collection (aktywne), $languages: Collection<Language> (z APP_LOCALES), $country: ?Country, $currency: ?Currency, $language: string (kod języka domyślnego), $interface: list<string> (kody języków interfejsu), $canManage: bool. --}}
-<x-mainboard::zone.layout :title="text('admiro::admin.settings_title')">
+<x-admiro::zone.layout :title="text('admiro::admin.settings_title')">
     @include('admiro::panel.dictionaries.tabs', ['current' => null])
 
-    @error('settings') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+    @error('settings') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <form class="ss-card" method="POST" action="{{ route('admiro.settings.update') }}">
         @csrf
@@ -29,7 +29,7 @@
             <fieldset class="ss-field ss-fieldset">
                 <legend class="ss-field__label">{{ text('admiro::admin.settings_interface') }}</legend>
                 @foreach ($languages as $option)
-                    <x-mainboard::switch :id="'interface-' . $option->code" name="interface[]" :value="$option->code" :label="$option->native_name ?? $option->code" :checked="in_array($option->code, $interface, true)" />
+                    <x-admiro::switch :id="'interface-' . $option->code" name="interface[]" :value="$option->code" :label="$option->native_name ?? $option->code" :checked="in_array($option->code, $interface, true)" />
                 @endforeach
             </fieldset>
             <div class="ss-field">
@@ -42,9 +42,9 @@
             </div>
             @if ($canManage)
                 <div class="ss-form-actions">
-                    <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text_action('save') }}</button>
+                    <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="check" class="ss-button__icon" />{{ text_action('save') }}</button>
                 </div>
             @endif
         </fieldset>
     </form>
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

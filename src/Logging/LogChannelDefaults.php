@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Logging;
+namespace Simplysmart\Admiro\Logging;
 
 use Illuminate\Contracts\Config\Repository;
 
@@ -27,7 +27,7 @@ final readonly class LogChannelDefaults
     ) {}
 
     /**
-     * @param string $channelKey Klucz configu Core z nazwą kanału (np. `mainboard.auth.log_channel`).
+     * @param string $channelKey Klucz configu Core z nazwą kanału (np. `admiro.auth.log_channel`).
      * @param string $file Ścieżka pliku względem storage (np. `logs/sign-in.log`).
      */
     public function define(string $channelKey, string $file): void
@@ -42,7 +42,7 @@ final readonly class LogChannelDefaults
             'driver' => 'daily',
             'path' => $this->storagePath . '/' . $file,
             'level' => 'info',
-            'days' => $this->config->get('mainboard.mail.log_days'),
+            'days' => $this->config->get('admiro.mail.log_days'),
             'replace_placeholders' => true,
         ]);
     }

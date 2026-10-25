@@ -4,7 +4,7 @@
     <label class="ss-field__label" for="{{ $id }}">{{ $label }}</label>
     <div @class(['ss-input-wrap', 'ss-input-wrap--icon' => $icon !== null, 'ss-input-wrap--keypad' => $keypad])>
         @if ($icon !== null)
-            <x-mainboard::icon :name="$icon" class="ss-input-wrap__icon" />
+            <x-admiro::icon :name="$icon" class="ss-input-wrap__icon" />
         @endif
         <input {{ $attributes->merge(array_filter([
             'class' => 'ss-input ss-input--code',
@@ -21,7 +21,7 @@
         ], static fn (mixed $value): bool => $value !== null)) }}>
         @if ($keypad)
             <button class="ss-input-wrap__action" type="button" aria-haspopup="dialog" aria-controls="{{ $id }}-keypad" title="{{ text('layout.keypad.open') }}" data-ss-keypad-open hidden>
-                <x-mainboard::icon name="keypad" class="ss-input-wrap__action-icon" />
+                <x-admiro::icon name="keypad" class="ss-input-wrap__action-icon" />
                 <span class="ss-sr-only">{{ text('layout.keypad.open') }}</span>
             </button>
         @endif
@@ -35,7 +35,7 @@
         <div class="ss-keypad__header">
             <h2 class="ss-keypad__title" id="{{ $id }}-keypad-title">{{ $label }}</h2>
             <button class="ss-icon-button ss-keypad__close" type="button" data-ss-keypad-close>
-                <x-mainboard::icon name="close" class="ss-icon-button__icon" />
+                <x-admiro::icon name="close" class="ss-icon-button__icon" />
                 <span class="ss-sr-only">{{ text('layout.close') }}</span>
             </button>
         </div>
@@ -50,7 +50,7 @@
             </button>
             <button class="ss-keypad__key" type="button" data-ss-keypad-digit="0">0</button>
             <button class="ss-keypad__key ss-keypad__key--muted" type="button" data-ss-keypad-backspace>
-                <x-mainboard::icon name="backspace" class="ss-keypad__key-icon" />
+                <x-admiro::icon name="backspace" class="ss-keypad__key-icon" />
                 <span class="ss-sr-only">{{ text('layout.keypad.backspace') }}</span>
             </button>
         </div>

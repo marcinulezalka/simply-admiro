@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn\Steps;
+namespace Simplysmart\Admiro\Auth\SignIn\Steps;
 
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Auth\SignIn\CodeCheckResult;
-use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
-use Simplysmart\Mainboard\Auth\SignIn\LoginChallengeService;
-use Simplysmart\Mainboard\Auth\SignIn\PendingSignIn;
-use Simplysmart\Mainboard\Auth\SignIn\SignInFailure;
-use Simplysmart\Mainboard\Auth\SignIn\SignInFlowState;
-use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\SignInStep;
+use Simplysmart\Admiro\Auth\SignIn\CodeCheckResult;
+use Simplysmart\Admiro\Auth\SignIn\LoginAttemptLimiter;
+use Simplysmart\Admiro\Auth\SignIn\LoginChallengeService;
+use Simplysmart\Admiro\Auth\SignIn\PendingSignIn;
+use Simplysmart\Admiro\Auth\SignIn\SignInFailure;
+use Simplysmart\Admiro\Auth\SignIn\SignInFlowState;
+use Simplysmart\Admiro\Auth\SignInLimit;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\SignInStep;
 
 /**
  * Kod z e-maila (posiadanie skrzynki). Bez konta (decoy) zachowuje się tak samo, tylko nigdy nie przechodzi.
@@ -59,7 +59,7 @@ final readonly class EmailCodeStep implements SignInStep
 
     public function view(): string
     {
-        return 'mainboard::auth.code';
+        return 'admiro::auth.code';
     }
 
     public function viewData(PendingSignIn $signIn): array

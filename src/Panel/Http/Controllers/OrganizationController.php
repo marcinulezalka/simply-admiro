@@ -20,16 +20,16 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Enums\BrandAsset;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Organizations\OrganizationBranding;
-use Simplysmart\Mainboard\Organizations\OrganizationChangeRejected;
-use Simplysmart\Mainboard\Organizations\OrganizationData;
-use Simplysmart\Mainboard\Organizations\OrganizationForm;
-use Simplysmart\Mainboard\Organizations\OrganizationManagement;
-use Simplysmart\Mainboard\Queries\Organizations\ActiveOrganizations;
-use Simplysmart\Mainboard\Queries\Organizations\OrganizationList;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Enums\BrandAsset;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Organizations\OrganizationBranding;
+use Simplysmart\Admiro\Organizations\OrganizationChangeRejected;
+use Simplysmart\Admiro\Organizations\OrganizationData;
+use Simplysmart\Admiro\Organizations\OrganizationForm;
+use Simplysmart\Admiro\Organizations\OrganizationManagement;
+use Simplysmart\Admiro\Queries\Organizations\ActiveOrganizations;
+use Simplysmart\Admiro\Queries\Organizations\OrganizationList;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Organizations;
+namespace Simplysmart\Admiro\Organizations;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Rules\Nip;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Rules\Nip;
 
 /**
- * Walidacja formularza danych organizacji (widok `mainboard::organizations.fields`), wspólna dla paneli stref:
+ * Walidacja formularza danych organizacji (widok `admiro::organizations.fields`), wspólna dla paneli stref:
  * nazwa, nazwa skrócona, NIP z sumą kontrolną, REGON (9 albo 14 cyfr), KRS (10 cyfr), kod pocztowy 00-000, adresy
  * e-mail i długości kolumn z Organization::DETAIL_LENGTHS. Puste pola znaczą brak wartości.
  */

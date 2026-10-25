@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Relations;
+namespace Simplysmart\Admiro\Models\Relations;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Simplysmart\Mainboard\Models\Permissions\Permission;
-use Simplysmart\Mainboard\Permissions\PermissionTables;
+use Simplysmart\Admiro\Models\Permissions\Permission;
+use Simplysmart\Admiro\Permissions\PermissionTables;
 
 /**
  * Uprawnienie rekordu (kolumna `permission_id`).

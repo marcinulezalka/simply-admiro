@@ -15,7 +15,7 @@ namespace Simplysmart\Admiro\Panel\Enums;
 
 /**
  * Uprawnienia strefy administratorów; przypisania do ról są w pliku ról Core
- * (`database/seeders/permissions/admiro.json` w simplysmart/mainboard), etykiety w `permissions.admiro.*`.
+ * (`database/seeders/permissions/admiro.json` w simplysmart/admiro), etykiety w `permissions.admiro.*`.
  */
 enum Permission: string
 {

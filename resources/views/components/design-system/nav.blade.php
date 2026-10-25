@@ -7,17 +7,17 @@
             <li><a class="ss-ds__nav-link" href="#{{ $section }}">{{ text('design_system.sections.' . $section) }}</a></li>
         @endforeach
         @if ($sections === [])
-            <li><a class="ss-ds__nav-link" href="{{ route('mainboard.design-system') }}">{{ text('design_system.back') }}</a></li>
+            <li><a class="ss-ds__nav-link" href="{{ route('simplysmart.design-system') }}">{{ text('design_system.back') }}</a></li>
         @endif
     </ul>
 
     <p class="ss-ds__nav-heading">{{ text('design_system.nav_views') }}</p>
-    @foreach (app(\Simplysmart\Mainboard\Contracts\DesignSystemCatalog::class)->areas() as $area)
+    @foreach (app(\Simplysmart\Admiro\Contracts\DesignSystemCatalog::class)->areas() as $area)
         <details class="ss-ds__nav-group" @if ($area->contains($current)) open @endif>
             <summary class="ss-ds__nav-summary">{{ $area->label() }}</summary>
             <ul class="ss-ds__nav-list">
                 @foreach ($area->views as $view)
-                    <li><a class="ss-ds__nav-link" href="{{ route('mainboard.design-system.view', $view->key) }}" @if ($view->key === $current) aria-current="page" @endif>{{ $view->label() }}</a></li>
+                    <li><a class="ss-ds__nav-link" href="{{ route('simplysmart.design-system.view', $view->key) }}" @if ($view->key === $current) aria-current="page" @endif>{{ $view->label() }}</a></li>
                 @endforeach
             </ul>
         </details>

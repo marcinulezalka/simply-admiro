@@ -19,13 +19,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
 use Simplysmart\Admiro\Panel\Http\ManagedAccounts;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Permissions\RoleAssignmentDenied;
-use Simplysmart\Mainboard\Permissions\SystemRoleGrant;
-use Simplysmart\Mainboard\Permissions\ZoneRoleAssignment;
-use Simplysmart\Mainboard\Queries\Accounts\ZoneAccounts;
-use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Permissions\RoleAssignmentDenied;
+use Simplysmart\Admiro\Permissions\SystemRoleGrant;
+use Simplysmart\Admiro\Permissions\ZoneRoleAssignment;
+use Simplysmart\Admiro\Queries\Accounts\ZoneAccounts;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 
 /**
  * Administratorzy i ich role (`users.manage`), w organizacji operatora: nadawanie i odbieranie ról przez

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn\Steps;
+namespace Simplysmart\Admiro\Auth\SignIn\Steps;
 
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Auth\PinRules;
-use Simplysmart\Mainboard\Auth\SignIn\PendingSignIn;
-use Simplysmart\Mainboard\Auth\SignIn\PendingSignInResolver;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\SignInStep;
+use Simplysmart\Admiro\Auth\PinRules;
+use Simplysmart\Admiro\Auth\SignIn\PendingSignIn;
+use Simplysmart\Admiro\Auth\SignIn\PendingSignInResolver;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\SignInStep;
 
 /**
  * Ustawienie PIN-u przy pierwszym logowaniu (konto bez PIN-u, po kroku kodu).
@@ -53,7 +53,7 @@ final readonly class PinSetupStep implements SignInStep
 
     public function view(): string
     {
-        return 'mainboard::auth.pin-setup';
+        return 'admiro::auth.pin-setup';
     }
 
     public function viewData(PendingSignIn $signIn): array

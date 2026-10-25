@@ -4,7 +4,7 @@
     <div @class(['ss-toasts', 'ss-toasts--inline' => $inline]) aria-label="{{ text('layout.toasts') }}" data-ss-toasts>
         @foreach ($toasts as $toast)
             <div class="ss-toast ss-toast--{{ $toast->type->value }}" role="{{ $toast->type->role() }}" data-ss-toast @if (! $inline && $toast->type->dismissesItself()) data-ss-toast-auto @endif>
-                <x-mainboard::icon :name="$toast->type->icon()" class="ss-toast__icon" />
+                <x-admiro::icon :name="$toast->type->icon()" class="ss-toast__icon" />
                 <div class="ss-toast__body">
                     <p class="ss-toast__title">@if ($toast->title !== null)<span class="ss-sr-only">{{ $toast->type->label() }}: </span>@endif{{ $toast->heading() }}</p>
                     <p class="ss-toast__message">{{ $toast->message }}</p>
@@ -13,7 +13,7 @@
                     @endif
                 </div>
                 <button class="ss-toast__close" type="button" data-ss-toast-close>
-                    <x-mainboard::icon name="close" class="ss-toast__close-icon" />
+                    <x-admiro::icon name="close" class="ss-toast__close-icon" />
                     <span class="ss-sr-only">{{ text('layout.close') }}</span>
                 </button>
             </div>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Localization;
+namespace Simplysmart\Admiro\Localization;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Enums\TaxRateType;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
-use Simplysmart\Mainboard\Models\Dictionaries\Language;
-use Simplysmart\Mainboard\Models\Dictionaries\TaxRate;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Enums\TaxRateType;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Models\Dictionaries\TaxRate;
 
 /**
  * Zmiany słowników lokalizacji przez administratora: włączanie i wyłączanie krajów, języków i walut (bez wpisów

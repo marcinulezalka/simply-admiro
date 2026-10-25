@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Contracts\ZoneNavigation;
-use Simplysmart\Mainboard\Http\AccountRoutes;
-use Simplysmart\Mainboard\View\Navigation\NavigationGroup;
-use Simplysmart\Mainboard\View\Navigation\NavigationItem;
-use Simplysmart\Mainboard\View\Navigation\SettingsMenu;
+use Simplysmart\Admiro\Contracts\ZoneNavigation;
+use Simplysmart\Admiro\Http\AccountRoutes;
+use Simplysmart\Admiro\View\Navigation\NavigationGroup;
+use Simplysmart\Admiro\View\Navigation\NavigationItem;
+use Simplysmart\Admiro\View\Navigation\SettingsMenu;
 
 /**
  * Buduje menu ustawień zalogowanego konta: najpierw grupy ustawień strefy (ZoneNavigation::settings()), na końcu

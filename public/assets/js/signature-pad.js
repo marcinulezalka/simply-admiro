@@ -1,5 +1,5 @@
 /**
- * Podpis odręczny (x-mainboard::signature-pad): rysowanie myszą, rysikiem albo palcem na [data-ss-signature] (canvas),
+ * Podpis odręczny (x-admiro::signature-pad): rysowanie myszą, rysikiem albo palcem na [data-ss-signature] (canvas),
  * po każdym pociągnięciu obraz PNG (data URL) trafia do ukrytego pola formularza; [data-ss-signature-clear] czyści
  * podpis. Bez skryptu pole zostaje puste, a komunikat <noscript> mówi, że podpis wymaga JavaScriptu.
  */

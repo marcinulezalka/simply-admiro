@@ -21,10 +21,10 @@ use Illuminate\Validation\Rule;
 use LogicException;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Permissions\OwnerData;
-use Simplysmart\Mainboard\Permissions\ZoneOwnerProvisioners;
-use Simplysmart\Mainboard\Queries\Organizations\ActiveOrganizations;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Permissions\OwnerData;
+use Simplysmart\Admiro\Permissions\ZoneOwnerProvisioners;
+use Simplysmart\Admiro\Queries\Organizations\ActiveOrganizations;
 
 /**
  * Zakładanie właściciela strefy (`owners.assign`) przez kontrakt strefy docelowej: panel nie zna jej klas

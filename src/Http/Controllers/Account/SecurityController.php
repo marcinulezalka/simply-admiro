@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,24 +11,24 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Account;
+namespace Simplysmart\Admiro\Http\Controllers\Account;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\AccessRevocationReason;
-use Simplysmart\Mainboard\Auth\Devices\DeviceCookie;
-use Simplysmart\Mainboard\Auth\PinLength;
-use Simplysmart\Mainboard\Auth\Recovery\RecoveryEmailRegistration;
-use Simplysmart\Mainboard\Auth\RevokeAccountAccess;
-use Simplysmart\Mainboard\Auth\SignIn\SignOut;
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
-use Simplysmart\Mainboard\Http\AccountRoutes;
-use Simplysmart\Mainboard\Queries\Audit\AccountHistory;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Auth\AccessRevocationReason;
+use Simplysmart\Admiro\Auth\Devices\DeviceCookie;
+use Simplysmart\Admiro\Auth\PinLength;
+use Simplysmart\Admiro\Auth\Recovery\RecoveryEmailRegistration;
+use Simplysmart\Admiro\Auth\RevokeAccountAccess;
+use Simplysmart\Admiro\Auth\SignIn\SignOut;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\TrustedDeviceRepository;
+use Simplysmart\Admiro\Http\AccountRoutes;
+use Simplysmart\Admiro\Queries\Audit\AccountHistory;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -51,7 +51,7 @@ final readonly class SecurityController
         $settings = $zone->auth();
         $accountId = $this->account->id() ?? throw new AccessDeniedHttpException();
 
-        return view('mainboard::account.security', [
+        return view('admiro::account.security', [
             'currentPinLength' => PinLength::accepted(),
             'pinLength' => $settings->pinLength,
             'codeLength' => $settings->codeLength,

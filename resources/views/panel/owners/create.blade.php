@@ -1,5 +1,5 @@
 {{-- Założenie właściciela strefy: strefa (z ZoneOwnerProvisioner), organizacja klienta (albo operatora), imię i nazwisko i adres e-mail na karcie formularza. $zones: list<ZoneDefinition>, $organizations: Collection<Organization> (aktywne). --}}
-<x-mainboard::zone.layout :title="text('admiro::admin.owner_title')">
+<x-admiro::zone.layout :title="text('admiro::admin.owner_title')">
     @if ($zones === [])
         <p class="ss-notice">{{ text('admiro::admin.no_provisioners') }}</p>
     @else
@@ -28,12 +28,12 @@
                         @error('organization') <p class="ss-field__error" role="alert">{{ $message }}</p> @enderror
                     </div>
                 </div>
-                <x-mainboard::input id="name" name="name" :label="text('admiro::admin.account_name')" icon="user" :value="old('name')" :placeholder="text('placeholders.full_name')" :error="$errors->first('name')" required maxlength="255" />
-                <x-mainboard::input id="email" name="email" type="email" :label="text('admiro::admin.account_email')" icon="mail" :value="old('email')" :placeholder="text('placeholders.email')" :error="$errors->first('email')" required maxlength="255" />
+                <x-admiro::input id="name" name="name" :label="text('admiro::admin.account_name')" icon="user" :value="old('name')" :placeholder="text('placeholders.full_name')" :error="$errors->first('name')" required maxlength="255" />
+                <x-admiro::input id="email" name="email" type="email" :label="text('admiro::admin.account_email')" icon="mail" :value="old('email')" :placeholder="text('placeholders.email')" :error="$errors->first('email')" required maxlength="255" />
                 <div class="ss-form-actions">
-                    <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="user-plus" class="ss-button__icon" />{{ text_action('create') }}</button>
+                    <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="user-plus" class="ss-button__icon" />{{ text_action('create') }}</button>
                 </div>
             </div>
         </form>
     @endif
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

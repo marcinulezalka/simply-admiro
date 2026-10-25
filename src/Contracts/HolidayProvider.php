@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
-use Simplysmart\Mainboard\Holidays\HolidayQuote;
-use Simplysmart\Mainboard\Holidays\HolidaysUnavailable;
+use Simplysmart\Admiro\Holidays\HolidayQuote;
+use Simplysmart\Admiro\Holidays\HolidaysUnavailable;
 
 /**
  * Źródło ogólnokrajowych świąt — dni wolnych od pracy (domyślnie Nager.Date, `Holidays\NagerDate`): święta kraju

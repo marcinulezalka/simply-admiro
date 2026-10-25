@@ -1,10 +1,10 @@
 /**
- * Zgoda na cookies (x-mainboard::cookie-consent): baner przy braku zgody albo zgodzie na starszą wersję polityki,
+ * Zgoda na cookies (x-admiro::cookie-consent): baner przy braku zgody albo zgodzie na starszą wersję polityki,
  * okno ustawień z kategoriami (przycisk „Dostosuj” i każdy element z `data-ss-cookie-settings`), zapis wyboru
  * w ciasteczku pierwszej strony (JSON: wersja, kategorie, losowy identyfikator UUID, czas) i w rejestrze zgód
  * (POST JSON na `data-endpoint`, bez danych osobowych), a potem uruchomienie skryptów opcjonalnych zgodnych kategorii
  * (`<script type="text/plain" data-ss-consent-script>` → prawdziwy <script src>). Zamknięcie ustawień bez decyzji
- * przywraca baner. Osadzany inline z nonce CSP (x-mainboard::scripts).
+ * przywraca baner. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const root = document.querySelector('[data-ss-consent]');

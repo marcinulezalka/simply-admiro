@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,24 +11,24 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Account;
+namespace Simplysmart\Admiro\Http\Controllers\Account;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Enums\AvatarColor;
-use Simplysmart\Mainboard\Http\AccountRoutes;
-use Simplysmart\Mainboard\Localization\LocaleRouting;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Profile\AccountLocale;
-use Simplysmart\Mainboard\Profile\UpdateProfile;
-use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
-use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Enums\AvatarColor;
+use Simplysmart\Admiro\Http\AccountRoutes;
+use Simplysmart\Admiro\Localization\LocaleRouting;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Profile\AccountLocale;
+use Simplysmart\Admiro\Profile\UpdateProfile;
+use Simplysmart\Admiro\Queries\Organizations\ActiveMemberships;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 
 /**
  * Profil zalogowanego konta: imię i nazwisko, adres e-mail (tylko do odczytu), język interfejsu (gdy włączonych jest
@@ -57,7 +57,7 @@ final readonly class ProfileController
         $zone = $this->zone->get();
         $profile = $this->current->require();
 
-        return view('mainboard::account.profile', [
+        return view('admiro::account.profile', [
             'profile' => $profile,
             'colors' => AvatarColor::cases(),
             'locales' => $this->locale->isSelectable() ? $this->locale->choices() : [],

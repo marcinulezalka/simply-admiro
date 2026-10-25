@@ -1,5 +1,5 @@
 /**
- * Strona design systemu (mainboard::design-system.index). Zależy od tokens.css, base.css i app.css.
+ * Strona design systemu (admiro::design-system.index). Zależy od tokens.css, base.css i app.css.
  * Próbki tokenów (.ss-ds-chip--*, .ss-ds-radius--*, .ss-ds-shadow--*, .ss-ds-space--*) generuje widok
  * z odczytanych tokenów, więc ten plik ich nie powtarza.
  */
@@ -48,7 +48,7 @@
 }
 
 /**
- * .ss-ds__nav — nawigacja design systemu w karcie (x-mainboard::design-system.nav), dwie grupy: fundamenty
+ * .ss-ds__nav — nawigacja design systemu w karcie (x-admiro::design-system.nav), dwie grupy: fundamenty
  * i widoki. Na telefonie grupy jako pigułki z przewijaniem poziomym, na szerokim ekranie pionowa lista
  * przyklejona przy przewijaniu.
  */

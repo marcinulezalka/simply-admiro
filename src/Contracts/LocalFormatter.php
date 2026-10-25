@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
 use DateTimeInterface;
 
@@ -25,7 +25,7 @@ interface LocalFormatter
     /**
      * Kwota z walutą, np. "1 234,50 zł" (pl) albo "PLN 1,234.50" (en).
      *
-     * @param  string|null  $currency  kod ISO 4217; null = waluta domyślna z config('mainboard.locale.currency')
+     * @param  string|null  $currency  kod ISO 4217; null = waluta domyślna z config('admiro.locale.currency')
      */
     public function money(int|float $amount, ?string $currency = null, ?string $locale = null): string;
 

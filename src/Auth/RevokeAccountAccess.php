@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Admiro\Auth;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Eloquent\Model;
-use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Unieważnia dostęp do konta: nowa epoka (każda otwarta sesja zostanie wylogowana), usunięcie zapisanych

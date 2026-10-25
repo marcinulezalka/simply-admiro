@@ -14,29 +14,26 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel;
 
 use Simplysmart\Admiro\Panel\Console\CreateAdmiroAccount;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Zones\ZoneDefinitionFactory;
-use Simplysmart\Mainboard\Zones\ZoneGuardRegistrar;
-use Simplysmart\Mainboard\Zones\ZoneMiddlewareRegistrar;
-use Simplysmart\Mainboard\Zones\ZoneRouteRegistrar;
-use Simplysmart\Mainboard\Zones\ZoneServiceProvider;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Zones\ZoneDefinitionFactory;
+use Simplysmart\Admiro\Zones\ZoneGuardRegistrar;
+use Simplysmart\Admiro\Zones\ZoneMiddlewareRegistrar;
+use Simplysmart\Admiro\Zones\ZoneRouteRegistrar;
+use Simplysmart\Admiro\Zones\ZoneServiceProvider;
 use Simplysmart\Admiro\Panel\Http\AdmiroNavigation;
-use Simplysmart\Mainboard\Zones\ZoneNavigations;
+use Simplysmart\Admiro\Translation\CascadeTextTranslator;
+use Simplysmart\Admiro\Zones\ZoneNavigations;
 
 /**
- * Strefa administratorów: config strefy, trasy, widoki, tłumaczenia i komenda zakładania kont.
+ * Strefa administratorów na mechanizmie stref: rejestracja strefy (config `admiro.zone`), trasy, menu i komenda
+ * zakładania kont. Config, widoki (`admiro::panel.*`) i teksty (`admiro::...`) ładuje provider rdzenia.
  */
 final class PanelServiceProvider extends ZoneServiceProvider
 {
     /**
-     * Namespace widoków i tłumaczeń paczki (`view('admiro::panel....')`, `text('admiro::...')`).
+     * Namespace tekstów strefy (`text('admiro::...')`, `sign_in.admiro.*`): wspólny z rdzeniem.
      */
-    public const string NAMESPACE = 'admiro';
-
-    public function register(): void
-    {
-        $this->mergeConfigFrom(__DIR__ . '/../../config/admiro.php', 'admiro');
-    }
+    public const string NAMESPACE = CascadeTextTranslator::CORE_NAMESPACE;
 
     public function boot(
         ZoneDefinitionFactory $factory,
@@ -47,8 +44,6 @@ final class PanelServiceProvider extends ZoneServiceProvider
     ): void {
         parent::boot($factory, $zones, $guards, $middleware, $routes);
 
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', self::NAMESPACE);
-        $this->loadTranslationsFrom(__DIR__ . '/../../lang', self::NAMESPACE);
         $this->app->make(ZoneNavigations::class)->add(config()->string('admiro.zone.name'), AdmiroNavigation::class);
 
         if ($this->app->runningInConsole()) {

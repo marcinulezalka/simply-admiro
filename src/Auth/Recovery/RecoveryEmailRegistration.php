@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,22 +11,22 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Recovery;
+namespace Simplysmart\Admiro\Auth\Recovery;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Simplysmart\Mainboard\Auth\AccountKey;
-use Simplysmart\Mainboard\Auth\EmailAddress;
-use Simplysmart\Mainboard\Auth\Events\RecoveryEmailChanged;
-use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
-use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Mail\MailOrganization;
-use Simplysmart\Mainboard\Mail\SecurityCodeMail;
-use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Auth\EmailAddress;
+use Simplysmart\Admiro\Auth\Events\RecoveryEmailChanged;
+use Simplysmart\Admiro\Auth\SignIn\LoginAttemptLimiter;
+use Simplysmart\Admiro\Auth\SignInLimit;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Mail\MailOrganization;
+use Simplysmart\Admiro\Mail\SecurityCodeMail;
+use Simplysmart\Admiro\Models\ZoneAccount;
 
 /**
  * Zapasowy adres e-mail zalogowanego konta (strona „Bezpieczeństwo”): kod na nowy adres (inny niż główny),

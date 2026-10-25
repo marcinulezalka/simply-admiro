@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Closure;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\HasZoneRoles;
-use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\HasZoneRoles;
+use Simplysmart\Admiro\Contracts\ZonePermissionChecker;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 

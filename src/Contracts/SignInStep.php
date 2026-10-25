@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Simplysmart\Mainboard\Auth\SignIn\PendingSignIn;
+use Simplysmart\Admiro\Auth\SignIn\PendingSignIn;
 
 /**
  * Krok logowania strefy (kod z e-maila, PIN, ustawienie PIN-u, w przyszłości np. TOTP).

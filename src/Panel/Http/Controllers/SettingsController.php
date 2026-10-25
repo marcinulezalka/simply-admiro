@@ -21,11 +21,11 @@ use Illuminate\Validation\ValidationException;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Localization\LocalizationSettings;
-use Simplysmart\Mainboard\Localization\LocalizationSettingsRejected;
-use Simplysmart\Mainboard\Queries\Dictionaries\DefaultEntries;
-use Simplysmart\Mainboard\Queries\Dictionaries\LocalizationChoices;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Localization\LocalizationSettings;
+use Simplysmart\Admiro\Localization\LocalizationSettingsRejected;
+use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
+use Simplysmart\Admiro\Queries\Dictionaries\LocalizationChoices;
 
 /**
  * Ustawienia systemu: kraj, język i waluta domyślne oraz języki interfejsu (`settings.view` podgląd,

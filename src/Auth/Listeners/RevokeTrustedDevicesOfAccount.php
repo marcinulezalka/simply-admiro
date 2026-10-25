@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Listeners;
+namespace Simplysmart\Admiro\Auth\Listeners;
 
-use Simplysmart\Mainboard\Auth\AccountKey;
+use Simplysmart\Admiro\Auth\AccountKey;
 use Illuminate\Contracts\Events\Dispatcher;
-use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
-use Simplysmart\Mainboard\Auth\Events\AccountLocked;
-use Simplysmart\Mainboard\Auth\Events\TrustedDevicesRevoked;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
+use Simplysmart\Admiro\Auth\Events\AccountLocked;
+use Simplysmart\Admiro\Auth\Events\TrustedDevicesRevoked;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\TrustedDeviceRepository;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
 
 /**
  * Konto bez zaufanych urządzeń po unieważnieniu dostępu (zmiana i reset PIN-u, odblokowanie, dezaktywacja,

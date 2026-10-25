@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,20 +11,20 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn\Steps;
+namespace Simplysmart\Admiro\Auth\SignIn\Steps;
 
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Auth\PinLength;
-use Simplysmart\Mainboard\Auth\PinRules;
-use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
-use Simplysmart\Mainboard\Auth\SignIn\PendingSignIn;
-use Simplysmart\Mainboard\Auth\SignIn\PendingSignInResolver;
-use Simplysmart\Mainboard\Auth\SignIn\PinCheckResult;
-use Simplysmart\Mainboard\Auth\SignIn\PinVerifier;
-use Simplysmart\Mainboard\Auth\SignIn\SignInFailure;
-use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\SignInStep;
+use Simplysmart\Admiro\Auth\PinLength;
+use Simplysmart\Admiro\Auth\PinRules;
+use Simplysmart\Admiro\Auth\SignIn\LoginAttemptLimiter;
+use Simplysmart\Admiro\Auth\SignIn\PendingSignIn;
+use Simplysmart\Admiro\Auth\SignIn\PendingSignInResolver;
+use Simplysmart\Admiro\Auth\SignIn\PinCheckResult;
+use Simplysmart\Admiro\Auth\SignIn\PinVerifier;
+use Simplysmart\Admiro\Auth\SignIn\SignInFailure;
+use Simplysmart\Admiro\Auth\SignInLimit;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\SignInStep;
 
 /**
  * PIN (wiedza). Zablokowane konto wraca do początku z ogólnym komunikatem; o blokadzie
@@ -58,7 +58,7 @@ final readonly class PinStep implements SignInStep
 
     public function view(): string
     {
-        return 'mainboard::auth.pin';
+        return 'admiro::auth.pin';
     }
 
     public function viewData(PendingSignIn $signIn): array

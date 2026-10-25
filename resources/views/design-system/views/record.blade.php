@@ -1,18 +1,18 @@
 {{-- Gotowy widok: szczegóły pojedynczego rekordu (§5): nagłówek kontekstowy z powrotem, metadanymi i akcjami, stepper z przypadków enuma statusu, siatka kart z parami etykieta → wartość. $view: DesignSystemView. --}}
 @php
-    use Simplysmart\Mainboard\Enums\DesignSystemView;
-    use Simplysmart\Mainboard\View\Demo\DemoInvoices;
-    use Simplysmart\Mainboard\View\Demo\DemoInvoiceStatus;
+    use Simplysmart\Admiro\Enums\DesignSystemView;
+    use Simplysmart\Admiro\View\Demo\DemoInvoices;
+    use Simplysmart\Admiro\View\Demo\DemoInvoiceStatus;
     $invoice = DemoInvoices::featured();
     $money = static fn (float $amount): string => local_money($amount, DemoInvoices::CURRENCY);
 @endphp
-<x-mainboard::design-system.shell :view="$view" module="invoices" :title="text('design_system.demo.invoice', ['number' => $invoice->number])" :meta="$invoice->client . ' · ' . local_date($invoice->issued)" :back="route('mainboard.design-system.view', DesignSystemView::List)">
+<x-admiro::design-system.shell :view="$view" module="invoices" :title="text('design_system.demo.invoice', ['number' => $invoice->number])" :meta="$invoice->client . ' · ' . local_date($invoice->issued)" :back="route('simplysmart.design-system.view', DesignSystemView::List)">
     <x-slot:actions>
         <button class="ss-button" type="button">{{ text('design_system.demo.export_pdf') }}</button>
-        <a class="ss-button ss-button--primary" href="{{ route('mainboard.design-system.view', DesignSystemView::Form) }}">{{ text_action('edit') }}</a>
+        <a class="ss-button ss-button--primary" href="{{ route('simplysmart.design-system.view', DesignSystemView::Form) }}">{{ text_action('edit') }}</a>
     </x-slot:actions>
 
-    <x-mainboard::stepper :steps="array_map(static fn (DemoInvoiceStatus $step): string => $step->label(), DemoInvoiceStatus::cases())" :current="$invoice->status->position()" />
+    <x-admiro::stepper :steps="array_map(static fn (DemoInvoiceStatus $step): string => $step->label(), DemoInvoiceStatus::cases())" :current="$invoice->status->position()" />
 
     <div class="ss-grid ss-grid--3">
         <section class="ss-card">
@@ -44,4 +44,4 @@
             </dl>
         </section>
     </div>
-</x-mainboard::design-system.shell>
+</x-admiro::design-system.shell>

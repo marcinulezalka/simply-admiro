@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Cookies;
+namespace Simplysmart\Admiro\Cookies;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Database\QueryException;
-use Simplysmart\Mainboard\Contracts\ConsentScripts;
-use Simplysmart\Mainboard\Contracts\CookieCatalog;
-use Simplysmart\Mainboard\Enums\CookieCategory;
-use Simplysmart\Mainboard\Localization\LocaleRouting;
-use Simplysmart\Mainboard\Providers\CoreRoutesServiceProvider;
-use Simplysmart\Mainboard\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Contracts\ConsentScripts;
+use Simplysmart\Admiro\Contracts\CookieCatalog;
+use Simplysmart\Admiro\Enums\CookieCategory;
+use Simplysmart\Admiro\Localization\LocaleRouting;
+use Simplysmart\Admiro\Providers\CoreRoutesServiceProvider;
+use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
 
 /**
- * Stan banera cookies dla widoku (x-mainboard::cookie-consent, x-mainboard::cookie-links): baner jest potrzebny,
+ * Stan banera cookies dla widoku (x-admiro::cookie-consent, x-admiro::cookie-links): baner jest potrzebny,
  * gdy opublikowano politykę cookies albo paczka zarejestrowała skrypt opcjonalny (same niezbędne cookies nie
  * wymagają zgody). Wersja polityki 0 = brak polityki; baza bez tabel (przed migracją) to brak polityki, żeby
  * strony nadal działały.
@@ -44,7 +44,7 @@ final readonly class ConsentBanner
 
     public function state(): ?ConsentBannerState
     {
-        if (! $this->config->boolean('mainboard.cookies.enabled')) {
+        if (! $this->config->boolean('admiro.cookies.enabled')) {
             return null;
         }
 
@@ -69,8 +69,8 @@ final readonly class ConsentBanner
             $version ?? 0,
             $cookies,
             $scripts,
-            $this->config->string('mainboard.cookies.cookie_name'),
-            $this->config->integer('mainboard.cookies.lifetime_days'),
+            $this->config->string('admiro.cookies.cookie_name'),
+            $this->config->integer('admiro.cookies.lifetime_days'),
             $this->url('cookies.consent'),
             $version === null ? null : $this->url('cookies.policy'),
         );

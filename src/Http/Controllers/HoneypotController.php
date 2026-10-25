@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers;
+namespace Simplysmart\Admiro\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Security\Honeypot\HoneypotTracker;
-use Simplysmart\Mainboard\Security\Honeypot\HoneypotTrap;
+use Simplysmart\Admiro\Security\Honeypot\HoneypotTracker;
+use Simplysmart\Admiro\Security\Honeypot\HoneypotTrap;
 
 /**
  * Fałszywe logowanie pod adresami pułapek: wygląda jak logowanie strefy, odsyła formularz na ten sam adres
@@ -28,7 +28,7 @@ final readonly class HoneypotController
     {
         $tracker->record($request, HoneypotTrap::RouteVisit);
 
-        return view('mainboard::honeypot.login', ['failed' => false, 'email' => null]);
+        return view('admiro::honeypot.login', ['failed' => false, 'email' => null]);
     }
 
     public function trap(Request $request, HoneypotTracker $tracker): View
@@ -36,6 +36,6 @@ final readonly class HoneypotController
         $tracker->record($request, HoneypotTrap::RouteSubmit);
         $email = $request->input('email');
 
-        return view('mainboard::honeypot.login', ['failed' => true, 'email' => is_string($email) ? mb_substr($email, 0, 255) : null]);
+        return view('admiro::honeypot.login', ['failed' => true, 'email' => is_string($email) ? mb_substr($email, 0, 255) : null]);
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\Permissions\Role;
-use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\Permissions\Role;
+use Simplysmart\Admiro\Models\ZoneAccount;
 
 /**
  * Role delegowane w pliku ról (`assigns`): posiadacz roli nadaje i odbiera wymienione role mimo braku ich

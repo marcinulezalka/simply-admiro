@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use LogicException;
-use Simplysmart\Mainboard\Auth\ZoneAuthSettings;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
-use Simplysmart\Mainboard\Enums\LegalDocumentType;
-use Simplysmart\Mainboard\Enums\Palette;
-use Simplysmart\Mainboard\Mail\MailPalette;
+use Simplysmart\Admiro\Auth\ZoneAuthSettings;
+use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Enums\Palette;
+use Simplysmart\Admiro\Mail\MailPalette;
 
 /**
  * Niezmienna definicja jednej strefy (budowana przez ZoneDefinitionFactory z configu paczki strefy).
@@ -40,8 +40,8 @@ final readonly class ZoneDefinition
      * @param bool $teams Konta działają w organizacjach (firmach klientów) wybieranych w żądaniu;
      *                    false = zawsze w organizacji operatora aplikacji.
      * @param list<string> $stylesheets Arkusze CSS strefy (ścieżki plików), dołączane po stylach Core na stronach
-     *                                  logowania i w layoucie aplikacji (x-mainboard::zone-styles).
-     * @param list<Palette> $palettes Kolorystyki do wyboru w strefie (x-mainboard::palette-switch); pusta lista =
+     *                                  logowania i w layoucie aplikacji (x-admiro::zone-styles).
+     * @param list<Palette> $palettes Kolorystyki do wyboru w strefie (x-admiro::palette-switch); pusta lista =
      *                               bez przełącznika, tylko kolory bazowe strefy.
      * @param ZoneFavicon|null $favicon Ikony strony strefy (trasa `<strefa>.favicon`); null = ikona aplikacji.
      * @param string|null $textNamespace Namespace tekstów paczki strefy (`texts` w configu, np. etykiety ról

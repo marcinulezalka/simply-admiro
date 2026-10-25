@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Mail;
+namespace Simplysmart\Admiro\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Simplysmart\Mainboard\Auth\Recovery\SecurityCodePurpose;
+use Simplysmart\Admiro\Auth\Recovery\SecurityCodePurpose;
 
 /**
  * Kod bezpieczeństwa poza logowaniem (Auth\Recovery\SessionCodes): potwierdzenie zapasowego adresu albo reset PIN-u;

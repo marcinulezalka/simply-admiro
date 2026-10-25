@@ -1,7 +1,7 @@
 {{-- Dokument prawny Core (polityka prywatności albo klauzula RODO): formularz szkicu (tytuł i treść Markdown w każdym języku interfejsu; bez settings.manage tylko do odczytu) z zapisem i publikacją nowej wersji, lista opublikowanych wersji z odnośnikiem do strony dokumentu. $document: Enums\LegalDocumentType, $draft: ?LegalDocument (szkic albo bieżąca wersja), $isDraft: bool, $versions: Collection<LegalDocument>, $locales: list<string>, $defaultLocale: string, $canManage: bool. --}}
-<x-mainboard::zone.layout :title="$document->label()">
-    <p class="ss-notice"><x-mainboard::icon name="info" /> {{ text('admiro::admin.legal_document_lead') }}</p>
-    @error('document') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+<x-admiro::zone.layout :title="$document->label()">
+    <p class="ss-notice"><x-admiro::icon name="info" /> {{ text('admiro::admin.legal_document_lead') }}</p>
+    @error('document') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <form class="ss-card" method="POST" action="{{ route('admiro.legal-documents.update', ['document' => $document->value]) }}">
         @csrf
@@ -11,7 +11,7 @@
         <fieldset class="ss-form ss-fieldset" @disabled(! $canManage)>
             @foreach ($locales as $locale)
                 @php($content = $draft?->content($locale) ?? ['title' => '', 'body' => ''])
-                <x-mainboard::input :id="'title-' . $locale" :name="'title[' . $locale . ']'" :label="text('admiro::admin.cookie_policy_field_title', ['locale' => strtoupper($locale)])" :value="old('title.' . $locale, $content['title'])" maxlength="255" />
+                <x-admiro::input :id="'title-' . $locale" :name="'title[' . $locale . ']'" :label="text('admiro::admin.cookie_policy_field_title', ['locale' => strtoupper($locale)])" :value="old('title.' . $locale, $content['title'])" maxlength="255" />
                 <div class="ss-field">
                     <label class="ss-field__label" for="body-{{ $locale }}">{{ text('admiro::admin.cookie_policy_field_body', ['locale' => strtoupper($locale)]) }}</label>
                     <textarea class="ss-input" id="body-{{ $locale }}" name="body[{{ $locale }}]" rows="14">{{ old('body.' . $locale, $content['body']) }}</textarea>
@@ -19,7 +19,7 @@
             @endforeach
             @if ($canManage)
                 <div class="ss-form-actions">
-                    <button class="ss-button" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text('admiro::admin.cookie_policy_save') }}</button>
+                    <button class="ss-button" type="submit"><x-admiro::icon name="check" class="ss-button__icon" />{{ text('admiro::admin.cookie_policy_save') }}</button>
                 </div>
             @endif
         </fieldset>
@@ -42,8 +42,8 @@
             <table class="ss-table">
                 <thead>
                     <tr>
-                        <th scope="col">{{ text_data(\Simplysmart\Mainboard\Models\LegalDocument::class, 'version') }}</th>
-                        <th scope="col">{{ text_data(\Simplysmart\Mainboard\Models\LegalDocument::class, 'published_at') }}</th>
+                        <th scope="col">{{ text_data(\Simplysmart\Admiro\Models\LegalDocument::class, 'version') }}</th>
+                        <th scope="col">{{ text_data(\Simplysmart\Admiro\Models\LegalDocument::class, 'published_at') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,4 +59,4 @@
             </table>
         </div>
     </section>
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

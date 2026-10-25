@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,19 +11,19 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Queries\Dictionaries;
+namespace Simplysmart\Admiro\Queries\Dictionaries;
 
 use Illuminate\Config\Repository;
-use Simplysmart\Mainboard\Contracts\DictionaryEntry;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\DataModel;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
-use Simplysmart\Mainboard\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Contracts\DictionaryEntry;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\DataModel;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Models\Dictionaries\Language;
 
 /**
  * Kraj, język i waluta aplikacji: wpis słownika oznaczony `is_default`, a gdy go nie ma — wpis o kodzie
- * z configu (mainboard.localization.country, app.locale, mainboard.locale.currency); null bez słownika.
+ * z configu (admiro.localization.country, app.locale, admiro.locale.currency); null bez słownika.
  */
 final readonly class DefaultEntries
 {
@@ -33,7 +33,7 @@ final readonly class DefaultEntries
 
     public function country(): ?Country
     {
-        return $this->find(Country::class, strtoupper($this->configured('mainboard.localization.country')));
+        return $this->find(Country::class, strtoupper($this->configured('admiro.localization.country')));
     }
 
     public function language(): ?Language
@@ -43,7 +43,7 @@ final readonly class DefaultEntries
 
     public function currency(): ?Currency
     {
-        return $this->find(Currency::class, strtoupper($this->configured('mainboard.locale.currency')));
+        return $this->find(Currency::class, strtoupper($this->configured('admiro.locale.currency')));
     }
 
     /**

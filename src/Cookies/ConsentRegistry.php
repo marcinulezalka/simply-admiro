@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Cookies;
+namespace Simplysmart\Admiro\Cookies;
 
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Enums\ConsentDecision;
-use Simplysmart\Mainboard\Enums\CookieCategory;
-use Simplysmart\Mainboard\Models\CookieConsent;
+use Simplysmart\Admiro\Enums\ConsentDecision;
+use Simplysmart\Admiro\Enums\CookieCategory;
+use Simplysmart\Admiro\Models\CookieConsent;
 
 /**
  * Rejestr zgód na cookies: zapisuje decyzję przeglądarki (losowy identyfikator UUID z ciasteczka, wersja polityki,

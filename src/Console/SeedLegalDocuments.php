@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Illuminate\Console\Command;
-use Simplysmart\Mainboard\Database\Seeders\LegalDocumentsSeeder;
+use Simplysmart\Admiro\Database\Seeders\LegalDocumentsSeeder;
 
 /**
  * Publikuje pierwsze wersje polityk (cookies, prywatności, RODO) z treści Core. Seeder referencyjny, idempotentny:
@@ -22,7 +22,7 @@ use Simplysmart\Mainboard\Database\Seeders\LegalDocumentsSeeder;
  */
 final class SeedLegalDocuments extends Command
 {
-    protected $signature = 'mainboard:legal:seed';
+    protected $signature = 'admiro:legal:seed';
 
     protected $description = 'Publikuje pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO';
 

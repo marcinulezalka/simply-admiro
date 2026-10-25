@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Routing\Router;
 use InvalidArgumentException;
 use LogicException;
-use Simplysmart\Mainboard\Enums\FaviconType;
-use Simplysmart\Mainboard\Http\AccountRoutes;
-use Simplysmart\Mainboard\Http\Controllers\ZoneFaviconController;
-use Simplysmart\Mainboard\Http\Controllers\ZoneFontController;
-use Simplysmart\Mainboard\Http\SignInRoutes;
-use Simplysmart\Mainboard\Localization\LocaleRouting;
+use Simplysmart\Admiro\Enums\FaviconType;
+use Simplysmart\Admiro\Http\AccountRoutes;
+use Simplysmart\Admiro\Http\Controllers\ZoneFaviconController;
+use Simplysmart\Admiro\Http\Controllers\ZoneFontController;
+use Simplysmart\Admiro\Http\SignInRoutes;
+use Simplysmart\Admiro\Localization\LocaleRouting;
 
 /**
  * Rejestruje trasy strefy: prefiks URL ({locale} i slug), prefiks nazw `<strefa>.`, grupę middleware

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database\Seeders;
+namespace Simplysmart\Admiro\Database\Seeders;
 
 use Illuminate\Config\Repository;
 use Illuminate\Database\Seeder;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Cookies\CookiePolicies;
-use Simplysmart\Mainboard\Enums\LegalDocumentType;
-use Simplysmart\Mainboard\Legal\LegalDocuments;
-use Simplysmart\Mainboard\Queries\Cookies\CookiePolicyVersions;
-use Simplysmart\Mainboard\Queries\Legal\LegalDocumentVersions;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Cookies\CookiePolicies;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Legal\LegalDocuments;
+use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 
 /**
  * Pierwsze wersje polityk: polityka cookies, polityka prywatności i klauzula RODO z plików Markdown
  * `database/seeders/legal/<język>/<dokument>.md` (pierwszy wiersz `# Tytuł`, reszta to treść) w każdym włączonym
- * języku interfejsu, który ma plik; `:name` i `:email` to administrator danych z `mainboard.legal.controller`,
+ * języku interfejsu, który ma plik; `:name` i `:email` to administrator danych z `admiro.legal.controller`,
  * `:consent_days` — ważność zgody cookies. Seeder referencyjny, idempotentny: dokument, który ma już wersję albo
  * szkic, zostaje bez zmian (kolejne wersje powstają w panelu administratora); bez pliku w języku domyślnym nic
  * nie jest publikowane.
@@ -71,9 +71,9 @@ final class LegalDocumentsSeeder extends Seeder
     private function content(string $file): array
     {
         $replacements = [
-            ':name' => $this->config->string('mainboard.legal.controller.name'),
-            ':email' => $this->config->string('mainboard.legal.controller.email'),
-            ':consent_days' => (string) $this->config->integer('mainboard.cookies.lifetime_days'),
+            ':name' => $this->config->string('admiro.legal.controller.name'),
+            ':email' => $this->config->string('admiro.legal.controller.email'),
+            ':consent_days' => (string) $this->config->integer('admiro.cookies.lifetime_days'),
         ];
         $content = [];
 

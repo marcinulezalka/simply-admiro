@@ -1,6 +1,6 @@
 /**
  * Style strefy administratorów, dołączane przez Core po jego stylach (`stylesheets` w configu strefy,
- * x-mainboard::zone-styles). Tylko tokeny Core (--ss-*).
+ * x-admiro::zone-styles). Tylko tokeny Core (--ss-*).
  *
  * Fonty strefy (`fonts` w configu strefy, @font-face od Core; z polskimi literami, licencja SIL OFL w public/fonts/):
  * Space Grotesk w tytule logowania (--ss-font-display), kursywa Instrument Serif we fragmencie w *gwiazdkach*

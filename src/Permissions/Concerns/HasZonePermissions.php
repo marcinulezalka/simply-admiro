@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions\Concerns;
+namespace Simplysmart\Admiro\Permissions\Concerns;
 
 use BackedEnum;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Contracts\CurrentRole;
-use Simplysmart\Mainboard\Models\Permissions\PermissionDenial;
-use Simplysmart\Mainboard\Models\Relations\HasPermissionDenials;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Contracts\CurrentRole;
+use Simplysmart\Admiro\Models\Permissions\PermissionDenial;
+use Simplysmart\Admiro\Models\Relations\HasPermissionDenials;
 use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;

@@ -76,18 +76,18 @@ if [[ "${DEPLOY_FRESH:-}" == 1 ]]; then
     # Core blokuje destrukcyjne komendy na produkcji; zmienna zdejmuje blokadę tylko dla tego procesu.
     # Config bez cache, bo zcache'owany config nie czyta zmiennych środowiska.
     "$php_bin" artisan config:clear >/dev/null
-    MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true "$php_bin" artisan migrate:fresh --force
+    ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS=true "$php_bin" artisan migrate:fresh --force
 else
     step "Migracje"
     "$php_bin" artisan migrate --force
 fi
 
 step "Słowniki, organizacja operatora, role i polityki"
-# Kolejność z docs/wdrozenie.md mainboard: role stref bez firm klientów nadawane są w organizacji operatora.
-"$php_bin" artisan mainboard:localization:seed
-"$php_bin" artisan mainboard:organizations:seed
-"$php_bin" artisan mainboard:permissions:sync
-"$php_bin" artisan mainboard:legal:seed
+# Kolejność z docs/wdrozenie.md admiro: role stref bez firm klientów nadawane są w organizacji operatora.
+"$php_bin" artisan admiro:localization:seed
+"$php_bin" artisan admiro:organizations:seed
+"$php_bin" artisan admiro:permissions:sync
+"$php_bin" artisan admiro:legal:seed
 for command in $("$php_bin" artisan list --raw | awk '{print $1}' | grep -E ':dictionaries:sync$' || true); do
     "$php_bin" artisan "$command"
 done
@@ -99,9 +99,9 @@ step "Cache konfiguracji, tras i widoków"
 "$php_bin" artisan view:cache
 
 # Skrypt crona (harmonogram i worker kolejki) dla panelu hostingu; tylko gdy Core ma tę komendę.
-if "$php_bin" artisan list --raw | awk '{print $1}' | grep -qx 'mainboard:cron:script'; then
+if "$php_bin" artisan list --raw | awk '{print $1}' | grep -qx 'admiro:cron:script'; then
     step "Skrypt crona"
-    "$php_bin" artisan mainboard:cron:script --php="$php_bin"
+    "$php_bin" artisan admiro:cron:script --php="$php_bin"
 fi
 
 step "Wdrożenie zakończone: $("$php_bin" artisan --version)"

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
 use Carbon\CarbonImmutable;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRateQuote;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRatesUnavailable;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRateQuote;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRatesUnavailable;
 
 /**
  * Źródło kursów walut w złotych (domyślnie tabela A NBP, `ExchangeRates\NbpTableA`): kursy opublikowane w dniach

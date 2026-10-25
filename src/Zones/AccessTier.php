@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,9 +11,9 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
-use Simplysmart\Mainboard\Http\Middleware\EnsureAccountCanSignIn;
+use Simplysmart\Admiro\Http\Middleware\EnsureAccountCanSignIn;
 
 /**
  * Poziomy dostępu do tras strefy; każdy wyższy zawiera niższe (public ⊂ authenticated ⊂ uprawnienie).

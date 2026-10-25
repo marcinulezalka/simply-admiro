@@ -1,11 +1,11 @@
 /**
- * Wirtualna klawiatura numeryczna pól PIN (x-mainboard::pin-field): przycisk [data-ss-keypad-open] w polu otwiera
+ * Wirtualna klawiatura numeryczna pól PIN (x-admiro::pin-field): przycisk [data-ss-keypad-open] w polu otwiera
  * modalnie okno [data-ss-keypad] (natywny <dialog>), którego przyciski dopisują cyfry do pola wskazanego przez
  * data-ss-keypad-for (do jego maxlength), usuwają ostatnią cyfrę albo czyszczą pole. Kropki w
  * [data-ss-keypad-display] pokazują liczbę wpisanych cyfr (czytniki ekranu dostają ją tekstem z
  * data-ss-keypad-count: „:count” → liczba). W oknie działa też fizyczna klawiatura (cyfry, Backspace, Delete,
  * Enter = „Gotowe”, Escape zamyka natywnie). Po zamknięciu fokus wraca do pola. Bez skryptu przycisk zostaje
- * ukryty. Osadzany inline z nonce CSP (x-mainboard::scripts).
+ * ukryty. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const init = (dialog) => {

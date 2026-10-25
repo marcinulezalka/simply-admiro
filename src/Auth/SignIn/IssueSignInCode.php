@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,19 +11,19 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Simplysmart\Mainboard\Contracts\AccountLocator;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Mail\LoginCodeMail;
-use Simplysmart\Mainboard\Mail\MailOrganization;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\AccountLocator;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Mail\LoginCodeMail;
+use Simplysmart\Admiro\Mail\MailOrganization;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Wydaje i wysyła kod logowania w tle. Żądanie kolejkuje ten job zawsze, także dla nieznanego

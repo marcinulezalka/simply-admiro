@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Auth\AccountKey;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\LoginChallengeRepository;
-use Simplysmart\Mainboard\Contracts\SignInAccount;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\LoginChallengeRepository;
+use Simplysmart\Admiro\Contracts\SignInAccount;
 
 /**
  * Wydaje i sprawdza kody logowania konta: ważny jest tylko najnowszy, z TTL i limitem prób.

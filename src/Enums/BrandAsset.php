@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Enums;
+namespace Simplysmart\Admiro\Enums;
 
 /**
  * Pliki marki strefy (config `brand`) i organizacji (panel): logo, sygnet i ikona strony. Logo i sygnet trafiają

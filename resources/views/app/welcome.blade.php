@@ -1,9 +1,9 @@
-{{-- Domyślna strona startowa aplikacji (trasa `/` szkieletu: view('welcome')). Aplikacja zastępuje ją własnym resources/views/welcome.blade.php. Jedna strona bez akcji: marka, funkcje Core jako ikona, tytuł i opis, stopka z logo Laravela i wersją mainboard. Nazwy simplysmart i mainboard wyróżnia View\BrandNames. --}}
-@php($highlight = \Simplysmart\Mainboard\View\BrandNames::highlight(...))
+{{-- Domyślna strona startowa aplikacji (trasa `/` szkieletu: view('welcome')). Aplikacja zastępuje ją własnym resources/views/welcome.blade.php. Jedna strona bez akcji: marka, funkcje Core jako ikona, tytuł i opis, stopka z logo Laravela i wersją admiro. Nazwy simplysmart i admiro wyróżnia View\BrandNames. --}}
+@php($highlight = \Simplysmart\Admiro\View\BrandNames::highlight(...))
 @php($features = ['zones' => 'zones', 'sign_in' => 'sign-in', 'dictionaries' => 'dictionaries', 'history' => 'history', 'locale' => 'locale', 'standards' => 'standards'])
-<x-mainboard::page :title="config('app.name')" :description="text('welcome.lead')">
+<x-admiro::page :title="config('app.name')" :description="text('welcome.lead')">
     <x-slot:head>
-        <x-mainboard::styles />
+        <x-admiro::styles />
     </x-slot:head>
 
     <div class="ss-welcome">
@@ -16,7 +16,7 @@
                 <ul class="ss-welcome__features">
                     @foreach ($features as $feature => $icon)
                         <li class="ss-welcome__feature">
-                            <x-mainboard::icon :name="$icon" class="ss-icon--tile" />
+                            <x-admiro::icon :name="$icon" class="ss-icon--tile" />
                             <span class="ss-welcome__feature-text">
                                 <span class="ss-welcome__feature-title">{{ text('welcome.features.' . $feature . '.title') }}</span>
                                 <span class="ss-muted">{{ text('welcome.features.' . $feature . '.description') }}</span>
@@ -28,16 +28,16 @@
                 <footer class="ss-welcome__footer">
                     <span class="ss-welcome__built-on">
                         <span class="ss-muted">{{ text('welcome.built_on') }}</span>
-                        <span class="ss-welcome__laravel">{!! \Simplysmart\Mainboard\View\CoreAssets::contents('img/vendor/laravel.svg') !!}</span>
+                        <span class="ss-welcome__laravel">{!! \Simplysmart\Admiro\View\CoreAssets::contents('img/vendor/laravel.svg') !!}</span>
                     </span>
-                    <span class="ss-badge">{{ text('welcome.mainboard_version', ['version' => \Simplysmart\Mainboard\View\CoreVersion::current()]) }}</span>
+                    <span class="ss-badge">{{ text('welcome.admiro_version', ['version' => \Simplysmart\Admiro\View\CoreVersion::current()]) }}</span>
                 </footer>
             </section>
 
             <aside class="ss-welcome__brand">
-                <x-mainboard::logo />
+                <x-admiro::logo />
                 <p class="ss-welcome__tagline">{{ text('welcome.tagline') }}</p>
             </aside>
         </main>
     </div>
-</x-mainboard::page>
+</x-admiro::page>

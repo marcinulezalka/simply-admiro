@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -14,10 +14,10 @@ declare(strict_types=1);
 return [
 
     'title' => 'System simplysmart został pomyślnie zainstalowany',
-    'lead' => 'Fundament Twojej nowej aplikacji biznesowej, zbudowany na Laravelu i pakiecie mainboard, jest w pełni gotowy do pracy. Wszystko, czego potrzebujesz na start, działa od pierwszego uruchomienia.',
+    'lead' => 'Fundament Twojej nowej aplikacji biznesowej, zbudowany na Laravelu i pakiecie admiro, jest w pełni gotowy do pracy. Wszystko, czego potrzebujesz na start, działa od pierwszego uruchomienia.',
     'inside' => 'Co zyskujesz na starcie?',
     'built_on' => 'Zbudowane na',
-    'mainboard_version' => 'mainboard :version',
+    'admiro_version' => 'admiro :version',
     'tagline' => 'Dopasowane aplikacje biznesowe na Laravelu',
 
     'features' => [

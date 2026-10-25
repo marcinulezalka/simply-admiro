@@ -9,7 +9,7 @@
     <label class="ss-field__label" for="{{ $id }}">{{ $label }}</label>
     <div @class(['ss-input-wrap', 'ss-input-wrap--icon' => $icon !== null])>
         @if ($icon !== null)
-            <x-mainboard::icon :name="$icon" class="ss-input-wrap__icon" />
+            <x-admiro::icon :name="$icon" class="ss-input-wrap__icon" />
         @endif
         <input {{ $attributes->merge(array_filter([
             'class' => 'ss-input',

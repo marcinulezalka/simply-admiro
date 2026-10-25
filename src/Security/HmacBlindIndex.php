@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,9 +11,9 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Security;
+namespace Simplysmart\Admiro\Security;
 
-use Simplysmart\Mainboard\Contracts\BlindIndex;
+use Simplysmart\Admiro\Contracts\BlindIndex;
 
 /**
  * HMAC-SHA256 z kluczem aplikacji: ten sam adres daje ten sam skrót, a bez klucza nie da się go odwrócić.

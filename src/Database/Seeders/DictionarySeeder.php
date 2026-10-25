@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database\Seeders;
+namespace Simplysmart\Admiro\Database\Seeders;
 
 use Illuminate\Config\Repository;
 use Illuminate\Database\Seeder;
-use Simplysmart\Mainboard\Contracts\DictionaryEntry;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Database\IdSlots;
-use Simplysmart\Mainboard\Localization\DictionaryLocales;
-use Simplysmart\Mainboard\Models\DataModel;
+use Simplysmart\Admiro\Contracts\DictionaryEntry;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Database\IdSlots;
+use Simplysmart\Admiro\Localization\DictionaryLocales;
+use Simplysmart\Admiro\Models\DataModel;
 
 /**
  * Baza seederów referencyjnych słowników: idempotentne (rekord szukany po kodzie, także usunięty),

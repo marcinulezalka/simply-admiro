@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -12,13 +12,13 @@ declare(strict_types=1);
  */
 
 use Illuminate\Container\Container;
-use Simplysmart\Mainboard\Contracts\LocalFormatter;
-use Simplysmart\Mainboard\Contracts\TextTranslator;
-use Simplysmart\Mainboard\Translation\TextGroup;
+use Simplysmart\Admiro\Contracts\LocalFormatter;
+use Simplysmart\Admiro\Contracts\TextTranslator;
+use Simplysmart\Admiro\Translation\TextGroup;
 
 if (! function_exists('text')) {
     /**
-     * Tłumaczenie kaskadowe: paczka strefy → mainboard → skeleton → klucz (bez języka zapasowego).
+     * Tłumaczenie kaskadowe: paczka strefy → admiro → skeleton → klucz (bez języka zapasowego).
      *
      * @param  array<string, mixed>  $replace
      */
@@ -78,7 +78,7 @@ if (! function_exists('text_email')) {
 
 if (! function_exists('local_money')) {
     /**
-     * Kwota z walutą sformatowana według języka; bez waluty używa config('mainboard.locale.currency').
+     * Kwota z walutą sformatowana według języka; bez waluty używa config('admiro.locale.currency').
      */
     function local_money(int|float $amount, ?string $currency = null, ?string $locale = null): string
     {

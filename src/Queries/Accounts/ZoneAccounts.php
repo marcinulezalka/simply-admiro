@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Queries\Accounts;
+namespace Simplysmart\Admiro\Queries\Accounts;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Simplysmart\Mainboard\Auth\AccountColumns;
-use Simplysmart\Mainboard\Auth\EmailAddress;
-use Simplysmart\Mainboard\Contracts\BlindIndex;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Auth\AccountColumns;
+use Simplysmart\Admiro\Auth\EmailAddress;
+use Simplysmart\Admiro\Contracts\BlindIndex;
+use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Konta strefy dla paneli administracyjnych: strona listy (od najnowszych) z wyszukiwaniem po dokładnym adresie

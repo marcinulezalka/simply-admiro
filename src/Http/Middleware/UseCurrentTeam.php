@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,19 +11,19 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
-use Simplysmart\Mainboard\Contracts\HasZoneRoles;
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\HasZoneRoles;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Contracts\CurrentRole;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Permissions\OrganizationSelector;
-use Simplysmart\Mainboard\Permissions\RoleSelector;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Contracts\CurrentRole;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Permissions\OrganizationSelector;
+use Simplysmart\Admiro\Permissions\RoleSelector;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

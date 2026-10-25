@@ -4,6 +4,6 @@
     @if ($image !== null)
         <img class="ss-avatar__image" src="{{ $image }}" alt="">
     @else
-        {{ \Simplysmart\Mainboard\View\Initials::of($name) }}
+        {{ \Simplysmart\Admiro\View\Initials::of($name) }}
     @endif
 </span>

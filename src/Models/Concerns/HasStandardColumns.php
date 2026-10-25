@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Concerns;
+namespace Simplysmart\Admiro\Models\Concerns;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
-use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Admiro\Database\ColumnNames;
 
 /**
  * Casty kolumn z Columns::base() i Columns::closing(), ich wartości domyślne jako domyślne atrybuty

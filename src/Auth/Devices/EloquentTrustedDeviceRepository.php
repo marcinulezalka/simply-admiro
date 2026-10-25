@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Devices;
+namespace Simplysmart\Admiro\Auth\Devices;
 
-use Simplysmart\Mainboard\Auth\AccountKey;
+use Simplysmart\Admiro\Auth\AccountKey;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
-use Simplysmart\Mainboard\Database\ZoneTables;
-use Simplysmart\Mainboard\Zones\ZoneTable;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\TrustedDeviceRepository;
+use Simplysmart\Admiro\Database\ZoneTables;
+use Simplysmart\Admiro\Zones\ZoneTable;
 
 /**
  * Zaufane urządzenia w tabeli `<strefa>_trusted_devices` bieżącej strefy.

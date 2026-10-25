@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,25 +11,25 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Models\AuditEvent;
+use Simplysmart\Admiro\Models\AuditEvent;
 
 /**
- * Usuwa wpisy dziennika zdarzeń starsze niż `mainboard.audit.retention_days` (planowane codziennie przez Core).
+ * Usuwa wpisy dziennika zdarzeń starsze niż `admiro.audit.retention_days` (planowane codziennie przez Core).
  */
 final class PruneAuditEvents extends Command
 {
-    protected $signature = 'mainboard:audit:prune';
+    protected $signature = 'admiro:audit:prune';
 
     protected $description = 'Usuwa stare wpisy dziennika zdarzeń';
 
     public function handle(Repository $config): int
     {
-        $before = Carbon::now()->subDays($config->integer('mainboard.audit.retention_days'));
+        $before = Carbon::now()->subDays($config->integer('admiro.audit.retention_days'));
         $deleted = AuditEvent::query()->toBase()->where('occurred_at', '<', $before)->delete();
 
         $this->info("audit_events: {$deleted}");

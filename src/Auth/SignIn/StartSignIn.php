@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Simplysmart\Mainboard\Auth\Devices\RecognizeTrustedDevice;
-use Simplysmart\Mainboard\Auth\EmailAddress;
-use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Security\Honeypot\FormHoneypot;
-use Simplysmart\Mainboard\Security\Honeypot\HoneypotTracker;
-use Simplysmart\Mainboard\Security\Honeypot\HoneypotTrap;
+use Simplysmart\Admiro\Auth\Devices\RecognizeTrustedDevice;
+use Simplysmart\Admiro\Auth\EmailAddress;
+use Simplysmart\Admiro\Auth\SignInLimit;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Security\Honeypot\FormHoneypot;
+use Simplysmart\Admiro\Security\Honeypot\HoneypotTracker;
+use Simplysmart\Admiro\Security\Honeypot\HoneypotTrap;
 
 /**
  * Pierwszy krok: adres e-mail. Ta sama ścieżka dla każdego adresu (limity, stan w sesji, job

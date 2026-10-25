@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Queries\Organizations\ActiveMemberships;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Queries\Organizations\ActiveMemberships;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Wybiera organizację żądania. Strefa bez zespołów: zawsze organizacja operatora. Strefa z zespołami:
@@ -26,7 +26,7 @@ use Simplysmart\Mainboard\Zones\ZoneDefinition;
  */
 final readonly class OrganizationSelector
 {
-    public const string SESSION_KEY = 'mainboard.organization';
+    public const string SESSION_KEY = 'admiro.organization';
 
     public function __construct(
         private ActiveMemberships $memberships,

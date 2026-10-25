@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\LoginChallengeRepository;
-use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
-use Simplysmart\Mainboard\Zones\ZoneTable;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\LoginChallengeRepository;
+use Simplysmart\Admiro\Contracts\TrustedDeviceRepository;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Zones\ZoneTable;
 
 /**
  * Usuwa stare kody logowania oraz odwołane i wygasłe zaufane urządzenia każdej strefy z logowaniem
@@ -30,7 +30,7 @@ use Simplysmart\Mainboard\Zones\ZoneTable;
  */
 final class PruneSignInChallenges extends Command
 {
-    protected $signature = 'mainboard:auth:prune';
+    protected $signature = 'admiro:auth:prune';
 
     protected $description = 'Usuwa wygasłe kody logowania i nieaktywne zaufane urządzenia stref';
 

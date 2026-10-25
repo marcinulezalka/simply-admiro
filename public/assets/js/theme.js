@@ -1,13 +1,13 @@
 /**
  * Motyw: jasny, ciemny i dwa motywy wysokiego kontrastu WCAG (czerń na bieli, żółty na czarnym). Zapisany wybór
  * (localStorage) ustawia data-theme na <html> od razu, w <head>, zanim strona się narysuje (bez błysku); przyciski
- * [data-ss-theme] w przełączniku [data-ss-theme-toggle] (x-mainboard::theme-toggle) ustawiają motyw, a wybrany ma
+ * [data-ss-theme] w przełączniku [data-ss-theme-toggle] (x-admiro::theme-toggle) ustawiają motyw, a wybrany ma
  * aria-pressed="true". Bez wyboru obowiązuje motyw systemu (jasny albo ciemny, a przy prefers-contrast: more kontrast
  * czarno-biały); bez skryptu przełącznik zostaje ukryty.
  *
- * Kolorystyka: meta ss-palettes (x-mainboard::page; content: kolorystyki strony po spacji, data-scope: zakres
+ * Kolorystyka: meta ss-palettes (x-admiro::page; content: kolorystyki strony po spacji, data-scope: zakres
  * zapamiętania, np. strefa); zapisany wybór z tej listy ustawia data-palette na <html>, przyciski
- * [data-ss-palette] w [data-ss-palette-switch] (x-mainboard::palette-switch) go zmieniają (pusta wartość = kolory
+ * [data-ss-palette] w [data-ss-palette-switch] (x-admiro::palette-switch) go zmieniają (pusta wartość = kolory
  * bazowe). Bez meta strona nie ma kolorystyk i nie dostaje data-palette.
  */
 (() => {

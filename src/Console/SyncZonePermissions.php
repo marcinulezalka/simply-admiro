@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Illuminate\Console\Command;
-use Simplysmart\Mainboard\Permissions\InvalidPermissionFile;
-use Simplysmart\Mainboard\Permissions\PermissionFileParser;
-use Simplysmart\Mainboard\Permissions\PermissionFiles;
-use Simplysmart\Mainboard\Permissions\ZoneRoleSet;
-use Simplysmart\Mainboard\Permissions\ZoneRoleSynchronizer;
+use Simplysmart\Admiro\Permissions\InvalidPermissionFile;
+use Simplysmart\Admiro\Permissions\PermissionFileParser;
+use Simplysmart\Admiro\Permissions\PermissionFiles;
+use Simplysmart\Admiro\Permissions\ZoneRoleSet;
+use Simplysmart\Admiro\Permissions\ZoneRoleSynchronizer;
 
 /**
  * Zapisuje role i uprawnienia stref z plików JSON (PermissionFiles). Najpierw waliduje wszystkie pliki, więc
@@ -27,7 +27,7 @@ use Simplysmart\Mainboard\Permissions\ZoneRoleSynchronizer;
  */
 final class SyncZonePermissions extends Command
 {
-    protected $signature = 'mainboard:permissions:sync
+    protected $signature = 'admiro:permissions:sync
         {--zone= : Tylko ta strefa}
         {--prune : Usuń uprawnienia i role strefy, których nie ma w pliku}
         {--force : Pozwól na --prune na produkcji bez pytania}';

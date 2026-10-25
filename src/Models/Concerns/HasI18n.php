@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Concerns;
+namespace Simplysmart\Admiro\Models\Concerns;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
-use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Admiro\Database\ColumnNames;
 
 /**
  * Krótkie tłumaczenia słownika w `json_i18n` (`{"pl": "polski", "en": "Polish"}`, docs/baza-danych.md §7).

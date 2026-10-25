@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Concerns;
+namespace Simplysmart\Admiro\Models\Concerns;
 
 use Illuminate\Support\Str;
-use Simplysmart\Mainboard\Auth\AccountColumns;
+use Simplysmart\Admiro\Auth\AccountColumns;
 
 /**
  * Losowy `token` (64 znaki) jako klucz trasy: publiczne adresy nigdy nie zawierają sekwencyjnego `id`.

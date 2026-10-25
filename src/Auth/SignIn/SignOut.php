@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
-use Simplysmart\Mainboard\Auth\AccountKey;
+use Simplysmart\Admiro\Auth\AccountKey;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Auth\Events\SignedOut;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Admiro\Auth\Events\SignedOut;
+use Simplysmart\Admiro\Contracts\CurrentZone;
 
 /**
  * Wylogowanie z bieżącej strefy: unieważnia tylko jej sesję (inne strefy zostają zalogowane).

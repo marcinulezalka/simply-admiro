@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\ExchangeRates;
+namespace Simplysmart\Admiro\ExchangeRates;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Config\Repository;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory as HttpFactory;
-use Simplysmart\Mainboard\Contracts\ExchangeRateProvider;
+use Simplysmart\Admiro\Contracts\ExchangeRateProvider;
 
 /**
  * Kursy średnie z tabeli A NBP (Web API `api.nbp.pl`, JSON): okres dzielony na zapytania po najwyżej 93 dni (limit
@@ -56,10 +56,10 @@ final readonly class NbpTableA implements ExchangeRateProvider
      */
     private function fetch(CarbonImmutable $from, CarbonImmutable $to): array
     {
-        $url = rtrim($this->config->string('mainboard.exchange_rates.nbp_url'), '/') . '/exchangerates/tables/A/' . $from->toDateString() . '/' . $to->toDateString() . '/';
+        $url = rtrim($this->config->string('admiro.exchange_rates.nbp_url'), '/') . '/exchangerates/tables/A/' . $from->toDateString() . '/' . $to->toDateString() . '/';
 
         try {
-            $response = $this->http->acceptJson()->timeout($this->config->integer('mainboard.exchange_rates.timeout_seconds'))->get($url, ['format' => 'json']);
+            $response = $this->http->acceptJson()->timeout($this->config->integer('admiro.exchange_rates.timeout_seconds'))->get($url, ['format' => 'json']);
         } catch (ConnectionException $exception) {
             throw ExchangeRatesUnavailable::because($exception->getMessage());
         }

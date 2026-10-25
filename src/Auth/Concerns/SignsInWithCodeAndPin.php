@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Concerns;
+namespace Simplysmart\Admiro\Auth\Concerns;
 
 use Carbon\CarbonInterface;
 use Illuminate\Container\Container;
-use Simplysmart\Mainboard\Auth\AccountColumns;
-use Simplysmart\Mainboard\Auth\EmailAddress;
-use Simplysmart\Mainboard\Contracts\BlindIndex;
+use Simplysmart\Admiro\Auth\AccountColumns;
+use Simplysmart\Admiro\Auth\EmailAddress;
+use Simplysmart\Admiro\Contracts\BlindIndex;
 
 /**
  * Implementacja Contracts\CodeAndPinAccount dla modelu konta strefy (kolumny z Database\ZoneTables).
@@ -26,7 +26,7 @@ use Simplysmart\Mainboard\Contracts\BlindIndex;
  * Laravelowe remember-me jest wyłączone (zastępują je zaufane urządzenia). Liczniki z wartością domyślną
  * w bazie mają ją też w nowym modelu (checksum, docs/baza-danych.md §5).
  *
- * @see \Simplysmart\Mainboard\Models\ZoneAccount
+ * @see \Simplysmart\Admiro\Models\ZoneAccount
  *
  * @method static void saving(\Closure|string $callback) Metoda modelu Eloquent.
  * @method bool isDirty(array<int, string>|string|null $attributes = null) Metoda modelu Eloquent.

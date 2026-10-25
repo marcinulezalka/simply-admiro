@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Admiro\Auth;
 
 use Illuminate\Config\Repository;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use Simplysmart\Mainboard\Contracts\SignInStep;
-use Simplysmart\Mainboard\Enums\AuthLayout;
+use Simplysmart\Admiro\Contracts\SignInStep;
+use Simplysmart\Admiro\Enums\AuthLayout;
 
 /**
- * Buduje ZoneAuthSettings: `mainboard.auth` scalone rekurencyjnie z kluczem `auth` configu strefy
+ * Buduje ZoneAuthSettings: `admiro.auth` scalone rekurencyjnie z kluczem `auth` configu strefy
  * (lista kroków i lista czasów blokad są zastępowane w całości).
  */
 final readonly class ZoneAuthSettingsFactory
@@ -36,7 +36,7 @@ final readonly class ZoneAuthSettingsFactory
      */
     public function make(array $overrides): ZoneAuthSettings
     {
-        $settings = array_replace_recursive($this->config->array('mainboard.auth'), $overrides);
+        $settings = array_replace_recursive($this->config->array('admiro.auth'), $overrides);
 
         foreach (['steps', 'pin.lockout_minutes'] as $list) {
             if (Arr::has($overrides, $list)) {

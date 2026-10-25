@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Auth;
+namespace Simplysmart\Admiro\Http\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\SignIn\ResendSignInCode;
-use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Http\SignInRoutes;
+use Simplysmart\Admiro\Auth\SignIn\ResendSignInCode;
+use Simplysmart\Admiro\Auth\SignIn\Steps\EmailCodeStep;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Http\SignInRoutes;
 
 /**
  * Nowy kod logowania na kroku kodu (po odstępie między wysyłkami) z neutralnym komunikatem.

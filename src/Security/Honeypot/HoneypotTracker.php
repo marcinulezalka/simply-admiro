@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Security\Honeypot;
+namespace Simplysmart\Admiro\Security\Honeypot;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Config\Repository as Config;
@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
- * Zapisuje trafienie w pułapkę (dziennik `mainboard.honeypot.log_channel`: powód, IP, ścieżka, user agent,
+ * Zapisuje trafienie w pułapkę (dziennik `admiro.honeypot.log_channel`: powód, IP, ścieżka, user agent,
  * bez haseł, tylko ich długość) i banuje adres: od razu przy POST lub wypełnionym ukrytym polu, przy GET
  * dopiero po `get_hits_threshold` wejściach w oknie (przypadkowy człowiek nie traci dostępu).
  */
@@ -41,7 +41,7 @@ final readonly class HoneypotTracker
     public function record(Request $request, HoneypotTrap $trap): void
     {
         $ip = (string) $request->ip();
-        $log = $this->logs->channel($this->config->string('mainboard.honeypot.log_channel'));
+        $log = $this->logs->channel($this->config->string('admiro.honeypot.log_channel'));
 
         $log->info('honeypot hit', [
             'trap' => $trap->value,
@@ -53,7 +53,7 @@ final readonly class HoneypotTracker
             'password_length' => $this->passwordLength($request),
         ]);
 
-        if (! $trap->bansImmediately() && $this->hits($ip) < $this->config->integer('mainboard.honeypot.get_hits_threshold')) {
+        if (! $trap->bansImmediately() && $this->hits($ip) < $this->config->integer('admiro.honeypot.get_hits_threshold')) {
             return;
         }
 
@@ -67,7 +67,7 @@ final readonly class HoneypotTracker
     private function hits(string $ip): int
     {
         $key = IpBans::key('hits', $ip);
-        $this->cache->add($key, 0, Carbon::now()->addMinutes($this->config->integer('mainboard.honeypot.get_hits_window_minutes')));
+        $this->cache->add($key, 0, Carbon::now()->addMinutes($this->config->integer('admiro.honeypot.get_hits_window_minutes')));
         $hits = $this->cache->increment($key);
 
         return is_int($hits) ? $hits : 0;

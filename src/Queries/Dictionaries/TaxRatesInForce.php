@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Queries\Dictionaries;
+namespace Simplysmart\Admiro\Queries\Dictionaries;
 
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Simplysmart\Mainboard\Enums\TaxRateType;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Models\Dictionaries\TaxRate;
+use Simplysmart\Admiro\Enums\TaxRateType;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Models\Dictionaries\TaxRate;
 
 /**
  * Stawki VAT obowiązujące w danym dniu: od `valid_from` do `valid_to` włącznie (bez końca, gdy null).
  * Kraj null oznacza stawki bez kraju (ogólne). Stawka aplikacji to podstawowa stawka kraju domyślnego,
- * a gdy słownik jej nie ma — mainboard.localization.vat_percent.
+ * a gdy słownik jej nie ma — admiro.localization.vat_percent.
  */
 final readonly class TaxRatesInForce
 {
@@ -64,7 +64,7 @@ final readonly class TaxRatesInForce
     {
         $rate = $this->standard($this->defaults->country(), $on)?->rate;
 
-        return $rate ?? $this->config->string('mainboard.localization.vat_percent');
+        return $rate ?? $this->config->string('admiro.localization.vat_percent');
     }
 
     /**

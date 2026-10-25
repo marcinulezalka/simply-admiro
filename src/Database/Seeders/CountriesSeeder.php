@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,19 +11,19 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database\Seeders;
+namespace Simplysmart\Admiro\Database\Seeders;
 
-use Simplysmart\Mainboard\Database\CodeColumns;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Models\Dictionaries\CountryLanguage;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
-use Simplysmart\Mainboard\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Database\CodeColumns;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Models\Dictionaries\CountryLanguage;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Models\Dictionaries\Language;
 
 /**
  * Słownik krajów: nazwy, kody alpha-3 i numeryczne, kontynent, region i ludność z ICU, numer kierunkowy,
  * członkostwo w UE; listy grupują kontynenty (CONTINENT_ORDER), a w nich kraj aplikacji
- * (mainboard.localization.country) i LEADING_COUNTRIES na początku. Ikonę flagi, walutę i języki
+ * (admiro.localization.country) i LEADING_COUNTRIES na początku. Ikonę flagi, walutę i języki
  * urzędowe (najczęściej używany jako główny) dopisuje tylko krajom, które ich jeszcze nie mają, i tylko gdy
  * słowniki walut i języków je zawierają — poprawki administratora zostają.
  */
@@ -31,7 +31,7 @@ final class CountriesSeeder extends DictionarySeeder
 {
     public function run(): void
     {
-        $default = strtoupper($this->config->string('mainboard.localization.country'));
+        $default = strtoupper($this->config->string('admiro.localization.country'));
         $leading = array_values(array_unique([$default, ...LocalizationData::LEADING_COUNTRIES]));
         $hasDefault = Country::query()->where(ColumnNames::IS_DEFAULT, true)->exists();
         $currencies = Currency::query()->get()->mapWithKeys(static fn(Currency $currency): array => [$currency->alpha_code_3 => $currency->id])->all();

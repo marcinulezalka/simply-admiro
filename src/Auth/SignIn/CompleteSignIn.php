@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -19,14 +19,14 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\Devices\RegisterTrustedDevice;
-use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
-use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Localization\LocaleRouting;
-use Simplysmart\Mainboard\Profile\AccountLocale;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Auth\Devices\RegisterTrustedDevice;
+use Simplysmart\Admiro\Auth\Events\SignInSucceeded;
+use Simplysmart\Admiro\Auth\SignIn\Steps\EmailCodeStep;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Localization\LocaleRouting;
+use Simplysmart\Admiro\Profile\AccountLocale;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
 
 /**
  * Wszystkie kroki wykonane: logowanie w guardzie strefy, nowa sesja z epoką konta, zapis

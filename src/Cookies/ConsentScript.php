@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Cookies;
+namespace Simplysmart\Admiro\Cookies;
 
-use Simplysmart\Mainboard\Enums\CookieCategory;
+use Simplysmart\Admiro\Enums\CookieCategory;
 
 /**
  * Skrypt opcjonalny (np. analityka) ładowany dopiero po zgodzie na kategorię: adres skryptu (zewnętrzny wymaga
- * dopisania domeny do `mainboard.security.csp.policy` przez paczkę, która go rejestruje).
+ * dopisania domeny do `admiro.security.csp.policy` przez paczkę, która go rejestruje).
  */
 final readonly class ConsentScript
 {

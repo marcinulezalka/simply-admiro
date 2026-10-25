@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Queries\Organizations;
+namespace Simplysmart\Admiro\Queries\Organizations;
 
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\Permissions\OrganizationMember;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Permissions\PermissionTables;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\Permissions\OrganizationMember;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Permissions\PermissionTables;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Członkowie organizacji: we wszystkich strefach (panel administratora) albo w jednej strefie, także konto

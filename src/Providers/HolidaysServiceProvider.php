@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Console\SyncHolidays;
-use Simplysmart\Mainboard\Contracts\HolidayProvider;
-use Simplysmart\Mainboard\Holidays\NagerDate;
+use Simplysmart\Admiro\Console\SyncHolidays;
+use Simplysmart\Admiro\Contracts\HolidayProvider;
+use Simplysmart\Admiro\Holidays\NagerDate;
 
 /**
  * Święta i dni wolne krajów: dostawca świąt (domyślnie Nager.Date), komenda synchronizacji i jej uruchamianie
- * w pierwszym dniu miesiąca (gdy `mainboard.holidays.schedule` włączone).
+ * w pierwszym dniu miesiąca (gdy `admiro.holidays.schedule` włączone).
  */
 final class HolidaysServiceProvider extends ServiceProvider
 {
@@ -38,7 +38,7 @@ final class HolidaysServiceProvider extends ServiceProvider
 
         $this->commands([SyncHolidays::class]);
         $this->callAfterResolving(Schedule::class, static function (Schedule $schedule): void {
-            if (config()->boolean('mainboard.holidays.schedule')) {
+            if (config()->boolean('admiro.holidays.schedule')) {
                 $schedule->command(SyncHolidays::class)->monthly();
             }
         });

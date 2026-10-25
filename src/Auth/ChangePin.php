@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,23 +11,23 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Admiro\Auth;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Simplysmart\Mainboard\Auth\Events\PinChanged;
-use Simplysmart\Mainboard\Auth\SignIn\CodeCheckResult;
-use Simplysmart\Mainboard\Auth\SignIn\CompleteSignIn;
-use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
-use Simplysmart\Mainboard\Auth\SignIn\LoginChallengeService;
-use Simplysmart\Mainboard\Auth\SignIn\PinCheckResult;
-use Simplysmart\Mainboard\Auth\SignIn\PinVerifier;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Admiro\Auth\Events\PinChanged;
+use Simplysmart\Admiro\Auth\SignIn\CodeCheckResult;
+use Simplysmart\Admiro\Auth\SignIn\CompleteSignIn;
+use Simplysmart\Admiro\Auth\SignIn\LoginAttemptLimiter;
+use Simplysmart\Admiro\Auth\SignIn\LoginChallengeService;
+use Simplysmart\Admiro\Auth\SignIn\PinCheckResult;
+use Simplysmart\Admiro\Auth\SignIn\PinVerifier;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Contracts\CurrentZone;
 
 /**
  * Zmiana PIN-u zalogowanego konta: wymaga obecnego PIN-u (liczonego do blokady jak przy logowaniu) i kodu

@@ -42,7 +42,7 @@ na serwerze skrypt serwerowy z admiro
 `vendor/bin/simplysmart deploy:onboarding`: to samo wdrożenie plus konta z `infrastructure/deploy.onboarding.env`
 (`<strefa>:account:create --skip-existing`, więc można je powtarzać). `vendor/bin/simplysmart deploy:fresh
 --confirm=<DEPLOY_SSH>` to onboarding na pustej bazie: `migrate:fresh` **usuwa wszystkie tabele i dane**, a blokadę
-destrukcyjnych komend zdejmuje tylko dla tego jednego procesu (`MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true`, nigdy
+destrukcyjnych komend zdejmuje tylko dla tego jednego procesu (`ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS=true`, nigdy
 w `.env`). `--dry-run` pokazuje plan bez wysyłania.
 Ręcznie te same kroki wyglądają tak.
 
@@ -72,25 +72,25 @@ Po wysłaniu kodu:
 
 ```bash
 php artisan migrate --force              # migracje Core (destrukcyjne komendy są na produkcji zablokowane)
-php artisan mainboard:localization:seed  # słowniki lokalizacji; bezpieczne przy każdym wdrożeniu
-php artisan mainboard:organizations:seed # organizacja operatora (zakres ról stref bez firm); bezpieczne przy każdym wdrożeniu
-php artisan mainboard:permissions:sync   # role i uprawnienia stref z plików JSON; idempotentna, bez --prune nic nie usuwa
-php artisan mainboard:legal:seed         # pierwsze wersje polityk (cookies, prywatności, RODO); istniejących nie zmienia
+php artisan admiro:localization:seed  # słowniki lokalizacji; bezpieczne przy każdym wdrożeniu
+php artisan admiro:organizations:seed # organizacja operatora (zakres ról stref bez firm); bezpieczne przy każdym wdrożeniu
+php artisan admiro:permissions:sync   # role i uprawnienia stref z plików JSON; idempotentna, bez --prune nic nie usuwa
+php artisan admiro:legal:seed         # pierwsze wersje polityk (cookies, prywatności, RODO); istniejących nie zmienia
 php artisan icons:cache                  # manifest ikon blade-icons (flagi), bez skanowania SVG przy każdym żądaniu
 ```
 
 Harmonogram Laravela musi działać z crona (`* * * * * php /ścieżka/artisan schedule:run`): Core planuje
-`mainboard:auth:prune` (co godzinę: kody logowania, zaufane urządzenia), `mainboard:audit:prune` (codziennie:
-dziennik zdarzeń) i `mainboard:exchange-rates:sync` (w dni robocze o `EXCHANGE_RATES_SCHEDULE_AT`, domyślnie 12:30:
+`admiro:auth:prune` (co godzinę: kody logowania, zaufane urządzenia), `admiro:audit:prune` (codziennie:
+dziennik zdarzeń) i `admiro:exchange-rates:sync` (w dni robocze o `EXCHANGE_RATES_SCHEDULE_AT`, domyślnie 12:30:
 kursy tabeli A NBP z ostatnich `EXCHANGE_RATES_DAYS_BACK` dni; pusta godzina wyłącza; `NBP_API_URL`,
-`NBP_API_TIMEOUT`), `mainboard:holidays:sync` (pierwszego dnia miesiąca: święta aktywnych krajów na bieżący i następny
-rok z `date.nager.at`; `HOLIDAYS_SCHEDULE=false` wyłącza, `HOLIDAYS_API_URL`, `HOLIDAYS_API_TIMEOUT`) i `mainboard:cookies:prune` (codziennie: rejestr zgód na cookies starszy niż
+`NBP_API_TIMEOUT`), `admiro:holidays:sync` (pierwszego dnia miesiąca: święta aktywnych krajów na bieżący i następny
+rok z `date.nager.at`; `HOLIDAYS_SCHEDULE=false` wyłącza, `HOLIDAYS_API_URL`, `HOLIDAYS_API_TIMEOUT`) i `admiro:cookies:prune` (codziennie: rejestr zgód na cookies starszy niż
 `COOKIE_CONSENT_RETENTION_DAYS`). Serwer potrzebuje wyjścia HTTPS do `api.nbp.pl` i `date.nager.at`.
 
 ### Cron na hostingu bez supervisora
 
 Kolejka musi być asynchroniczna (kod logowania, zob. [strefy.md](strefy.md)), więc worker kolejki działa z crona.
-Panel hostingu często uruchamia tylko plik, bez argumentów, dlatego `php artisan mainboard:cron:script` tworzy
+Panel hostingu często uruchamia tylko plik, bez argumentów, dlatego `php artisan admiro:cron:script` tworzy
 z szablonu `resources/stubs/cron.sh.stub` skrypt `storage/app/cron.sh` (prawa 0755, katalog ignorowany przez git):
 `schedule:run` i `queue:work --tries=<n> --max-time=<interwał − 10 s>` (przy interwale 1 min z `--stop-when-empty`).
 Skrypt nie zawiera sekretów; wartości wstawiane przy generowaniu:
@@ -107,7 +107,7 @@ hostingu: program BASH, plik `<katalog aplikacji>/storage/app/cron.sh`, interwa�
 
 Zgoda na cookies (`COOKIE_CONSENT`, domyślnie włączona): baner pojawia się po opublikowaniu polityki cookies
 w panelu `admiro` („Polityka cookies”); ciasteczko zgody `COOKIE_CONSENT_NAME` ważne `COOKIE_CONSENT_DAYS` dni.
-Zewnętrzny skrypt opcjonalny (np. analityka) wymaga dopisania jego domeny do `mainboard.security.csp.policy` —
+Zewnętrzny skrypt opcjonalny (np. analityka) wymaga dopisania jego domeny do `admiro.security.csp.policy` —
 robi to paczka, która go rejestruje (`config([...])` w swoim providerze).
 
 ## Assety
@@ -121,7 +121,7 @@ albo w CI), w katalogu szkieletu:
 ```bash
 npm ci
 npm run build                          # szkielet i wszystkie paczki
-php artisan mainboard:assets --copy    # kopiuje public/build paczek do public/vendor/<paczka>/
+php artisan admiro:assets --copy    # kopiuje public/build paczek do public/vendor/<paczka>/
 ```
 
 Na serwer trafia `public/` szkieletu razem z `public/build/` i `public/vendor/*/build/`.
@@ -132,7 +132,7 @@ Na serwer trafia `public/` szkieletu razem z `public/build/` i `public/vendor/*/
 `brand/`, `docs/` i `.claude/` mają w `.gitattributes` regułę `export-ignore`, więc paczka ich nie zawiera:
 
 ```bash
-git archive --format=zip -o mainboard.zip HEAD
+git archive --format=zip -o admiro.zip HEAD
 ```
 
 ## Wdrożenie przez FTP

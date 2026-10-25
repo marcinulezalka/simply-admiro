@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,22 +11,22 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Console\SeedOrganizations;
-use Simplysmart\Mainboard\Console\SyncZonePermissions;
-use Simplysmart\Mainboard\Contracts\CurrentOrganization;
-use Simplysmart\Mainboard\Contracts\CurrentRole;
-use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
-use Simplysmart\Mainboard\Http\Middleware\RequireZonePermission;
-use Simplysmart\Mainboard\Permissions\PermissionDefaults;
-use Simplysmart\Mainboard\Permissions\PermissionFiles;
-use Simplysmart\Mainboard\Permissions\RequestRole;
-use Simplysmart\Mainboard\Permissions\SpatieCurrentOrganization;
-use Simplysmart\Mainboard\Permissions\SpatiePermissionChecker;
-use Simplysmart\Mainboard\Permissions\ZoneOwnerProvisioners;
+use Simplysmart\Admiro\Console\SeedOrganizations;
+use Simplysmart\Admiro\Console\SyncZonePermissions;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Contracts\CurrentRole;
+use Simplysmart\Admiro\Contracts\ZonePermissionChecker;
+use Simplysmart\Admiro\Http\Middleware\RequireZonePermission;
+use Simplysmart\Admiro\Permissions\PermissionDefaults;
+use Simplysmart\Admiro\Permissions\PermissionFiles;
+use Simplysmart\Admiro\Permissions\RequestRole;
+use Simplysmart\Admiro\Permissions\SpatieCurrentOrganization;
+use Simplysmart\Admiro\Permissions\SpatiePermissionChecker;
+use Simplysmart\Admiro\Permissions\ZoneOwnerProvisioners;
 
 /**
  * Organizacje i uprawnienia stref na spatie/laravel-permission: kontrakty sprawdzania, bieżącej organizacji i aktywnej roli,

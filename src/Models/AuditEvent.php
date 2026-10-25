@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models;
+namespace Simplysmart\Admiro\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Wpis dziennika zdarzeń (tabela `audit_events`): tylko dopisywanie, bez kolumn standardowych i historii,
- * IP szyfrowane, kontekst bez danych osobowych. Starsze niż `mainboard.audit.retention_days` usuwa
- * `mainboard:audit:prune`.
+ * IP szyfrowane, kontekst bez danych osobowych. Starsze niż `admiro.audit.retention_days` usuwa
+ * `admiro:audit:prune`.
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon $occurred_at

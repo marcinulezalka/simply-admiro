@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,9 +11,9 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Enums;
+namespace Simplysmart\Admiro\Enums;
 
-use Simplysmart\Mainboard\Contracts\HasLabel;
+use Simplysmart\Admiro\Contracts\HasLabel;
 
 /**
  * Skąd jest święto albo dzień wolny: kalendarz świąt Nager.Date albo wpis ręczny administratora.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Cache\RateLimiter;
@@ -21,14 +21,14 @@ use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Console\PruneCookieConsents;
-use Simplysmart\Mainboard\Contracts\ConsentScripts;
-use Simplysmart\Mainboard\Contracts\CookieCatalog;
-use Simplysmart\Mainboard\Cookies\ConsentBanner;
-use Simplysmart\Mainboard\Cookies\CookieDescription;
-use Simplysmart\Mainboard\Cookies\InMemoryConsentScripts;
-use Simplysmart\Mainboard\Cookies\InMemoryCookieCatalog;
-use Simplysmart\Mainboard\Enums\CookieCategory;
+use Simplysmart\Admiro\Console\PruneCookieConsents;
+use Simplysmart\Admiro\Contracts\ConsentScripts;
+use Simplysmart\Admiro\Contracts\CookieCatalog;
+use Simplysmart\Admiro\Cookies\ConsentBanner;
+use Simplysmart\Admiro\Cookies\CookieDescription;
+use Simplysmart\Admiro\Cookies\InMemoryConsentScripts;
+use Simplysmart\Admiro\Cookies\InMemoryCookieCatalog;
+use Simplysmart\Admiro\Enums\CookieCategory;
 
 /**
  * Cookies i zgody: katalog cookies i skrypty opcjonalne (singletony, paczki dopisują swoje), cookies Core w katalogu,
@@ -36,9 +36,9 @@ use Simplysmart\Mainboard\Enums\CookieCategory;
  */
 final class CookiesServiceProvider extends ServiceProvider
 {
-    public const string THROTTLE = 'mainboard.cookie-consent';
+    public const string THROTTLE = 'admiro.cookie-consent';
 
-    private const array VIEWS = ['mainboard::components.cookie-consent', 'mainboard::components.cookie-links', 'mainboard::components.app.layout'];
+    private const array VIEWS = ['admiro::components.cookie-consent', 'admiro::components.cookie-links', 'admiro::components.app.layout'];
 
     public function register(): void
     {
@@ -52,7 +52,7 @@ final class CookiesServiceProvider extends ServiceProvider
             $catalog->add($cookie);
         }
 
-        $limiter->for(self::THROTTLE, static fn(Request $request): Limit => Limit::perMinute($config->integer('mainboard.cookies.throttle_per_minute'))->by((string) $request->ip()));
+        $limiter->for(self::THROTTLE, static fn(Request $request): Limit => Limit::perMinute($config->integer('admiro.cookies.throttle_per_minute'))->by((string) $request->ip()));
         $views->composer(self::VIEWS, static fn(View $view) => $view->with('cookieConsent', app(ConsentBanner::class)->state()));
 
         if ($this->app->runningInConsole()) {
@@ -71,7 +71,7 @@ final class CookiesServiceProvider extends ServiceProvider
         return [
             new CookieDescription('*_session', CookieCategory::Necessary, 'cookies.core.session', 'cookies.lifetimes.session'),
             new CookieDescription('*_device', CookieCategory::Necessary, 'cookies.core.device', 'cookies.lifetimes.device'),
-            new CookieDescription($config->string('mainboard.cookies.cookie_name'), CookieCategory::Necessary, 'cookies.core.consent', 'cookies.lifetimes.consent'),
+            new CookieDescription($config->string('admiro.cookies.cookie_name'), CookieCategory::Necessary, 'cookies.core.consent', 'cookies.lifetimes.consent'),
             new CookieDescription('ss-theme, ss-palette, ss-sidebar-collapsed', CookieCategory::Necessary, 'cookies.core.appearance', 'cookies.lifetimes.storage'),
         ];
     }

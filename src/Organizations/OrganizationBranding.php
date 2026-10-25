@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,20 +11,20 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Organizations;
+namespace Simplysmart\Admiro\Organizations;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Enums\BrandAsset;
-use Simplysmart\Mainboard\Mail\BrandFile;
-use Simplysmart\Mainboard\Models\Organization;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Enums\BrandAsset;
+use Simplysmart\Admiro\Mail\BrandFile;
+use Simplysmart\Admiro\Models\Organization;
 
 /**
  * Marka organizacji (logo, sygnet, ikona strony) — jedyne miejsce jej zmiany. Pliki leżą na prywatnym dysku
- * `mainboard.organization_brand.disk` (`organizations/<token>/brand/<plik>-<skrót>.<rozszerzenie>`), a wpis
+ * `admiro.organization_brand.disk` (`organizations/<token>/brand/<plik>-<skrót>.<rozszerzenie>`), a wpis
  * `json_attributes.brand.<plik>` (ścieżka, MIME) zmienia się jak inne pola organizacji, więc trafia do historii.
  */
 final readonly class OrganizationBranding
@@ -143,6 +143,6 @@ final readonly class OrganizationBranding
 
     private function disk(): Filesystem
     {
-        return $this->filesystems->disk($this->config->string('mainboard.organization_brand.disk'));
+        return $this->filesystems->disk($this->config->string('admiro.organization_brand.disk'));
     }
 }

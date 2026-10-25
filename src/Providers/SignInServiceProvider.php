@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -26,30 +26,30 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
-use Simplysmart\Mainboard\Auth\Devices\DeviceTokenIssuer;
-use Simplysmart\Mainboard\Auth\Devices\EloquentTrustedDeviceRepository;
-use Simplysmart\Mainboard\Auth\EloquentAccountLocator;
-use Simplysmart\Mainboard\Auth\EloquentAccountStore;
-use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
-use Simplysmart\Mainboard\Auth\Events\AccountLocked;
-use Simplysmart\Mainboard\Auth\Events\PinChanged;
-use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
-use Simplysmart\Mainboard\Auth\Listeners\RevokeTrustedDevicesOfAccount;
-use Simplysmart\Mainboard\Auth\Listeners\SendAccountLockedMail;
-use Simplysmart\Mainboard\Auth\Listeners\SendPinChangedMail;
-use Simplysmart\Mainboard\Auth\Listeners\SendTrustedDeviceMails;
-use Simplysmart\Mainboard\Auth\SignIn\EloquentLoginChallengeRepository;
-use Simplysmart\Mainboard\Auth\SignIn\LoginCodeGenerator;
-use Simplysmart\Mainboard\Console\PruneSignInChallenges;
-use Simplysmart\Mainboard\Contracts\AccountLocator;
-use Simplysmart\Mainboard\Contracts\AccountStore;
-use Simplysmart\Mainboard\Contracts\BlindIndex;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\LoginChallengeRepository;
-use Simplysmart\Mainboard\Contracts\TrustedDeviceRepository;
-use Simplysmart\Mainboard\Http\SignInRoutes;
-use Simplysmart\Mainboard\Security\HmacBlindIndex;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Auth\Devices\DeviceTokenIssuer;
+use Simplysmart\Admiro\Auth\Devices\EloquentTrustedDeviceRepository;
+use Simplysmart\Admiro\Auth\EloquentAccountLocator;
+use Simplysmart\Admiro\Auth\EloquentAccountStore;
+use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
+use Simplysmart\Admiro\Auth\Events\AccountLocked;
+use Simplysmart\Admiro\Auth\Events\PinChanged;
+use Simplysmart\Admiro\Auth\Events\TrustedDeviceRegistered;
+use Simplysmart\Admiro\Auth\Listeners\RevokeTrustedDevicesOfAccount;
+use Simplysmart\Admiro\Auth\Listeners\SendAccountLockedMail;
+use Simplysmart\Admiro\Auth\Listeners\SendPinChangedMail;
+use Simplysmart\Admiro\Auth\Listeners\SendTrustedDeviceMails;
+use Simplysmart\Admiro\Auth\SignIn\EloquentLoginChallengeRepository;
+use Simplysmart\Admiro\Auth\SignIn\LoginCodeGenerator;
+use Simplysmart\Admiro\Console\PruneSignInChallenges;
+use Simplysmart\Admiro\Contracts\AccountLocator;
+use Simplysmart\Admiro\Contracts\AccountStore;
+use Simplysmart\Admiro\Contracts\BlindIndex;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\LoginChallengeRepository;
+use Simplysmart\Admiro\Contracts\TrustedDeviceRepository;
+use Simplysmart\Admiro\Http\SignInRoutes;
+use Simplysmart\Admiro\Security\HmacBlindIndex;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**

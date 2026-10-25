@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Localization;
+namespace Simplysmart\Admiro\Localization;
 
 use Carbon\CarbonImmutable;
 use DateTimeInterface;
@@ -20,11 +20,11 @@ use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Number;
 use InvalidArgumentException;
 use RuntimeException;
-use Simplysmart\Mainboard\Contracts\LocalFormatter;
+use Simplysmart\Admiro\Contracts\LocalFormatter;
 
 /**
  * Formatowanie regionalne przez intl (Number) i Carbon; bieżący język bierze z translatora,
- * a domyślną walutę z config('mainboard.locale.currency').
+ * a domyślną walutę z config('admiro.locale.currency').
  */
 final readonly class IntlLocalFormatter implements LocalFormatter
 {
@@ -43,7 +43,7 @@ final readonly class IntlLocalFormatter implements LocalFormatter
      */
     private const string REFERENCE_MONDAY = '2024-01-01';
 
-    private const string CURRENCY_CONFIG = 'mainboard.locale.currency';
+    private const string CURRENCY_CONFIG = 'admiro.locale.currency';
 
     public function __construct(
         private Translator $translator,

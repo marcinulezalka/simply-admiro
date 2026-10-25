@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -14,10 +14,10 @@ declare(strict_types=1);
 return [
 
     'title' => 'simplysmart has been installed successfully',
-    'lead' => 'The foundation of your new business application, built on Laravel and the mainboard package, is fully ready to work. Everything you need to start works from the very first run.',
+    'lead' => 'The foundation of your new business application, built on Laravel and the admiro package, is fully ready to work. Everything you need to start works from the very first run.',
     'inside' => 'What you get from the start',
     'built_on' => 'Built on',
-    'mainboard_version' => 'mainboard :version',
+    'admiro_version' => 'admiro :version',
     'tagline' => 'Tailored business applications on Laravel',
 
     'features' => [

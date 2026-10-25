@@ -44,7 +44,6 @@
     },
     "autoload": {
         "psr-4": {
-            "Simplysmart\\Mainboard\\": "src/",
             "Simplysmart\\Admiro\\": "src/"
         },
         "files": [
@@ -70,7 +69,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Simplysmart\\Mainboard\\MainboardServiceProvider",
+                "Simplysmart\\Admiro\\AdmiroServiceProvider",
                 "Simplysmart\\Admiro\\Panel\\PanelServiceProvider"
             ]
         }

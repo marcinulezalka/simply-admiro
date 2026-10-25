@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Holidays\HolidaySync;
-use Simplysmart\Mainboard\Holidays\HolidaysUnavailable;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Holidays\HolidaySync;
+use Simplysmart\Admiro\Holidays\HolidaysUnavailable;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
 
 /**
  * Pobiera święta (dni wolne od pracy) dla aktywnych krajów słownika (albo --country) na bieżący i następny rok
@@ -26,7 +26,7 @@ use Simplysmart\Mainboard\Models\Dictionaries\Country;
  */
 final class SyncHolidays extends Command
 {
-    protected $signature = 'mainboard:holidays:sync {--year=* : Rok (można powtórzyć), domyślnie bieżący i następny} {--country=* : Kod kraju ISO 3166-1 alpha-2 (można powtórzyć)}';
+    protected $signature = 'admiro:holidays:sync {--year=* : Rok (można powtórzyć), domyślnie bieżący i następny} {--country=* : Kod kraju ISO 3166-1 alpha-2 (można powtórzyć)}';
 
     protected $description = 'Pobiera święta i dni wolne krajów z Nager.Date';
 

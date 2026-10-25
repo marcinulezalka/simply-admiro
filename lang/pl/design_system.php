@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
 
     'title' => 'Design system',
-    'lead' => 'Tokeny i komponenty mainboard na żywo, w motywie systemu (jasnym albo ciemnym). Wartości pochodzą wprost z tokens.css.',
+    'lead' => 'Tokeny i komponenty admiro na żywo, w motywie systemu (jasnym albo ciemnym). Wartości pochodzą wprost z tokens.css.',
     'not_for_production' => 'Strona tylko poza produkcją',
     'token' => 'Token',
     'light' => 'Jasny',
@@ -64,7 +64,7 @@ return [
         'notice' => 'Komunikat stanu: wysłaliśmy nowy kod.',
         'card' => 'Karta: tło surface, ramka border, bez cienia.',
         'card_muted' => 'Karta w karcie: tło surface-muted, bez ramki.',
-        'brand_text' => 'Aplikacje simplysmart na pakiecie mainboard.',
+        'brand_text' => 'Aplikacje simplysmart na pakiecie admiro.',
         'icon_before' => 'Ikona przed tekstem',
         'icon_after' => 'Dalej',
         'pill' => 'Pigułka',

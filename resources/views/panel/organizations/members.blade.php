@@ -1,6 +1,6 @@
 {{-- Członkowie organizacji we wszystkich strefach: strefa, osoba (awatar, nazwa, adres), role strefy jako plakietki i usunięcie z organizacji (organizations.manage). $organization: Organization, $members: list<array{zone: ZoneDefinition, account: ZoneAccount, roles: list<string>}>, $canManage: bool. --}}
-<x-mainboard::zone.layout :title="text('admiro::admin.members_title', ['organization' => $organization->name])" :back="route('admiro.organizations.index')">
-    @error('member') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+<x-admiro::zone.layout :title="text('admiro::admin.members_title', ['organization' => $organization->name])" :back="route('admiro.organizations.index')">
+    @error('member') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <section class="ss-card ss-card--flush">
         <div class="ss-table-wrap">
@@ -20,7 +20,7 @@
                         <tr>
                             <th scope="row">
                                 <span class="ss-person">
-                                    <x-mainboard::avatar :name="$member['account']->displayName()" :color="$member['account']->avatarColor()" size="sm" />
+                                    <x-admiro::avatar :name="$member['account']->displayName()" :color="$member['account']->avatarColor()" size="sm" />
                                     <span class="ss-person__text"><span>{{ $member['account']->displayName() }}</span><span class="ss-muted">{{ $member['account']->emailAddress() }}</span></span>
                                 </span>
                             </th>
@@ -49,4 +49,4 @@
             </table>
         </div>
     </section>
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

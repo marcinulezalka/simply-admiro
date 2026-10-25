@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth;
+namespace Simplysmart\Admiro\Auth;
 
 use Illuminate\Contracts\Validation\ValidationRule;
-use Simplysmart\Mainboard\Rules\StrongPin;
+use Simplysmart\Admiro\Rules\StrongPin;
 
 /**
  * Jedyne źródło reguł walidacji PIN-u (logowanie, ustawienie i zmiana PIN-u).

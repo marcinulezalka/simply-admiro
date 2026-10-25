@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Legal;
+namespace Simplysmart\Admiro\Legal;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
-use Simplysmart\Mainboard\Enums\LegalDocumentType;
-use Simplysmart\Mainboard\Queries\Cookies\CookiePolicyVersions;
-use Simplysmart\Mainboard\Queries\Legal\LegalDocumentVersions;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Odnośniki prawne: w strefie (karta logowania, stopka layoutu aplikacji, e-maile) opublikowane dokumenty Core
@@ -73,7 +73,7 @@ final readonly class LegalLinks
         }
 
         if ($current !== self::COOKIES && $this->cookies->current() !== null) {
-            $related[] = ['url' => $this->url->route('mainboard.cookies.policy'), 'title' => text('cookies.links.policy'), 'text' => text('legal.cookies_lead'), 'icon' => 'cookie'];
+            $related[] = ['url' => $this->url->route('admiro.cookies.policy'), 'title' => text('cookies.links.policy'), 'text' => text('legal.cookies_lead'), 'icon' => 'cookie'];
         }
 
         return $related;

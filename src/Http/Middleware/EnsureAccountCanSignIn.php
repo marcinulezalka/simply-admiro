@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\SignIn\CompleteSignIn;
-use Simplysmart\Mainboard\Auth\SignIn\SignOut;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\RevocableAccess;
-use Simplysmart\Mainboard\Contracts\SignInAccount;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Auth\SignIn\CompleteSignIn;
+use Simplysmart\Admiro\Auth\SignIn\SignOut;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\RevocableAccess;
+use Simplysmart\Admiro\Contracts\SignInAccount;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

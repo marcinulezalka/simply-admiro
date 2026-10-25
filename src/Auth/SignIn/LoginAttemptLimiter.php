@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\SignIn;
+namespace Simplysmart\Admiro\Auth\SignIn;
 
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Validation\ValidationException;
-use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Zones\ZoneCacheKey;
+use Simplysmart\Admiro\Auth\SignInLimit;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Zones\ZoneCacheKey;
 
 /**
  * Limity prób logowania per tożsamość (IP, adres, para adres + IP), z kluczami

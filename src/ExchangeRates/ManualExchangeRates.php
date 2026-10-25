@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\ExchangeRates;
+namespace Simplysmart\Admiro\ExchangeRates;
 
 use Carbon\CarbonImmutable;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Enums\ExchangeRateSource;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
-use Simplysmart\Mainboard\Models\Dictionaries\ExchangeRate;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Enums\ExchangeRateSource;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Models\Dictionaries\ExchangeRate;
 
 /**
  * Kursy ręczne administratora (np. przy awarii NBP): dodanie kursu waluty z dnia, którego jeszcze nie ma,

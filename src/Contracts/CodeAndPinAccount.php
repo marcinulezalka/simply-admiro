@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
 /**
  * Pełne konto strefy logującej się kodem z e-maila i PIN-em; model strefy implementuje je
  * traitem Auth\Concerns\SignsInWithCodeAndPin. Serwisy wymagają tylko części, której używają.
  *
- * @see \Simplysmart\Mainboard\Models\ZoneAccount
+ * @see \Simplysmart\Admiro\Models\ZoneAccount
  */
 interface CodeAndPinAccount extends SignInAccount, HasPinCredential, LockableAccount, RevocableAccess, HasRecoveryEmail {}

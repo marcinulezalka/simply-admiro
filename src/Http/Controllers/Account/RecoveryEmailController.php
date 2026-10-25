@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Account;
+namespace Simplysmart\Admiro\Http\Controllers\Account;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\Recovery\RecoveryEmailRegistration;
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Http\AccountRoutes;
+use Simplysmart\Admiro\Auth\Recovery\RecoveryEmailRegistration;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Http\AccountRoutes;
 
 /**
  * Zapasowy adres e-mail zalogowanego konta (sekcja `recovery` strony bezpieczeństwa,

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Devices;
+namespace Simplysmart\Admiro\Auth\Devices;
 
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Cookie\QueueingFactory as CookieJar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Ciasteczko zaufanego urządzenia strefy `<strefa>_device`: szyfrowane (EncryptCookies w grupie strefy),

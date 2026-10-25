@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,26 +11,26 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Audit\Listeners;
+namespace Simplysmart\Admiro\Audit\Listeners;
 
 use Illuminate\Config\Repository;
 use Illuminate\Log\LogManager;
-use Simplysmart\Mainboard\Audit\AuditEntries;
-use Simplysmart\Mainboard\Audit\Events\AdminActionPerformed;
-use Simplysmart\Mainboard\Audit\Events\RecordAccessed;
-use Simplysmart\Mainboard\Auth\Events\AccountAccessRevoked;
-use Simplysmart\Mainboard\Auth\Events\AccountLocked;
-use Simplysmart\Mainboard\Auth\Events\PinChanged;
-use Simplysmart\Mainboard\Auth\Events\RecoveryEmailChanged;
-use Simplysmart\Mainboard\Auth\Events\SignedOut;
-use Simplysmart\Mainboard\Auth\Events\SignInRejected;
-use Simplysmart\Mainboard\Auth\Events\SignInSucceeded;
-use Simplysmart\Mainboard\Auth\Events\TrustedDeviceRegistered;
-use Simplysmart\Mainboard\Auth\Events\TrustedDevicesRevoked;
-use Simplysmart\Mainboard\Permissions\Events\ZoneRoleChanged;
+use Simplysmart\Admiro\Audit\AuditEntries;
+use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
+use Simplysmart\Admiro\Audit\Events\RecordAccessed;
+use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
+use Simplysmart\Admiro\Auth\Events\AccountLocked;
+use Simplysmart\Admiro\Auth\Events\PinChanged;
+use Simplysmart\Admiro\Auth\Events\RecoveryEmailChanged;
+use Simplysmart\Admiro\Auth\Events\SignedOut;
+use Simplysmart\Admiro\Auth\Events\SignInRejected;
+use Simplysmart\Admiro\Auth\Events\SignInSucceeded;
+use Simplysmart\Admiro\Auth\Events\TrustedDeviceRegistered;
+use Simplysmart\Admiro\Auth\Events\TrustedDevicesRevoked;
+use Simplysmart\Admiro\Permissions\Events\ZoneRoleChanged;
 
 /**
- * Dziennik zdarzeń w pliku (kanał `mainboard.auth.log_channel`).
+ * Dziennik zdarzeń w pliku (kanał `admiro.auth.log_channel`).
  */
 final readonly class WriteAuditLog
 {
@@ -45,6 +45,6 @@ final readonly class WriteAuditLog
     ): void {
         $entry = $this->entries->from($event);
 
-        $this->logs->channel($this->config->string('mainboard.auth.log_channel'))->log($entry->level->value, $entry->event, $entry->toLogContext());
+        $this->logs->channel($this->config->string('admiro.auth.log_channel'))->log($entry->level->value, $entry->event, $entry->toLogContext());
     }
 }

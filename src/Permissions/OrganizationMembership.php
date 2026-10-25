@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
-use Simplysmart\Mainboard\Contracts\HasZoneRoles;
+use Simplysmart\Admiro\Contracts\HasZoneRoles;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Auth\AccessRevocationReason;
-use Simplysmart\Mainboard\Auth\AccountActor;
-use Simplysmart\Mainboard\Auth\RevokeAccountAccess;
-use Simplysmart\Mainboard\Contracts\CodeAndPinAccount;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Zones\AccountZone;
+use Simplysmart\Admiro\Auth\AccessRevocationReason;
+use Simplysmart\Admiro\Auth\AccountActor;
+use Simplysmart\Admiro\Auth\RevokeAccountAccess;
+use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Zones\AccountZone;
 use Spatie\Permission\PermissionRegistrar;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Contracts\Container\Container;
-use Simplysmart\Mainboard\Contracts\ZoneNavigation;
+use Simplysmart\Admiro\Contracts\ZoneNavigation;
 
 /**
  * Rejestr menu stref (singleton): paczka strefy dodaje klasę ZoneNavigation dla swojej strefy w providerze, layout

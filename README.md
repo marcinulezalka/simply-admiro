@@ -2,7 +2,7 @@
 
 Rdzeń aplikacji simplysmart w jednej paczce: baza danych (migracje wszystkich tabel), mechanizm stref, logowanie kodem z e-maila i PIN-em, uprawnienia i organizacje, słowniki lokalizacji, design system i układy UI — razem ze strefą administratorów (panel) i przybornikiem deweloperskim (wydania, paczki prywatne, wdrożenie).
 
-Paczka Composer: `simplysmart/admiro`, namespace `Simplysmart\Admiro\`. Do wersji 0.3.0 rdzeń był osobną paczką `simplysmart/mainboard` (historia w [CHANGELOG.md](CHANGELOG.md)).
+Paczka Composer: `simplysmart/admiro`, namespace `Simplysmart\Admiro\`. Do wersji 0.3.0 rdzeń był osobną paczką `simplysmart/admiro` (historia w [CHANGELOG.md](CHANGELOG.md)).
 
 ## Wymagania
 

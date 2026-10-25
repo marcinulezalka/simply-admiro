@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Illuminate\Console\Command;
-use Simplysmart\Mainboard\Security\Honeypot\IpBans;
+use Simplysmart\Admiro\Security\Honeypot\IpBans;
 
 /**
  * Zdejmuje ban pułapki na boty z adresu IP (bany nie mają listy: w cache jest tylko hash adresu).
  */
 final class UnbanIp extends Command
 {
-    protected $signature = 'mainboard:honeypot:unban {ip : Adres IP}';
+    protected $signature = 'admiro:honeypot:unban {ip : Adres IP}';
 
     protected $description = 'Zdejmuje ban pułapki na boty z adresu IP';
 

@@ -1,7 +1,7 @@
 {{-- Gotowy widok: pulpit modułu (statystyki w kartach, ostatnie rekordy, zadania). $view: DesignSystemView, $invoices: list<DemoInvoice>. --}}
 @php
-    use Simplysmart\Mainboard\View\Demo\DemoInvoices;
-    use Simplysmart\Mainboard\View\Demo\DemoInvoiceStatus;
+    use Simplysmart\Admiro\View\Demo\DemoInvoices;
+    use Simplysmart\Admiro\View\Demo\DemoInvoiceStatus;
     $open = array_filter($invoices, static fn ($invoice): bool => in_array($invoice->status, [DemoInvoiceStatus::Sent, DemoInvoiceStatus::Accepted], true));
     $overdue = DemoInvoices::overdue();
     $month = array_filter($invoices, static fn ($invoice): bool => str_starts_with($invoice->issued, substr(DemoInvoices::TODAY, 0, 7)));
@@ -11,9 +11,9 @@
         'month' => local_money(array_sum(array_map(static fn ($invoice): float => $invoice->net, $month)), DemoInvoices::CURRENCY),
     ];
 @endphp
-<x-mainboard::design-system.shell :view="$view" module="dashboard" :title="text('design_system.demo.greeting')" :meta="text('design_system.demo.today', ['date' => local_date(DemoInvoices::TODAY)])">
+<x-admiro::design-system.shell :view="$view" module="dashboard" :title="text('design_system.demo.greeting')" :meta="text('design_system.demo.today', ['date' => local_date(DemoInvoices::TODAY)])">
     <x-slot:actions>
-        <a class="ss-button ss-button--primary" href="{{ route('mainboard.design-system.view', \Simplysmart\Mainboard\Enums\DesignSystemView::Form) }}">{{ text('design_system.demo.new_invoice') }}</a>
+        <a class="ss-button ss-button--primary" href="{{ route('simplysmart.design-system.view', \Simplysmart\Admiro\Enums\DesignSystemView::Form) }}">{{ text('design_system.demo.new_invoice') }}</a>
     </x-slot:actions>
 
     <div class="ss-grid ss-grid--3">
@@ -33,7 +33,7 @@
                 @foreach (array_slice($invoices, 0, 4) as $invoice)
                     <li class="ss-list__item">
                         <span class="ss-list__main">
-                            <a class="ss-link" href="{{ route('mainboard.design-system.view', \Simplysmart\Mainboard\Enums\DesignSystemView::Record) }}">{{ $invoice->number }}</a>
+                            <a class="ss-link" href="{{ route('simplysmart.design-system.view', \Simplysmart\Admiro\Enums\DesignSystemView::Record) }}">{{ $invoice->number }}</a>
                             <span class="ss-muted">{{ $invoice->client }}</span>
                         </span>
                         <span class="ss-list__side">
@@ -54,4 +54,4 @@
             </ul>
         </section>
     </div>
-</x-mainboard::design-system.shell>
+</x-admiro::design-system.shell>

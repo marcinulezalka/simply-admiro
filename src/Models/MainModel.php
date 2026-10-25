@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models;
+namespace Simplysmart\Admiro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Simplysmart\Mainboard\Models\Concerns\HasRouteToken;
+use Simplysmart\Admiro\Models\Concerns\HasRouteToken;
 
 /**
  * Baza modeli Core i stref (docs/baza-danych.md §5): klucz trasy to losowy `token`.

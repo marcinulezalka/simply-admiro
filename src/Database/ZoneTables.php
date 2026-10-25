@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database;
+namespace Simplysmart\Admiro\Database;
 
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
-use Simplysmart\Mainboard\Auth\AccountColumns;
-use Simplysmart\Mainboard\Zones\ZoneTable;
+use Simplysmart\Admiro\Auth\AccountColumns;
+use Simplysmart\Admiro\Zones\ZoneTable;
 
 /**
  * Schemat tabel strefy z logowaniem (konta, kody logowania, sesje, zaufane urządzenia), jednakowy dla każdej strefy.

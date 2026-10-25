@@ -26,7 +26,7 @@ $assetVersion = rawurlencode(is_readable(VERSION_FILE) ? trim((string) file_get_
 <body>
     <main class="ss-page">
         <h1 class="ss-logo"><?php readfile(LOGO_FILE); ?></h1>
-        <p>Projekt utworzony przez Smartboard. Domena: <code>mainboard.local</code>.</p>
+        <p>Projekt utworzony przez Smartboard.</p>
         <p class="ss-muted">Zastąp ten plik swoją aplikacją w <code>public/</code>.</p>
     </main>
 </body>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers;
+namespace Simplysmart\Admiro\Http\Controllers;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\View\View;
-use Simplysmart\Mainboard\Contracts\DesignSystemCatalog;
-use Simplysmart\Mainboard\View\CoreAssets;
-use Simplysmart\Mainboard\View\DesignTokens;
+use Simplysmart\Admiro\Contracts\DesignSystemCatalog;
+use Simplysmart\Admiro\View\CoreAssets;
+use Simplysmart\Admiro\View\DesignTokens;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -36,13 +36,13 @@ final readonly class DesignSystemController
     ) {}
 
     /**
-     * @throws NotFoundHttpException Gdy strona jest wyłączona (`mainboard.design_system.enabled`).
+     * @throws NotFoundHttpException Gdy strona jest wyłączona (`admiro.design_system.enabled`).
      */
     public function index(): View
     {
         $this->ensureEnabled();
 
-        return view('mainboard::design-system.index', [
+        return view('admiro::design-system.index', [
             'tokens' => DesignTokens::fromCss(CoreAssets::contents(self::TOKENS_FILE)),
             'icons' => CoreAssets::names(self::ICONS_DIRECTORY, 'svg'),
         ]);
@@ -66,7 +66,7 @@ final readonly class DesignSystemController
      */
     private function ensureEnabled(): void
     {
-        if (! $this->config->boolean('mainboard.design_system.enabled')) {
+        if (! $this->config->boolean('admiro.design_system.enabled')) {
             throw new NotFoundHttpException();
         }
     }

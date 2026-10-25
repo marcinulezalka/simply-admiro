@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Security\Honeypot;
+namespace Simplysmart\Admiro\Security\Honeypot;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -20,9 +20,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * Pułapka w formularzu (`mainboard.honeypot.forms`): ukryte pole, którego człowiek nie wypełnia, i zaszyfrowany
+ * Pułapka w formularzu (`admiro.honeypot.forms`): ukryte pole, którego człowiek nie wypełnia, i zaszyfrowany
  * czas wyświetlenia formularza; wysłanie szybsze niż `form_min_seconds`, bez czasu albo z podrobionym czasem
- * to bot. Widok dodaje pola komponentem `x-mainboard::honeypot`.
+ * to bot. Widok dodaje pola komponentem `x-admiro::honeypot`.
  */
 final readonly class FormHoneypot
 {
@@ -37,7 +37,7 @@ final readonly class FormHoneypot
 
     public function isEnabled(): bool
     {
-        return $this->config->boolean('mainboard.honeypot.forms');
+        return $this->config->boolean('admiro.honeypot.forms');
     }
 
     /**
@@ -59,7 +59,7 @@ final readonly class FormHoneypot
 
         return (is_string($trap) && $trap !== '')
             || $renderedAt === null
-            || Carbon::now()->getTimestamp() - $renderedAt < $this->config->integer('mainboard.honeypot.form_min_seconds');
+            || Carbon::now()->getTimestamp() - $renderedAt < $this->config->integer('admiro.honeypot.form_min_seconds');
     }
 
     private function renderedAt(mixed $token): ?int

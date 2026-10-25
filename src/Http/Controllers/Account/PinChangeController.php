@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Account;
+namespace Simplysmart\Admiro\Http\Controllers\Account;
 
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
-use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Models\ZoneAccount;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\ChangePin;
-use Simplysmart\Mainboard\Auth\PinRules;
-use Simplysmart\Mainboard\Auth\SignIn\IssueSignInCode;
-use Simplysmart\Mainboard\Auth\SignIn\LoginAttemptLimiter;
-use Simplysmart\Mainboard\Auth\SignInLimit;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Http\AccountRoutes;
+use Simplysmart\Admiro\Auth\ChangePin;
+use Simplysmart\Admiro\Auth\PinRules;
+use Simplysmart\Admiro\Auth\SignIn\IssueSignInCode;
+use Simplysmart\Admiro\Auth\SignIn\LoginAttemptLimiter;
+use Simplysmart\Admiro\Auth\SignInLimit;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Http\AccountRoutes;
 
 /**
  * Zmiana PIN-u zalogowanego konta (formularz na stronie bezpieczeństwa, SecurityController): wysłanie kodu na adres

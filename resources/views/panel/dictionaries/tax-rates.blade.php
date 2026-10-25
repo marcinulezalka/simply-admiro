@@ -1,7 +1,7 @@
 {{-- Stawki VAT kraju: tabela (rodzaj, stawka, od, do) z zakończeniem obowiązującej stawki i karta dodania stawki (settings.manage). $country: Country, $rates: Collection<TaxRate> (od najnowszych), $types: list<TaxRateType>, $canManage: bool. --}}
-@php($column = static fn (string $name): string => text_data(\Simplysmart\Mainboard\Models\Dictionaries\TaxRate::class, $name))
-<x-mainboard::zone.layout :title="text('admiro::admin.tax_rates_title') . ': ' . $country->translatedName()" :back="route('admiro.dictionaries.index', ['dictionary' => 'countries'])">
-    @error('rate') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+@php($column = static fn (string $name): string => text_data(\Simplysmart\Admiro\Models\Dictionaries\TaxRate::class, $name))
+<x-admiro::zone.layout :title="text('admiro::admin.tax_rates_title') . ': ' . $country->translatedName()" :back="route('admiro.dictionaries.index', ['dictionary' => 'countries'])">
+    @error('rate') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <section class="ss-card ss-card--flush">
         <div class="ss-table-wrap">
@@ -60,14 +60,14 @@
                             @endforeach
                         </select>
                     </div>
-                    <x-mainboard::input id="rate" name="rate" field-class="ss-form-row__grow" :label="$column('rate')" inputmode="decimal" :value="old('rate')" :error="$errors->first('rate')" />
-                    <x-mainboard::input id="valid_from" name="valid_from" type="date" field-class="ss-form-row__grow" :label="$column('valid_from')" icon="calendar" :value="old('valid_from')" :error="$errors->first('valid_from')" required />
+                    <x-admiro::input id="rate" name="rate" field-class="ss-form-row__grow" :label="$column('rate')" inputmode="decimal" :value="old('rate')" :error="$errors->first('rate')" />
+                    <x-admiro::input id="valid_from" name="valid_from" type="date" field-class="ss-form-row__grow" :label="$column('valid_from')" icon="calendar" :value="old('valid_from')" :error="$errors->first('valid_from')" required />
                 </div>
-                <x-mainboard::input id="note" name="note" :label="$column('note')" :value="old('note')" maxlength="255" />
+                <x-admiro::input id="note" name="note" :label="$column('note')" :value="old('note')" maxlength="255" />
                 <div class="ss-form-actions">
-                    <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text_action('create') }}</button>
+                    <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="check" class="ss-button__icon" />{{ text_action('create') }}</button>
                 </div>
             </div>
         </form>
     @endif
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

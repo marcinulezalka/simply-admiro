@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database\Seeders;
+namespace Simplysmart\Admiro\Database\Seeders;
 
-use Simplysmart\Mainboard\Database\CodeColumns;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Database\CodeColumns;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
 
 /**
  * Słownik walut: każda waluta używana dziś przez kraje z listy (mapa walut ICU), nazwy z ICU.
- * Włączone od startu: waluta aplikacji (mainboard.locale.currency) i ACTIVE_CURRENCIES.
+ * Włączone od startu: waluta aplikacji (admiro.locale.currency) i ACTIVE_CURRENCIES.
  */
 final class CurrenciesSeeder extends DictionarySeeder
 {
     public function run(): void
     {
-        $default = strtoupper($this->config->string('mainboard.locale.currency'));
+        $default = strtoupper($this->config->string('admiro.locale.currency'));
         $active = array_values(array_unique([$default, ...LocalizationData::ACTIVE_CURRENCIES]));
         $hasDefault = Currency::query()->where(ColumnNames::IS_DEFAULT, true)->exists();
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Providers;
+namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -25,12 +25,12 @@ use Illuminate\Foundation\Http\Kernel as FoundationKernel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Console\UnbanIp;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Http\HoneypotRoutes;
-use Simplysmart\Mainboard\Http\Middleware\BlockBannedIps;
-use Simplysmart\Mainboard\Security\ErrorMasker;
-use Simplysmart\Mainboard\Security\TrustedProxies;
+use Simplysmart\Admiro\Console\UnbanIp;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Http\HoneypotRoutes;
+use Simplysmart\Admiro\Http\Middleware\BlockBannedIps;
+use Simplysmart\Admiro\Security\ErrorMasker;
+use Simplysmart\Admiro\Security\TrustedProxies;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -53,11 +53,11 @@ final class SecurityServiceProvider extends ServiceProvider
     public function boot(TrustedProxies $trustedProxies, RateLimiter $limiter, Repository $config): void
     {
         $trustedProxies->apply();
-        DB::prohibitDestructiveCommands($this->app->environment('production') === true && ! $config->boolean('mainboard.security.allow_destructive_commands'));
+        DB::prohibitDestructiveCommands($this->app->environment('production') === true && ! $config->boolean('admiro.security.allow_destructive_commands'));
 
         $this->callAfterResolving(ExceptionHandler::class, $this->maskErrors(...));
 
-        $limiter->for(HoneypotRoutes::THROTTLE, static fn(Request $request): Limit => Limit::perMinute($config->integer('mainboard.honeypot.route_throttle_per_minute'))->by((string) $request->ip()));
+        $limiter->for(HoneypotRoutes::THROTTLE, static fn(Request $request): Limit => Limit::perMinute($config->integer('admiro.honeypot.route_throttle_per_minute'))->by((string) $request->ip()));
         $this->registerHoneypot($config);
 
         if ($this->app->runningInConsole()) {
@@ -85,12 +85,12 @@ final class SecurityServiceProvider extends ServiceProvider
     }
 
     /**
-     * Pułapki na boty, gdy włączone w `mainboard.honeypot`: globalna blokada zbanowanych adresów i (dla `routes`)
+     * Pułapki na boty, gdy włączone w `admiro.honeypot`: globalna blokada zbanowanych adresów i (dla `routes`)
      * trasy pułapek rejestrowane po wszystkich providerach, żeby prawdziwe trasy wygrywały.
      */
     private function registerHoneypot(Repository $config): void
     {
-        if (! $config->boolean('mainboard.honeypot.routes') && ! $config->boolean('mainboard.honeypot.forms')) {
+        if (! $config->boolean('admiro.honeypot.routes') && ! $config->boolean('admiro.honeypot.forms')) {
             return;
         }
 
@@ -100,7 +100,7 @@ final class SecurityServiceProvider extends ServiceProvider
             $kernel->prependMiddleware(BlockBannedIps::class);
         }
 
-        if ($config->boolean('mainboard.honeypot.routes')) {
+        if ($config->boolean('admiro.honeypot.routes')) {
             $this->app->booted(function (): void {
                 if (! ($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
                     $this->app->make(HoneypotRoutes::class)->register();

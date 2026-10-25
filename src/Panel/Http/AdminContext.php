@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Panel\Http;
 
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Models\AdmiroAccount;
-use Simplysmart\Mainboard\Auth\AccountActor;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\ZonePermissionChecker;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Auth\AccountActor;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\ZonePermissionChecker;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**

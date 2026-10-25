@@ -22,12 +22,12 @@ use Illuminate\Validation\Rule;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Enums\TaxRateType;
-use Simplysmart\Mainboard\Localization\Dictionary;
-use Simplysmart\Mainboard\Localization\DictionaryChangeRejected;
-use Simplysmart\Mainboard\Localization\DictionaryManagement;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Queries\Dictionaries\DictionaryList;
+use Simplysmart\Admiro\Enums\TaxRateType;
+use Simplysmart\Admiro\Localization\Dictionary;
+use Simplysmart\Admiro\Localization\DictionaryChangeRejected;
+use Simplysmart\Admiro\Localization\DictionaryManagement;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Queries\Dictionaries\DictionaryList;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
 
     'title' => 'Design system',
-    'lead' => 'Live mainboard tokens and components in your system theme (light or dark). Values come straight from tokens.css.',
+    'lead' => 'Live admiro tokens and components in your system theme (light or dark). Values come straight from tokens.css.',
     'not_for_production' => 'Outside production only',
     'token' => 'Token',
     'light' => 'Light',
@@ -64,7 +64,7 @@ return [
         'notice' => 'Status message: we have sent a new code.',
         'card' => 'Card: surface background, border, no shadow.',
         'card_muted' => 'Card in a card: surface-muted background, no border.',
-        'brand_text' => 'simplysmart applications on the mainboard package.',
+        'brand_text' => 'simplysmart applications on the admiro package.',
         'icon_before' => 'Icon before text',
         'icon_after' => 'Continue',
         'pill' => 'Pill',

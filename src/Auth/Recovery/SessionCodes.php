@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Auth\Recovery;
+namespace Simplysmart\Admiro\Auth\Recovery;
 
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Auth\SignIn\LoginCodeGenerator;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Admiro\Auth\SignIn\LoginCodeGenerator;
+use Simplysmart\Admiro\Contracts\CurrentZone;
 
 /**
  * Jednorazowe kody bezpieczeństwa poza logowaniem, trzymane w sesji strefy osobno dla każdego celu
@@ -27,7 +27,7 @@ use Simplysmart\Mainboard\Contracts\CurrentZone;
  */
 final readonly class SessionCodes
 {
-    private const string SESSION_PREFIX = 'mainboard.security_code.';
+    private const string SESSION_PREFIX = 'admiro.security_code.';
 
     public function __construct(
         private LoginCodeGenerator $codes,

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -19,13 +19,13 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Simplysmart\Mainboard\Http\Middleware\BlockAiAgents;
-use Simplysmart\Mainboard\Http\Middleware\PreventRequestForgeryWithoutCookie;
-use Simplysmart\Mainboard\Http\Middleware\RecordHistoryActor;
-use Simplysmart\Mainboard\Http\Middleware\SecurityHeaders;
-use Simplysmart\Mainboard\Http\Middleware\SetLocale;
-use Simplysmart\Mainboard\Http\Middleware\UseCurrentTeam;
-use Simplysmart\Mainboard\Http\Middleware\UseZone;
+use Simplysmart\Admiro\Http\Middleware\BlockAiAgents;
+use Simplysmart\Admiro\Http\Middleware\PreventRequestForgeryWithoutCookie;
+use Simplysmart\Admiro\Http\Middleware\RecordHistoryActor;
+use Simplysmart\Admiro\Http\Middleware\SecurityHeaders;
+use Simplysmart\Admiro\Http\Middleware\SetLocale;
+use Simplysmart\Admiro\Http\Middleware\UseCurrentTeam;
+use Simplysmart\Admiro\Http\Middleware\UseZone;
 
 /**
  * Rejestruje grupę middleware strefy (`zone.<nazwa>`), używaną zamiast grupy `web`.

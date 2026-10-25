@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\View\Notifications;
+namespace Simplysmart\Admiro\View\Notifications;
 
 /**
  * Powiadomienie w panelu top baru i na liście powiadomień: tytuł, treść, czas (już sformatowany), adres i stan.
@@ -20,7 +20,7 @@ final readonly class NotificationItem
 {
     /**
      * @param string $time Czas do pokazania, sformatowany przez `local_*` (np. „dziś, 08:41”).
-     * @param string $icon Ikona Core (x-mainboard::icon).
+     * @param string $icon Ikona Core (x-admiro::icon).
      */
     public function __construct(
         public string $title,

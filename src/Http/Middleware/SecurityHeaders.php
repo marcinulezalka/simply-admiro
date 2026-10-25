@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Middleware;
+namespace Simplysmart\Admiro\Http\Middleware;
 
 use Closure;
 use Illuminate\Config\Repository;
 use Illuminate\Foundation\Vite;
 use Illuminate\Http\Request;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\CurrentZone;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -69,14 +69,14 @@ final readonly class SecurityHeaders
             $headers->set($name, $value);
         }
 
-        $headers->set('Permissions-Policy', $this->config->string('mainboard.security.permissions_policy'));
+        $headers->set('Permissions-Policy', $this->config->string('admiro.security.permissions_policy'));
 
-        if ($request->isSecure() && $this->config->boolean('mainboard.security.hsts.enabled')) {
-            $headers->set('Strict-Transport-Security', 'max-age=' . $this->config->integer('mainboard.security.hsts.max_age') . '; includeSubDomains');
+        if ($request->isSecure() && $this->config->boolean('admiro.security.hsts.enabled')) {
+            $headers->set('Strict-Transport-Security', 'max-age=' . $this->config->integer('admiro.security.hsts.max_age') . '; includeSubDomains');
         }
 
         if ($nonce !== null) {
-            $headers->set('Content-Security-Policy', str_replace(self::NONCE_PLACEHOLDER, $nonce, $this->config->string('mainboard.security.csp.policy')));
+            $headers->set('Content-Security-Policy', str_replace(self::NONCE_PLACEHOLDER, $nonce, $this->config->string('admiro.security.csp.policy')));
         }
 
         if ($isPrivate) {
@@ -86,7 +86,7 @@ final readonly class SecurityHeaders
                 }
             }
 
-            $headers->set('X-Robots-Tag', $this->config->string('mainboard.zones.robots'));
+            $headers->set('X-Robots-Tag', $this->config->string('admiro.zones.robots'));
         }
 
         return $response;
@@ -97,6 +97,6 @@ final readonly class SecurityHeaders
      */
     private function cspEnabled(): bool
     {
-        return $this->config->boolean('mainboard.security.csp.enabled') && ! $this->vite->isRunningHot();
+        return $this->config->boolean('admiro.security.csp.enabled') && ! $this->vite->isRunningHot();
     }
 }

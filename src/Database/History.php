@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database;
+namespace Simplysmart\Admiro\Database;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Schema\Blueprint;
 use LogicException;
 use PDOException;
-use Simplysmart\Mainboard\Contracts\HistoryTriggers;
-use Simplysmart\Mainboard\Database\History\MysqlHistoryTriggers;
-use Simplysmart\Mainboard\Database\History\SqliteHistoryTriggers;
+use Simplysmart\Admiro\Contracts\HistoryTriggers;
+use Simplysmart\Admiro\Database\History\MysqlHistoryTriggers;
+use Simplysmart\Admiro\Database\History\SqliteHistoryTriggers;
 
 /**
  * Historia zmian tabeli w `<tabela>_history`, zapisywana triggerami bazy (docs/baza-danych.md §4),

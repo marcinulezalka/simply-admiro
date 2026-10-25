@@ -12,5 +12,5 @@
     @endif
 </div>
 @once
-    <x-mainboard::scripts :files="['js/signature-pad.js']" />
+    <x-admiro::scripts :files="['js/signature-pad.js']" />
 @endonce

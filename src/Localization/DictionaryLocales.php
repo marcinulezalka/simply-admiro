@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Localization;
+namespace Simplysmart\Admiro\Localization;
 
 use Illuminate\Config\Repository;
 
@@ -31,13 +31,13 @@ final readonly class DictionaryLocales
     }
 
     /**
-     * Języki interfejsu z APP_LOCALES (mainboard.locale.enabled), język aplikacji zawsze.
+     * Języki interfejsu z APP_LOCALES (admiro.locale.enabled), język aplikacji zawsze.
      *
      * @return list<string>
      */
     public function interfaceLocales(): array
     {
-        $enabled = array_filter($this->config->array('mainboard.locale.enabled', []), is_string(...));
+        $enabled = array_filter($this->config->array('admiro.locale.enabled', []), is_string(...));
 
         return array_values(array_unique([$this->defaultLocale(), ...$enabled]));
     }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Models\Dictionaries;
+namespace Simplysmart\Admiro\Models\Dictionaries;
 
-use Simplysmart\Mainboard\Contracts\DictionaryEntry;
-use Simplysmart\Mainboard\Models\Concerns\HasI18n;
-use Simplysmart\Mainboard\Models\DataModel;
-use Simplysmart\Mainboard\Models\Relations\SpokenInCountries;
+use Simplysmart\Admiro\Contracts\DictionaryEntry;
+use Simplysmart\Admiro\Models\Concerns\HasI18n;
+use Simplysmart\Admiro\Models\DataModel;
+use Simplysmart\Admiro\Models\Relations\SpokenInCountries;
 
 /**
  * Język (ISO 639, małe litery). `is_active` — do wyboru w treściach i dokumentach, `is_interface` —

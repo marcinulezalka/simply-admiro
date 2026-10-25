@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Mail;
+namespace Simplysmart\Admiro\Mail;
 
-use Simplysmart\Mainboard\Contracts\SignInAccount;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\ZoneAccount;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\SignInAccount;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Organizacja, w której imieniu idzie e-mail do konta (jej logo w layoucie): strefa bez organizacji klientów —

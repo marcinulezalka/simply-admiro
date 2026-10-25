@@ -15,13 +15,13 @@ namespace Simplysmart\Admiro\Panel\Http;
 
 use Illuminate\Http\Request;
 use Simplysmart\Admiro\Panel\Enums\Permission;
-use Simplysmart\Mainboard\Contracts\ZoneNavigation;
-use Simplysmart\Mainboard\Enums\LegalDocumentType;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
-use Simplysmart\Mainboard\View\Navigation\NavigationGroup;
-use Simplysmart\Mainboard\View\Navigation\NavigationItem;
-use Simplysmart\Mainboard\View\Navigation\SearchBox;
+use Simplysmart\Admiro\Contracts\ZoneNavigation;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
+use Simplysmart\Admiro\View\Navigation\NavigationGroup;
+use Simplysmart\Admiro\View\Navigation\NavigationItem;
+use Simplysmart\Admiro\View\Navigation\SearchBox;
 
 /**
  * Menu strefy administratorów w layoucie aplikacji: pulpit oraz grupy stref i kont, organizacji i systemu (dziennik

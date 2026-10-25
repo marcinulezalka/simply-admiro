@@ -4,15 +4,15 @@
     $title = text('errors.' . $code . '.title');
     $previous = url()->previous();
 @endphp
-<x-mainboard::page :title="$title" robots="noindex, nofollow">
+<x-admiro::page :title="$title" robots="noindex, nofollow">
     <x-slot:head>
-        <x-mainboard::styles />
+        <x-admiro::styles />
     </x-slot:head>
 
     <div class="ss-auth ss-auth--split">
         <main class="ss-auth__cards ss-frame ss-frame--row">
             <aside class="ss-card ss-card--inverse ss-card--elevated ss-auth__brand ss-error__brand">
-                <x-mainboard::logo class="ss-auth__brand-logo" />
+                <x-admiro::logo class="ss-auth__brand-logo" />
                 <p class="ss-error__code" aria-hidden="true">{{ $code }}</p>
             </aside>
 
@@ -24,14 +24,14 @@
                 </div>
 
                 <div class="ss-error__actions">
-                    <a class="ss-button ss-button--primary ss-button--pill" href="{{ url('/') }}"><x-mainboard::icon name="home" class="ss-button__icon" />{{ text('errors.home') }}</a>
+                    <a class="ss-button ss-button--primary ss-button--pill" href="{{ url('/') }}"><x-admiro::icon name="home" class="ss-button__icon" />{{ text('errors.home') }}</a>
                     @if ($retry)
-                        <a class="ss-button ss-button--pill" href="{{ url()->current() }}"><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('errors.retry') }}</a>
+                        <a class="ss-button ss-button--pill" href="{{ url()->current() }}"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('errors.retry') }}</a>
                     @elseif ($previous !== url()->current())
-                        <a class="ss-button ss-button--pill" href="{{ $previous }}"><x-mainboard::icon name="arrow-left" class="ss-button__icon" />{{ text('errors.back') }}</a>
+                        <a class="ss-button ss-button--pill" href="{{ $previous }}"><x-admiro::icon name="arrow-left" class="ss-button__icon" />{{ text('errors.back') }}</a>
                     @endif
                 </div>
             </div>
         </main>
     </div>
-</x-mainboard::page>
+</x-admiro::page>

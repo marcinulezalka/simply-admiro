@@ -2,14 +2,14 @@
 @php
     $colors = $tokens->group('color');
     $paletteTokens = $tokens->group('palette');
-    $palettes = \Simplysmart\Mainboard\Enums\Palette::cases();
+    $palettes = \Simplysmart\Admiro\Enums\Palette::cases();
     $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'buttons', 'segmented', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
-    $highlight = \Simplysmart\Mainboard\View\BrandNames::highlight(...);
+    $highlight = \Simplysmart\Admiro\View\BrandNames::highlight(...);
 @endphp
-<x-mainboard::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow" :palettes="$palettes" palette-scope="design-system">
+<x-admiro::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow" :palettes="$palettes" palette-scope="design-system">
     <x-slot:head>
-        <x-mainboard::styles :files="[...\Simplysmart\Mainboard\View\CoreAssets::STYLESHEETS, 'css/design-system.css']" />
-        <x-mainboard::scripts :files="['js/input-mask.js']" />
+        <x-admiro::styles :files="[...\Simplysmart\Admiro\View\CoreAssets::STYLESHEETS, 'css/design-system.css']" />
+        <x-admiro::scripts :files="['js/input-mask.js']" />
         <style nonce="{{ \Illuminate\Support\Facades\Vite::cspNonce() }}">
 @foreach ([...$colors, ...$paletteTokens] as $token)
 .ss-ds-chip--{{ $token->key }}-light { background: {{ $token->light }}; }
@@ -29,17 +29,17 @@
 
     <div class="ss-ds">
         <header class="ss-ds__header">
-            <x-mainboard::logo class="ss-ds__logo" />
+            <x-admiro::logo class="ss-ds__logo" />
             <div class="ss-ds__heading">
                 <h1 class="ss-ds__title">{{ text('design_system.title') }}</h1>
                 <span class="ss-badge">{{ text('design_system.not_for_production') }}</span>
-                <x-mainboard::theme-toggle />
+                <x-admiro::theme-toggle />
             </div>
             <p class="ss-ds__lead ss-muted">{{ text('design_system.lead') }}</p>
         </header>
 
         <div class="ss-ds__layout">
-            <x-mainboard::design-system.nav :sections="$sections" />
+            <x-admiro::design-system.nav :sections="$sections" />
 
             <main class="ss-ds__sections">
                 <section class="ss-card" id="colors" aria-labelledby="colors-title">
@@ -71,12 +71,12 @@
                     <h2 class="ss-ds__section-title" id="palettes-title">{{ text('design_system.sections.palettes') }}</h2>
                     <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.palettes_lead') }}</p>
                     <div class="ss-ds__row">
-                        <x-mainboard::palette-switch :palettes="$palettes" />
+                        <x-admiro::palette-switch :palettes="$palettes" />
                         <button class="ss-button ss-button--primary" type="button">{{ text('design_system.sample.primary') }}</button>
                         <a class="ss-link" href="#palettes">{{ text('design_system.sample.link') }}</a>
                         <span class="ss-card ss-card--inverse ss-ds__palette-inverse">{{ text('design_system.sample.palette_inverse') }}</span>
                     </div>
-                    <p class="ss-ds__row"><code>&lt;html data-palette="…"&gt;</code> <code>palettes</code> <code>x-mainboard::palette-switch</code></p>
+                    <p class="ss-ds__row"><code>&lt;html data-palette="…"&gt;</code> <code>palettes</code> <code>x-admiro::palette-switch</code></p>
                     <div class="ss-ds__table-wrap">
                         <table class="ss-ds__table">
                             <thead>
@@ -156,25 +156,25 @@
                     <h2 class="ss-ds__section-title" id="buttons-title">{{ text('design_system.sections.buttons') }}</h2>
                     <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.buttons_lead') }}</p>
                     <div class="ss-ds__row">
-                        <x-mainboard::palette-switch :palettes="$palettes" />
+                        <x-admiro::palette-switch :palettes="$palettes" />
                         <button class="ss-button ss-button--primary" type="button">{{ text('design_system.sample.primary') }}</button>
                         <button class="ss-button" type="button">{{ text('design_system.sample.secondary') }}</button>
                         <button class="ss-button" type="button" disabled>{{ text('design_system.sample.disabled') }}</button>
                         <a class="ss-link" href="#buttons">{{ text('design_system.sample.link') }}</a>
                     </div>
                     <div class="ss-ds__row ss-ds__spaced">
-                        <button class="ss-button ss-button--primary" type="button"><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.icon_before') }}</button>
-                        <button class="ss-button" type="button">{{ text('design_system.sample.icon_after') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
-                        <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.pill') }}</button>
-                        <button class="ss-button ss-button--pill" type="button">{{ text('design_system.sample.pill') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
+                        <button class="ss-button ss-button--primary" type="button"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.icon_before') }}</button>
+                        <button class="ss-button" type="button">{{ text('design_system.sample.icon_after') }}<x-admiro::icon name="arrow-right" class="ss-button__icon" /></button>
+                        <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.pill') }}</button>
+                        <button class="ss-button ss-button--pill" type="button">{{ text('design_system.sample.pill') }}<x-admiro::icon name="arrow-right" class="ss-button__icon" /></button>
                     </div>
                     <div class="ss-ds__row ss-ds__spaced">
-                        <button class="ss-button ss-button--primary ss-button--pill ss-button--lg" type="button"><x-mainboard::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_lg') }}</button>
-                        <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-mainboard::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_md') }}</button>
-                        <button class="ss-button ss-button--primary ss-button--pill ss-button--sm" type="button"><x-mainboard::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_sm') }}</button>
+                        <button class="ss-button ss-button--primary ss-button--pill ss-button--lg" type="button"><x-admiro::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_lg') }}</button>
+                        <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-admiro::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_md') }}</button>
+                        <button class="ss-button ss-button--primary ss-button--pill ss-button--sm" type="button"><x-admiro::icon name="map-pin" class="ss-button__icon" />{{ text('design_system.sample.size_sm') }}</button>
                     </div>
                     <div class="ss-ds__narrow">
-                        <button class="ss-button ss-button--primary ss-button--block" type="button">.ss-button--block<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
+                        <button class="ss-button ss-button--primary ss-button--block" type="button">.ss-button--block<x-admiro::icon name="arrow-right" class="ss-button__icon" /></button>
                     </div>
                 </section>
 
@@ -186,8 +186,8 @@
                             <p class="ss-field__label">{{ text('design_system.sample.segmented.' . $kind) }} · .{{ str_replace(' ', '.', $class) }}</p>
                             <div class="ss-ds__row">
                                 <div class="{{ $class }}" role="group" aria-label="{{ text('layout.theme') }}">
-                                    @foreach (\Simplysmart\Mainboard\Enums\Theme::cases() as $theme)
-                                        <button class="ss-tabs__link" type="button" aria-pressed="{{ $loop->first ? 'true' : 'false' }}" title="{{ $theme->label() }}"><x-mainboard::icon :name="$theme->icon()" class="ss-tabs__icon" /><span class="ss-sr-only">{{ $theme->label() }}</span></button>
+                                    @foreach (\Simplysmart\Admiro\Enums\Theme::cases() as $theme)
+                                        <button class="ss-tabs__link" type="button" aria-pressed="{{ $loop->first ? 'true' : 'false' }}" title="{{ $theme->label() }}"><x-admiro::icon :name="$theme->icon()" class="ss-tabs__icon" /><span class="ss-sr-only">{{ $theme->label() }}</span></button>
                                     @endforeach
                                 </div>
                                 <ul class="{{ $class }}">
@@ -196,8 +196,8 @@
                                     @endforeach
                                 </ul>
                                 <div class="{{ $class }}" role="group" aria-label="{{ text('design_system.sample.segmented.availability') }}">
-                                    <button class="ss-tabs__link" type="button" aria-pressed="true"><x-mainboard::icon name="check-circle" class="ss-tabs__icon" />{{ text('design_system.sample.available') }}</button>
-                                    <button class="ss-tabs__link" type="button" aria-pressed="false"><x-mainboard::icon name="close" class="ss-tabs__icon" />{{ text('design_system.sample.unavailable') }}</button>
+                                    <button class="ss-tabs__link" type="button" aria-pressed="true"><x-admiro::icon name="check-circle" class="ss-tabs__icon" />{{ text('design_system.sample.available') }}</button>
+                                    <button class="ss-tabs__link" type="button" aria-pressed="false"><x-admiro::icon name="close" class="ss-tabs__icon" />{{ text('design_system.sample.unavailable') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -207,22 +207,22 @@
                 <section class="ss-card" id="forms" aria-labelledby="forms-title">
                     <h2 class="ss-ds__section-title" id="forms-title">{{ text('design_system.sections.forms') }}</h2>
                     <div class="ss-form ss-ds__narrow">
-                        <x-mainboard::input id="ds-email" :label="text('design_system.sample.field')" icon="mail" type="email" :placeholder="text('placeholders.email')" :hint="text('design_system.sample.placeholder_hint')" />
-                        <x-mainboard::input id="ds-email-error" :label="text('design_system.sample.field_error')" icon="mail" type="email" value="jan@" :error="text('design_system.sample.error')" />
-                        <x-mainboard::input id="ds-name" :label="text('design_system.sample.person')" icon="user" autocomplete="off" :placeholder="text('placeholders.full_name')" />
-                        <x-mainboard::input id="ds-company" :label="text('design_system.demo.client_name')" icon="building" autocomplete="off" :placeholder="text('placeholders.company')" />
-                        <x-mainboard::input id="ds-date" :label="text('design_system.sample.date')" icon="calendar" type="date" />
-                        @foreach (\Simplysmart\Mainboard\Enums\InputMask::cases() as $mask)
-                            <x-mainboard::input :id="'ds-mask-' . $mask->value" :label="text('design_system.sample.masks.' . $mask->value)" :mask="$mask" />
+                        <x-admiro::input id="ds-email" :label="text('design_system.sample.field')" icon="mail" type="email" :placeholder="text('placeholders.email')" :hint="text('design_system.sample.placeholder_hint')" />
+                        <x-admiro::input id="ds-email-error" :label="text('design_system.sample.field_error')" icon="mail" type="email" value="jan@" :error="text('design_system.sample.error')" />
+                        <x-admiro::input id="ds-name" :label="text('design_system.sample.person')" icon="user" autocomplete="off" :placeholder="text('placeholders.full_name')" />
+                        <x-admiro::input id="ds-company" :label="text('design_system.demo.client_name')" icon="building" autocomplete="off" :placeholder="text('placeholders.company')" />
+                        <x-admiro::input id="ds-date" :label="text('design_system.sample.date')" icon="calendar" type="date" />
+                        @foreach (\Simplysmart\Admiro\Enums\InputMask::cases() as $mask)
+                            <x-admiro::input :id="'ds-mask-' . $mask->value" :label="text('design_system.sample.masks.' . $mask->value)" :mask="$mask" />
                         @endforeach
                         <div class="ss-field">
                             <label class="ss-field__label" for="ds-code">{{ text('design_system.sample.code') }}</label>
                             <input class="ss-input ss-input--code" id="ds-code" inputmode="numeric" value="15935748">
                         </div>
                         <div>
-                            <x-mainboard::switch id="ds-switch-on" :label="text('design_system.sample.check')" :hint="text('design_system.sample.switch_hint')" :checked="true" />
-                            <x-mainboard::switch id="ds-switch-off" :label="text('design_system.sample.switch_off')" />
-                            <x-mainboard::switch id="ds-switch-disabled" :label="text('design_system.sample.disabled')" disabled />
+                            <x-admiro::switch id="ds-switch-on" :label="text('design_system.sample.check')" :hint="text('design_system.sample.switch_hint')" :checked="true" />
+                            <x-admiro::switch id="ds-switch-off" :label="text('design_system.sample.switch_off')" />
+                            <x-admiro::switch id="ds-switch-disabled" :label="text('design_system.sample.disabled')" disabled />
                         </div>
                     </div>
                 </section>
@@ -232,27 +232,27 @@
                     <div class="ss-ds__stack ss-ds__narrow">
                         <p class="ss-notice">{{ text('design_system.sample.notice') }}</p>
                         <div class="ss-ds__row">
-                            <x-mainboard::avatar :name="text('design_system.demo.account')" size="sm" />
-                            <x-mainboard::avatar :name="text('design_system.demo.account')" />
-                            <x-mainboard::avatar :name="text('design_system.demo.account')" :accent="true" />
-                            <x-mainboard::avatar :name="text('design_system.demo.account')" size="lg" />
+                            <x-admiro::avatar :name="text('design_system.demo.account')" size="sm" />
+                            <x-admiro::avatar :name="text('design_system.demo.account')" />
+                            <x-admiro::avatar :name="text('design_system.demo.account')" :accent="true" />
+                            <x-admiro::avatar :name="text('design_system.demo.account')" size="lg" />
                         </div>
                         <div class="ss-ds__row">
                             <span class="ss-avatars">
-                                @foreach (\Simplysmart\Mainboard\Enums\AvatarColor::cases() as $color)
-                                    <x-mainboard::avatar :name="$color->label()" :color="$color" :label="true" />
+                                @foreach (\Simplysmart\Admiro\Enums\AvatarColor::cases() as $color)
+                                    <x-admiro::avatar :name="$color->label()" :color="$color" :label="true" />
                                 @endforeach
                             </span>
-                            <x-mainboard::avatar-colors :name="text('design_system.demo.account')" :current="\Simplysmart\Mainboard\Enums\AvatarColor::Blue" field="ds-avatar-color" />
+                            <x-admiro::avatar-colors :name="text('design_system.demo.account')" :current="\Simplysmart\Admiro\Enums\AvatarColor::Blue" field="ds-avatar-color" />
                             <span class="ss-person">
-                                <x-mainboard::avatar :name="text('design_system.demo.account')" size="sm" />
+                                <x-admiro::avatar :name="text('design_system.demo.account')" size="sm" />
                                 <span class="ss-person__text"><span>{{ text('design_system.demo.account') }}</span><span class="ss-muted">{{ text('design_system.demo.account_subtitle') }}</span></span>
                             </span>
                         </div>
-                        <x-mainboard::toasts :inline="true" :toasts="\Simplysmart\Mainboard\View\Demo\DemoNotifications::toasts(route('mainboard.design-system.view', \Simplysmart\Mainboard\Enums\DesignSystemView::Notifications))" />
+                        <x-admiro::toasts :inline="true" :toasts="\Simplysmart\Admiro\View\Demo\DemoNotifications::toasts(route('simplysmart.design-system.view', \Simplysmart\Admiro\Enums\DesignSystemView::Notifications))" />
                         <p class="ss-field__error">{{ text('design_system.sample.error') }}</p>
                         <div class="ss-ds__row">
-                            <span class="ss-badge">{{ text('welcome.mainboard_version', ['version' => \Simplysmart\Mainboard\View\CoreVersion::current()]) }}</span>
+                            <span class="ss-badge">{{ text('welcome.admiro_version', ['version' => \Simplysmart\Admiro\View\CoreVersion::current()]) }}</span>
                             <span class="ss-badge">{{ text('design_system.not_for_production') }}</span>
                         </div>
                     </div>
@@ -268,9 +268,9 @@
                                 @endforeach
                             </ul>
                             <div class="ss-period__nav">
-                                <a class="ss-icon-button" href="#periods"><x-mainboard::icon name="arrow-left" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('design_system.sample.previous') }}</span></a>
-                                <p class="ss-period__label">{{ local_date(\Simplysmart\Mainboard\View\Demo\DemoInvoices::TODAY, 'dddd, LL') }}</p>
-                                <a class="ss-icon-button" href="#periods"><x-mainboard::icon name="arrow-right" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('design_system.sample.next') }}</span></a>
+                                <a class="ss-icon-button" href="#periods"><x-admiro::icon name="arrow-left" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('design_system.sample.previous') }}</span></a>
+                                <p class="ss-period__label">{{ local_date(\Simplysmart\Admiro\View\Demo\DemoInvoices::TODAY, 'dddd, LL') }}</p>
+                                <a class="ss-icon-button" href="#periods"><x-admiro::icon name="arrow-right" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('design_system.sample.next') }}</span></a>
                             </div>
                         </div>
                         <div class="ss-ds__row">
@@ -316,7 +316,7 @@
                             <p class="ss-muted">{{ text('design_system.sample.frame_text') }}</p>
                             <p class="ss-ds__row"><code>.ss-frame</code> <code>.ss-card--tinted</code> <code>--ss-radius-nested</code></p>
                             <div class="ss-ds__row ss-ds__push">
-                                <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.start') }}</button>
+                                <button class="ss-button ss-button--primary ss-button--pill" type="button"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('design_system.sample.start') }}</button>
                             </div>
                         </div>
                         <div class="ss-card ss-card--inverse ss-card--elevated ss-ds__frame-card">
@@ -324,8 +324,8 @@
                             <p class="ss-muted">{{ text('design_system.sample.inverse_text') }}</p>
                             <p class="ss-ds__row"><code>.ss-card--inverse</code> <code>.ss-card--elevated</code></p>
                             <div class="ss-ds__row ss-ds__push ss-ds__between">
-                                <span class="ss-badge ss-ds__badge-inverse"><x-mainboard::icon name="shield-check" class="ss-badge__icon" />{{ text('design_system.sample.secured') }}</span>
-                                <button class="ss-button ss-button--primary ss-button--pill" type="button">{{ text('design_system.sample.more') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
+                                <span class="ss-badge ss-ds__badge-inverse"><x-admiro::icon name="shield-check" class="ss-badge__icon" />{{ text('design_system.sample.secured') }}</span>
+                                <button class="ss-button ss-button--primary ss-button--pill" type="button">{{ text('design_system.sample.more') }}<x-admiro::icon name="arrow-right" class="ss-button__icon" /></button>
                             </div>
                         </div>
                     </div>
@@ -344,7 +344,7 @@
                     <ul class="ss-ds__icons">
                         @foreach ($icons as $icon)
                             <li class="ss-ds__icon">
-                                <x-mainboard::icon :name="$icon" class="ss-icon--tile" />
+                                <x-admiro::icon :name="$icon" class="ss-icon--tile" />
                                 <code>{{ $icon }}</code>
                             </li>
                         @endforeach
@@ -355,17 +355,17 @@
                     <h2 class="ss-ds__section-title" id="brand-title">{{ text('design_system.sections.brand') }}</h2>
                     <div class="ss-ds__stack">
                         <div class="ss-ds__row">
-                            <x-mainboard::logo class="ss-ds__brand-logo" />
-                            <span class="ss-welcome__laravel">{!! \Simplysmart\Mainboard\View\CoreAssets::contents('img/vendor/laravel.svg') !!}</span>
+                            <x-admiro::logo class="ss-ds__brand-logo" />
+                            <span class="ss-welcome__laravel">{!! \Simplysmart\Admiro\View\CoreAssets::contents('img/vendor/laravel.svg') !!}</span>
                         </div>
                         <p>{{ $highlight(text('design_system.sample.brand_text')) }}</p>
                         <p class="ss-ds__row">
                             <span class="ss-muted">{{ text('design_system.sample.flags') }}</span>
-                            <x-mainboard::flag icon="pl" /> <x-mainboard::flag icon="gb" /> <x-mainboard::flag icon="de" />
+                            <x-admiro::flag icon="pl" /> <x-admiro::flag icon="gb" /> <x-admiro::flag icon="de" />
                         </p>
                     </div>
                 </section>
             </main>
         </div>
     </div>
-</x-mainboard::page>
+</x-admiro::page>

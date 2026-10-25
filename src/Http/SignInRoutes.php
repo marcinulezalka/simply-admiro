@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,29 +11,29 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http;
+namespace Simplysmart\Admiro\Http;
 
 use Illuminate\Routing\Router;
-use Simplysmart\Mainboard\Auth\SignIn\SignInFlow;
-use Simplysmart\Mainboard\Auth\SignIn\Steps\EmailCodeStep;
-use Simplysmart\Mainboard\Http\Controllers\Auth\ForgotPinController;
-use Simplysmart\Mainboard\Http\Controllers\Auth\LoginController;
-use Simplysmart\Mainboard\Http\Controllers\Auth\LogoutController;
-use Simplysmart\Mainboard\Http\Controllers\Auth\ResendCodeController;
-use Simplysmart\Mainboard\Http\Controllers\Auth\SignInStepController;
-use Simplysmart\Mainboard\Http\Middleware\EnsureSignInStep;
-use Simplysmart\Mainboard\Zones\AccessTier;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
-use Simplysmart\Mainboard\Auth\AuthBrand;
-use Simplysmart\Mainboard\Http\Controllers\Auth\AuthBrandController;
+use Simplysmart\Admiro\Auth\SignIn\SignInFlow;
+use Simplysmart\Admiro\Auth\SignIn\Steps\EmailCodeStep;
+use Simplysmart\Admiro\Http\Controllers\Auth\ForgotPinController;
+use Simplysmart\Admiro\Http\Controllers\Auth\LoginController;
+use Simplysmart\Admiro\Http\Controllers\Auth\LogoutController;
+use Simplysmart\Admiro\Http\Controllers\Auth\ResendCodeController;
+use Simplysmart\Admiro\Http\Controllers\Auth\SignInStepController;
+use Simplysmart\Admiro\Http\Middleware\EnsureSignInStep;
+use Simplysmart\Admiro\Zones\AccessTier;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Auth\AuthBrand;
+use Simplysmart\Admiro\Http\Controllers\Auth\AuthBrandController;
 
 /**
  * Trasy logowania strefy (wewnątrz grupy strefy): `auth.login`, `auth.<krok>` dla każdego kroku
- * z configu, `auth.code.resend`, „Nie pamiętam PIN-u” z resetem przez zapasowy adres i `auth.logout`. Każdy POST ma limit `mainboard.sign-in`.
+ * z configu, `auth.code.resend`, „Nie pamiętam PIN-u” z resetem przez zapasowy adres i `auth.logout`. Każdy POST ma limit `admiro.sign-in`.
  */
 final readonly class SignInRoutes
 {
-    public const string THROTTLE = 'mainboard.sign-in';
+    public const string THROTTLE = 'admiro.sign-in';
 
     private const string PREFIX = 'signin';
 

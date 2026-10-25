@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,17 +11,17 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Security\Honeypot;
+namespace Simplysmart\Admiro\Security\Honeypot;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Carbon;
-use Simplysmart\Mainboard\Zones\ZoneCacheKey;
+use Simplysmart\Admiro\Zones\ZoneCacheKey;
 use Symfony\Component\HttpFoundation\IpUtils;
 
 /**
  * Bany IP z pułapek na boty: w cache tylko hash adresu (`zone:shared:honeypot:ban:<sha256>`), bez wspólnego
- * indeksu (brak wyścigu przy zapisie). Adresy z `mainboard.honeypot.whitelist` nigdy nie są banowane.
+ * indeksu (brak wyścigu przy zapisie). Adresy z `admiro.honeypot.whitelist` nigdy nie są banowane.
  */
 final readonly class IpBans
 {
@@ -41,7 +41,7 @@ final readonly class IpBans
             return null;
         }
 
-        $until = Carbon::now()->addMinutes($this->config->integer('mainboard.honeypot.ban_minutes'));
+        $until = Carbon::now()->addMinutes($this->config->integer('admiro.honeypot.ban_minutes'));
         $this->cache->put(self::key('ban', $ip), $until->getTimestamp(), $until);
 
         return $until;
@@ -59,7 +59,7 @@ final readonly class IpBans
 
     public function isWhitelisted(string $ip): bool
     {
-        $whitelist = array_values(array_filter($this->config->array('mainboard.honeypot.whitelist'), is_string(...)));
+        $whitelist = array_values(array_filter($this->config->array('admiro.honeypot.whitelist'), is_string(...)));
 
         return $whitelist !== [] && IpUtils::checkIp($ip, $whitelist);
     }

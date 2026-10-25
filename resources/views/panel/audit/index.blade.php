@@ -1,10 +1,10 @@
 {{-- Dziennik zdarzeń systemu: filtry (strefa, zdarzenie z czytelną nazwą, zakres dat) i tabela (kiedy, zdarzenie, strefa, konto, kto, organizacja, IP, kontekst) ze stronicowaniem. $entries: LengthAwarePaginator<AuditEvent>, $events: list<string> (nazwy zdarzeń do filtra), $zones: list<ZoneDefinition>, $filters: array{zone: ?string, event: ?string, from: ?string, to: ?string}. --}}
 @php
-    use Simplysmart\Mainboard\View\AuditEventLabel;
+    use Simplysmart\Admiro\View\AuditEventLabel;
     $byName = collect($zones)->keyBy('name');
-    $column = static fn (string $name): string => text_data(\Simplysmart\Mainboard\Models\AuditEvent::class, $name);
+    $column = static fn (string $name): string => text_data(\Simplysmart\Admiro\Models\AuditEvent::class, $name);
 @endphp
-<x-mainboard::zone.layout :title="text('admiro::admin.audit_title')">
+<x-admiro::zone.layout :title="text('admiro::admin.audit_title')">
     <form class="ss-card ss-form-row" method="GET" action="{{ route('admiro.audit.index') }}">
         <div class="ss-field">
             <label class="ss-field__label" for="zone">{{ $column('zone') }}</label>
@@ -24,8 +24,8 @@
                 @endforeach
             </select>
         </div>
-        <x-mainboard::input id="from" name="from" type="date" :label="text('admiro::admin.audit_from')" :value="$filters['from']" />
-        <x-mainboard::input id="to" name="to" type="date" :label="text('admiro::admin.audit_to')" :value="$filters['to']" />
+        <x-admiro::input id="from" name="from" type="date" :label="text('admiro::admin.audit_from')" :value="$filters['from']" />
+        <x-admiro::input id="to" name="to" type="date" :label="text('admiro::admin.audit_to')" :value="$filters['to']" />
         <button class="ss-button" type="submit">{{ text_action('filter') }}</button>
     </form>
 
@@ -59,5 +59,5 @@
         </div>
     </section>
 
-    <x-mainboard::pagination :paginator="$entries" />
-</x-mainboard::zone.layout>
+    <x-admiro::pagination :paginator="$entries" />
+</x-admiro::zone.layout>

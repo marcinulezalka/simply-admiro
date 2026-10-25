@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
-use Simplysmart\Mainboard\View\Navigation\NavigationGroup;
-use Simplysmart\Mainboard\View\Navigation\SearchBox;
+use Simplysmart\Admiro\View\Navigation\NavigationGroup;
+use Simplysmart\Admiro\View\Navigation\SearchBox;
 
 /**
- * Menu strefy w layoucie aplikacji (x-mainboard::zone.layout): pozycje według uprawnień zalogowanego konta, ustawienia
+ * Menu strefy w layoucie aplikacji (x-admiro::zone.layout): pozycje według uprawnień zalogowanego konta, ustawienia
  * strefy (menu ustawień z powrotem do aplikacji), globalna wyszukiwarka i druga linia pod nazwą konta. Implementacja należy do paczki strefy i jest rejestrowana w
  * Zones\ZoneNavigations; rozwiązywana dla żądania (może korzystać z kontekstu żądania i konta).
  */

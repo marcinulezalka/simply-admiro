@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Profile;
+namespace Simplysmart\Admiro\Profile;
 
 use Illuminate\Database\Eloquent\Model;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Database\ColumnNames;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Database\ColumnNames;
 
 /**
  * Język interfejsu wybrany przez konto (`json_attributes` pod {@see self::ATTRIBUTE}): obowiązuje tylko, gdy jest

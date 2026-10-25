@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,18 +11,18 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\View\DesignSystem;
+namespace Simplysmart\Admiro\View\DesignSystem;
 
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
-use Simplysmart\Mainboard\Auth\PinLength;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Enums\DesignSystemView;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Auth\PinLength;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Enums\DesignSystemView;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Dane podglądów prawdziwych ekranów logowania (`mainboard::auth.*`) w design systemie: pierwsza strefa z logowaniem,
+ * Dane podglądów prawdziwych ekranów logowania (`admiro::auth.*`) w design systemie: pierwsza strefa z logowaniem,
  * jej ustawienia (długość kodu, czas ważności, PIN) i błędy pól tak, jak pokazuje je logowanie (błędny kod, zbyt wiele
  * prób, wygasła sesja logowania, słaby PIN). Bez strefy z logowaniem podglądu nie ma (404).
  */

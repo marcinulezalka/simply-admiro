@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Simplysmart\Mainboard\Auth\AccountKey;
-use Simplysmart\Mainboard\Contracts\CurrentRole;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Contracts\CurrentRole;
 
 /**
  * Aktywna rola konta w żądaniu (wiązanie scoped): pamięta konto (klasa modelu i identyfikator), organizację i rolę,

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use InvalidArgumentException;
-use Simplysmart\Mainboard\Enums\FaviconType;
+use Simplysmart\Admiro\Enums\FaviconType;
 
 /**
  * Ikony strony strefy (`favicon` w configu strefy: `ico`, `svg`, `apple` — ścieżki plików, co najmniej jedna).
- * Pliki serwuje trasa `<strefa>.favicon` z wersją w adresie; `x-mainboard::page` w strefie dostaje znaczniki `<link>`.
+ * Pliki serwuje trasa `<strefa>.favicon` z wersją w adresie; `x-admiro::page` w strefie dostaje znaczniki `<link>`.
  */
 final readonly class ZoneFavicon
 {

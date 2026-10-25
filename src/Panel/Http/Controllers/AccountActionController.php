@@ -19,7 +19,7 @@ use Simplysmart\Admiro\Panel\Http\AccountAction;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
 use Simplysmart\Admiro\Panel\Http\AdministratorGuard;
 use Simplysmart\Admiro\Panel\Http\ManagedAccounts;
-use Simplysmart\Mainboard\Auth\AccountAdministration;
+use Simplysmart\Admiro\Auth\AccountAdministration;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**

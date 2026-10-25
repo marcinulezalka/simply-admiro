@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\View\Demo;
+namespace Simplysmart\Admiro\View\Demo;
 
-use Simplysmart\Mainboard\Enums\DesignSystemView;
-use Simplysmart\Mainboard\View\Navigation\NavigationGroup;
-use Simplysmart\Mainboard\View\Navigation\NavigationItem;
-use Simplysmart\Mainboard\View\Navigation\SearchBox;
+use Simplysmart\Admiro\Enums\DesignSystemView;
+use Simplysmart\Admiro\View\Navigation\NavigationGroup;
+use Simplysmart\Admiro\View\Navigation\NavigationItem;
+use Simplysmart\Admiro\View\Navigation\SearchBox;
 
 /**
- * Menu, wyszukiwarka i konto przykładowego panelu (faktury) w widokach design systemu na x-mainboard::app.layout.
+ * Menu, wyszukiwarka i konto przykładowego panelu (faktury) w widokach design systemu na x-admiro::app.layout.
  */
 final class DemoNavigation
 {
@@ -28,12 +28,12 @@ final class DemoNavigation
      */
     public static function groups(DesignSystemView $current): array
     {
-        $item = static fn(string $label, DesignSystemView $target, string $icon, ?string $badge = null): NavigationItem => new NavigationItem($label, route('mainboard.design-system.view', $target), $icon, $target === $current, $badge);
+        $item = static fn(string $label, DesignSystemView $target, string $icon, ?string $badge = null): NavigationItem => new NavigationItem($label, route('simplysmart.design-system.view', $target), $icon, $target === $current, $badge);
 
         return [
             new NavigationGroup(null, [
                 $item(text('design_system.demo.modules.dashboard'), DesignSystemView::Dashboard, 'home'),
-                new NavigationItem(text('design_system.demo.modules.invoices'), route('mainboard.design-system.view', DesignSystemView::Sidebar), 'invoice', false, local_number(count(DemoInvoices::overdue())), [
+                new NavigationItem(text('design_system.demo.modules.invoices'), route('simplysmart.design-system.view', DesignSystemView::Sidebar), 'invoice', false, local_number(count(DemoInvoices::overdue())), [
                     $item(text('design_system.demo.modules.invoices_all'), DesignSystemView::Sidebar, 'invoice'),
                     $item(text('design_system.demo.modules.invoices_list'), DesignSystemView::List, 'invoice'),
                 ]),
@@ -53,7 +53,7 @@ final class DemoNavigation
      */
     public static function contexts(DesignSystemView $current): array
     {
-        $here = route('mainboard.design-system.view', $current);
+        $here = route('simplysmart.design-system.view', $current);
 
         return [
             new NavigationGroup(text('design_system.demo.contexts.company'), [
@@ -65,7 +65,7 @@ final class DemoNavigation
 
     public static function search(): SearchBox
     {
-        return new SearchBox(route('mainboard.design-system.view', DesignSystemView::Sidebar), text('design_system.demo.search'));
+        return new SearchBox(route('simplysmart.design-system.view', DesignSystemView::Sidebar), text('design_system.demo.search'));
     }
 
     /**

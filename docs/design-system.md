@@ -101,11 +101,11 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
 - **Tokeny:** wartość z wariantem ciemnym to `light-dark(jasny, ciemny)` w jednej linii (w cieniu tylko kolor cienia).
   O wariancie decyduje `color-scheme`: domyślnie motyw systemu, a wybór użytkownika ustawia `data-theme="light|dark"`
   na `<html>` (`:root[data-theme=…] { color-scheme: … }` w `tokens.css`). W Tailwind te same tokeny trafią do `@theme`.
-- **Przełącznik** `x-mainboard::theme-toggle`: przełącznik segmentowy z czterema motywami (`Enums\Theme`) — jasny,
+- **Przełącznik** `x-admiro::theme-toggle`: przełącznik segmentowy z czterema motywami (`Enums\Theme`) — jasny,
   ciemny, kontrast WCAG (`contrast`: czerń na bieli) i duży kontrast WCAG (`contrast-yellow`: żółty na czarnym); wybrany
   segment ma `aria-pressed="true"`, etykiety w `title` i dla czytników ekranu. Stoi w ustawieniach konta (strona
   „Wygląd”, `account.appearance`; menu boczne aplikacji i strony logowania go nie mają), na stronach treści i na stronie design systemu. Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony
-  (`x-mainboard::page`) stosuje go przed narysowaniem (bez błysku). Bez skryptu przełącznik jest ukryty i obowiązuje
+  (`x-admiro::page`) stosuje go przed narysowaniem (bez błysku). Bez skryptu przełącznik jest ukryty i obowiązuje
   motyw systemu.
 - **Motywy wysokiego kontrastu (WCAG 2.2 AAA):** bloki `:root[data-theme="contrast"]` i `[data-theme="contrast-yellow"]`
   na końcu `tokens.css` podmieniają wszystkie tokeny semantyczne na wartości o kontraście co najmniej 7:1 (ramki pełne,
@@ -123,9 +123,9 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   `--ss-palette-<paleta>-{accent,accent-hover,info,info-surface,inverse}` w `tokens.css`. Atrybut `data-palette` na
   `<html>` (`:root[data-palette=…]`, wygrywa z `:root` arkusza strefy) podmienia akcent, informację i kartę odwróconą
   w obu motywach; powierzchnie zostają ze strefy. Strefa wybiera oferowane kolorystyki w configu (`palettes`);
-  `x-mainboard::palette-switch` pokazuje „Domyślna” (kolory bazowe) i listę z próbkami; layouty (aplikacja, logowanie)
+  `x-admiro::palette-switch` pokazuje „Domyślna” (kolory bazowe) i listę z próbkami; layouty (aplikacja, logowanie)
   go nie wyświetlają — przełącznik jest na stronie „Wygląd” w ustawieniach konta (strefa z `palettes`) i w sekcji
-  „Kolorystyki” design systemu, a każda strona stosuje zapisany wybór. `x-mainboard::page` dostaje te same `palettes` i `paletteScope`
+  „Kolorystyki” design systemu, a każda strona stosuje zapisany wybór. `x-admiro::page` dostaje te same `palettes` i `paletteScope`
   (meta `ss-palettes` przed `js/theme.js`), więc wybór — zapamiętany w przeglądarce osobno dla każdej strefy — działa
   bez błysku; kolorystyka spoza listy strefy jest pomijana. Bez skryptu przełącznik jest ukryty.
 
@@ -142,7 +142,7 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   odwrócona) oraz promień zagnieżdżony `--ss-radius-nested` (rama minus odstęp: krawędzie równoległe).
   Jedna wyróżniona karta widoku może być wyniesiona (`.ss-card--elevated`, `--ss-shadow-elevated`) —
   jedyny wyjątek od „karta bez cienia”.
-- **Przyciski z ikonami**: `x-mainboard::icon` z klasą `.ss-button__icon` przed tekstem (akcja, np. odśwież)
+- **Przyciski z ikonami**: `x-admiro::icon` z klasą `.ss-button__icon` przed tekstem (akcja, np. odśwież)
   albo po nim (przejście dalej, strzałka); `.ss-button--pill` dla akcji w ramie. Na karcie odwróconej akcja
   główna odwraca kolory sama.
 - **Rozmiary przycisków** (tokeny `--ss-button-height`, `-padding`, `-icon`, `-gap`, `-font` ustawiane przez
@@ -197,14 +197,14 @@ Strona składa się z poziomych warstw, od ogólnej do szczegółowej:
 
 ## 7. Komponenty Blade (docelowo)
 
-Wspólne komponenty powstają w Core jako `x-mainboard::…`:
+Wspólne komponenty powstają w Core jako `x-admiro::…`:
 
 | Komponent | Warstwa |
 | --- | --- |
 | `page` | szablon bazowy (zaimplementowany): `<head>` z meta `title`, `description`, `keywords`, `tags` (`article:tag`, np. `json_tags` rekordu), `robots`; każdy layout (`auth.layout`, `zone.layout`) składa się z niego |
 | `logo`, `styles` | logo SVG inline (`currentColor`) i style Core inline z nonce CSP (zaimplementowane; do czasu builda z §8) |
-| `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem, funkcjami Core jako ikona, tytuł i opis, stopką z logo Laravela i plakietką wersji mainboard (`View\CoreVersion`, plik `VERSION`) oraz panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
-| `BrandNames::highlight()` | wyróżnienie nazw simplysmart i mainboard w tekście (`View\BrandNames`, klasa `.ss-brand-name`): najpierw escapuje, potem pogrubia; w treściach piszemy „mainboard”, nie `simplysmart/mainboard` ani „Core” |
+| `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem, funkcjami Core jako ikona, tytuł i opis, stopką z logo Laravela i plakietką wersji admiro (`View\CoreVersion`, plik `VERSION`) oraz panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
+| `BrandNames::highlight()` | wyróżnienie nazw simplysmart i admiro w tekście (`View\BrandNames`, klasa `.ss-brand-name`): najpierw escapuje, potem pogrubia; w treściach piszemy „admiro”, nie `simplysmart/admiro` ani „Core” |
 | `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); rysunki z zestawu [Lucide](https://lucide.dev) (ISC, zaokrąglone końce i łączenia, kreska 1,75 we wspólnym nagłówku Core, w CSS z tokenu `--ss-icon-stroke`; źródło i licencja w `docs/zaleznosci.md`); nowa ikona to plik SVG 24×24 z Lucide z tym samym nagłówkiem |
 | `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
@@ -223,12 +223,12 @@ Formularze (do czasu komponentów) składają się z klas statycznego CSS: `.ss-
 | `flag` | flaga kraju lub języka z `flag_icon` (zaimplementowany; inline SVG 4:3, `.ss-flag`, dekoracyjna) |
 
 Strefy składają z nich swoje widoki. Aplikacja zmienia pojedynczy komponent plikiem w
-`resources/views/vendor/mainboard/` (odwrócone nadpisywanie, zob. `CLAUDE.md` szkieletu).
+`resources/views/vendor/admiro/` (odwrócone nadpisywanie, zob. `CLAUDE.md` szkieletu).
 Teksty tylko przez `text_*` / `local_*`.
 
 ### Strona design systemu
 
-`/design-system` (trasa `mainboard.design-system`, przy kilku językach `/{locale}/design-system`) pokazuje na
+`/design-system` (trasa `simplysmart.design-system`, przy kilku językach `/{locale}/design-system`) pokazuje na
 żywo tokeny i komponenty: kolory (jasny i ciemny), typografię, promienie, cienie, odstępy, przyciski,
 formularze, komunikaty, karty, ikony i markę. Tokeny czyta `View\DesignTokens` wprost z `tokens.css`
 (rozwiązuje `var()` dla obu motywów), ikony to pliki z `img/icons/`, więc nowy token lub ikona pojawia się na
@@ -236,25 +236,25 @@ stronie bez zmian w widoku; nowy komponent dopisujemy do `resources/views/design
 Domyślnie działa tylko poza produkcją (`DESIGN_SYSTEM_PAGE`, sprawdzane przy żądaniu; wyłączona = 404) i nie
 jest indeksowana.
 
-Nawigacja (komponent `x-mainboard::design-system.nav`, karta po lewej) ma dwie grupy: **Fundamenty** (sekcje
-strony) i **Widoki** — gotowe ekrany aplikacji pod `/design-system/views/{widok}` (`mainboard.design-system.view`),
+Nawigacja (komponent `x-admiro::design-system.nav`, karta po lewej) ma dwie grupy: **Fundamenty** (sekcje
+strony) i **Widoki** — gotowe ekrany aplikacji pod `/design-system/views/{widok}` (`simplysmart.design-system.view`),
 pogrupowane w rozwijane obszary (`Enums\DesignSystemArea`, natywne `<details>`, obszar bieżącego widoku
 rozwinięty): **Autoryzacja** (logowanie klasyczne i na dwóch kartach, kod z e-maila, błędny kod, PIN, zbyt wiele
 prób, ustawienie i potwierdzenie PIN-u, wygasła sesja logowania, „Nie pamiętam PIN-u”), **Panel aplikacji** (pulpit,
 lista rekordów, szczegóły rekordu, formularz, menu boczne), **Strony treści** (polityka prywatności na `content.layout`) i **Błędy** (401, 403, 404, 419, 429, 500, 503). Ekrany
-logowania i strony błędów to podglądy prawdziwych plików produkcyjnych (`mainboard::auth.*`, `app/errors/*`):
+logowania i strony błędów to podglądy prawdziwych plików produkcyjnych (`admiro::auth.*`, `app/errors/*`):
 logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól (`View\DesignSystem\SignInPreviews`).
 
 ### Pola, maski i awatary
 
-- **Pole** `x-mainboard::input`: etykieta nad polem, subtelna ikona w tle po lewej (przygaszona, pełna przy
+- **Pole** `x-admiro::input`: etykieta nad polem, subtelna ikona w tle po lewej (przygaszona, pełna przy
   fokusie), podpowiedź i błąd powiązane przez `aria-describedby` (`aria-invalid` przy błędzie). Popularne pola
   mają ikonę: e-mail `mail`, osoba `user`, firma `building`, adres `map-pin`, data `calendar`.
 - **Podpowiedzi w polach** (placeholder): sam przykład formatu, bez „np.” (np. `jan.kowalski@przyklad.pl`), na neutralnych, fikcyjnych danych, nigdy zamiast
   etykiety ani instrukcji (znika przy pisaniu); kolor `--ss-color-muted` z pełnym kryciem (kontrast 4,8:1). Wspólne
   teksty w grupie `placeholders.*` (e-mail, imię, nazwisko, imię i nazwisko, firma, adres, wyszukiwanie, notatka) i wzór
   `placeholders.example`; maski biorą go przez `InputMask::placeholder()`. Pola kodu i PIN-u nie mają podpowiedzi.
-- **Pole PIN-u** `x-mainboard::pin-field` (kroki logowania z PIN-em, ustawienie PIN-u, zmiana PIN-u w bezpieczeństwie):
+- **Pole PIN-u** `x-admiro::pin-field` (kroki logowania z PIN-em, ustawienie PIN-u, zmiana PIN-u w bezpieczeństwie):
   `.ss-input--code` z opcjonalną subtelną ikoną po lewej (prop `icon`; w logowaniu `lock` dla PIN-u, `shield-check` dla kodu,
   także w polu kodu z e-maila) i przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
   modal `.ss-keypad` (natywny `<dialog>`, `js/pin-keypad.js`): cyfry 0–9 w siatce 3 × 4, „C” czyści, ikona `backspace`
@@ -264,12 +264,12 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 - **Maski** `Enums\InputMask` (telefon, kod pocztowy, NIP, PESEL, numer rachunku): wzór (`9` cyfra, `A` litera),
   klawiatura numeryczna, ikona, przykład w placeholderze i format w podpowiedzi. `js/input-mask.js` formatuje
   w trakcie pisania i przy wklejaniu; bez skryptu pole przyjmuje tekst, a format podaje podpowiedź.
-- **Awatar** `x-mainboard::avatar`: zdjęcie albo inicjały (`View\Initials`: pierwsza i ostatnia część zaczynająca
+- **Awatar** `x-admiro::avatar`: zdjęcie albo inicjały (`View\Initials`: pierwsza i ostatnia część zaczynająca
   się wielką literą, bez „dr” itp.), rozmiary `sm`, `md`, `lg`, `accent` dla bieżącego użytkownika. Jest
   dekoracyjny — nazwę podaje tekst obok (`.ss-person`). Pokazujemy go wszędzie, gdzie prezentujemy osoby.
 - **Kolor awatara** (`Enums\AvatarColor`, tokeny `--ss-avatar-<kolor>-bg` / `-fg`, kontrast co najmniej 6,4:1):
   nowe konto dostaje kolor z adresu e-mail (`json_attributes.avatar_color`), użytkownik zmienia go w profilu
-  (`x-mainboard::avatar-colors`); awatar przyjmuje `color`, a ta sama osoba ma ten sam kolor na każdym ekranie.
+  (`x-admiro::avatar-colors`); awatar przyjmuje `color`, a ta sama osoba ma ten sam kolor na każdym ekranie.
 - **Menu boczne**: u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) jako
   menu konta, pod nim akcje (zwijanie, przełącznik kontekstu `contexts` — np. organizacja albo widok pracy, bieżący
   z haczykiem — i powiadomienia), na dole subtelne logo (3rem).
@@ -290,7 +290,7 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 
 ### Toasty i powiadomienia
 
-- **Toasty** (`x-mainboard::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji na dole
+- **Toasty** (`x-admiro::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji na dole
   ekranu, wyśrodkowane. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
   (tytuł albo prefiks dla czytników). Błąd (`danger`) ma `role="alert"` i zostaje do zamknięcia; pozostałe mają
   `role="status"` i znikają po 6 s (`js/toasts.js`; pauza przy najechaniu i fokusie). Toast może mieć jedną
@@ -298,39 +298,39 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   z sesji (`Toast::fromFlash()`): akcja flashuje `Toast::SESSION_KEY` z listą `Toast::toArray()`, a krótki komunikat
   `status` (`Toast::STATUS_KEY`, np. „Wylogowano” po wylogowaniu) staje się toastem powodzenia — komunikaty z sesji
   nie trafiają do szarego `.ss-notice` w karcie. Wariant `inline` to próbki w treści strony.
-- **Powiadomienia** (`View\Notifications\NotificationPanel`, `NotificationItem`, `x-mainboard::notification`):
+- **Powiadomienia** (`View\Notifications\NotificationPanel`, `NotificationItem`, `x-admiro::notification`):
   dzwonek w top barze z licznikiem nieprzeczytanych (liczba także w tekście dla czytników) i panelem
   (`<details data-ss-dropdown>`, jak menu konta: otwarcie jednego zamyka drugie); pełna lista na osobnej stronie.
-- **Switch zamiast checkboxa**: w formularzach każde pole tak/nie to `x-mainboard::switch` (także „Zapamiętaj
+- **Switch zamiast checkboxa**: w formularzach każde pole tak/nie to `x-admiro::switch` (także „Zapamiętaj
   to urządzenie” przy logowaniu); `name` i `value` zostają jak w checkboxie. Wybór jednej z kilku opcji to
   `.ss-choices`.
 
 ### Zgoda na cookies
 
-- **Baner i ustawienia** `x-mainboard::cookie-consent` (w szablonie bazowym `x-mainboard::page`, więc na każdej
+- **Baner i ustawienia** `x-admiro::cookie-consent` (w szablonie bazowym `x-admiro::page`, więc na każdej
   stronie każdej strefy): natywne `<dialog>` otwierane modalnie (fokus w oknie, tło `::backdrop`, Esc).
   - Baner `.ss-consent__banner`: tytuł, opis, trzy przyciski — „Zezwól na wszystkie” (główny) na górze na całą
     szerokość, pod nim w rzędzie „Odrzuć” i „Dostosuj” (drugorzędne, obrys), na wąskim telefonie jeden pod drugim —
     i odnośnik do polityki.
-  - Okno ustawień `.ss-consent__settings`: kategorie (`Enums\CookieCategory`) jako `x-mainboard::switch`
+  - Okno ustawień `.ss-consent__settings`: kategorie (`Enums\CookieCategory`) jako `x-admiro::switch`
     (niezbędne zablokowane, „Zawsze włączone”), lista cookies kategorii w `<details>`, przyciski i zamknięcie
     `.ss-icon-button`; zamknięcie bez decyzji przywraca baner.
   - Logika w `js/cookie-consent.js` (inline z nonce CSP): ciasteczko zgody, rejestr zgód, skrypty opcjonalne
     `<script type="text/plain" data-ss-consent-script>` uruchamiane po zgodzie.
-- **Odnośniki** `x-mainboard::cookie-links` („Ustawienia cookies” — każdy element z `data-ss-cookie-settings`
+- **Odnośniki** `x-admiro::cookie-links` („Ustawienia cookies” — każdy element z `data-ss-cookie-settings`
   otwiera okno; „Polityka cookies”) w stopce logowania, w pasku stron treści i w menu konta layoutu aplikacji.
 - Baner pojawia się tylko, gdy opublikowano politykę cookies albo paczka zarejestrowała skrypt opcjonalny.
 
 ### Logowanie
 
-- Nagłówek karty logowania (`x-mainboard::auth.layout`, prop `title`) może mieć wyróżniony fragment w `*gwiazdkach*`:
+- Nagłówek karty logowania (`x-admiro::auth.layout`, prop `title`) może mieć wyróżniony fragment w `*gwiazdkach*`:
   `View\AccentText` zamienia go na `.ss-accent-text` (kursywa w kolorze akcentu), a w `<title>` zostaje sam tekst.
 - Notka pod formularzem (prop `note`, `.ss-auth__note`): mniejszy, przygaszony tekst, np. o blokadzie po błędnych
   PIN-ach. Teksty kroków podmienia paczka strefy (`docs/strefy.md`).
 
 ### E-maile
 
-- E-maile stref (`Mail\ZoneMailable`, `docs/strefy.md` „E-maile strefy”) mają ramę `mainboard::mail.frame`: tabele
+- E-maile stref (`Mail\ZoneMailable`, `docs/strefy.md` „E-maile strefy”) mają ramę `admiro::mail.frame`: tabele
   600 px, logo osadzone w wiadomości, biała karta treści z ramką i zaokrągleniem, stopka (informacja o wysyłce
   automatycznej, odnośniki prawne strefy, copyright). Style inline w kolorach `mail.palette` strefy — domyślnie
   wartości z palety design systemu (tło slate-50, karta biała, ramka gray-200, tekst gray-900, przytłumiony gray-500,
@@ -341,7 +341,7 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
 
 ### Strony błędów
 
-`resources/views/app/errors/<kod>.blade.php` (komponent `x-mainboard::error.layout`, teksty `errors.*`): rama
+`resources/views/app/errors/<kod>.blade.php` (komponent `x-admiro::error.layout`, teksty `errors.*`): rama
 z kartą marki z dużym kodem i kartą z tytułem, opisem i akcjami (strona główna, powrót; dla 500 i 503 „Spróbuj
 ponownie”). Katalog `resources/views/app/` jest ostatnią ścieżką `view.paths`, więc Laravel sam używa tych stron,
 a aplikacja nadpisuje pojedynczą plikiem `resources/views/errors/<kod>.blade.php`. Bez sesji, bazy i skryptów;
@@ -351,11 +351,11 @@ przypadek, jego obszar w `area()` i plik w `resources/views/design-system/views/
 widoki Core): paczka strefy dokłada własne obszary i widoki w swoim providerze
 (`callAfterResolving(DesignSystemCatalog::class, …)`, `addArea()`, `addView()` z leniwymi danymi), bez zmian
 w Core — np. makiety swoich ekranów; klucze są unikalne w aplikacji. Widoki na pełnym layoucie aplikacji mają nad
-sobą pasek `x-mainboard::design-system.strip` (powrót i widoki tego samego obszaru), powłoka aplikacji to
-`x-mainboard::design-system.shell`, a przykładowe dane (faktury, status jako enum sterujący stepperem) jedno
+sobą pasek `x-admiro::design-system.strip` (powrót i widoki tego samego obszaru), powłoka aplikacji to
+`x-admiro::design-system.shell`, a przykładowe dane (faktury, status jako enum sterujący stepperem) jedno
 źródło `View\Demo\DemoInvoices`.
 
-**Layout aplikacji z menu bocznym** `x-mainboard::app.layout`: menu po lewej (`View\Navigation\NavigationGroup`
+**Layout aplikacji z menu bocznym** `x-admiro::app.layout`: menu po lewej (`View\Navigation\NavigationGroup`
 z `NavigationItem`: etykieta, adres, ikona, bieżąca pozycja przez `aria-current`, licznik, podpozycje `children` —
 pozycja z nimi jest gałęzią `.ss-sidebar__tree` (`<details>` z chevronem, rozwinięta, gdy ona albo podpozycja jest
 bieżąca), a podpozycje bez ikon (`.ss-sidebar__sublist`) łączą linie drzewa spod ikony pozycji z zaokrąglonym łukiem
@@ -364,16 +364,16 @@ w nawigacji design systemu mają te same linie), zwijane do ikon
 i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
 globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy
-`x-mainboard::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
+`x-admiro::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
 pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Sekcje menu (nagłówek konta, nazwane
 grupy, ustawienia) oddzielają kreski z zaokrąglonymi końcami (`--ss-sidebar-divider`). Na dole menu odnośnik „Ustawienia”
 (`settings`: `View\Navigation\SettingsMenu`) i subtelne, wyśrodkowane logo simplysmart (35% szerokości menu,
-`.ss-sidebar__brand-toggle`), które odsłania pełnoszeroką stopkę strony simplysmart (`x-mainboard::brand-footer`,
+`.ss-sidebar__brand-toggle`), które odsłania pełnoszeroką stopkę strony simplysmart (`x-admiro::brand-footer`,
 `.ss-footer`: odnośniki prawne strefy `legalLinks`, cookies, copyright, przełącznik motywu, duże logo): powłoka `.ss-shell`
 przesuwa się w górę nad stopką, dłuższa strona najpierw płynnie przewija się na dół, a przewinięcie w górę chowa stopkę;
 bez stałego menu (poniżej 64rem) stopka jest na końcu strony. Na stronie ustawień (`settings->active`)
 menu pokazuje zamiast pozycji aplikacji „Wróć do aplikacji”, tytuł „Ustawienia” i grupy ustawień (`docs/strefy.md`). Skrypt `public/assets/js/app-shell.js`
-osadza `x-mainboard::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
+osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.
 
 Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
@@ -381,21 +381,21 @@ do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
 `surface-muted`), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
-`x-mainboard::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie
-`x-mainboard::pagination` (poprzednia/następna, „Strona X z Y”; przy jednej stronie nic), podpis odręczny
-`x-mainboard::signature-pad` (płótno, obraz PNG w ukrytym polu, „Wyczyść”; skrypt raz na stronę), plakietka jako przycisk
+`x-admiro::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie
+`x-admiro::pagination` (poprzednia/następna, „Strona X z Y”; przy jednej stronie nic), podpis odręczny
+`x-admiro::signature-pad` (płótno, obraz PNG w ukrytym polu, „Wyczyść”; skrypt raz na stronę), plakietka jako przycisk
 (`button.ss-badge`, np. odebranie roli),
 `.ss-grid` (`--3`, `--wide`), `.ss-stat`, `.ss-list`, `.ss-table`, `.ss-pairs`, `.ss-form-layout`,
 `.ss-form-actions`, `.ss-form-row`, `.ss-fieldset`, `.ss-choices` z `.ss-choice` (wybór jednej opcji jako
 pigułki), `.ss-grid--4`, `.ss-card__title--inset`, `.ss-table--grid`, `.ss-table__sub`, `.ss-icon-button`,
 `.ss-shell`, `.ss-sidebar`, `.ss-tabs` (zakładki sekcji, bieżąca przez `aria-current`), `.ss-card__footer`,
-`.ss-account-menu` oraz przełącznik `x-mainboard::switch` (`.ss-switch`: checkbox z `role="switch"`, opis
+`.ss-account-menu` oraz przełącznik `x-admiro::switch` (`.ss-switch`: checkbox z `role="switch"`, opis
 i podpowiedź powiązana przez `aria-describedby`). Panele stref składają z nich swoje widoki, a widoki z `/design-system/views` są wzorem.
 
 ## 8. Build assetów: Vite w każdej paczce, uruchamiany ze szkieletu (docelowo)
 
 Jedno `npm run dev` / `npm run build` w szkielecie buduje assety szkieletu i wszystkich paczek.
-Każda paczka (także mainboard) ma własny Vite, a szkielet tylko je uruchamia.
+Każda paczka (także admiro) ma własny Vite, a szkielet tylko je uruchamia.
 
 - **Paczka:** `package.json` (`"private": true`, `"name": "@simplysmart/<paczka>"`, skrypty
   `build` = `vite build`, `dev` = `vite build --watch`), `vite.config.js` i źródła w
@@ -413,10 +413,10 @@ Każda paczka (także mainboard) ma własny Vite, a szkielet tylko je uruchamia.
 - **Zależności:** `vite`, `tailwindcss`, `@tailwindcss/vite` w `devDependencies` paczki;
   workspaces instalują je raz, w `node_modules` szkieletu. Nowe zależności wymagają zgody i
   wpisu w [zaleznosci.md](zaleznosci.md).
-- **Serwowanie:** komenda Core `php artisan mainboard:assets` tworzy symlink
+- **Serwowanie:** komenda Core `php artisan admiro:assets` tworzy symlink
   `public/vendor/<paczka>` → `public/` paczki w `vendor/simplysmart/<paczka>/` (`--copy` kopiuje,
   gdy hosting nie obsługuje symlinków). `public/vendor/` jest generowane i ignorowane przez git.
-- **Widoki:** komponent `x-mainboard::assets package="…" :entries="[…]"` opakowuje
+- **Widoki:** komponent `x-admiro::assets package="…" :entries="[…]"` opakowuje
   `Vite::useBuildDirectory('vendor/<paczka>/build')->withEntryPoints(…)`; strefy używają go
   zamiast `@vite`. Hashe w nazwach plików z manifestu zastępują `?v=` z pliku `VERSION`.
 - **Tryb dev:** paczki przebudowują się przy zmianie (odświeżenie strony), HMR działa tylko dla

@@ -21,13 +21,13 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRateSync;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRatesRejected;
-use Simplysmart\Mainboard\ExchangeRates\ExchangeRatesUnavailable;
-use Simplysmart\Mainboard\ExchangeRates\ManualExchangeRates;
-use Simplysmart\Mainboard\Models\Dictionaries\Currency;
-use Simplysmart\Mainboard\Queries\Dictionaries\ExchangeRatesOn;
-use Simplysmart\Mainboard\Queries\Dictionaries\LocalizationChoices;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRateSync;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRatesRejected;
+use Simplysmart\Admiro\ExchangeRates\ExchangeRatesUnavailable;
+use Simplysmart\Admiro\ExchangeRates\ManualExchangeRates;
+use Simplysmart\Admiro\Models\Dictionaries\Currency;
+use Simplysmart\Admiro\Queries\Dictionaries\ExchangeRatesOn;
+use Simplysmart\Admiro\Queries\Dictionaries\LocalizationChoices;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -39,7 +39,7 @@ final readonly class ExchangeRateController
     private const int PER_PAGE = 50;
 
     /**
-     * Najdłuższy okres pobierania z panelu (dni) — dłuższe okresy komendą `mainboard:exchange-rates:sync`.
+     * Najdłuższy okres pobierania z panelu (dni) — dłuższe okresy komendą `admiro:exchange-rates:sync`.
      */
     private const int MAX_SYNC_DAYS = 366;
 

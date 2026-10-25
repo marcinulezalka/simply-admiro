@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database\History;
+namespace Simplysmart\Admiro\Database\History;
 
 use Illuminate\Database\Connection;
-use Simplysmart\Mainboard\Contracts\HistoryTriggers;
+use Simplysmart\Admiro\Contracts\HistoryTriggers;
 
 /**
  * Wspólna budowa triggerów historii; dialekt podaje funkcję JSON, aktora i odczyt definicji.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\View;
+namespace Simplysmart\Admiro\View;
 
 use RuntimeException;
 
 /**
  * Zawartość assetów Core z `public/assets/` do osadzenia inline (logo SVG, style), dopóki paczka nie ma
- * własnego builda serwowanego przez `mainboard:assets` (docs/design-system.md §8).
+ * własnego builda serwowanego przez `admiro:assets` (docs/design-system.md §8).
  */
 final class CoreAssets
 {

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Tools\Deploy;
 
 /**
- * Konto zakładane przy onboardingu poleceniem strefy `<strefa>:account:create` (konwencja mainboard);
+ * Konto zakładane przy onboardingu poleceniem strefy `<strefa>:account:create` (konwencja mechanizmu stref admiro);
  * istniejące konto jest pomijane (`--skip-existing`), więc onboarding można powtarzać.
  */
 final readonly class OnboardingAccount

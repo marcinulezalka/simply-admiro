@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Contracts;
+namespace Simplysmart\Admiro\Contracts;
 
-use Simplysmart\Mainboard\Translation\TextGroup;
+use Simplysmart\Admiro\Translation\TextGroup;
 
 /**
- * Tłumaczenia kaskadowe bez języka zapasowego: paczka strefy → mainboard → skeleton → klucz.
+ * Tłumaczenia kaskadowe bez języka zapasowego: paczka strefy → admiro → skeleton → klucz.
  *
  * Brak tłumaczenia w bieżącym języku zwraca klucz zamiast tekstu w innym języku, więc od razu
  * widać, czy brakuje tłumaczenia, czy klucz jest błędny.

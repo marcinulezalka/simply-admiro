@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Mail;
+namespace Simplysmart\Admiro\Mail;
 
 use Closure;
 use Illuminate\Container\Container;
@@ -22,12 +22,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\SentMessage;
 use LogicException;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\ZoneRegistry;
-use Simplysmart\Mainboard\Legal\LegalLinks;
-use Simplysmart\Mainboard\Localization\LocaleRouting;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Zones\ZoneDefinition;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Legal\LegalLinks;
+use Simplysmart\Admiro\Localization\LocaleRouting;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * E-mail strefy: HTML w layoucie strefy i wersja tekstowa, z tekstami z kaskady strefy (paczka strefy → Core).
@@ -35,17 +35,17 @@ use Simplysmart\Mainboard\Zones\ZoneDefinition;
  * Mail niesie nazwę strefy, id organizacji i język, a wysyłka i podgląd działają wewnątrz strefy (CurrentZone::within),
  * więc wynik jest ten sam w żądaniu i w workerze kolejki. Widoki: strefa z `mail.views` (`<prefiks>`) dostaje
  * `<prefiks>.layout` (wymagany), `<prefiks>.<szablon>` (HTML) i `<prefiks>.text.<szablon>`, gdy istnieją; brakujące
- * biorą się z Core (`mainboard::mail.layout`, `mainboard::mail.html.<szablon>`, `mainboard::mail.<szablon>`).
+ * biorą się z Core (`admiro::mail.layout`, `admiro::mail.html.<szablon>`, `admiro::mail.<szablon>`).
  * Widok HTML rozszerza `$mailLayout`; widoki dostają `$mailZone`, `$mailPalette` (MailPalette strefy, `mail.palette`), `$mailLogo` (BrandFile, osadzany przez
  * `$message->embedData`), `$mailOrganization` (nazwa albo null) i `$mailLegalLinks` (list<array{url, label}>).
  */
 abstract class ZoneMailable extends Mailable
 {
-    public const string CORE_LAYOUT = 'mainboard::mail.layout';
+    public const string CORE_LAYOUT = 'admiro::mail.layout';
 
-    private const string CORE_HTML = 'mainboard::mail.html.';
+    private const string CORE_HTML = 'admiro::mail.html.';
 
-    private const string CORE_TEXT = 'mainboard::mail.';
+    private const string CORE_TEXT = 'admiro::mail.';
 
     private const string ZONE_LAYOUT = '.layout';
 
@@ -63,7 +63,7 @@ abstract class ZoneMailable extends Mailable
     }
 
     /**
-     * Nazwa szablonu (`login-code` → `mainboard::mail.html.login-code`).
+     * Nazwa szablonu (`login-code` → `admiro::mail.html.login-code`).
      */
     abstract protected function template(): string;
 

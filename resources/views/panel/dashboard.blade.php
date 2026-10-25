@@ -9,7 +9,7 @@
         $canViewSettings ? ['admiro.settings.show', 'admiro::admin.settings_title', 'settings'] : null,
     ]);
 @endphp
-<x-mainboard::zone.layout :title="text('admiro::dashboard.title')">
+<x-admiro::zone.layout :title="text('admiro::dashboard.title')">
     @if ($shortcuts === [])
         <p class="ss-notice">{{ text('admiro::admin.no_sections') }}</p>
     @else
@@ -17,11 +17,11 @@
             <div class="ss-grid ss-grid--3">
                 @foreach ($shortcuts as [$route, $label, $icon])
                     <a class="ss-card ss-card--link" href="{{ route($route) }}">
-                        <x-mainboard::icon :name="$icon" class="ss-icon--tile" />
+                        <x-admiro::icon :name="$icon" class="ss-icon--tile" />
                         <span>{{ text($label) }}</span>
                     </a>
                 @endforeach
             </div>
         </nav>
     @endif
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

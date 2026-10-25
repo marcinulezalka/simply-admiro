@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Zones;
+namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
-use Simplysmart\Mainboard\Auth\AccountKey;
-use Simplysmart\Mainboard\Contracts\CurrentAccount;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Contracts\SignInAccount;
-use Simplysmart\Mainboard\Models\ZoneAccount;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Contracts\CurrentAccount;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Contracts\SignInAccount;
+use Simplysmart\Admiro\Models\ZoneAccount;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**

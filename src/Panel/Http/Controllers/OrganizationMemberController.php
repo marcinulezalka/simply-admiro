@@ -21,11 +21,11 @@ use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
 use Simplysmart\Admiro\Panel\Http\AdministratorGuard;
 use Simplysmart\Admiro\Panel\Http\ManagedAccounts;
-use Simplysmart\Mainboard\Auth\AccountKey;
-use Simplysmart\Mainboard\Permissions\OrganizationMembership;
-use Simplysmart\Mainboard\Queries\Organizations\OrganizationList;
-use Simplysmart\Mainboard\Queries\Organizations\OrganizationMembers;
-use Simplysmart\Mainboard\Queries\Permissions\ZoneRoleNames;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Permissions\OrganizationMembership;
+use Simplysmart\Admiro\Queries\Organizations\OrganizationList;
+use Simplysmart\Admiro\Queries\Organizations\OrganizationMembers;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,16 +11,16 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Http\Controllers\Auth;
+namespace Simplysmart\Admiro\Http\Controllers\Auth;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Simplysmart\Mainboard\Auth\Recovery\RecoveryPinReset;
-use Simplysmart\Mainboard\Contracts\CurrentZone;
-use Simplysmart\Mainboard\Http\SignInRoutes;
-use Simplysmart\Mainboard\Zones\ZoneRedirects;
+use Simplysmart\Admiro\Auth\Recovery\RecoveryPinReset;
+use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Http\SignInRoutes;
+use Simplysmart\Admiro\Zones\ZoneRedirects;
 
 /**
  * „Nie pamiętam PIN-u” (gość): jak ustawić nowy PIN, a z zapasowym adresem e-mail — reset samodzielnie
@@ -35,7 +35,7 @@ final readonly class ForgotPinController
 
     public function show(Request $request, RecoveryPinReset $reset): View
     {
-        return view('mainboard::auth.forgot-pin', ['codePending' => $reset->isPending($request), 'codeLength' => $this->zone->get()->auth()->codeLength]);
+        return view('admiro::auth.forgot-pin', ['codePending' => $reset->isPending($request), 'codeLength' => $this->zone->get()->auth()->codeLength]);
     }
 
     public function sendCode(Request $request, RecoveryPinReset $reset): RedirectResponse

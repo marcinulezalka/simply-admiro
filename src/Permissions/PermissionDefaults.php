@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Permissions;
+namespace Simplysmart\Admiro\Permissions;
 
 use Illuminate\Contracts\Config\Repository;
-use Simplysmart\Mainboard\Models\Organization;
-use Simplysmart\Mainboard\Models\Permissions\Permission;
-use Simplysmart\Mainboard\Models\Permissions\Role;
-use Simplysmart\Mainboard\Zones\ZoneCacheKey;
+use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\Permissions\Permission;
+use Simplysmart\Admiro\Models\Permissions\Role;
+use Simplysmart\Admiro\Zones\ZoneCacheKey;
 
 /**
  * Konfiguracja spatie/laravel-permission ustawiana przez Core (bez publikowania config/permission.php):

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,15 +11,15 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Database\Seeders;
+namespace Simplysmart\Admiro\Database\Seeders;
 
 use Illuminate\Config\Repository;
-use Simplysmart\Mainboard\Database\IdSlots;
-use Simplysmart\Mainboard\Enums\TaxRateType;
-use Simplysmart\Mainboard\Localization\DictionaryLocales;
-use Simplysmart\Mainboard\Localization\TaxRateLabels;
-use Simplysmart\Mainboard\Models\Dictionaries\Country;
-use Simplysmart\Mainboard\Models\Dictionaries\TaxRate;
+use Simplysmart\Admiro\Database\IdSlots;
+use Simplysmart\Admiro\Enums\TaxRateType;
+use Simplysmart\Admiro\Localization\DictionaryLocales;
+use Simplysmart\Admiro\Localization\TaxRateLabels;
+use Simplysmart\Admiro\Models\Dictionaries\Country;
+use Simplysmart\Admiro\Models\Dictionaries\TaxRate;
 
 /**
  * Stawki VAT państw UE (podstawowa, obniżone, zerowe; Polska w całości z „zw”) — tylko krajom,

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard;
+namespace Simplysmart\Admiro;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -22,49 +22,55 @@ use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
-use Simplysmart\Mainboard\Console\SeedLocalization;
-use Simplysmart\Mainboard\Console\WriteCronScript;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Contracts\LocalFormatter;
-use Simplysmart\Mainboard\Contracts\TextTranslator;
-use Simplysmart\Mainboard\Listeners\LogSentMail;
-use Simplysmart\Mainboard\Listeners\SetHistoryActorForJob;
-use Simplysmart\Mainboard\Localization\DictionaryInterfaceLocales;
-use Simplysmart\Mainboard\Localization\IntlLocalFormatter;
-use Simplysmart\Mainboard\Logging\LogChannelDefaults;
-use Simplysmart\Mainboard\Mail\MailLogDefaults;
-use Simplysmart\Mainboard\Providers\AuditServiceProvider;
-use Simplysmart\Mainboard\Providers\CookiesServiceProvider;
-use Simplysmart\Mainboard\Providers\CoreRoutesServiceProvider;
-use Simplysmart\Mainboard\Providers\DesignSystemServiceProvider;
-use Simplysmart\Mainboard\Providers\ExchangeRatesServiceProvider;
-use Simplysmart\Mainboard\Providers\HolidaysServiceProvider;
-use Simplysmart\Mainboard\Providers\LegalServiceProvider;
-use Simplysmart\Mainboard\Providers\PermissionsServiceProvider;
-use Simplysmart\Mainboard\Providers\SecurityServiceProvider;
-use Simplysmart\Mainboard\Providers\SignInServiceProvider;
-use Simplysmart\Mainboard\Providers\ZonesServiceProvider;
-use Simplysmart\Mainboard\Translation\CascadeTextTranslator;
-use Simplysmart\Mainboard\Translation\CoreTranslationPath;
+use Simplysmart\Admiro\Console\SeedLocalization;
+use Simplysmart\Admiro\Console\WriteCronScript;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Contracts\LocalFormatter;
+use Simplysmart\Admiro\Contracts\TextTranslator;
+use Simplysmart\Admiro\Listeners\LogSentMail;
+use Simplysmart\Admiro\Listeners\SetHistoryActorForJob;
+use Simplysmart\Admiro\Localization\DictionaryInterfaceLocales;
+use Simplysmart\Admiro\Localization\IntlLocalFormatter;
+use Simplysmart\Admiro\Logging\LogChannelDefaults;
+use Simplysmart\Admiro\Mail\MailLogDefaults;
+use Simplysmart\Admiro\Providers\AuditServiceProvider;
+use Simplysmart\Admiro\Providers\CookiesServiceProvider;
+use Simplysmart\Admiro\Providers\CoreRoutesServiceProvider;
+use Simplysmart\Admiro\Providers\DesignSystemServiceProvider;
+use Simplysmart\Admiro\Providers\ExchangeRatesServiceProvider;
+use Simplysmart\Admiro\Providers\HolidaysServiceProvider;
+use Simplysmart\Admiro\Providers\LegalServiceProvider;
+use Simplysmart\Admiro\Providers\PermissionsServiceProvider;
+use Simplysmart\Admiro\Providers\SecurityServiceProvider;
+use Simplysmart\Admiro\Providers\SignInServiceProvider;
+use Simplysmart\Admiro\Providers\ZonesServiceProvider;
+use Simplysmart\Admiro\Translation\CascadeTextTranslator;
+use Simplysmart\Admiro\Translation\CoreTranslationPath;
 
 /**
- * Punkt integracji paczki z aplikacją Laravel (auto-discovery przez extra.laravel.providers): config Core,
+ * Punkt integracji rdzenia z aplikacją Laravel (auto-discovery przez extra.laravel.providers, przed strefą
+ * administratorów `Panel\PanelServiceProvider`): config paczki,
  * logi i poczta frameworka, teksty i lokalizacja, zasoby paczki (tłumaczenia, widoki, migracje), historia zmian
  * w jobach oraz providery obszarów (Providers\): strefy, logowanie, uprawnienia, dziennik zdarzeń, bezpieczeństwo, trasy Core, katalog design systemu.
  */
-final class MainboardServiceProvider extends ServiceProvider
+final class AdmiroServiceProvider extends ServiceProvider
 {
     /**
-     * Providery obszarów Core, rejestrowane razem z tym providerem.
-     *
-     * @var list<class-string<ServiceProvider>>
+     * Klucz configu paczki (`config('admiro.*')`, plik `config/admiro.php`).
      */
+    public const string CONFIG = 'admiro';
+
     /**
      * Domyślne widoki aplikacji (np. `welcome`) i strony błędów (`errors/<kod>`): ostatnia ścieżka `view.paths`, więc
      * plik o tej samej nazwie w `resources/views/` aplikacji wygrywa, a Laravel znajduje tu strony błędów HTTP.
      */
     private const string APP_VIEWS = __DIR__ . '/../resources/views/app';
 
+    /**
+     * Providery obszarów Core, rejestrowane razem z tym providerem.
+     *
+     * @var list<class-string<ServiceProvider>>
+     */
     private const array AREAS = [
         ZonesServiceProvider::class,
         SignInServiceProvider::class,
@@ -91,7 +97,7 @@ final class MainboardServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/mainboard.php', 'mainboard');
+        $this->mergeConfigFrom(__DIR__ . '/../config/admiro.php', self::CONFIG);
 
         $config = $this->app->make(Repository::class);
         $viewPaths = $config->get('view.paths', []);
@@ -99,8 +105,8 @@ final class MainboardServiceProvider extends ServiceProvider
         (new MailLogDefaults($config, $this->app->storagePath()))->apply();
 
         $logChannels = new LogChannelDefaults($config, $this->app->storagePath());
-        $logChannels->define('mainboard.auth.log_channel', 'logs/sign-in.log');
-        $logChannels->define('mainboard.honeypot.log_channel', 'logs/honeypot.log');
+        $logChannels->define('admiro.auth.log_channel', 'logs/sign-in.log');
+        $logChannels->define('admiro.honeypot.log_channel', 'logs/honeypot.log');
 
         $this->app->extend('translation.loader', fn(Loader $loader): Loader => (new CoreTranslationPath(
             $this->app->make(Filesystem::class),
@@ -138,7 +144,7 @@ final class MainboardServiceProvider extends ServiceProvider
     }
 
     /**
-     * Nieznana flaga (`x-mainboard::flag`) pokazuje flagę „xx” z wariantu flat (flag-icons, MIT) zamiast
+     * Nieznana flaga (`x-admiro::flag`) pokazuje flagę „xx” z wariantu flat (flag-icons, MIT) zamiast
      * domyślnej blade-flags (Twemoji, CC-BY-4.0) — tylko gdy aplikacja nie ustawiła własnej.
      */
     private function useFlatFlagFallback(Repository $config): void

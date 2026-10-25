@@ -1,8 +1,8 @@
 {{-- Święta i dni wolne kraju w roku: wybór kraju i roku, tabela (dzień, nazwa, źródło) z usunięciem wpisu ręcznego; karty pobrania z kalendarza świąt i dnia wolnego ręcznego (settings.manage). $countries: Collection<Country>, $country: ?Country, $year: int, $holidays: Collection<Holiday>, $canManage: bool. --}}
-@php($column = static fn (string $name): string => text_data(\Simplysmart\Mainboard\Models\Dictionaries\Holiday::class, $name))
-<x-mainboard::zone.layout :title="text('admiro::admin.holidays_title')" :meta="$country?->translatedName()">
-    <p class="ss-notice"><x-mainboard::icon name="info" /> {{ text('admiro::admin.holidays_lead') }}</p>
-    @error('holiday') <p class="ss-notice" role="alert"><x-mainboard::icon name="alert-triangle" /> {{ $message }}</p> @enderror
+@php($column = static fn (string $name): string => text_data(\Simplysmart\Admiro\Models\Dictionaries\Holiday::class, $name))
+<x-admiro::zone.layout :title="text('admiro::admin.holidays_title')" :meta="$country?->translatedName()">
+    <p class="ss-notice"><x-admiro::icon name="info" /> {{ text('admiro::admin.holidays_lead') }}</p>
+    @error('holiday') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 
     <form class="ss-card" method="GET" action="{{ route('admiro.holidays.index') }}">
         <div class="ss-form-row">
@@ -14,8 +14,8 @@
                     @endforeach
                 </select>
             </div>
-            <x-mainboard::input id="year" name="year" type="number" :label="text('admiro::admin.holidays_year')" :value="(string) $year" min="2000" max="2100" />
-            <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="search" class="ss-button__icon" />{{ text_action('search') }}</button>
+            <x-admiro::input id="year" name="year" type="number" :label="text('admiro::admin.holidays_year')" :value="(string) $year" min="2000" max="2100" />
+            <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="search" class="ss-button__icon" />{{ text_action('search') }}</button>
         </div>
     </form>
 
@@ -40,7 +40,7 @@
                             <td><span class="ss-badge">{{ $holiday->source->label() }}</span></td>
                             @if ($canManage)
                                 <td>
-                                    @if ($holiday->source === \Simplysmart\Mainboard\Enums\HolidaySource::Manual)
+                                    @if ($holiday->source === \Simplysmart\Admiro\Enums\HolidaySource::Manual)
                                         <form method="POST" action="{{ route('admiro.holidays.destroy', ['country' => $country?->alpha_code_2, 'holiday' => $holiday->token]) }}">
                                             @csrf
                                             @method('DELETE')
@@ -67,7 +67,7 @@
                 <h2 class="ss-card__title">{{ text('admiro::admin.holidays_sync') }}</h2>
                 <p class="ss-card__lead ss-muted">{{ text('admiro::admin.holidays_sync_lead', ['country' => $country->translatedName(), 'year' => (string) $year]) }}</p>
                 <div class="ss-form-actions">
-                    <button class="ss-button ss-button--primary" type="submit"><x-mainboard::icon name="refresh" class="ss-button__icon" />{{ text('admiro::admin.holidays_sync_action') }}</button>
+                    <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('admiro::admin.holidays_sync_action') }}</button>
                 </div>
             </form>
 
@@ -77,14 +77,14 @@
                 <h2 class="ss-card__title">{{ text('admiro::admin.holiday_add') }}</h2>
                 <div class="ss-form">
                     <div class="ss-form-row">
-                        <x-mainboard::input id="holiday_date" name="holiday_date" type="date" field-class="ss-form-row__grow" :label="$column('holiday_date')" icon="calendar" :value="old('holiday_date')" required />
-                        <x-mainboard::input id="holiday_name" name="holiday_name" field-class="ss-form-row__grow" :label="$column('name')" :value="old('holiday_name')" :placeholder="text('admiro::admin.holiday_placeholder')" required maxlength="255" />
+                        <x-admiro::input id="holiday_date" name="holiday_date" type="date" field-class="ss-form-row__grow" :label="$column('holiday_date')" icon="calendar" :value="old('holiday_date')" required />
+                        <x-admiro::input id="holiday_name" name="holiday_name" field-class="ss-form-row__grow" :label="$column('name')" :value="old('holiday_name')" :placeholder="text('admiro::admin.holiday_placeholder')" required maxlength="255" />
                     </div>
                     <div class="ss-form-actions">
-                        <button class="ss-button" type="submit"><x-mainboard::icon name="check" class="ss-button__icon" />{{ text_action('create') }}</button>
+                        <button class="ss-button" type="submit"><x-admiro::icon name="check" class="ss-button__icon" />{{ text_action('create') }}</button>
                     </div>
                 </div>
             </form>
         </div>
     @endif
-</x-mainboard::zone.layout>
+</x-admiro::zone.layout>

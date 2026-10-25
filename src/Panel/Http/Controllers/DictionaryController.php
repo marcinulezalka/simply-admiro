@@ -19,11 +19,11 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Mainboard\Database\ColumnNames;
-use Simplysmart\Mainboard\Localization\Dictionary;
-use Simplysmart\Mainboard\Localization\DictionaryChangeRejected;
-use Simplysmart\Mainboard\Localization\DictionaryManagement;
-use Simplysmart\Mainboard\Queries\Dictionaries\DictionaryList;
+use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Localization\Dictionary;
+use Simplysmart\Admiro\Localization\DictionaryChangeRejected;
+use Simplysmart\Admiro\Localization\DictionaryManagement;
+use Simplysmart\Admiro\Queries\Dictionaries\DictionaryList;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

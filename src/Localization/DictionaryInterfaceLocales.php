@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Localization;
+namespace Simplysmart\Admiro\Localization;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Database\DatabaseManager;
-use Simplysmart\Mainboard\Contracts\InterfaceLocales;
-use Simplysmart\Mainboard\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Contracts\InterfaceLocales;
+use Simplysmart\Admiro\Models\Dictionaries\Language;
 
 /**
  * Języki interfejsu ze słownika (`locale_languages.is_interface`, domyślny `is_default`), zawsze w granicach
@@ -25,7 +25,7 @@ use Simplysmart\Mainboard\Models\Dictionaries\Language;
  */
 final readonly class DictionaryInterfaceLocales implements InterfaceLocales
 {
-    public const string CACHE_KEY = 'mainboard:localization:interface';
+    public const string CACHE_KEY = 'admiro:localization:interface';
 
     private const int CACHE_SECONDS = 300;
 

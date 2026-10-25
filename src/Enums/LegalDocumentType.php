@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Enums;
+namespace Simplysmart\Admiro\Enums;
 
-use Simplysmart\Mainboard\Contracts\HasLabel;
+use Simplysmart\Admiro\Contracts\HasLabel;
 
 /**
  * Dokument prawny aplikacji w wersjach (Models\LegalDocument, poza polityką cookies, która ma własne wersje i zgody):
- * polityka prywatności i klauzula informacyjna RODO. Każdy ma publiczną stronę Core (trasa `mainboard.legal.<wartość>`),
+ * polityka prywatności i klauzula informacyjna RODO. Każdy ma publiczną stronę Core (trasa `admiro.legal.<wartość>`),
  * etykietę odnośnika, wstęp i ikonę tytułu; strefa linkuje opublikowane w karcie logowania (`legal_documents`).
  */
 enum LegalDocumentType: string implements HasLabel
@@ -42,7 +42,7 @@ enum LegalDocumentType: string implements HasLabel
     }
 
     /**
-     * Ikona tytułu strony (x-mainboard::icon).
+     * Ikona tytułu strony (x-admiro::icon).
      */
     public function icon(): string
     {
@@ -57,6 +57,6 @@ enum LegalDocumentType: string implements HasLabel
      */
     public function routeName(): string
     {
-        return 'mainboard.legal.' . $this->value;
+        return 'admiro.legal.' . $this->value;
     }
 }

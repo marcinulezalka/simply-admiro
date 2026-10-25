@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\Console;
+namespace Simplysmart\Admiro\Console;
 
 use Illuminate\Console\Command;
-use Simplysmart\Mainboard\Database\Seeders\OperatorOrganizationSeeder;
+use Simplysmart\Admiro\Database\Seeders\OperatorOrganizationSeeder;
 
 /**
  * Zakłada organizację operatora aplikacji. Seeder referencyjny, idempotentny: wolno go uruchomić ponownie
@@ -22,7 +22,7 @@ use Simplysmart\Mainboard\Database\Seeders\OperatorOrganizationSeeder;
  */
 final class SeedOrganizations extends Command
 {
-    protected $signature = 'mainboard:organizations:seed';
+    protected $signature = 'admiro:organizations:seed';
 
     protected $description = 'Zakłada organizację operatora aplikacji (zakres ról stref bez firm klientów)';
 

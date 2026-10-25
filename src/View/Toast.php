@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * This file is part of simplysmart/mainboard.
+ * This file is part of simplysmart/admiro.
  *
  * Copyright (c) 2026 Marcin Ulezalka <marcin.ulezalka@simplysmart.pl>
  *
@@ -11,9 +11,9 @@ declare(strict_types=1);
  * See the LICENSE file distributed with this source code.
  */
 
-namespace Simplysmart\Mainboard\View;
+namespace Simplysmart\Admiro\View;
 
-use Simplysmart\Mainboard\Enums\ToastType;
+use Simplysmart\Admiro\Enums\ToastType;
 
 /**
  * Toast (alert aplikacji na dole ekranu): typ, treść, opcjonalny tytuł i akcja. Akcje flashują toasty do sesji

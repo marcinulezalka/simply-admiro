@@ -97,9 +97,9 @@ final class RemoteScriptTest extends TestCase
     public function skrypt_serwerowy_przy_fresh_zdejmuje_blokade_tylko_dla_migrate_fresh(): void
     {
         $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'), freshDatabase: true);
-        $fresh = strpos($script, 'MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS=true "$php_bin" artisan migrate:fresh --force');
+        $fresh = strpos($script, 'ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS=true "$php_bin" artisan migrate:fresh --force');
         $configClear = strpos($script, '"$php_bin" artisan config:clear');
-        $seed = strpos($script, 'artisan mainboard:localization:seed');
+        $seed = strpos($script, 'artisan admiro:localization:seed');
 
         $this->assertStringStartsWith("export DEPLOY_PHP='php84' GITHUB_TOKEN=''\nexport DEPLOY_FRESH=1\n", $script);
         $this->assertStringContainsString('if [[ "${DEPLOY_FRESH:-}" == 1 ]]; then', $script);
@@ -108,7 +108,7 @@ final class RemoteScriptTest extends TestCase
         $this->assertIsInt($seed);
         $this->assertLessThan($fresh, $configClear);
         $this->assertLessThan($seed, $fresh);
-        $this->assertSame(1, substr_count($script, 'MAINBOARD_ALLOW_DESTRUCTIVE_COMMANDS'));
+        $this->assertSame(1, substr_count($script, 'ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS'));
     }
 
     #[Test]
@@ -121,8 +121,8 @@ final class RemoteScriptTest extends TestCase
     public function skrypt_serwerowy_zaklada_organizacje_operatora_przed_rolami(): void
     {
         $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'));
-        $organizations = strpos($script, 'artisan mainboard:organizations:seed');
-        $permissions = strpos($script, 'artisan mainboard:permissions:sync');
+        $organizations = strpos($script, 'artisan admiro:organizations:seed');
+        $permissions = strpos($script, 'artisan admiro:permissions:sync');
 
         $this->assertIsInt($organizations);
         $this->assertIsInt($permissions);
@@ -132,7 +132,7 @@ final class RemoteScriptTest extends TestCase
     #[Test]
     public function skrypt_serwerowy_publikuje_pierwsze_wersje_polityk(): void
     {
-        $this->assertStringContainsString('artisan mainboard:legal:seed', RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app')));
+        $this->assertStringContainsString('artisan admiro:legal:seed', RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app')));
     }
 
     #[Test]
@@ -140,12 +140,12 @@ final class RemoteScriptTest extends TestCase
     {
         $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'));
         $cache = strpos($script, 'artisan view:cache');
-        $cron = strpos($script, '"$php_bin" artisan mainboard:cron:script --php="$php_bin"');
+        $cron = strpos($script, '"$php_bin" artisan admiro:cron:script --php="$php_bin"');
 
         $this->assertIsInt($cache);
         $this->assertIsInt($cron);
         $this->assertLessThan($cron, $cache);
-        $this->assertStringContainsString("grep -qx 'mainboard:cron:script'", $script);
+        $this->assertStringContainsString("grep -qx 'admiro:cron:script'", $script);
     }
 
     /**
