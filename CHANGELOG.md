@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Nazwa skrócona w formularzu organizacji (opcjonalna, do 40 znaków): wyświetlana pod imieniem i nazwiskiem w menu aplikacji zamiast pełnej nazwy.
 - Marka organizacji w edycji organizacji (`organizations.manage`): logo, sygnet i ikona strony — podgląd, wgranie (PNG/JPG, ikona PNG/ICO, limit rozmiaru) i usunięcie, każda zmiana w dzienniku. Logo organizacji trafia do e-maili wysyłanych w jej imieniu.
 
 ### Changed

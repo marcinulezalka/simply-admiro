@@ -63,10 +63,10 @@ final readonly class OrganizationController
 
     public function store(Request $request, ActiveOrganizations $active): RedirectResponse
     {
-        [$name, $parent] = $this->validated($request, $active);
+        [$name, $parent, $shortName] = $this->validated($request, $active);
 
         try {
-            $organization = $this->management->create($name, $parent);
+            $organization = $this->management->create($name, $parent, $shortName);
         } catch (OrganizationChangeRejected) {
             return $this->rejected();
         }
@@ -90,10 +90,10 @@ final readonly class OrganizationController
     public function update(Request $request, string $organization, ActiveOrganizations $active): RedirectResponse
     {
         $current = $this->organization($organization);
-        [$name, $parent] = $this->validated($request, $active);
+        [$name, $parent, $shortName] = $this->validated($request, $active);
 
         try {
-            $this->management->update($current, $name, $parent);
+            $this->management->update($current, $name, $parent, $shortName);
         } catch (OrganizationChangeRejected) {
             return $this->rejected();
         }
@@ -120,17 +120,19 @@ final readonly class OrganizationController
     }
 
     /**
-     * @return array{string, Organization|null}
+     * @return array{string, Organization|null, string|null}
      */
     private function validated(Request $request, ActiveOrganizations $active): array
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            Organization::SHORT_NAME => ['nullable', 'string', 'max:' . Organization::SHORT_NAME_MAX_LENGTH],
             'parent' => ['nullable', 'string', 'max:' . Organization::TOKEN_LENGTH],
         ]);
         $parent = is_string($validated['parent'] ?? null) ? $active->find($validated['parent']) : null;
+        $shortName = is_string($validated[Organization::SHORT_NAME] ?? null) ? $validated[Organization::SHORT_NAME] : null;
 
-        return [is_string($validated['name']) ? $validated['name'] : '', $parent];
+        return [is_string($validated['name']) ? $validated['name'] : '', $parent, $shortName];
     }
 
     private function organization(string $token): Organization

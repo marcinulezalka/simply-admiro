@@ -37,6 +37,7 @@ return [
     'own_account' => 'Your own account is not changed in the panel; use the account settings.',
     'owner_intro' => 'The owner account is created in the target zone (or gets the role if the address already has an account). The owner sets a PIN at the first sign-in.',
     'organization' => 'Organization',
+    'organization_short_name_hint' => 'A short name shown under the person’s name in the application menu. Without it the full name is shown.',
     'organization_operator' => '— operator organization (zones without customer organizations) —',
     'owner_organization_required' => 'This zone works in customer organizations: choose the organization.',
     'owner_created' => 'Owner created.',
