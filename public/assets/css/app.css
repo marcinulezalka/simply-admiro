@@ -664,6 +664,16 @@ button.ss-badge:focus-visible {
 }
 
 /**
+ * .ss-auth--reversed — wariant AuthLayout::SplitReversed: od 56rem karty w odbiciu lustrzanym (formularz po lewej,
+ * marka po prawej); w kodzie i na telefonie marka zostaje przed formularzem. Potrójna klasa wygrywa z .ss-frame--row.
+ */
+@media (min-width: 56rem) {
+    .ss-auth--reversed .ss-frame.ss-frame--row {
+        flex-direction: row-reverse;
+    }
+}
+
+/**
  * .ss-sr-only — tekst tylko dla czytników ekranu (np. stan etapu steppera, etykieta wyszukiwarki).
  */
 .ss-sr-only {
@@ -3049,6 +3059,11 @@ a.ss-notification:focus-visible {
     .ss-auth--image .ss-auth__card {
         margin-top: 0;
         margin-left: calc(-1 * var(--ss-radius-nested));
+    }
+
+    .ss-auth--reversed.ss-auth--image .ss-auth__card {
+        margin-left: 0;
+        margin-right: calc(-1 * var(--ss-radius-nested));
     }
 }
 

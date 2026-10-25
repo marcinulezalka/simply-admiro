@@ -24,6 +24,7 @@ final readonly class ZoneAuthSettings
     /**
      * @param list<class-string<SignInStep>> $steps
      * @param list<int> $lockoutMinutes Czas kolejnych blokad; ostatni powtarza się dla dalszych.
+     * @param string|null $logo Ścieżka logo strefy (SVG z fill="currentColor") w karcie marki układów dwóch kart; null — logo simplysmart.
      * @param array<string, array{max: int, decay_minutes: int}> $limits
      */
     public function __construct(
@@ -44,6 +45,7 @@ final readonly class ZoneAuthSettings
         public int $trustedDevicesPerAccount = 10,
         public AuthLayout $layout = AuthLayout::Centered,
         public ?AuthBrand $brand = null,
+        public ?string $logo = null,
     ) {}
 
     /**

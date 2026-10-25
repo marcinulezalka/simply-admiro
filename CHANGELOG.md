@@ -4,6 +4,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Układ logowania `split-reversed` (`Enums\AuthLayout::SplitReversed`, `auth.layout` strefy): dwie karty w ramie w odbiciu lustrzanym — formularz po lewej, karta marki po prawej (`.ss-auth--reversed`; na telefonie marka nad formularzem); z banerem karta formularza zakrywa zaokrąglenie banera po swojej prawej stronie.
+- Logo strefy w karcie marki: `auth.logo` w configu strefy (ścieżka pliku SVG z `fill="currentColor"`, osadzany inline w kolorze karty) zamiast logo simplysmart; brak pliku albo inny format zatrzymuje start (`ZoneAuthSettings::$logo`, prop `logo` w `x-mainboard::auth.layout`).
+
 ## [0.3.0] - 2026-10-25
 
 ### Added

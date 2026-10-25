@@ -22,7 +22,10 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // opcjonalnie: 'guard', 'provider', 'session' => ['lifetime' => 15, ...],
        // 'auth' => ['pin' => ['min_length' => 8]] (nadpisania mainboard.auth; zakres PIN-u w granicach 4–16),
        // 'auth' => ['trusted_devices' => ['enabled' => false]] (kod z e-maila przy każdym logowaniu),
-       // 'auth' => ['layout' => 'split'] (ekrany logowania jako dwie karty: marka i formularz; domyślnie 'centered'),
+       // 'auth' => ['layout' => 'split'] (ekrany logowania jako dwie karty: marka i formularz; domyślnie 'centered';
+       //     'split-reversed' — to samo w odbiciu: formularz po lewej, marka po prawej),
+       // 'auth' => ['logo' => __DIR__.'/../public/images/logo.svg'] (logo strefy w karcie marki zamiast logo simplysmart;
+       //     SVG z fill="currentColor" osadzany inline w kolorze karty; brak pliku zatrzymuje start),
        // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
        // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout
@@ -259,7 +262,7 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
 | `AUTH_CODE_TTL` | `10` | minuty ważności kodu z e-maila |
 | `AUTH_PIN_MIN_LENGTH` | `4` | najkrótszy nowy PIN (cyfry, nie mniej niż 4) |
 | `AUTH_PIN_MAX_LENGTH` | `16` | najdłuższy nowy PIN (cyfry, nie więcej niż 16); wpisany istniejący PIN jest sprawdzany w pełnym zakresie 4–16 |
-| `AUTH_LAYOUT` | `centered` | układ stron logowania: `centered` (jedna karta) albo `split` (dwie karty obok siebie); strefa nadpisuje w `auth.layout` |
+| `AUTH_LAYOUT` | `centered` | układ stron logowania: `centered` (jedna karta), `split` (dwie karty obok siebie: marka po lewej) albo `split-reversed` (formularz po lewej, marka po prawej); strefa nadpisuje w `auth.layout` |
 | `AUTH_TRUSTED_DEVICES` | `true` | zaufane urządzenia (strefa może je wyłączyć w configu) |
 | `AUTH_TRUSTED_DEVICE_DAYS` | `30` | dni zaufania urządzenia |
 | `SECURITY_MASK_ERRORS` | brak (produkcja) | maskowanie błędów jako 404 |

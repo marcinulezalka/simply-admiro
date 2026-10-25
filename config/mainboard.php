@@ -174,7 +174,8 @@ return [
 
         /*
          * Układ stron logowania (Enums\AuthLayout): `centered` — jedna karta na środku, `split` — dwie karty
-         * obok siebie (marka po lewej, nagłówek i formularz po prawej). Strefa może go nadpisać w `auth.layout`.
+         * obok siebie (marka po lewej, nagłówek i formularz po prawej), `split-reversed` — to samo w odbiciu
+         * (formularz po lewej, marka po prawej). Strefa może go nadpisać w `auth.layout`.
          */
         'layout' => env('AUTH_LAYOUT', AuthLayout::Centered->value),
 
@@ -183,6 +184,12 @@ return [
          * ścieżki plików `light` (i opcjonalnie `dark`) oraz klucz tekstu `alt`; null = logo.
          */
         'brand' => null,
+
+        /*
+         * Logo strefy w karcie marki układu dwóch kart zamiast logo simplysmart: strefa podaje w `auth.logo`
+         * ścieżkę pliku SVG z fill="currentColor" (osadzany inline, kolor z karty); null = logo simplysmart.
+         */
+        'logo' => null,
 
         'route_throttle_per_minute' => 20,
 

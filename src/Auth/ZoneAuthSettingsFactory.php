@@ -62,6 +62,7 @@ final readonly class ZoneAuthSettingsFactory
             trustedDevicesPerAccount: max(1, Arr::integer($settings, 'trusted_devices.max_per_account')),
             layout: $this->layout(Arr::string($settings, 'layout')),
             brand: $this->brand(Arr::get($settings, 'brand')),
+            logo: $this->logo(Arr::get($settings, 'logo')),
         );
     }
 
@@ -83,6 +84,24 @@ final readonly class ZoneAuthSettingsFactory
         }
 
         return $classes === [] ? throw new InvalidArgumentException('A zone with sign-in needs at least one step.') : $classes;
+    }
+
+    /**
+     * Logo strefy z `auth.logo` (ścieżka pliku SVG osadzanego inline) albo null, gdy strefa go nie ma.
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest ścieżką istniejącego pliku SVG.
+     */
+    private function logo(mixed $logo): ?string
+    {
+        if ($logo === null) {
+            return null;
+        }
+
+        if (! is_string($logo) || ! is_file($logo) || strtolower(pathinfo($logo, PATHINFO_EXTENSION)) !== 'svg') {
+            throw new InvalidArgumentException('auth.logo must be the path of an existing SVG file.');
+        }
+
+        return $logo;
     }
 
     /**
