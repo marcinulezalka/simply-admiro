@@ -35,7 +35,11 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-radius-card` | karty, panele, modale | `1rem` | | `rounded-2xl` |
 | `--ss-radius-control` | pola, kontrolki | `0.875rem` | | `rounded-xl` |
 | `--ss-radius-button` | przyciski, przyciski z ikoną, przełącznik motywu, klawisze PIN (strefa może dać `--ss-radius-pill`) | `var(--ss-radius-control)` | | `rounded-xl` |
+| `--ss-radius-input` | pola formularzy `.ss-input` (strefa może dać `--ss-radius-pill`, karty zostają bez zmian) | `var(--ss-radius-control)` | | `rounded-xl` |
 | `--ss-radius-pill` | pigułki, awatar, wyszukiwarka | `9999px` | | `rounded-full` |
+| `--ss-icon-stroke` | grubość kreski ikon liniowych `.ss-icon` (wygrywa z atrybutem plików; strefa może dać grubszą, miększą kreskę) | `1.75` | | `stroke-[1.75]` |
+| `--ss-auth-title-size` | tytuł karty logowania `.ss-auth__title` | `1.5rem` | | `text-2xl` |
+| `--ss-auth-control-height` | wspólna wysokość pól i przycisków formularza logowania (bez `.ss-button--sm`/`--lg`) | `2.5rem` | | `min-h-10` |
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
 | `--ss-color-canvas` | tło powłoki aplikacji (`.ss-shell`) | `#e8e9ed` | `#0b0d12` | `bg-gray-200` |
@@ -196,7 +200,7 @@ Wspólne komponenty powstają w Core jako `x-mainboard::…`:
 | `logo`, `styles` | logo SVG inline (`currentColor`) i style Core inline z nonce CSP (zaimplementowane; do czasu builda z §8) |
 | `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): karta z opisem, funkcjami Core jako ikona, tytuł i opis, stopką z logo Laravela i plakietką wersji mainboard (`View\CoreVersion`, plik `VERSION`) oraz panelem marki; aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
 | `BrandNames::highlight()` | wyróżnienie nazw simplysmart i mainboard w tekście (`View\BrandNames`, klasa `.ss-brand-name`): najpierw escapuje, potem pogrubia; w treściach piszemy „mainboard”, nie `simplysmart/mainboard` ani „Core” |
-| `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); rysunki z zestawu [Lucide](https://lucide.dev) (ISC, zaokrąglone końce i łączenia, kreska 1,75 we wspólnym nagłówku Core; źródło i licencja w `docs/zaleznosci.md`); nowa ikona to plik SVG 24×24 z Lucide z tym samym nagłówkiem |
+| `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); rysunki z zestawu [Lucide](https://lucide.dev) (ISC, zaokrąglone końce i łączenia, kreska 1,75 we wspólnym nagłówku Core, w CSS z tokenu `--ss-icon-stroke`; źródło i licencja w `docs/zaleznosci.md`); nowa ikona to plik SVG 24×24 z Lucide z tym samym nagłówkiem |
 | `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
@@ -246,7 +250,8 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   teksty w grupie `placeholders.*` (e-mail, imię, nazwisko, imię i nazwisko, firma, adres, wyszukiwanie, notatka) i wzór
   `placeholders.example`; maski biorą go przez `InputMask::placeholder()`. Pola kodu i PIN-u nie mają podpowiedzi.
 - **Pole PIN-u** `x-mainboard::pin-field` (kroki logowania z PIN-em, ustawienie PIN-u, zmiana PIN-u w bezpieczeństwie):
-  `.ss-input--code` z przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
+  `.ss-input--code` z opcjonalną subtelną ikoną po lewej (prop `icon`; w logowaniu `lock` dla PIN-u, `shield-check` dla kodu,
+  także w polu kodu z e-maila) i przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
   modal `.ss-keypad` (natywny `<dialog>`, `js/pin-keypad.js`): cyfry 0–9 w siatce 3 × 4, „C” czyści, ikona `backspace`
   usuwa ostatnią cyfrę, „Gotowe” zamyka; kropki pokazują liczbę wpisanych cyfr (liczba także dla czytników ekranu),
   cyfry trafiają do pola na bieżąco (do `maxlength`), fizyczna klawiatura działa w polu i w oknie, po zamknięciu fokus

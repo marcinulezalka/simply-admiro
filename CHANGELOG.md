@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Tokeny dla stref: `--ss-auth-title-size` (tytuł karty logowania), `--ss-auth-control-height` (wspólna wysokość pól i przycisków formularza logowania), `--ss-icon-stroke` (grubość kreski ikon liniowych) i `--ss-radius-input` (zaokrąglenie pól niezależnie od kart); wartości domyślne bez zmian wyglądu.
+- Subtelne ikony w polach kodu i PIN-u na stronach logowania (`lock` przy PIN-ie, `shield-check` przy kodzie z e-maila); `x-mainboard::pin-field` przyjmuje prop `icon`.
 - Układ logowania `split-reversed` (`Enums\AuthLayout::SplitReversed`, `auth.layout` strefy): dwie karty w ramie w odbiciu lustrzanym — formularz po lewej, karta marki po prawej (`.ss-auth--reversed`; na telefonie marka nad formularzem); z banerem karta formularza zakrywa zaokrąglenie banera po swojej prawej stronie.
 - Logo strefy w karcie marki: `auth.logo` w configu strefy (ścieżka pliku SVG z `fill="currentColor"`, osadzany inline w kolorze karty) zamiast logo simplysmart; brak pliku albo inny format zatrzymuje start (`ZoneAuthSettings::$logo`, prop `logo` w `x-mainboard::auth.layout`).
 

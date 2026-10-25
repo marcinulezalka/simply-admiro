@@ -4,7 +4,10 @@
         @csrf
         <div class="ss-field">
             <label class="ss-field__label" for="code">{{ $zone->signInText('code') }}</label>
-            <input class="ss-input ss-input--code" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="{{ $codeLength }}" required autofocus @error('code') aria-invalid="true" aria-describedby="code-error" @enderror>
+            <div class="ss-input-wrap ss-input-wrap--icon">
+                <x-mainboard::icon name="shield-check" class="ss-input-wrap__icon" />
+                <input class="ss-input ss-input--code" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="{{ $codeLength }}" required autofocus @error('code') aria-invalid="true" aria-describedby="code-error" @enderror>
+            </div>
             @error('code') <p class="ss-field__error" id="code-error" role="alert">{{ $message }}</p> @enderror
         </div>
         @if ($rememberDeviceDays !== null)

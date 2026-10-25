@@ -11,7 +11,7 @@
             <p class="ss-muted">{{ $zone->signInText('forgot_pin.recovery.code_lead') }}</p>
             <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.' . $routes::FORGOT_PIN_RESET)) }}">
                 @csrf
-                <x-mainboard::pin-field id="forgot-pin-code" name="code" :label="$zone->signInText('code')" type="text" autocomplete="one-time-code" :min="$codeLength" :max="$codeLength" :keypad="false" :error="$errors->first('code')" />
+                <x-mainboard::pin-field icon="shield-check" id="forgot-pin-code" name="code" :label="$zone->signInText('code')" type="text" autocomplete="one-time-code" :min="$codeLength" :max="$codeLength" :keypad="false" :error="$errors->first('code')" />
                 <button class="ss-button ss-button--primary ss-button--pill" type="submit"><x-mainboard::icon name="lock" class="ss-button__icon" />{{ $zone->signInText('forgot_pin.recovery.reset') }}</button>
             </form>
             <form method="POST" action="{{ route($zone->routeName('auth.' . $routes::FORGOT_PIN_CANCEL)) }}">

@@ -2,7 +2,7 @@
 <x-mainboard::auth.layout :title="$zone->signInText('pin_title')" :lead="$zone->signInText('pin_lead')" :note="$zone->signInText('pin_note')">
     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.pin.store')) }}">
         @csrf
-        <x-mainboard::pin-field id="pin" name="pin" :error="$errors->first('pin')" :label="$zone->signInText('pin')" autocomplete="current-password" :min="$pinLength->min" :max="$pinLength->max" autofocus />
+        <x-mainboard::pin-field icon="lock" id="pin" name="pin" :error="$errors->first('pin')" :label="$zone->signInText('pin')" autocomplete="current-password" :min="$pinLength->min" :max="$pinLength->max" autofocus />
         <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ $zone->signInText('continue') }}<x-mainboard::icon name="arrow-right" class="ss-button__icon" /></button>
     </form>
 

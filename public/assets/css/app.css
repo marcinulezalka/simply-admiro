@@ -39,6 +39,11 @@
     height: 100%;
 }
 
+/* Grubość kreski z tokenu wygrywa z atrybutem stroke-width plików ikon (tylko ikony liniowe). */
+.ss-icon svg[stroke] {
+    stroke-width: var(--ss-icon-stroke);
+}
+
 /**
  * .ss-icon--tile — ikona w kafelku surface-muted (lista funkcji, próbki ikon).
  */
@@ -389,7 +394,7 @@ button.ss-badge:focus-visible {
     width: 100%;
     padding: var(--ss-space-3) var(--ss-space-4);
     border: 1px solid var(--ss-color-border-strong);
-    border-radius: var(--ss-radius-control);
+    border-radius: var(--ss-radius-input);
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     font: inherit;
@@ -581,9 +586,18 @@ button.ss-badge:focus-visible {
 .ss-auth__title {
     margin: 0;
     font-family: var(--ss-font-display);
-    font-size: 1.5rem;
+    font-size: var(--ss-auth-title-size);
     font-weight: 600;
     line-height: 1.25;
+}
+
+/* Pola i przyciski formularza logowania mają tę samą wysokość (--ss-auth-control-height); rozmiary sm/lg zostają. */
+.ss-auth .ss-input {
+    min-height: var(--ss-auth-control-height);
+}
+
+.ss-auth .ss-button:not(.ss-button--sm, .ss-button--lg) {
+    --ss-button-height: var(--ss-auth-control-height);
 }
 
 .ss-auth__lead {
@@ -2580,6 +2594,11 @@ a.ss-notification:focus-visible {
 
 .ss-input-wrap--icon .ss-input {
     padding-left: 2.5rem;
+}
+
+/* Kod z ikoną: odstęp z obu stron, więc wyśrodkowane cyfry zostają na środku pola. */
+.ss-input-wrap--icon .ss-input--code {
+    padding-inline: 2.5rem;
 }
 
 .ss-input-wrap:focus-within .ss-input-wrap__icon {

@@ -1,8 +1,11 @@
-{{-- Pole PIN-u (i innych kodów z cyfr) z etykietą, błędem walidacji i wirtualną klawiaturą numeryczną: przycisk z ikoną klawiatury w polu otwiera modal (<dialog>, js/pin-keypad.js) z cyframi 0–9, usuwaniem ostatniej cyfry, czyszczeniem i „Gotowe”; cyfry trafiają do pola na bieżąco, kropki pokazują ich liczbę, fizyczna klawiatura działa w polu i w oknie. Bez skryptu przycisk jest ukryty i zostaje zwykłe pole. id, name, label, autocomplete, min, max: wymagane; type: password (domyślnie) albo text (kod z e-maila); keypad: false = bez klawiatury; error: komunikat błędu pola (np. $errors->first('pin')); reszta atrybutów trafia na input (np. autofocus). --}}
-@props(['id', 'name', 'label', 'autocomplete', 'min', 'max', 'type' => 'password', 'keypad' => true, 'error' => null])
+{{-- Pole PIN-u (i innych kodów z cyfr) z etykietą, błędem walidacji i wirtualną klawiaturą numeryczną: przycisk z ikoną klawiatury w polu otwiera modal (<dialog>, js/pin-keypad.js) z cyframi 0–9, usuwaniem ostatniej cyfry, czyszczeniem i „Gotowe”; cyfry trafiają do pola na bieżąco, kropki pokazują ich liczbę, fizyczna klawiatura działa w polu i w oknie. Bez skryptu przycisk jest ukryty i zostaje zwykłe pole. id, name, label, autocomplete, min, max: wymagane; type: password (domyślnie) albo text (kod z e-maila); keypad: false = bez klawiatury; icon: nazwa subtelnej ikony w polu po lewej (np. lock); error: komunikat błędu pola (np. $errors->first('pin')); reszta atrybutów trafia na input (np. autofocus). --}}
+@props(['id', 'name', 'label', 'autocomplete', 'min', 'max', 'type' => 'password', 'keypad' => true, 'icon' => null, 'error' => null])
 <div class="ss-field">
     <label class="ss-field__label" for="{{ $id }}">{{ $label }}</label>
-    <div @class(['ss-input-wrap', 'ss-input-wrap--keypad' => $keypad])>
+    <div @class(['ss-input-wrap', 'ss-input-wrap--icon' => $icon !== null, 'ss-input-wrap--keypad' => $keypad])>
+        @if ($icon !== null)
+            <x-mainboard::icon :name="$icon" class="ss-input-wrap__icon" />
+        @endif
         <input {{ $attributes->merge(array_filter([
             'class' => 'ss-input ss-input--code',
             'id' => $id,

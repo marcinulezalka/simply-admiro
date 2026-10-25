@@ -143,6 +143,8 @@
     --ss-radius-pill: 9999px;
     /* Przyciski (.ss-button, .ss-icon-button, przełącznik motywu, klawisze PIN); strefa może dać pigułkę (--ss-radius-pill) */
     --ss-radius-button: var(--ss-radius-control);
+    /* Pola formularzy (.ss-input); strefa może dać pigułkę (--ss-radius-pill) niezależnie od kart i kafelków */
+    --ss-radius-input: var(--ss-radius-control);
     /* Rama z kartami: karta w ramie ma promień ramy minus jej odstęp, więc krawędzie są równoległe */
     --ss-radius-frame: 1.75rem;
     --ss-frame-padding: 0.75rem;
@@ -181,6 +183,11 @@
     --ss-content-width: 40rem;
     --ss-auth-width: 26rem;
     --ss-auth-split-width: 60rem;
+    /* Logowanie: rozmiar tytułu karty i wspólna wysokość pól i przycisków formularza (strefa może je zmienić) */
+    --ss-auth-title-size: 1.5rem;
+    --ss-auth-control-height: 2.5rem;
+    /* Grubość kreski ikon liniowych (x-mainboard::icon); strefa może dać grubszą, bardziej miękką kreskę */
+    --ss-icon-stroke: 1.75;
     --ss-content-page-width: 72rem;
     --ss-sidebar-width: 16rem;
     --ss-sidebar-collapsed-width: 4.5rem;
