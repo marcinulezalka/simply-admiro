@@ -25,6 +25,8 @@ return [
     'mark_all_read' => 'Oznacz wszystkie jako przeczytane',
     'unread' => 'nieprzeczytane',
     'close' => 'Zamknij',
+    'home' => 'Strona główna',
+    'code_digit' => 'Cyfra :position z :length',
     'toasts' => 'Komunikaty aplikacji',
     'keypad' => [
         'open' => 'Wpisz na klawiaturze ekranowej',
@@ -32,7 +34,7 @@ return [
         'count' => 'Wpisane cyfry: :count',
         'clear' => 'Wyczyść',
         'backspace' => 'Usuń ostatnią cyfrę',
-        'done' => 'Gotowe',
+        'done' => 'Zatwierdź PIN',
     ],
     'settings' => 'Ustawienia',
     'back_to_app' => 'Wróć do aplikacji',

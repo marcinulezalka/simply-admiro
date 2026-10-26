@@ -58,6 +58,8 @@ final readonly class ZoneDefinition
      * @param MailPalette $mailPalette Kolory e-maili strefy (`mail.palette`); domyślnie paleta Core.
      * @param string|null $logo Logo strefy do osadzenia inline na stronach (`logo`: ścieżka SVG z fill="currentColor",
      *                          np. strona startowa View\ZoneLogos); domyślnie `auth.logo`; null = strefa bez logo.
+     * @param string|null $website Strona WWW strefy (`website`: adres http(s)), np. odnośnik logo strefy na stronie
+     *                             startowej (View\ZoneLogos); null = logo bez odnośnika.
      * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
      *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
      *                           są zawężone do niej; false = uprawnienia z sumy ról.
@@ -86,6 +88,7 @@ final readonly class ZoneDefinition
         public bool $roleContexts = false,
         public array $legalDocuments = [],
         public ?string $logo = null,
+        public ?string $website = null,
     ) {}
 
     /**

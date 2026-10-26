@@ -52,6 +52,8 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     własnego; brak pliku, zły format albo `favicon` w tej sekcji zatrzymuje start),
        // 'logo' => __DIR__.'/../public/images/logo.svg' (logo strefy do osadzenia inline na stronach, np. pod marką
        //     na stronie startowej — View\ZoneLogos; SVG z fill="currentColor", domyślnie `auth.logo`; zły plik zatrzymuje start),
+       // 'website' => 'https://shop.example' (strona WWW strefy: logo strefy na stronie startowej prowadzi do niej
+       //     w nowej karcie, przy wspólnym logo kilku stref pierwszy podany adres; adres spoza http(s) zatrzymuje start),
        // 'mail' => ['views' => '<paczka>::mail.<strefa>', 'palette' => ['accent' => '#112a46', ...]]
        //     (e-maile strefy, patrz „E-maile strefy”; zły prefiks albo kolor spoza #rrggbb zatrzymuje start),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
@@ -226,6 +228,10 @@ Layout strefy może dołączyć ramę Core (`@include('admiro::mail.frame')`: ta
 stopka z odnośnikami prawnymi strefy `legal_links` i copyrightem) albo mieć własny HTML. Style są inline, bo klienci
 poczty nie czytają arkuszy ani tokenów `--ss-*`. Widoki dostają `$mailZone`, `$mailPalette`, `$mailLogo`,
 `$mailOrganization` i `$mailLegalLinks`.
+
+Przykład własnego HTML: strefa administratorów (`admiro::mail.admiro`) ma layout z kartą na grafitowym tle, złotym
+paskiem u góry i logo w nagłówku karty, a szablony kodów (`login-code`, `security-code`) pokazują każdą cyfrę
+w osobnym polu (`admiro::mail.admiro.partials.code`), jak pola kodu na stronie logowania.
 
 Logo (`Mail\MailBrandResolver`) jest osadzone w wiadomości (CID): logo organizacji z panelu (`Organizations\OrganizationBranding`,
 pliki na prywatnym dysku `ADMIRO_ORGANIZATION_BRAND_DISK`, domyślnie `local`), potem `brand.logo` strefy, a na końcu

@@ -17,7 +17,8 @@ use Simplysmart\Admiro\Contracts\ZoneRegistry;
 
 /**
  * Logo zarejestrowanych stref (`logo` strefy, domyślnie `auth.logo`) do osadzenia inline, np. na stronie startowej:
- * każdy plik raz (kilka stref jednej paczki dzieli zwykle to samo logo), w kolejności nazw stref.
+ * każdy plik raz (kilka stref jednej paczki dzieli zwykle to samo logo), w kolejności nazw stref, z adresem strony WWW
+ * strefy (`website`; przy wspólnym logo pierwszy podany).
  */
 final readonly class ZoneLogos
 {
@@ -26,18 +27,22 @@ final readonly class ZoneLogos
     ) {}
 
     /**
-     * @return list<string> Treść plików SVG (fill="currentColor": przyjmują kolor tekstu).
+     * @return list<array{svg: string, website: ?string}> Treść pliku SVG (fill="currentColor": przyjmuje kolor tekstu)
+     *                                                   i strona WWW strefy (null = logo bez odnośnika).
      */
-    public function svgs(): array
+    public function all(): array
     {
         $logos = [];
 
         foreach ($this->zones->all() as $zone) {
             $path = $zone->logo === null ? false : realpath($zone->logo);
 
-            if ($path !== false && ! isset($logos[$path])) {
-                $logos[$path] = (string) file_get_contents($path);
+            if ($path === false) {
+                continue;
             }
+
+            $logos[$path] ??= ['svg' => (string) file_get_contents($path), 'website' => null];
+            $logos[$path]['website'] ??= $zone->website;
         }
 
         return array_values($logos);

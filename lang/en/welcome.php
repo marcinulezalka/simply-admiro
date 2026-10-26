@@ -18,6 +18,7 @@ return [
     'inside' => 'What you get from the start',
     'built_on' => 'Built on',
     'admiro_version' => 'admiro :version',
+    'website' => ':site (opens in a new tab)',
 
     'features' => [
         'zones' => [

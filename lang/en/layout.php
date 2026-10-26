@@ -25,6 +25,8 @@ return [
     'mark_all_read' => 'Mark all as read',
     'unread' => 'unread',
     'close' => 'Close',
+    'home' => 'Home page',
+    'code_digit' => 'Digit :position of :length',
     'toasts' => 'Application messages',
     'keypad' => [
         'open' => 'Type on the on-screen keypad',
@@ -32,7 +34,7 @@ return [
         'count' => 'Digits entered: :count',
         'clear' => 'Clear',
         'backspace' => 'Delete the last digit',
-        'done' => 'Done',
+        'done' => 'Confirm PIN',
     ],
     'settings' => 'Settings',
     'back_to_app' => 'Back to the application',

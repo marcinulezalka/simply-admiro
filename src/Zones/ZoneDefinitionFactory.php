@@ -36,7 +36,7 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * z logowaniem), brand (`logo`, `signet` —
  * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
- * `on_accent`) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
+ * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
  * z `teams`).
  */
 final readonly class ZoneDefinitionFactory
@@ -95,7 +95,26 @@ final readonly class ZoneDefinitionFactory
             mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
             roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
             logo: $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo,
+            website: $this->website($name, $config['website'] ?? null),
         );
+    }
+
+    /**
+     * Strona WWW strefy z klucza `website` (adres http(s)) albo null, gdy strefa jej nie podaje.
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest adresem http(s).
+     */
+    private function website(string $zone, mixed $website): ?string
+    {
+        if ($website === null || $website === '') {
+            return null;
+        }
+
+        if (! is_string($website) || filter_var($website, FILTER_VALIDATE_URL) === false || preg_match('~^https?://~i', $website) !== 1) {
+            throw new InvalidArgumentException("Zone [{$zone}] website must be an http(s) URL.");
+        }
+
+        return $website;
     }
 
     /**

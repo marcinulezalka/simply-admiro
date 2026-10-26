@@ -4,8 +4,10 @@
  * data-ss-keypad-for (do jego maxlength), usuwają ostatnią cyfrę albo czyszczą pole. Kropki w
  * [data-ss-keypad-display] pokazują liczbę wpisanych cyfr (czytniki ekranu dostają ją tekstem z
  * data-ss-keypad-count: „:count” → liczba). W oknie działa też fizyczna klawiatura (cyfry, Backspace, Delete,
- * Enter = „Gotowe”, Escape zamyka natywnie). Po zamknięciu fokus wraca do pola. Bez skryptu przycisk zostaje
- * ukryty. Osadzany inline z nonce CSP (x-admiro::scripts).
+ * Enter = „Zatwierdź PIN”, Escape zamyka natywnie). „Zatwierdź PIN” [data-ss-keypad-done] zamyka okno i wysyła
+ * formularz pola (requestSubmit), gdy jest poprawny; inaczej fokus trafia do pierwszego niepoprawnego pola z jego
+ * komunikatem (np. za krótki PIN albo puste powtórzenie). Samo zamknięcie wraca fokusem do pola. Bez skryptu
+ * przycisk zostaje ukryty. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const init = (dialog) => {
@@ -51,9 +53,33 @@
         });
         dialog.querySelector('[data-ss-keypad-backspace]')?.addEventListener('click', () => update(input.value.slice(0, -1)));
         dialog.querySelector('[data-ss-keypad-clear]')?.addEventListener('click', () => update(''));
-        dialog.querySelectorAll('[data-ss-keypad-close], [data-ss-keypad-done]').forEach((button) => {
-            button.addEventListener('click', () => dialog.close());
-        });
+        let afterClose = null;
+
+        const submit = () => {
+            const form = input.form;
+
+            if (form === null) {
+                input.focus();
+            } else if (form.checkValidity()) {
+                form.requestSubmit();
+            } else {
+                const invalid = form.querySelector(':invalid');
+
+                if (invalid instanceof HTMLElement) {
+                    invalid.focus();
+                }
+
+                form.reportValidity();
+            }
+        };
+
+        const done = () => {
+            afterClose = submit;
+            dialog.close();
+        };
+
+        dialog.querySelector('[data-ss-keypad-close]')?.addEventListener('click', () => dialog.close());
+        dialog.querySelector('[data-ss-keypad-done]')?.addEventListener('click', done);
 
         dialog.addEventListener('keydown', (event) => {
             if (/^[0-9]$/.test(event.key)) {
@@ -64,7 +90,7 @@
                 update(event.key === 'Delete' ? '' : input.value.slice(0, -1));
             } else if (event.key === 'Enter') {
                 event.preventDefault();
-                dialog.close();
+                done();
             }
         });
         dialog.addEventListener('click', (event) => {
@@ -72,7 +98,11 @@
                 dialog.close();
             }
         });
-        dialog.addEventListener('close', () => input.focus());
+        dialog.addEventListener('close', () => {
+            const next = afterClose ?? (() => input.focus());
+            afterClose = null;
+            next();
+        });
 
         opener.addEventListener('click', () => {
             render();

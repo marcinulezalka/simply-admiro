@@ -24,11 +24,11 @@
                 </div>
 
                 <div class="ss-error__actions">
-                    <a class="ss-button ss-button--primary ss-button--pill" href="{{ url('/') }}"><x-admiro::icon name="home" class="ss-button__icon" />{{ text('errors.home') }}</a>
+                    <a class="ss-button ss-button--primary" href="{{ url('/') }}"><x-admiro::icon name="home" class="ss-button__icon" />{{ text('errors.home') }}</a>
                     @if ($retry)
-                        <a class="ss-button ss-button--pill" href="{{ url()->current() }}"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('errors.retry') }}</a>
+                        <a class="ss-button" href="{{ url()->current() }}"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('errors.retry') }}</a>
                     @elseif ($previous !== url()->current())
-                        <a class="ss-button ss-button--pill" href="{{ $previous }}"><x-admiro::icon name="arrow-left" class="ss-button__icon" />{{ text('errors.back') }}</a>
+                        <a class="ss-button" href="{{ $previous }}"><x-admiro::icon name="arrow-left" class="ss-button__icon" />{{ text('errors.back') }}</a>
                     @endif
                 </div>
             </div>

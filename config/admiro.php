@@ -323,6 +323,14 @@ return [
         'enabled' => (bool) env('DESIGN_SYSTEM_PAGE', env('APP_ENV', 'production') !== 'production'),
     ],
 
+    /*
+     * Strona startowa aplikacji (widok `welcome`): adres, do którego prowadzi logo simplysmart w karcie marki
+     * (nowa karta); logo stref prowadzą do `website` swoich stref.
+     */
+    'welcome' => [
+        'website' => $envString('WELCOME_WEBSITE', 'https://simplysmart.pl'),
+    ],
+
     'security' => [
 
         /*
@@ -401,6 +409,8 @@ return [
     | Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta marki z logotypem „admiro” na środku.
     | Marka strefy (public/images/, źródła w brand/): logotyp „admiro” w kroju Zen Dots ze złotą koroną nad „i”
     | na logowaniu i w e-mailach, złota korona z dolną kreską jako awatar i ikony strony.
+    | E-maile strefy we własnym layoucie (resources/views/mail/admiro/): karta ze złotym paskiem korony u góry, logo
+    | w nagłówku karty i kody w osobnych polach cyfr, w grafitowej palecie strefy (`mail.palette`).
     | Tytuł logowania z tekstów strefy (sign_in.admiro.* w lang/<locale>/sign_in.php) w kroju Space Grotesk, wyróżnione słowo
     | kursywą Instrument Serif (fonty w public/fonts/, przypisane tokenom w public/css/admiro.css).
     |
@@ -416,9 +426,14 @@ return [
             'layout' => 'split-reversed',
             'logo' => __DIR__ . '/../public/images/logo.svg',
         ],
+        'website' => $envString('ADMIRO_WEBSITE', 'https://admiro.simplysmart.pl'),
         'brand' => [
             'logo' => __DIR__ . '/../public/images/logo.png',
             'signet' => __DIR__ . '/../public/images/signet.png',
+        ],
+        'mail' => [
+            'views' => 'admiro::mail.admiro',
+            'palette' => ['bg' => '#f4f4f5', 'surface' => '#ffffff', 'border' => '#e4e4e7', 'text' => '#18181b', 'muted' => '#71717a', 'accent' => '#3f3f46', 'on_accent' => '#ffffff'],
         ],
         'stylesheets' => [__DIR__ . '/../public/css/admiro.css'],
         'fonts' => $fonts,

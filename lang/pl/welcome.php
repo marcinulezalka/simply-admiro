@@ -18,6 +18,7 @@ return [
     'inside' => 'Co zyskujesz na starcie?',
     'built_on' => 'Zbudowane na',
     'admiro_version' => 'admiro :version',
+    'website' => ':site (otwiera się w nowej karcie)',
 
     'features' => [
         'zones' => [

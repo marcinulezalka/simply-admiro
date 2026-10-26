@@ -1,4 +1,4 @@
-{{-- Domyślna strona startowa aplikacji (trasa `/` szkieletu: view('welcome')). Aplikacja zastępuje ją własnym resources/views/welcome.blade.php. Jedna strona bez akcji: marka, funkcje Core jako ikona, tytuł i opis, stopka z logo Laravela i wersją admiro; rama .ss-frame z dwiema kartami; w karcie marki logo simplysmart na środku, pod nim siatka kafelków z subtelnym gradientem i logo zarejestrowanych stref (View\ZoneLogos). Nazwy simplysmart i admiro wyróżnia View\BrandNames, w nagłówku nazwa simplysmart to logo SVG (BrandNames::withLogo()). --}}
+{{-- Domyślna strona startowa aplikacji (trasa `/` szkieletu: view('welcome')). Aplikacja zastępuje ją własnym resources/views/welcome.blade.php. Jedna strona bez akcji: marka, funkcje Core jako ikona, tytuł i opis, stopka z logo Laravela i wersją admiro; rama .ss-frame z dwiema kartami w kolorystyce stron błędów (karta treści .ss-card--tinted, karta marki .ss-card--inverse .ss-card--elevated); w karcie marki logo simplysmart na środku (odnośnik do `admiro.welcome.website` w nowej karcie), pod nim siatka kafelków z subtelnym gradientem i logo zarejestrowanych stref (View\ZoneLogos; logo strefy z `website` jest odnośnikiem do niej w nowej karcie). Nazwy simplysmart i admiro wyróżnia View\BrandNames, w nagłówku nazwa simplysmart to logo SVG (BrandNames::withLogo()). --}}
 @php($highlight = \Simplysmart\Admiro\View\BrandNames::highlight(...))
 @php($features = ['zones' => 'zones', 'sign_in' => 'sign-in', 'dictionaries' => 'dictionaries', 'history' => 'history', 'locale' => 'locale', 'standards' => 'standards'])
 <x-admiro::page :title="config('app.name')" :description="text('welcome.lead')">
@@ -8,7 +8,7 @@
 
     <div class="ss-welcome">
         <main class="ss-frame ss-frame--row ss-welcome__card">
-            <section class="ss-card ss-welcome__content">
+            <section class="ss-card ss-card--tinted ss-welcome__content">
                 <h1 class="ss-welcome__title">{{ \Simplysmart\Admiro\View\BrandNames::withLogo(text('welcome.title')) }}</h1>
                 <p class="ss-welcome__lead ss-muted">{{ $highlight(text('welcome.lead')) }}</p>
 
@@ -34,13 +34,24 @@
                 </footer>
             </section>
 
-            <aside class="ss-card ss-card--elevated ss-welcome__brand">
-                <x-admiro::logo />
-                @php($zoneLogos = app(\Simplysmart\Admiro\View\ZoneLogos::class)->svgs())
+            <aside class="ss-card ss-card--inverse ss-card--elevated ss-welcome__brand">
+                @php($website = config('admiro.welcome.website'))
+                @if (is_string($website) && $website !== '')
+                    <a class="ss-welcome__brand-link" href="{{ $website }}" target="_blank" rel="noopener noreferrer" aria-label="{{ text('welcome.website', ['site' => parse_url($website, PHP_URL_HOST) ?? $website]) }}"><x-admiro::logo /></a>
+                @else
+                    <x-admiro::logo />
+                @endif
+                @php($zoneLogos = app(\Simplysmart\Admiro\View\ZoneLogos::class)->all())
                 @if ($zoneLogos !== [])
                     <ul class="ss-welcome__zones">
                         @foreach ($zoneLogos as $zoneLogo)
-                            <li class="ss-welcome__zone-logo">{!! $zoneLogo !!}</li>
+                            <li class="ss-welcome__zone-logo">
+                                @if ($zoneLogo['website'] !== null)
+                                    <a class="ss-welcome__zone-link" href="{{ $zoneLogo['website'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ text('welcome.website', ['site' => parse_url($zoneLogo['website'], PHP_URL_HOST) ?? $zoneLogo['website']]) }}">{!! $zoneLogo['svg'] !!}</a>
+                                @else
+                                    <span class="ss-welcome__zone-link">{!! $zoneLogo['svg'] !!}</span>
+                                @endif
+                            </li>
                         @endforeach
                     </ul>
                 @endif

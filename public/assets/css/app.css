@@ -283,12 +283,17 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-welcome__feature — funkcja Core: ikona w kafelku surface-muted, obok tytuł (text) i opis (muted).
+ * .ss-welcome__feature — funkcja Core: ikona w kafelku surface (karta treści jest tinted, więc kafelek surface-muted
+ * zlałby się z tłem), obok tytuł (text) i opis (muted).
  */
 .ss-welcome__feature {
     display: flex;
     gap: var(--ss-space-3);
     align-items: flex-start;
+}
+
+.ss-welcome__feature .ss-icon--tile {
+    background: var(--ss-color-surface);
 }
 
 .ss-welcome__feature-text {
@@ -337,13 +342,19 @@ button.ss-badge:focus-visible {
     justify-content: center;
     gap: var(--ss-space-4);
     padding: var(--ss-space-16) var(--ss-space-8);
-    border-color: transparent;
-    background: var(--ss-color-brand);
-    color: var(--ss-color-on-brand);
     text-align: center;
 }
 
 .ss-welcome__brand .ss-logo {
+    width: 100%;
+    max-width: 18rem;
+    color: inherit;
+}
+
+/* Logo simplysmart jako odnośnik (admiro.welcome.website, nowa karta): blok o szerokości logo, w kolorze karty. */
+.ss-welcome__brand-link {
+    display: flex;
+    justify-content: center;
     width: 100%;
     max-width: 18rem;
     color: inherit;
@@ -369,10 +380,21 @@ button.ss-badge:focus-visible {
     align-items: center;
     justify-content: center;
     min-height: 3.5rem;
-    padding: var(--ss-space-3) var(--ss-space-4);
     border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
     border-radius: var(--ss-radius-control);
     background: linear-gradient(135deg, color-mix(in srgb, currentColor 7%, transparent), color-mix(in srgb, currentColor 1%, transparent));
+}
+
+/* Wnętrze kafelka: odnośnik do strony strefy (`website`, nowa karta) na całą powierzchnię kafelka albo samo logo. */
+.ss-welcome__zone-link {
+    display: flex;
+    flex: 1;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-radius: inherit;
+    color: inherit;
 }
 
 .ss-welcome__zone-logo svg {
@@ -478,12 +500,36 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-input--code — kod jednorazowy i PIN: duże, rozstrzelone cyfry, wyśrodkowane.
+ * .ss-input--code — kod jednorazowy i PIN: rozstrzelone cyfry, wyśrodkowane, w rozmiarze tekstu pól (jak inne pola).
  */
 .ss-input--code {
     font-family: var(--ss-font-mono);
-    font-size: 1.25rem;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.3em;
+    text-align: center;
+}
+
+/**
+ * .ss-code — kod z e-maila w osobnych polach (x-admiro::code-field, js/code-field.js): rząd komórek .ss-code__cell
+ * na całą szerokość formularza (najwyżej 3rem każda), jedna cyfra w środku komórki.
+ */
+.ss-code {
+    display: flex;
+    gap: var(--ss-space-2);
+    justify-content: space-between;
+}
+
+.ss-code[hidden] {
+    display: none;
+}
+
+.ss-code__cell {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 3rem;
+    padding-inline: 0;
+    font-family: var(--ss-font-mono);
+    font-size: 1.125rem;
+    font-weight: 600;
     text-align: center;
 }
 
@@ -660,9 +706,12 @@ button.ss-badge:focus-visible {
     line-height: 1.25;
 }
 
-/* Pola formularza logowania mają wysokość --ss-auth-control-height, przyciski --ss-auth-button-height (domyślnie tę samą); rozmiary sm/lg zostają. */
+/* Pola formularza logowania mają wysokość --ss-auth-control-height (bez pionowego wcięcia, żeby to token, a nie
+   wcięcie z wysokością linii, wyznaczał wysokość pola), przyciski --ss-auth-button-height (domyślnie tę samą);
+   rozmiary sm/lg zostają. */
 .ss-auth .ss-input {
     min-height: var(--ss-auth-control-height);
+    padding-block: 0;
 }
 
 .ss-auth .ss-button:not(.ss-button--sm, .ss-button--lg) {
@@ -687,6 +736,78 @@ button.ss-badge:focus-visible {
 
 .ss-auth__actions form {
     margin: 0;
+}
+
+/**
+ * .ss-auth__home — powrót na stronę startową aplikacji pod formularzem logowania: przycisk z ikoną domu,
+ * jak akcje stron błędów (.ss-error__actions).
+ */
+.ss-auth__home {
+    display: flex;
+}
+
+/**
+ * .ss-forgot — strona „Nie pamiętam PIN-u” jako albo/albo: nagłówek-odnośnik (__toggle, <summary> sekcji
+ * __recovery z ikoną i strzałką) rozwija formularz zapasowego adresu (__body) i ukrywa kroki bez zapasowego adresu
+ * (__steps); zwinięcie przywraca kroki.
+ */
+.ss-forgot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-forgot__toggle {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    color: var(--ss-color-text);
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-forgot__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-forgot__toggle:hover span {
+    text-decoration: underline;
+}
+
+.ss-forgot__toggle:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+    border-radius: var(--ss-radius-control);
+}
+
+.ss-forgot__toggle-icon,
+.ss-forgot__chevron {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-forgot__chevron {
+    transition: transform 0.2s ease;
+}
+
+.ss-forgot__recovery[open] .ss-forgot__chevron {
+    transform: rotate(180deg);
+}
+
+.ss-forgot__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    margin-top: var(--ss-space-4);
+}
+
+.ss-forgot__body form {
+    margin: 0;
+}
+
+.ss-forgot:has(.ss-forgot__recovery[open]) .ss-forgot__steps {
+    display: none;
 }
 
 /**
@@ -2291,7 +2412,8 @@ button.ss-tabs__link {
 }
 
 /**
- * Strony błędów (x-admiro::error.layout) na układzie logowania split: duży kod w karcie marki, akcje w pigułkach.
+ * Strony błędów (x-admiro::error.layout) na układzie logowania split: duży kod w karcie marki, akcje jako zwykłe
+ * przyciski design systemu (zaokrąglenie --ss-radius-button).
  */
 .ss-error__brand {
     flex-direction: column;
@@ -2720,16 +2842,21 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js): nagłówek z nazwą pola
- * i zamknięciem, kropki wpisanych cyfr (__display, __dot), siatka 3 × 4 dużych klawiszy (__key; --muted — wyczyść
- * i usuń ostatnią cyfrę) i „Gotowe” na całą szerokość.
+ * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js) w kolorach karty formularza
+ * logowania (.ss-card--tinted: tło surface-muted, ramka border-strong): nazwa pola, pasek (__bar) z kropkami wpisanych
+ * cyfr (__display, __dot) i zamknięciem obok, siatka smukłych, małych klawiszy w wysokości przycisków z ikoną
+ * (40 px, --ss-keypad-key-width × --ss-keypad-key-height; __key; --muted —
+ * wyczyść, --wide — 0 na dwie kolumny) i stopka (__footer) z usuwaniem ostatniej cyfry obok „Zatwierdź PIN”.
  */
 .ss-keypad {
-    width: min(100% - 2 * var(--ss-space-4), 20rem);
+    --ss-keypad-key-width: 3.5rem;
+    --ss-keypad-key-height: 2.5rem;
+    width: auto;
+    max-width: calc(100% - 2 * var(--ss-space-4));
     padding: var(--ss-space-6);
-    border: 1px solid var(--ss-color-border);
+    border: 1px solid var(--ss-color-border-strong);
     border-radius: var(--ss-radius-card);
-    background: var(--ss-color-surface);
+    background: var(--ss-color-surface-muted);
     color: var(--ss-color-text);
     box-shadow: var(--ss-shadow-elevated);
 }
@@ -2744,31 +2871,32 @@ a.ss-notification:focus-visible {
     background: rgb(10 12 20 / 0.6);
 }
 
-.ss-keypad__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--ss-space-4);
-}
-
 .ss-keypad__title {
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
 }
 
+.ss-keypad__bar,
+.ss-keypad__footer {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
 .ss-keypad__display {
     display: flex;
+    flex: 1;
     flex-wrap: wrap;
     gap: var(--ss-space-2);
     align-items: center;
     justify-content: center;
-    min-height: 2.75rem;
+    min-height: 2.5rem;
     margin: 0;
     padding: var(--ss-space-2) var(--ss-space-3);
     border: 1px solid var(--ss-color-border-strong);
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-surface-muted);
+    border-radius: var(--ss-radius-input);
+    background: var(--ss-color-surface);
 }
 
 .ss-keypad__dot {
@@ -2780,22 +2908,23 @@ a.ss-notification:focus-visible {
 
 .ss-keypad__keys {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, var(--ss-keypad-key-width));
     gap: var(--ss-space-2);
+    justify-content: center;
 }
 
 .ss-keypad__key {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 3.25rem;
+    height: var(--ss-keypad-key-height);
     padding: 0;
     border: 1px solid var(--ss-color-border-strong);
     border-radius: var(--ss-radius-button);
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     font-family: var(--ss-font-mono);
-    font-size: 1.375rem;
+    font-size: 1rem;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
     touch-action: manipulation;
@@ -2815,15 +2944,16 @@ a.ss-notification:focus-visible {
 }
 
 .ss-keypad__key--muted {
-    border-color: transparent;
-    background: var(--ss-color-surface-muted);
     color: var(--ss-color-muted);
-    font-size: 1rem;
+    font-size: 0.875rem;
 }
 
-.ss-keypad__key-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+.ss-keypad__key--wide {
+    grid-column: span 2;
+}
+
+.ss-keypad__done {
+    flex: 1;
 }
 
 /**

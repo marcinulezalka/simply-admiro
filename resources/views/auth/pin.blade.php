@@ -1,4 +1,4 @@
-{{-- Krok PIN logowania strefy (teksty przez $zone->signInText(): tytuł, wstęp, notka). $zone: ZoneDefinition (Core), $pinLength: Auth\PinLength (pełny zakres: istniejący PIN mógł powstać przy innym zakresie strefy). Pole z klawiaturą ekranową (x-admiro::pin-field). --}}
+{{-- Krok PIN logowania strefy (teksty przez $zone->signInText(): tytuł, wstęp, notka). $zone: ZoneDefinition (Core), $pinLength: Auth\PinLength (pełny zakres: istniejący PIN mógł powstać przy innym zakresie strefy). Pole z klawiaturą ekranową (x-admiro::pin-field; „Zatwierdź PIN” w klawiaturze od razu wysyła formularz); „Nie pamiętam PIN-u” jako przycisk drugorzędny z ikoną. --}}
 <x-admiro::auth.layout :title="$zone->signInText('pin_title')" :lead="$zone->signInText('pin_lead')" :note="$zone->signInText('pin_note')">
     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.pin.store')) }}">
         @csrf
@@ -7,6 +7,6 @@
     </form>
 
     <x-slot:actions>
-        <a class="ss-link" href="{{ route($zone->routeName('auth.forgot-pin')) }}">{{ $zone->signInText('forgot_pin_link') }}</a>
+        <a class="ss-button" href="{{ route($zone->routeName('auth.forgot-pin')) }}"><x-admiro::icon name="help-circle" class="ss-button__icon" />{{ $zone->signInText('forgot_pin_link') }}</a>
     </x-slot:actions>
 </x-admiro::auth.layout>

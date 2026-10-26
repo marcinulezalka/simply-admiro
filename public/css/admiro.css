@@ -13,7 +13,7 @@
  *
  * Ikony liniowe w całej strefie mają grubszą, bardziej miękką kreskę (zaokrąglone końce i łączenia Core).
  * Logowanie: większy tytuł z większym odstępem od formularza, wyróżnione słowo w złocie korony z logotypu (#F5B301),
- * pola formularza 44 px, przycisk 52 px, oba z zaokrągleniem kontrolek Core; pod przyciskami separator nad odnośnikami
+ * pola formularza i przyciski w wysokości Core (40 px, jak przyciski stron błędów) z zaokrągleniem kontrolek Core; pod przyciskami separator nad odnośnikami
  * do polityk na dole karty.
  */
 :root {
@@ -28,8 +28,6 @@
 
 .ss-auth {
     --ss-auth-title-size: 2rem;
-    --ss-auth-control-height: 2.75rem;
-    --ss-auth-button-height: 3.25rem;
     --ss-auth-header-space: var(--ss-space-4);
     --ss-color-accent-text: #f5b301;
     --ss-auth-legal-border: 1px solid var(--ss-color-border-strong);
