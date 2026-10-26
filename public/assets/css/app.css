@@ -111,10 +111,12 @@
 }
 
 /**
- * .ss-onboarding — sekcja kroków konfiguracji na górze pulpitu: nagłówek z ikoną w kafelku (.ss-onboarding__icon),
- * tytułem i opisem, pod nim lista numerowana paneli kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to
- * karta-odnośnik z dużym, przygaszonym numerem kroku w tle (.ss-onboarding__number, dekoracyjny), etykietą „Krok N”,
- * nazwą z ikoną i opisem. .ss-dashboard__shortcuts / .ss-dashboard__title — sekcja skrótów pod onboardingiem.
+ * .ss-onboarding — karta kroków konfiguracji na górze pulpitu: nagłówek (.ss-onboarding__header) z ikoną w kafelku
+ * (.ss-onboarding__icon), tytułem i opisem po lewej (.ss-onboarding__intro) i postępem po prawej
+ * (.ss-onboarding__progress: etykieta i pasek .ss-progress; na telefonie pod spodem), pod nim lista numerowana paneli
+ * niezrobionych kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to karta w karcie (.ss-card--muted)
+ * będąca odnośnikiem, z dużym, przygaszonym numerem kroku w tle (.ss-onboarding__number, dekoracyjny), etykietą
+ * „Krok N”, nazwą z ikoną i opisem. .ss-dashboard__shortcuts / .ss-dashboard__title — sekcja skrótów pod onboardingiem.
  */
 .ss-onboarding {
     margin-bottom: var(--ss-space-8);
@@ -122,9 +124,61 @@
 
 .ss-onboarding__header {
     display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-4) var(--ss-space-8);
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--ss-space-6);
+}
+
+.ss-onboarding__intro {
+    display: flex;
+    flex: 1 1 24rem;
     gap: var(--ss-space-4);
     align-items: flex-start;
-    margin-bottom: var(--ss-space-4);
+}
+
+.ss-onboarding__progress {
+    display: flex;
+    flex: 0 1 16rem;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: flex-end;
+}
+
+.ss-onboarding__progress-label {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* .ss-progress — pasek postępu (natywny <progress>): tor surface-muted, wypełnienie w kolorze akcentu. */
+.ss-progress {
+    width: 100%;
+    height: 0.5rem;
+    overflow: hidden;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-accent);
+    appearance: none;
+}
+
+.ss-progress::-webkit-progress-bar {
+    border-radius: 999px;
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-progress::-webkit-progress-value {
+    border-radius: 999px;
+    background: var(--ss-color-accent);
+}
+
+.ss-progress::-moz-progress-bar {
+    border-radius: 999px;
+    background: var(--ss-color-accent);
 }
 
 .ss-onboarding__icon {
@@ -175,8 +229,7 @@
 }
 
 .ss-onboarding__link:hover {
-    border-color: var(--ss-color-border-strong);
-    background: var(--ss-color-surface-muted);
+    background: color-mix(in srgb, var(--ss-color-surface-muted) 92%, var(--ss-color-text));
 }
 
 .ss-onboarding__link:focus-visible {
@@ -1709,34 +1762,35 @@ summary.ss-sidebar__identity:focus-visible {
 }
 
 /*
- * Sekcje menu oddzielone kreskami z zaokrąglonymi końcami, odsuniętymi od krawędzi menu: pod nagłówkiem konta
- * (tożsamość i akcje), nad każdą nazwaną grupą pozycji i nad wylogowaniem w stopce menu (nad logo).
- * --ss-sidebar-divider: kolor kreski (arkusz strefy może go zmienić).
+ * Grupy menu jako listy: każda grupa (.ss-sidebar__section — nazwa .ss-sidebar__group i pozycje) to osobny, zaokrąglony
+ * blok na jaśniejszym tle (--ss-sidebar-section, arkusz strefy może go zmienić) z większym odstępem od sąsiednich
+ * zamiast kresek; bieżąca pozycja w bloku ma przygaszone tło zamiast białej karty z cieniem. Nagłówek konta i
+ * wylogowanie odsuwa sam odstęp.
  */
 .ss-sidebar {
-    --ss-sidebar-divider: var(--ss-color-border-strong);
+    --ss-sidebar-section: var(--ss-color-surface);
+    gap: var(--ss-space-6);
 }
 
-.ss-sidebar__header::after,
-.ss-sidebar__group::before,
-.ss-sidebar__sign-out::before {
-    content: "";
-    display: block;
-    height: 2px;
-    border-radius: 999px;
-    background: var(--ss-sidebar-divider);
+.ss-sidebar__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-sidebar-section);
 }
 
-.ss-sidebar__header::after {
-    margin: var(--ss-space-1) var(--ss-space-2) 0;
+.ss-sidebar__section .ss-sidebar__link[aria-current="page"],
+.ss-sidebar__section .ss-sidebar__summary--current {
+    background: var(--ss-color-surface-muted);
+    box-shadow: none;
 }
 
-.ss-sidebar__group::before {
-    margin: 0 calc(-1 * var(--ss-space-1)) var(--ss-space-4);
-}
-
-.ss-sidebar__sign-out::before {
-    margin: 0 var(--ss-space-2) var(--ss-space-2);
+.ss-sidebar__section .ss-sidebar__link:hover,
+.ss-sidebar__section .ss-sidebar__sublink:hover {
+    background: var(--ss-color-surface-muted);
 }
 
 /* Wylogowanie wygląda jak pozycja menu: przycisk .ss-sidebar__link bez obramowania i tła przycisku. */
@@ -1810,13 +1864,13 @@ summary.ss-sidebar__identity:focus-visible {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--ss-space-1);
+    gap: var(--ss-space-4);
     min-height: 0;
     overflow-y: auto;
 }
 
 .ss-sidebar__group {
-    margin: var(--ss-space-4) 0 var(--ss-space-1);
+    margin: var(--ss-space-1) 0 0;
     padding: 0 var(--ss-space-3);
     color: var(--ss-color-muted);
     font-size: 0.75rem;
@@ -2176,8 +2230,12 @@ summary.ss-sidebar__identity:focus-visible {
 
     .ss-shell--collapsed .ss-sidebar__group {
         height: 1px;
-        margin: var(--ss-space-2) 0;
+        margin: 0;
         overflow: hidden;
+    }
+
+    .ss-shell--collapsed .ss-sidebar__section {
+        padding: var(--ss-space-1);
     }
 
     .ss-shell--collapsed .ss-sidebar__link {

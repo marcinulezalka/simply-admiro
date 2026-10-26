@@ -1,13 +1,7 @@
-{{-- Pulpit administratora. Na górze sekcja Onboarding (ikona rakiety, opis i panele kroków konfiguracji systemu w stałej kolejności: słowniki, ustawienia, dokumenty prawne, organizacje, właściciele stref, administratorzy — tylko kroki, które konto może wykonać, numerowane po kolei, z dużym numerem w tle), pod nią skróty do sekcji, do których konto ma uprawnienia (karty-odnośniki z ikoną), albo informacja o braku uprawnień. $canViewZones, $canViewOrganizations, $canAssignOwners, $canManageAdministrators, $canViewAudit, $canViewSettings, $canManageSettings, $canManageOrganizations: bool (uprawnienia administratora). --}}
+{{-- Pulpit administratora. Na górze karta Onboarding: nagłówek (ikona rakiety, tytuł, opis), po prawej pasek postępu (natywny <progress>, „Zrobione X z Y”) i panele niezrobionych kroków konfiguracji w stałej kolejności (Panel\Enums\OnboardingStep: słowniki, ustawienia, dokumenty prawne, organizacje, właściciele stref, administratorzy — tylko kroki, które konto może wykonać), każdy z dużym numerem kroku w tle; zrobione kroki znikają, a gdy wszystkie są zrobione, karty nie ma. Pod nią skróty do sekcji, do których konto ma uprawnienia (karty-odnośniki z ikoną), albo informacja o braku uprawnień. $onboarding: list<array{step: OnboardingStep, number: int, done: bool}> (Panel\Onboarding\OnboardingProgress::checklist()); $canViewZones, $canViewOrganizations, $canAssignOwners, $canManageAdministrators, $canViewAudit, $canViewSettings: bool (uprawnienia administratora). --}}
 @php
-    $steps = array_values(array_filter([
-        $canManageSettings ? ['admiro.dictionaries.index', ['dictionary' => 'countries'], 'dictionaries', 'dictionaries'] : null,
-        $canManageSettings ? ['admiro.settings.show', [], 'settings', 'locale'] : null,
-        $canManageSettings ? ['admiro.cookie-policy.index', [], 'legal', 'cookie'] : null,
-        $canManageOrganizations ? ['admiro.organizations.create', [], 'organizations', 'building'] : null,
-        $canAssignOwners ? ['admiro.owners.create', [], 'owners', 'user-plus'] : null,
-        $canManageAdministrators ? ['admiro.administrators.index', [], 'administrators', 'shield-check'] : null,
-    ]));
+    $pending = array_values(array_filter($onboarding, static fn(array $item): bool => ! $item['done']));
+    $doneCount = count($onboarding) - count($pending);
     $shortcuts = array_filter([
         $canViewZones ? ['admiro.zones.index', 'admiro::admin.zones_title', 'zones'] : null,
         $canViewOrganizations ? ['admiro.organizations.index', 'admiro::admin.organizations_title', 'building'] : null,
@@ -18,23 +12,29 @@
     ]);
 @endphp
 <x-admiro::zone.layout :title="text('admiro::dashboard.title')">
-    @if ($steps !== [])
-        <section class="ss-onboarding" aria-labelledby="ss-onboarding-title">
+    @if ($pending !== [])
+        <section class="ss-card ss-onboarding" aria-labelledby="ss-onboarding-title">
             <div class="ss-onboarding__header">
-                <x-admiro::icon name="rocket" class="ss-icon--tile ss-onboarding__icon" />
-                <div>
-                    <h2 class="ss-onboarding__title" id="ss-onboarding-title">{{ text('admiro::dashboard.onboarding_title') }}</h2>
-                    <p class="ss-onboarding__lead">{{ \Simplysmart\Admiro\View\BrandNames::highlight(text('admiro::dashboard.onboarding_lead')) }}</p>
+                <div class="ss-onboarding__intro">
+                    <x-admiro::icon name="rocket" class="ss-icon--tile ss-onboarding__icon" />
+                    <div>
+                        <h2 class="ss-onboarding__title" id="ss-onboarding-title">{{ text('admiro::dashboard.onboarding_title') }}</h2>
+                        <p class="ss-onboarding__lead">{{ \Simplysmart\Admiro\View\BrandNames::highlight(text('admiro::dashboard.onboarding_lead')) }}</p>
+                    </div>
+                </div>
+                <div class="ss-onboarding__progress">
+                    <label class="ss-onboarding__progress-label" for="ss-onboarding-progress">{{ text('admiro::dashboard.onboarding_progress', ['done' => (string) $doneCount, 'total' => (string) count($onboarding)]) }}</label>
+                    <progress class="ss-progress" id="ss-onboarding-progress" value="{{ $doneCount }}" max="{{ count($onboarding) }}">{{ $doneCount }}/{{ count($onboarding) }}</progress>
                 </div>
             </div>
             <ol class="ss-onboarding__steps ss-grid ss-grid--3">
-                @foreach ($steps as $index => [$route, $parameters, $key, $icon])
-                    <li class="ss-onboarding__step">
-                        <a class="ss-card ss-onboarding__link" href="{{ route($route, $parameters) }}">
-                            <span class="ss-onboarding__number" aria-hidden="true">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
-                            <span class="ss-onboarding__eyebrow">{{ text('admiro::dashboard.onboarding_step', ['number' => (string) ($index + 1)]) }}</span>
-                            <span class="ss-onboarding__name"><x-admiro::icon :name="$icon" class="ss-onboarding__name-icon" />{{ text('admiro::dashboard.onboarding_' . $key . '_title') }}</span>
-                            <span class="ss-onboarding__text">{{ text('admiro::dashboard.onboarding_' . $key . '_lead') }}</span>
+                @foreach ($pending as ['step' => $step, 'number' => $number])
+                    <li class="ss-onboarding__step" value="{{ $number }}">
+                        <a class="ss-card ss-card--muted ss-onboarding__link" href="{{ route('admiro.' . $step->route(), $step->routeParameters()) }}">
+                            <span class="ss-onboarding__number" aria-hidden="true">{{ str_pad((string) $number, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="ss-onboarding__eyebrow">{{ text('admiro::dashboard.onboarding_step', ['number' => (string) $number]) }}</span>
+                            <span class="ss-onboarding__name"><x-admiro::icon :name="$step->icon()" class="ss-onboarding__name-icon" />{{ text('admiro::dashboard.onboarding_' . $step->value . '_title') }}</span>
+                            <span class="ss-onboarding__text">{{ text('admiro::dashboard.onboarding_' . $step->value . '_lead') }}</span>
                         </a>
                     </li>
                 @endforeach

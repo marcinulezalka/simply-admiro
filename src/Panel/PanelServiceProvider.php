@@ -13,7 +13,11 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Panel;
 
+use Illuminate\Contracts\Events\Dispatcher;
+use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
 use Simplysmart\Admiro\Panel\Console\CreateAdmiroAccount;
+use Simplysmart\Admiro\Panel\Onboarding\RecordOnboardingProgress;
+use Simplysmart\Admiro\Permissions\Events\ZoneRoleChanged;
 use Simplysmart\Admiro\Contracts\ZoneRegistry;
 use Simplysmart\Admiro\Zones\ZoneDefinitionFactory;
 use Simplysmart\Admiro\Zones\ZoneGuardRegistrar;
@@ -25,8 +29,8 @@ use Simplysmart\Admiro\Translation\CascadeTextTranslator;
 use Simplysmart\Admiro\Zones\ZoneNavigations;
 
 /**
- * Strefa administratorów na mechanizmie stref: rejestracja strefy (config `admiro.zone`), trasy, menu i komenda
- * zakładania kont. Config, widoki (`admiro::panel.*`) i teksty (`admiro::...`) ładuje provider rdzenia.
+ * Strefa administratorów na mechanizmie stref: rejestracja strefy (config `admiro.zone`), trasy, menu, zapis postępu
+ * onboardingu (RecordOnboardingProgress) i komenda zakładania kont. Config, widoki (`admiro::panel.*`) i teksty (`admiro::...`) ładuje provider rdzenia.
  */
 final class PanelServiceProvider extends ZoneServiceProvider
 {
@@ -45,6 +49,7 @@ final class PanelServiceProvider extends ZoneServiceProvider
         parent::boot($factory, $zones, $guards, $middleware, $routes);
 
         $this->app->make(ZoneNavigations::class)->add(config()->string('admiro.zone.name'), AdmiroNavigation::class);
+        $this->app->make(Dispatcher::class)->listen([AdminActionPerformed::class, ZoneRoleChanged::class], RecordOnboardingProgress::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([CreateAdmiroAccount::class]);

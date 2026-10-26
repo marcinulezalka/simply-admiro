@@ -17,6 +17,7 @@ return [
 
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Pierwsze uruchomienie admiro krok po kroku. Przejdź etapy w tej kolejności — każdy kolejny korzysta z ustawień poprzedniego.',
+    'onboarding_progress' => 'Zrobione :done z :total',
     'onboarding_step' => 'Krok :number',
     'onboarding_dictionaries_title' => 'Słowniki',
     'onboarding_dictionaries_lead' => 'Włącz kraje, języki i waluty, w których działa firma — tylko one pojawią się w wyborach.',

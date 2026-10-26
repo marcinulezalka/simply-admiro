@@ -376,8 +376,9 @@ i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwa
 globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy
 `x-admiro::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
-pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Sekcje menu (nagłówek konta, nazwane
-grupy, wylogowanie) oddzielają kreski z zaokrąglonymi końcami (`--ss-sidebar-divider`). Na szerokim ekranie menu przylega
+pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Każda grupa pozycji to osobna lista
+(`.ss-sidebar__section`: nazwa grupy i pozycje w zaokrąglonym bloku z cienką ramką na jaśniejszym tle
+`--ss-sidebar-section`, bieżąca pozycja na tle `surface-muted`), grupy dzielą większe odstępy zamiast kresek. Na szerokim ekranie menu przylega
 do krawędzi okna (bez marginesów i zaokrągleń, ramka z prawej). Pod nazwą konta ikony: zwijanie menu, przełącznik
 kontekstu, ustawienia (ikona suwaków `.ss-sidebar__settings-toggle`, `settings`: `View\Navigation\SettingsMenu`; na
 stronach ustawień wypełniona akcentem) i dzwonek powiadomień. Na dole menu przycisk „Wyloguj” (`signOut`, formularz POST
@@ -392,8 +393,9 @@ osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Do
 
 Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
 do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
-`surface-muted`), `.ss-onboarding` (sekcja kroków konfiguracji na górze pulpitu: ikona w kafelku, tytuł, opis i
-lista numerowana kart-odnośników z dużym, przygaszonym numerem kroku w tle), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
+`surface-muted`), `.ss-onboarding` (karta kroków konfiguracji na górze pulpitu: ikona w kafelku, tytuł i opis, po
+prawej postęp z paskiem `.ss-progress` — natywny `<progress>` w kolorze akcentu — i lista numerowana kart-odnośników
+`.ss-card--muted` z dużym, przygaszonym numerem kroku w tle), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
 `x-admiro::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie

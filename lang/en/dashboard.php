@@ -17,6 +17,7 @@ return [
 
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Getting admiro up and running, step by step. Go through the stages in this order — each one builds on the previous one.',
+    'onboarding_progress' => ':done of :total done',
     'onboarding_step' => 'Step :number',
     'onboarding_dictionaries_title' => 'Dictionaries',
     'onboarding_dictionaries_lead' => 'Enable the countries, languages and currencies your business works with — only these show up in choices.',
