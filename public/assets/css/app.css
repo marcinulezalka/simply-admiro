@@ -111,6 +111,128 @@
 }
 
 /**
+ * .ss-onboarding — sekcja kroków konfiguracji na górze pulpitu: nagłówek z ikoną w kafelku (.ss-onboarding__icon),
+ * tytułem i opisem, pod nim lista numerowana paneli kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to
+ * karta-odnośnik z dużym, przygaszonym numerem kroku w tle (.ss-onboarding__number, dekoracyjny), etykietą „Krok N”,
+ * nazwą z ikoną i opisem. .ss-dashboard__shortcuts / .ss-dashboard__title — sekcja skrótów pod onboardingiem.
+ */
+.ss-onboarding {
+    margin-bottom: var(--ss-space-8);
+}
+
+.ss-onboarding__header {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: flex-start;
+    margin-bottom: var(--ss-space-4);
+}
+
+.ss-onboarding__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--ss-color-accent);
+}
+
+.ss-onboarding__title,
+.ss-dashboard__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.ss-dashboard__title {
+    margin-bottom: var(--ss-space-4);
+}
+
+.ss-onboarding__lead {
+    max-width: 60ch;
+    margin: var(--ss-space-1) 0 0;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-onboarding__steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding__step {
+    display: flex;
+}
+
+.ss-onboarding__link {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    min-height: 9.5rem;
+    overflow: hidden;
+    color: var(--ss-color-text);
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ss-onboarding__link:hover {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-onboarding__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-onboarding__number {
+    position: absolute;
+    right: calc(-1 * var(--ss-space-2));
+    bottom: -1.75rem;
+    color: color-mix(in srgb, var(--ss-color-text) 7%, transparent);
+    font-size: 7.5rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    user-select: none;
+    transition: color 0.15s ease;
+}
+
+.ss-onboarding__link:hover .ss-onboarding__number {
+    color: color-mix(in srgb, var(--ss-color-accent) 16%, transparent);
+}
+
+.ss-onboarding__eyebrow {
+    position: relative;
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ss-onboarding__name {
+    position: relative;
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    font-weight: 600;
+}
+
+.ss-onboarding__name-icon {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-onboarding__text {
+    position: relative;
+    max-width: 30ch;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+/**
  * .ss-card--tinted — karta wyróżniona jednolitym tłem surface-muted z ramką border-strong (np. jasna karta w ramie).
  * .ss-card--inverse — karta w kolorach odwróconych (surface-inverse); tekst, etykiety i akcja główna dopasowują się.
  * .ss-card--elevated — karta wyniesiona nad płaszczyznę (--ss-shadow-elevated); wyjątek od zasady „karta bez cienia”,
@@ -1482,8 +1604,8 @@ textarea.ss-input {
  * (.ss-shell--js): menu wysuwane z lewej (.ss-shell--open) nad przyciemnionym tłem; bez skryptu nad treścią.
  */
 /*
- * Powłoka aplikacji jak „soft UI”: neutralne szare płótno (--ss-color-canvas), menu jako jaśniejszy, zaokrąglony panel
- * (--ss-color-sidebar) unoszący się nad płótnem na szerokim ekranie, aktywna pozycja menu jako biała karta z miękkim
+ * Powłoka aplikacji jak „soft UI”: neutralne szare płótno (--ss-color-canvas), menu jako jaśniejszy panel
+ * (--ss-color-sidebar) przylegający na szerokim ekranie do krawędzi okna (bez marginesów i zaokrągleń, ramka z prawej), aktywna pozycja menu jako biała karta z miękkim
  * cieniem, a karty treści białe bez ramki z tym samym cieniem (--ss-shadow-soft). Akcent zostaje ze strefy.
  */
 .ss-shell {
@@ -1515,9 +1637,9 @@ textarea.ss-input {
 
 /**
  * Nagłówek menu: tożsamość (awatar, imię i nazwisko albo nazwa, druga linia) otwierająca menu konta, pod nią akcje
- * (zwijanie menu, powiadomienia). Menu ma stałą szerokość (--ss-sidebar-width, najwyżej), a dłuższe nazwy i pozycje
- * zawijają się do kolejnych wierszy. Stopka: odnośnik do ustawień i subtelne logo simplysmart (najwyżej 35%
- * szerokości) wysuwające stopkę simplysmart.
+ * (zwijanie menu, przełącznik kontekstu, ustawienia, powiadomienia). Menu ma stałą szerokość (--ss-sidebar-width,
+ * najwyżej), a dłuższe nazwy i pozycje zawijają się do kolejnych wierszy. Stopka: przycisk wylogowania
+ * (.ss-sidebar__sign-out) i subtelne logo simplysmart (najwyżej 35% szerokości) wysuwające stopkę simplysmart.
  */
 .ss-sidebar__header {
     display: flex;
@@ -1588,7 +1710,7 @@ summary.ss-sidebar__identity:focus-visible {
 
 /*
  * Sekcje menu oddzielone kreskami z zaokrąglonymi końcami, odsuniętymi od krawędzi menu: pod nagłówkiem konta
- * (tożsamość i akcje), nad każdą nazwaną grupą pozycji i nad odnośnikiem do ustawień w stopce menu (nad logo).
+ * (tożsamość i akcje), nad każdą nazwaną grupą pozycji i nad wylogowaniem w stopce menu (nad logo).
  * --ss-sidebar-divider: kolor kreski (arkusz strefy może go zmienić).
  */
 .ss-sidebar {
@@ -1597,7 +1719,7 @@ summary.ss-sidebar__identity:focus-visible {
 
 .ss-sidebar__header::after,
 .ss-sidebar__group::before,
-.ss-sidebar__settings::before {
+.ss-sidebar__sign-out::before {
     content: "";
     display: block;
     height: 2px;
@@ -1613,8 +1735,33 @@ summary.ss-sidebar__identity:focus-visible {
     margin: 0 calc(-1 * var(--ss-space-1)) var(--ss-space-4);
 }
 
-.ss-sidebar__settings::before {
+.ss-sidebar__sign-out::before {
     margin: 0 var(--ss-space-2) var(--ss-space-2);
+}
+
+/* Wylogowanie wygląda jak pozycja menu: przycisk .ss-sidebar__link bez obramowania i tła przycisku. */
+.ss-sidebar__sign-out {
+    margin: 0;
+}
+
+.ss-sidebar__sign-out .ss-sidebar__link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+}
+
+.ss-sidebar__sign-out .ss-sidebar__link:hover {
+    background: var(--ss-color-sidebar-hover);
+}
+
+/* Ikona ustawień na stronach ustawień: wypełniona akcentem jak bieżąca pozycja. */
+.ss-sidebar__settings-toggle[aria-current="page"] {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
 }
 
 /*
@@ -1628,7 +1775,7 @@ summary.ss-sidebar__identity:focus-visible {
     padding: 0 var(--ss-space-3);
 }
 
-.ss-sidebar__settings ~ .ss-sidebar__brand {
+.ss-sidebar__sign-out ~ .ss-sidebar__brand {
     margin-top: calc(-1 * var(--ss-space-2));
 }
 
@@ -1980,12 +2127,10 @@ summary.ss-sidebar__identity:focus-visible {
 
     .ss-sidebar {
         position: sticky;
-        top: var(--ss-space-3);
+        top: 0;
         flex: 0 0 var(--ss-sidebar-width);
-        height: calc(100vh - 2 * var(--ss-space-3));
-        margin: var(--ss-space-3) 0 var(--ss-space-3) var(--ss-space-3);
-        border-radius: var(--ss-radius-frame);
-        box-shadow: var(--ss-shadow-soft);
+        height: 100vh;
+        border-right: 1px solid var(--ss-color-border);
         transition: flex-basis 0.2s ease;
     }
 

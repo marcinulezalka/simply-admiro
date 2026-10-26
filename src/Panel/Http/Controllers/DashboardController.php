@@ -18,7 +18,8 @@ use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
 
 /**
- * Pulpit administratora: odnośniki do sekcji, do których ma uprawnienia.
+ * Pulpit administratora: kroki onboardingu (konfiguracja systemu w kolejności), które może wykonać, i odnośniki do
+ * sekcji, do których ma uprawnienia.
  */
 final readonly class DashboardController
 {
@@ -31,6 +32,8 @@ final readonly class DashboardController
             'canManageAdministrators' => $context->can(Permission::UsersManage),
             'canViewAudit' => $context->can(Permission::AuditView),
             'canViewSettings' => $context->can(Permission::SettingsView),
+            'canManageSettings' => $context->can(Permission::SettingsManage),
+            'canManageOrganizations' => $context->can(Permission::OrganizationsManage),
         ]);
     }
 }

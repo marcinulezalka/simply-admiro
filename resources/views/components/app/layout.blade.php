@@ -1,4 +1,4 @@
-{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu i dzwonek powiadomień; pozycje menu (pozycja z podpozycjami — NavigationItem::$children — jest gałęzią rozwijaną <details> z chevronem, podpozycje połączone liniami drzewa; w menu zwiniętym do ikon zamiast niej odnośnik pozycji); na dole odnośnik „Ustawienia” i subtelne, wyśrodkowane logo simplysmart (35% szerokości), które odsłania pełnoszeroką stopkę strony simplysmart jak na logowaniu (x-admiro::brand-footer: powłoka .ss-shell przesuwa się w górę nad stopką; na ekranach bez stałego menu stopka na końcu strony). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na końcu menu konta); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; fontFaces: reguły @font-face strefy (podgląd strefy w design systemie, poza strefą); palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
+{{-- Layout aplikacji z menu bocznym (docs/design-system.md §5). Menu po lewej przy krawędziach okna (stała szerokość, dłuższe pozycje i nazwy zawijają się): u góry awatar z imieniem i nazwiskiem (albo nazwą) i drugą linią (organizacja, rola) — kliknięcie otwiera menu konta; pod nim zwijanie menu, przełącznik kontekstu, ustawienia (ikona suwaków, settings->url; bieżące na stronach ustawień) i dzwonek powiadomień; pozycje menu (pozycja z podpozycjami — NavigationItem::$children — jest gałęzią rozwijaną <details> z chevronem, podpozycje połączone liniami drzewa; w menu zwiniętym do ikon zamiast niej odnośnik pozycji); na dole przycisk „Wyloguj” (formularz POST na signOut) i subtelne, wyśrodkowane logo simplysmart (35% szerokości), które odsłania pełnoszeroką stopkę strony simplysmart jak na logowaniu (x-admiro::brand-footer: powłoka .ss-shell przesuwa się w górę nad stopką; na ekranach bez stałego menu stopka na końcu strony). Na stronie ustawień (settings->active) menu pokazuje grupy ustawień z powrotem do aplikacji i tytułem „Ustawienia” — navigation zawiera wtedy grupy ustawień. Menu zwija się do ikon (stan w przeglądarce), na telefonie wysuwa się z boku (przycisk w top barze). Top bar: globalna wyszukiwarka (skrót „/”). navigation: list<View\Navigation\NavigationGroup>; settings: ?View\Navigation\SettingsMenu (null = bez ustawień, np. podgląd w design systemie); search: ?View\Navigation\SearchBox; account: ?array{name: string, subtitle?: string, image?: string, color?: Enums\AvatarColor, label?: string, items?: list<View\Navigation\NavigationItem>} (label: opis konta dla czytników ekranu) (bez koloru awatar w kolorze akcentu); signOut: ?string (adres wylogowania: formularz POST na dole menu); contexts: ?list<View\Navigation\NavigationGroup> (przełącznik kontekstu, np. organizacja i rola; pozycje NavigationItem albo NavigationForm, bieżący przez current); notifications: ?View\Notifications\NotificationPanel; toasts: list<View\Toast> albo null = z sesji (Toast::SESSION_KEY); legalLinks: list<array{url: string, label: string}> (odnośniki prawne w stopce simplysmart); stylesheets: dodatkowe arkusze z public/assets/ po arkuszach Core; zoneStylesheets: arkusze strefy (ścieżki plików) na końcu; fontFaces: reguły @font-face strefy (podgląd strefy w design systemie, poza strefą); palettes: list<Enums\Palette> (kolorystyki strony, bez przełącznika w layoucie) i paletteScope: zakres zapamiętania wyboru; motyw i kolorystykę zmienia strona wyglądu w ustawieniach; sloty: actions (akcje nagłówka), before (pasek nad aplikacją, np. podgląd w design systemie), brand (zamiast logo i stopki simplysmart). Menu rozwijane działają bez skryptu (<details>). --}}
 @props(['title', 'meta' => null, 'back' => null, 'navigation' => [], 'settings' => null, 'search' => null, 'account' => null, 'signOut' => null, 'contexts' => null, 'notifications' => null, 'toasts' => null, 'legalLinks' => [], 'description' => null, 'stylesheets' => [], 'zoneStylesheets' => [], 'palettes' => [], 'paletteScope' => '', 'fontFaces' => null])
 @php($toasts ??= \Simplysmart\Admiro\View\Toast::fromSession(session(\Simplysmart\Admiro\View\Toast::SESSION_KEY)))
 <x-admiro::page :title="$title" :description="$description" robots="noindex, nofollow" :palettes="$palettes" :palette-scope="$paletteScope" :font-faces="$fontFaces">
@@ -17,7 +17,7 @@
             <div class="ss-sidebar__header">
                 @if ($account !== null)
                     @php($accountItems = $account['items'] ?? [])
-                    @if ($accountItems !== [] || $signOut !== null)
+                    @if ($accountItems !== [])
                         <details class="ss-account-menu ss-sidebar__account" data-ss-dropdown>
                             <summary class="ss-sidebar__identity" title="{{ $account['name'] }}">
                                 <x-admiro::avatar :name="$account['name']" :image="$account['image'] ?? null" :color="$account['color'] ?? null" :accent="! isset($account['color'])" />
@@ -34,14 +34,6 @@
                                     @foreach ($accountItems as $item)
                                         <li><a class="ss-account-menu__link" href="{{ $item->url }}" @if ($item->current) aria-current="page" @endif><x-admiro::icon :name="$item->icon" class="ss-account-menu__icon" />{{ $item->label }}</a></li>
                                     @endforeach
-                                    @if ($signOut !== null)
-                                        <li>
-                                            <form method="POST" action="{{ $signOut }}">
-                                                @csrf
-                                                <button class="ss-account-menu__link" type="submit"><x-admiro::icon name="log-out" class="ss-account-menu__icon" />{{ text('sign_in.sign_out') }}</button>
-                                            </form>
-                                        </li>
-                                    @endif
                                 </ul>
                             </div>
                         </details>
@@ -105,6 +97,13 @@
                                 @endforeach
                             </div>
                         </details>
+                    @endif
+
+                    @if ($settings !== null)
+                        <a class="ss-icon-button ss-sidebar__settings-toggle" href="{{ $settings->url }}" title="{{ text('layout.settings') }}" @if ($settings->active) aria-current="page" @endif>
+                            <x-admiro::icon name="settings" class="ss-icon-button__icon" />
+                            <span class="ss-sr-only">{{ text('layout.settings') }}</span>
+                        </a>
                     @endif
 
                     @if ($notifications !== null)
@@ -196,15 +195,14 @@
                 @endforeach
             </nav>
 
-            @if ($settings !== null && ! $settings->active)
-                <ul class="ss-sidebar__list ss-sidebar__settings">
-                    <li>
-                        <a class="ss-sidebar__link" href="{{ $settings->url }}" title="{{ text('layout.settings') }}">
-                            <x-admiro::icon name="settings" class="ss-sidebar__icon" />
-                            <span class="ss-sidebar__label">{{ text('layout.settings') }}</span>
-                        </a>
-                    </li>
-                </ul>
+            @if ($signOut !== null)
+                <form class="ss-sidebar__sign-out" method="POST" action="{{ $signOut }}">
+                    @csrf
+                    <button class="ss-sidebar__link" type="submit" title="{{ text('sign_in.sign_out') }}">
+                        <x-admiro::icon name="log-out" class="ss-sidebar__icon" />
+                        <span class="ss-sidebar__label">{{ text('sign_in.sign_out') }}</span>
+                    </button>
+                </form>
             @endif
 
             @isset($brand)

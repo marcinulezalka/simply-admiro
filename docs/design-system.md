@@ -309,7 +309,7 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól
   `status` (`Toast::STATUS_KEY`, np. „Wylogowano” po wylogowaniu) staje się toastem powodzenia — komunikaty z sesji
   nie trafiają do szarego `.ss-notice` w karcie. Wariant `inline` to próbki w treści strony.
 - **Powiadomienia** (`View\Notifications\NotificationPanel`, `NotificationItem`, `x-admiro::notification`):
-  dzwonek w top barze z licznikiem nieprzeczytanych (liczba także w tekście dla czytników) i panelem
+  dzwonek pod nazwą konta w menu bocznym z licznikiem nieprzeczytanych (liczba także w tekście dla czytników) i panelem
   (`<details data-ss-dropdown>`, jak menu konta: otwarcie jednego zamyka drugie); pełna lista na osobnej stronie.
 - **Switch zamiast checkboxa**: w formularzach każde pole tak/nie to `x-admiro::switch` (także „Zapamiętaj
   to urządzenie” przy logowaniu); `name` i `value` zostają jak w checkboxie. Wybór jednej z kilku opcji to
@@ -377,8 +377,11 @@ globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”
 i Esc); nagłówek kontekstowy
 `x-admiro::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
 pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Sekcje menu (nagłówek konta, nazwane
-grupy, ustawienia) oddzielają kreski z zaokrąglonymi końcami (`--ss-sidebar-divider`). Na dole menu odnośnik „Ustawienia”
-(`settings`: `View\Navigation\SettingsMenu`) i subtelne, wyśrodkowane logo simplysmart (35% szerokości menu,
+grupy, wylogowanie) oddzielają kreski z zaokrąglonymi końcami (`--ss-sidebar-divider`). Na szerokim ekranie menu przylega
+do krawędzi okna (bez marginesów i zaokrągleń, ramka z prawej). Pod nazwą konta ikony: zwijanie menu, przełącznik
+kontekstu, ustawienia (ikona suwaków `.ss-sidebar__settings-toggle`, `settings`: `View\Navigation\SettingsMenu`; na
+stronach ustawień wypełniona akcentem) i dzwonek powiadomień. Na dole menu przycisk „Wyloguj” (`signOut`, formularz POST
+`.ss-sidebar__sign-out`) i subtelne, wyśrodkowane logo simplysmart (35% szerokości menu,
 `.ss-sidebar__brand-toggle`), które odsłania pełnoszeroką stopkę strony simplysmart (`x-admiro::brand-footer`,
 `.ss-footer`: odnośniki prawne strefy `legalLinks`, cookies, copyright, przełącznik motywu, duże logo): powłoka `.ss-shell`
 przesuwa się w górę nad stopką, dłuższa strona najpierw płynnie przewija się na dół, a przewinięcie w górę chowa stopkę;
@@ -389,7 +392,8 @@ osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Do
 
 Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
 do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
-`surface-muted`), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
+`surface-muted`), `.ss-onboarding` (sekcja kroków konfiguracji na górze pulpitu: ikona w kafelku, tytuł, opis i
+lista numerowana kart-odnośników z dużym, przygaszonym numerem kroku w tle), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
 `x-admiro::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie
