@@ -1,12 +1,13 @@
-{{-- „Nie pamiętam PIN-u” (ForgotPinController, strona dla gości): PIN-u nie da się odzyskać, ustawia się go od nowa. Konto z zapasowym adresem e-mail usuwa PIN samodzielnie (Auth\Recovery\RecoveryPinReset: adres konta → kod na zapasowy adres → PIN usunięty, sesje i zaufane urządzenia odwołane), bez niego — po resecie przez administratora strefy (Auth\AccountAdministration::resetPin); nowy PIN po kodzie z głównego adresu przy najbliższym logowaniu. Widok albo/albo: po wejściu widać nagłówek-odnośnik „Masz zapasowy adres e-mail?” (<details>, .ss-forgot__recovery) i kroki bez zapasowego adresu; rozwinięcie nagłówka pokazuje formularz i ukrywa kroki (.ss-forgot:has(...[open])), zwinięcie przywraca kroki. Sekcja jest rozwinięta od razu, gdy czeka kod albo formularz ma błędy. Przyciski standardowe, powrót do logowania drugorzędny. Teksty przez $zone->signInText(). $codePending: bool (w sesji czeka kod resetu; domyślnie false, np. w podglądzie design systemu); $codeLength: int (domyślnie ze strefy); $zone: ZoneDefinition (Core). --}}
+{{-- „Nie pamiętam PIN-u” (ForgotPinController, strona dla gości): PIN-u nie da się odzyskać, ustawia się go od nowa. Konto z zapasowym adresem e-mail usuwa PIN samodzielnie (Auth\Recovery\RecoveryPinReset: adres konta → kod na zapasowy adres → PIN usunięty, sesje i zaufane urządzenia odwołane), bez niego — po resecie przez administratora strefy (Auth\AccountAdministration::resetPin); nowy PIN po kodzie z głównego adresu przy najbliższym logowaniu. Widok albo/albo: po wejściu widać nagłówek-odnośnik „Masz zapasowy adres e-mail?” (<details>, .ss-forgot__recovery) i kroki bez zapasowego adresu; rozwinięcie nagłówka pokazuje formularz i ukrywa kroki (.ss-forgot:has(...[open])), zwinięcie przywraca kroki. Sekcja jest rozwinięta od razu, gdy czeka kod albo formularz ma błędy. Przyciski standardowe, powrót do logowania drugorzędny. Teksty przez $zone->signInText(). $codePending: bool (w sesji czeka kod resetu; domyślnie false, np. w podglądzie design systemu); $recoveryOpen: bool (sekcja zapasowego adresu rozwinięta od razu; wariant podglądu w design systemie, domyślnie false); $codeLength: int (domyślnie ze strefy); $zone: ZoneDefinition (Core). --}}
 @php
     $routes = \Simplysmart\Admiro\Http\SignInRoutes::class;
     $codePending ??= false;
+    $recoveryOpen ??= false;
     $codeLength ??= $zone->auth()->codeLength;
 @endphp
 <x-admiro::auth.layout :title="$zone->signInText('forgot_pin.title')" :lead="$zone->signInText('forgot_pin.lead')">
     <div class="ss-forgot">
-        <details class="ss-forgot__recovery" @if ($codePending || $errors->any()) open @endif>
+        <details class="ss-forgot__recovery" @if ($codePending || $recoveryOpen || $errors->any()) open @endif>
             <summary class="ss-forgot__toggle"><x-admiro::icon name="mail" class="ss-forgot__toggle-icon" /><span>{{ $zone->signInText('forgot_pin.recovery.title') }}</span><x-admiro::icon name="chevron-down" class="ss-forgot__chevron" /></summary>
             <div class="ss-card ss-card--muted ss-forgot__body">
                 @if ($codePending)

@@ -239,11 +239,13 @@ jest indeksowana.
 Nawigacja (komponent `x-admiro::design-system.nav`, karta po lewej) ma dwie grupy: **Fundamenty** (sekcje
 strony) i **Widoki** — gotowe ekrany aplikacji pod `/design-system/views/{widok}` (`simplysmart.design-system.view`),
 pogrupowane w rozwijane obszary (`Enums\DesignSystemArea`, natywne `<details>`, obszar bieżącego widoku
-rozwinięty): **Autoryzacja** (logowanie klasyczne i na dwóch kartach, kod z e-maila, błędny kod, PIN, zbyt wiele
-prób, ustawienie i potwierdzenie PIN-u, wygasła sesja logowania, „Nie pamiętam PIN-u”), **Panel aplikacji** (pulpit,
+rozwinięty): **Autoryzacja** (logowanie klasyczne i na dwóch kartach, kod z e-maila, błędny kod, PIN, PIN z otwartą
+klawiaturą ekranową, zbyt wiele prób, ustawienie i potwierdzenie PIN-u, wygasła sesja logowania, „Nie pamiętam PIN-u”
+oraz jego warianty: rozwinięty zapasowy adres i oczekujący kod resetu w polach cyfr), **Panel aplikacji** (pulpit,
 lista rekordów, szczegóły rekordu, formularz, menu boczne), **Strony treści** (polityka prywatności na `content.layout`) i **Błędy** (401, 403, 404, 419, 429, 500, 503). Ekrany
 logowania i strony błędów to podglądy prawdziwych plików produkcyjnych (`admiro::auth.*`, `app/errors/*`):
-logowanie na pierwszej strefie z logowaniem, z jej ustawieniami i błędami pól (`View\DesignSystem\SignInPreviews`).
+logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól i stanami wariantów (`keypadOpen`,
+`recoveryOpen`, `codePending`; `View\DesignSystem\SignInPreviews`).
 
 ### Pola, maski i awatary
 

@@ -23,8 +23,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Dane podglądów prawdziwych ekranów logowania (`admiro::auth.*`) w design systemie: pierwsza strefa z logowaniem,
- * jej ustawienia (długość kodu, czas ważności, PIN) i błędy pól tak, jak pokazuje je logowanie (błędny kod, zbyt wiele
- * prób, wygasła sesja logowania, słaby PIN). Bez strefy z logowaniem podglądu nie ma (404).
+ * jej ustawienia (długość kodu, czas ważności, PIN), błędy pól tak, jak pokazuje je logowanie (błędny kod, zbyt wiele
+ * prób, wygasła sesja logowania, słaby PIN) i stany wariantów: otwarta klawiatura PIN-u (`keypadOpen`), rozwinięta
+ * sekcja zapasowego adresu (`recoveryOpen`) i oczekujący kod resetu PIN-u (`codePending`). Bez strefy z logowaniem
+ * podglądu nie ma (404).
  */
 final readonly class SignInPreviews
 {
@@ -58,6 +60,9 @@ final readonly class SignInPreviews
             'resendIn' => 0,
             'rememberDeviceDays' => $auth->trustedDevicesEnabled ? $auth->trustedDeviceLifetimeDays : null,
             'pinLength' => $view === DesignSystemView::SignInPinSetup ? $auth->pinLength : PinLength::accepted(),
+            'keypadOpen' => $view === DesignSystemView::SignInPinKeypad,
+            'recoveryOpen' => $view === DesignSystemView::ForgotPinRecovery,
+            'codePending' => $view === DesignSystemView::ForgotPinCode,
             'errors' => $this->errors(match ($view) {
                 DesignSystemView::SignInCodeInvalid => ['code' => text('sign_in.failure')],
                 DesignSystemView::SignInPinLimit => ['pin' => text('sign_in.too_many_attempts', ['seconds' => self::LIMIT_SECONDS])],

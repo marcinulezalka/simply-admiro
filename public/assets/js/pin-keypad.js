@@ -7,7 +7,8 @@
  * Enter = „Zatwierdź PIN”, Escape zamyka natywnie). „Zatwierdź PIN” [data-ss-keypad-done] zamyka okno i wysyła
  * formularz pola (requestSubmit), gdy jest poprawny; inaczej fokus trafia do pierwszego niepoprawnego pola z jego
  * komunikatem (np. za krótki PIN albo puste powtórzenie). Samo zamknięcie wraca fokusem do pola. Bez skryptu
- * przycisk zostaje ukryty. Osadzany inline z nonce CSP (x-admiro::scripts).
+ * przycisk zostaje ukryty. Okno z [data-ss-keypad-show] otwiera się od razu po załadowaniu (podgląd w design systemie).
+ * Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const init = (dialog) => {
@@ -109,6 +110,11 @@
             dialog.showModal();
         });
         opener.hidden = false;
+
+        if (dialog.hasAttribute('data-ss-keypad-show')) {
+            render();
+            dialog.showModal();
+        }
     };
 
     const start = () => document.querySelectorAll('[data-ss-keypad]').forEach(init);

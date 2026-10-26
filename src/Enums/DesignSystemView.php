@@ -33,10 +33,13 @@ enum DesignSystemView: string
     case SignInCode = 'sign-in-code';
     case SignInCodeInvalid = 'sign-in-code-invalid';
     case SignInPin = 'sign-in-pin';
+    case SignInPinKeypad = 'sign-in-pin-keypad';
     case SignInPinLimit = 'sign-in-pin-limit';
     case SignInPinSetup = 'sign-in-pin-setup';
     case SignInExpired = 'sign-in-expired';
     case ForgotPin = 'forgot-pin';
+    case ForgotPinRecovery = 'forgot-pin-recovery';
+    case ForgotPinCode = 'forgot-pin-code';
     case Error401 = 'error-401';
     case Error403 = 'error-403';
     case Error404 = 'error-404';
@@ -54,10 +57,10 @@ enum DesignSystemView: string
         return match ($this) {
             self::SignInSplit => self::SignIn->template(),
             self::SignInCode, self::SignInCodeInvalid => 'admiro::auth.code',
-            self::SignInPin, self::SignInPinLimit => 'admiro::auth.pin',
+            self::SignInPin, self::SignInPinKeypad, self::SignInPinLimit => 'admiro::auth.pin',
             self::SignInPinSetup => 'admiro::auth.pin-setup',
             self::SignInExpired => 'admiro::auth.login',
-            self::ForgotPin => 'admiro::auth.forgot-pin',
+            self::ForgotPin, self::ForgotPinRecovery, self::ForgotPinCode => 'admiro::auth.forgot-pin',
             default => $this->errorCode() !== null ? 'admiro::app.errors.' . $this->errorCode() : 'admiro::design-system.views.' . $this->value,
         };
     }
@@ -65,8 +68,9 @@ enum DesignSystemView: string
     public function area(): DesignSystemArea
     {
         return match ($this) {
-            self::SignIn, self::SignInSplit, self::SignInCode, self::SignInCodeInvalid, self::SignInPin, self::SignInPinLimit,
-            self::SignInPinSetup, self::SignInExpired, self::ForgotPin => DesignSystemArea::Authorization,
+            self::SignIn, self::SignInSplit, self::SignInCode, self::SignInCodeInvalid, self::SignInPin, self::SignInPinKeypad,
+            self::SignInPinLimit, self::SignInPinSetup, self::SignInExpired, self::ForgotPin, self::ForgotPinRecovery,
+            self::ForgotPinCode => DesignSystemArea::Authorization,
             self::Dashboard, self::List, self::Record, self::Form, self::Sidebar, self::Notifications => DesignSystemArea::Workspace,
             self::ContentPage => DesignSystemArea::Pages,
             self::Error401, self::Error403, self::Error404, self::Error419, self::Error429, self::Error500, self::Error503 => DesignSystemArea::Errors,
