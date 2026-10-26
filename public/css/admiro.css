@@ -16,7 +16,9 @@
  * pola formularza i przyciski w wysokości Core (40 px, jak przyciski stron błędów) z zaokrągleniem kontrolek Core; pola kodu z e-maila
  * wyższe niż szersze (prostokąty 48 px); akcje pod formularzem (zmiana adresu, ponowne wysłanie kodu, „Nie pamiętam PIN-u”,
  * powrót do logowania) jako klasyczne odnośniki z małą ikoną zamiast przycisków; bez przycisku „Strona główna”
- * (`auth.home_link` w configu strefy); pod przyciskami separator nad odnośnikami do polityk na dole karty.
+ * (`auth.home_link` w configu strefy); pod przyciskami separator nad odnośnikami do polityk przy dolnej krawędzi karty
+ * (polityka cookies, prywatności i RODO, bez ustawień cookies: `auth.legal`). Panele przycisków (zakładki ustawień)
+ * klasyczne: jedna ramka na szarym tle, bez pierścienia.
  */
 :root {
     --ss-font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -58,4 +60,25 @@
     background: none;
     text-decoration: underline;
     text-underline-offset: 0.2em;
+}
+
+/* Odnośniki prawne przy dolnej krawędzi karty formularza logowania (karta jest kolumną flex Core). */
+.ss-auth__legal {
+    margin-top: auto;
+}
+
+/* Panele przycisków (Core .ss-tabs, np. zakładki ustawień i słowników) w rodzaju klasycznym: pojedyncza ramka na szarym
+   tle, bez zewnętrznego pierścienia i cienia, zaokrąglenie kontrolek zamiast pigułki. */
+.ss-tabs {
+    --ss-segment-ring: var(--ss-color-border-strong);
+    --ss-segment-stroke: 1px;
+    --ss-segment-margin: 0;
+    --ss-segment-halo: none;
+    --ss-segment-bg: var(--ss-color-surface-muted);
+    --ss-shadow-segment: none;
+    border-radius: var(--ss-radius-control);
+}
+
+.ss-tabs__link {
+    border-radius: calc(var(--ss-radius-control) - 2px);
 }

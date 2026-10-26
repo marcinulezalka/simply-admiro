@@ -27,6 +27,14 @@ return [
         'pages' => 'Strony panelu',
     ],
 
+    'actions' => [
+        'organization' => 'Nowa organizacja',
+        'owner' => 'Nowy właściciel strefy',
+        'exchange_rate' => 'Kurs waluty',
+        'holiday' => 'Dzień wolny',
+        'cookie_policy' => 'Polityka cookies',
+    ],
+
     'groups' => [
         'languages' => 'Języki',
         'countries' => 'Kraje',

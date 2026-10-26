@@ -3,7 +3,7 @@
     $colors = $tokens->group('color');
     $paletteTokens = $tokens->group('palette');
     $palettes = \Simplysmart\Admiro\Enums\Palette::cases();
-    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'buttons', 'segmented', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
+    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'header', 'buttons', 'segmented', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
     $highlight = \Simplysmart\Admiro\View\BrandNames::highlight(...);
 @endphp
 <x-admiro::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow" :palettes="$palettes" palette-scope="design-system">
@@ -150,6 +150,22 @@
                             </li>
                         @endforeach
                     </ul>
+                </section>
+
+                <section class="ss-card" id="header" aria-labelledby="header-title">
+                    <h2 class="ss-ds__section-title" id="header-title">{{ text('design_system.sections.header') }}</h2>
+                    <p class="ss-ds__section-lead ss-muted">{{ text('design_system.sections.header_lead') }}</p>
+                    <div class="ss-ds__spaced">
+                        <x-admiro::app.context icon="building" :title="text('design_system.sample.header_title')" :meta="text('design_system.sample.header_meta')">
+                            <x-slot:actions>
+                                <button class="ss-button" type="button"><x-admiro::icon name="upload" class="ss-button__icon" />{{ text('design_system.sample.header_secondary') }}</button>
+                                <button class="ss-button ss-button--primary" type="button"><x-admiro::icon name="plus" class="ss-button__icon" />{{ text('design_system.sample.header_primary') }}</button>
+                            </x-slot:actions>
+                        </x-admiro::app.context>
+                    </div>
+                    <div class="ss-ds__spaced">
+                        <x-admiro::app.context icon="flag" :title="text('design_system.sample.header_plain_title')" :meta="text('design_system.sample.header_plain_meta')" />
+                    </div>
                 </section>
 
                 <section class="ss-card" id="buttons" aria-labelledby="buttons-title">

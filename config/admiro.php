@@ -238,6 +238,16 @@ return [
          */
         'home_link' => true,
 
+        /*
+         * Odnośniki prawne na dole karty logowania: polityka cookies przed dokumentami strefy (`cookie_policy_first`)
+         * i odnośnik „Ustawienia cookies” (`cookie_settings`). Nazwy odnośników strefa może zmienić tekstami
+         * `sign_in.<strefa>.legal_cookies|legal_privacy|legal_gdpr`.
+         */
+        'legal' => [
+            'cookie_policy_first' => false,
+            'cookie_settings' => true,
+        ],
+
         'route_throttle_per_minute' => 20,
 
         'challenge_prune_hours' => 24,
@@ -413,9 +423,13 @@ return [
     | PIN administratorów ma co najmniej 8 cyfr zamiast domyślnych 4 (ADMIRO_PIN_MIN_LENGTH); maksimum 16 z auth.pin.
     | Logowanie w dwóch kartach: formularz po lewej, po prawej ciemna karta marki z logotypem „admiro” na środku.
     | Marka strefy (public/images/, źródła w brand/): logotyp „admiro” w kroju Zen Dots ze złotą koroną nad „i”
-    | na logowaniu i w e-mailach, złota korona z dolną kreską jako awatar i ikony strony.
+    | na logowaniu i w e-mailach; sygnet (awatar i ikony strony) monochromatyczny: biała korona wychodząca ukośnie
+    | z lewego dolnego rogu czarnego kafelka.
     | E-maile strefy we własnym layoucie (resources/views/mail/admiro/): karta ze złotym paskiem korony u góry, logo
     | w nagłówku karty i kody w osobnych polach cyfr, w grafitowej palecie strefy (`mail.palette`).
+    | Po zalogowaniu layout Workspace (`app_layout`): ustawienia, słowniki i konto w głównym menu, akcje pod nazwą konta
+    | z podpowiedziami, powiadomienia w wysuwanym panelu, stopka treści z logo, motywem i mapą strony; karta konta
+    | z ikonami profili społecznościowych (`social_links`, adresy z ADMIRO_SOCIAL_*; puste pomijane).
     | Tytuł logowania z tekstów strefy (sign_in.admiro.* w lang/<locale>/sign_in.php) w kroju Space Grotesk, wyróżnione słowo
     | kursywą Instrument Serif (fonty w public/fonts/, przypisane tokenom w public/css/admiro.css).
     |
@@ -431,8 +445,17 @@ return [
             'layout' => 'split-reversed',
             'logo' => __DIR__ . '/../public/images/logo.svg',
             'home_link' => false,
+            'legal' => ['cookie_policy_first' => true, 'cookie_settings' => false],
         ],
         'website' => $envString('ADMIRO_WEBSITE', 'https://admiro.simplysmart.pl'),
+        'app_layout' => 'workspace',
+        'social_links' => [
+            'linkedin' => $envString('ADMIRO_SOCIAL_LINKEDIN', ''),
+            'facebook' => $envString('ADMIRO_SOCIAL_FACEBOOK', ''),
+            'instagram' => $envString('ADMIRO_SOCIAL_INSTAGRAM', ''),
+            'github' => $envString('ADMIRO_SOCIAL_GITHUB', ''),
+            'youtube' => $envString('ADMIRO_SOCIAL_YOUTUBE', ''),
+        ],
         'brand' => [
             'logo' => __DIR__ . '/../public/images/logo.png',
             'signet' => __DIR__ . '/../public/images/signet.png',

@@ -185,14 +185,14 @@ final readonly class AdmiroSearch
         $needle = self::normalized($term);
         $results = [];
 
-        foreach ([...$this->navigation->groups(), ...$this->navigation->settings()] as $group) {
+        foreach ($this->navigation->sitemap() as $group) {
             foreach ($group->items as $item) {
                 if (! $item instanceof NavigationItem) {
                     continue;
                 }
 
                 foreach ([$item, ...$item->children] as $page) {
-                    if (str_contains(self::normalized($page->label), $needle)) {
+                    if (! str_starts_with($page->url, '#') && str_contains(self::normalized($page->label), $needle)) {
                         $results[$page->url] = new SearchResult($page->label, $page->url, $group->label, $page->icon !== '' ? $page->icon : $item->icon);
                     }
                 }

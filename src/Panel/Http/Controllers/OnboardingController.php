@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Kreator onboardingu (nagłówek „Onboarding”, kroki z OnboardingStep, które administrator może wykonać): wejście
- * prowadzi do pierwszego niezrobionego kroku; krok „Języki” to lista języków z przełącznikami (włączone osobno nad
+ * pokazuje przegląd kroków z postępem (karty niezrobionych kroków); krok „Języki” to lista języków z przełącznikami (włączone osobno nad
  * listą, filtr `q` jak w globalnej wyszukiwarce — także po krajach) zatwierdzana przyciskiem, pozostałe kroki opisują
  * zadanie i prowadzą do jego strony panelu. Krok spoza uprawnień albo nieznany to 404.
  */
@@ -42,17 +42,9 @@ final readonly class OnboardingController
         private Redirector $redirect,
     ) {}
 
-    public function index(): RedirectResponse
+    public function index(): View
     {
-        $checklist = $this->progress->checklist($this->steps());
-
-        if ($checklist === []) {
-            return $this->redirect->route($this->context->zone()->routeName('dashboard'));
-        }
-
-        $pending = array_values(array_filter($checklist, static fn(array $item): bool => ! $item['done']));
-
-        return $this->redirect->route($this->context->zone()->routeName('onboarding.show'), ['step' => ($pending[0] ?? $checklist[0])['step']->value]);
+        return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
     public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search): View
@@ -90,7 +82,7 @@ final readonly class OnboardingController
             throw new NotFoundHttpException();
         }
 
-        $audit->record('onboarding step confirmed', context: ['step' => $current->value]);
+        $audit->record(OnboardingStep::CONFIRMED_ACTION, context: ['step' => $current->value]);
         $next = $current->next($steps);
         $zone = $this->context->zone();
         $target = $next === null

@@ -16,6 +16,7 @@ namespace Simplysmart\Admiro\Audit;
 use Simplysmart\Admiro\Auth\AccountKey;
 use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
 use Simplysmart\Admiro\Audit\Events\RecordAccessed;
+use Simplysmart\Admiro\Audit\Events\RecordStatusChanged;
 use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Admiro\Auth\Events\AccountLocked;
 use Simplysmart\Admiro\Auth\Events\PinChanged;
@@ -52,10 +53,11 @@ final class AuditEntries
         ZoneRoleChanged::class,
         AdminActionPerformed::class,
         RecordAccessed::class,
+        RecordStatusChanged::class,
     ];
 
     public function from(
-        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|RecoveryEmailChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
+        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|RecoveryEmailChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed|RecordStatusChanged $event,
     ): AuditEntry {
         return match (true) {
             $event instanceof SignInSucceeded => new AuditEntry('sign-in', AuditLevel::Info, $event->zone, $this->id($event->account), ip: $event->ip),
@@ -69,6 +71,7 @@ final class AuditEntries
             $event instanceof TrustedDevicesRevoked => new AuditEntry('trusted devices revoked', AuditLevel::Info, $event->zone, $event->accountId, context: ['count' => $event->count, 'cause' => $event->cause]),
             $event instanceof ZoneRoleChanged => new AuditEntry($event->assigned ? 'role assigned' : 'role revoked', AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: ['role' => $event->role]),
             $event instanceof AdminActionPerformed => new AuditEntry($event->action, AuditLevel::Notice, $event->zone, $event->accountId, $event->actor, $event->organizationId, context: $event->context),
+            $event instanceof RecordStatusChanged => new AuditEntry('record status changed', AuditLevel::Notice, $event->actor?->zone, null, $event->actor, context: array_filter(['table' => $event->table, 'token' => $event->token, 'from' => $event->from?->value, 'to' => $event->to->value, 'reason' => $event->reason], static fn(?string $value): bool => $value !== null)),
             $event instanceof RecordAccessed => new AuditEntry('record accessed', $event->sensitive ? AuditLevel::Notice : AuditLevel::Info, $event->zone, null, $event->actor, $event->organizationId, context: ['record' => $event->recordType, 'token' => $event->recordToken, 'sensitive' => $event->sensitive, 'viewer_organization_id' => $event->viewerOrganizationId]),
         };
     }

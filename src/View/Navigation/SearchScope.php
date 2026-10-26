@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\View\Navigation;
 
 /**
- * Zakres globalnej wyszukiwarki do zaznaczenia przy polu (np. języki, strony panelu): wartość pola, etykieta i stan.
+ * Zakres globalnej wyszukiwarki do zaznaczenia przy polu (np. języki, strony panelu): wartość pola, etykieta, stan
+ * i ikona przy nazwie w menu zakresów.
  */
 final readonly class SearchScope
 {
@@ -22,5 +23,6 @@ final readonly class SearchScope
         public string $value,
         public string $label,
         public bool $checked = true,
+        public ?string $icon = null,
     ) {}
 }

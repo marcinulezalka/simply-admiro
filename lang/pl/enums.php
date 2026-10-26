@@ -15,6 +15,24 @@ return [
 
     'tax_rate_exempt_short' => 'zw',
 
+    'social_network' => [
+        'linkedin' => 'LinkedIn',
+        'facebook' => 'Facebook',
+        'instagram' => 'Instagram',
+        'github' => 'GitHub',
+        'youtube' => 'YouTube',
+    ],
+
+    'record_status' => [
+        'draft' => 'Szkic',
+        'pending' => 'Oczekuje',
+        'active' => 'Aktywny',
+        'blocked' => 'Zablokowany',
+        'migrating' => 'Migracja',
+        'quarantined' => 'Kwarantanna',
+        'archived' => 'Zarchiwizowany',
+    ],
+
     'tax_rate_type' => [
         'standard' => 'Podstawowa',
         'reduced' => 'Obniżona',

@@ -90,7 +90,7 @@ trait SignsInWithCodeAndPin
 
     public function canSignIn(): bool
     {
-        return $this->getAttribute(AccountColumns::IS_ACTIVE) === true && ! $this->isLocked();
+        return $this->getAttribute(AccountColumns::IS_ACTIVE) === true && $this->recordStatus()?->isUsable() !== false && ! $this->isLocked();
     }
 
     public function pinHash(): ?string

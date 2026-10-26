@@ -18,8 +18,10 @@ use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Simplysmart\Admiro\Auth\ZoneAuthSettings;
 use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Enums\AppLayout;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Enums\Palette;
+use Simplysmart\Admiro\Enums\SocialNetwork;
 use Simplysmart\Admiro\Mail\MailPalette;
 
 /**
@@ -60,6 +62,10 @@ final readonly class ZoneDefinition
      *                          np. strona startowa View\ZoneLogos); domyślnie `auth.logo`; null = strefa bez logo.
      * @param string|null $website Strona WWW strefy (`website`: adres http(s)), np. odnośnik logo strefy na stronie
      *                             startowej (View\ZoneLogos); null = logo bez odnośnika.
+     * @param AppLayout $appLayout Wariant layoutu aplikacji po zalogowaniu (`app_layout`); Workspace — ustawienia i konto
+     *                             w głównym menu, akcje z podpowiedziami, powiadomienia w wysuwanym panelu, stopka z mapą strony.
+     * @param list<array{network: SocialNetwork, url: string}> $socialLinks Profile strefy w serwisach społecznościowych
+     *                                                                   (`social_links`), np. ikony na karcie konta.
      * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
      *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
      *                           są zawężone do niej; false = uprawnienia z sumy ról.
@@ -89,6 +95,8 @@ final readonly class ZoneDefinition
         public array $legalDocuments = [],
         public ?string $logo = null,
         public ?string $website = null,
+        public AppLayout $appLayout = AppLayout::Sidebar,
+        public array $socialLinks = [],
     ) {}
 
     /**

@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 use Simplysmart\Admiro\Audit\AuditEntries;
 use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
 use Simplysmart\Admiro\Audit\Events\RecordAccessed;
+use Simplysmart\Admiro\Audit\Events\RecordStatusChanged;
 use Simplysmart\Admiro\Auth\Events\AccountAccessRevoked;
 use Simplysmart\Admiro\Auth\Events\AccountLocked;
 use Simplysmart\Admiro\Auth\Events\PinChanged;
@@ -39,7 +40,7 @@ final readonly class StoreAuditEvent
     ) {}
 
     public function handle(
-        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|RecoveryEmailChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed $event,
+        SignInSucceeded|SignInRejected|AccountLocked|SignedOut|AccountAccessRevoked|PinChanged|RecoveryEmailChanged|TrustedDeviceRegistered|TrustedDevicesRevoked|ZoneRoleChanged|AdminActionPerformed|RecordAccessed|RecordStatusChanged $event,
     ): void {
         $entry = $this->entries->from($event);
 

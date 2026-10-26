@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 return [
 
+    'status' => 'Status aplikacji',
+    'system_settings' => 'Ustawienia',
+    'sitemap' => 'Mapa aplikacji',
     'groups' => [
         'zones' => 'Strefy i konta',
         'organizations' => 'Klienci',

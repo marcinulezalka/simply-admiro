@@ -23,6 +23,9 @@ use Simplysmart\Admiro\Enums\LegalDocumentType;
  */
 enum OnboardingStep: string
 {
+    /** Akcja dziennika zdarzeń, którą kreator zatwierdza krok (Panel\Http\AdminAudit, RecordOnboardingProgress). */
+    public const string CONFIRMED_ACTION = 'onboarding step confirmed';
+
     case Languages = 'languages';
     case Settings = 'settings';
     case Legal = 'legal';

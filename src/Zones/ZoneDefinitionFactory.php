@@ -18,8 +18,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Admiro\Auth\ZoneAuthSettingsFactory;
+use Simplysmart\Admiro\Enums\AppLayout;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Enums\Palette;
+use Simplysmart\Admiro\Enums\SocialNetwork;
 use Simplysmart\Admiro\Mail\MailPalette;
 
 /**
@@ -36,7 +38,9 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * z logowaniem), brand (`logo`, `signet` —
  * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
- * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
+ * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)), app_layout (wariant
+ * layoutu aplikacji: Enums\AppLayout), social_links (profile w serwisach społecznościowych: Enums\SocialNetwork →
+ * adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
  * z `teams`).
  */
 final readonly class ZoneDefinitionFactory
@@ -96,7 +100,62 @@ final readonly class ZoneDefinitionFactory
             roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
             logo: $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo,
             website: $this->website($name, $config['website'] ?? null),
+            appLayout: $this->appLayout($name, $config['app_layout'] ?? null),
+            socialLinks: $this->socialLinks($name, Arr::array($config, 'social_links', [])),
         );
+    }
+
+    /**
+     * Profile w serwisach społecznościowych z `social_links` (wartość Enums\SocialNetwork → adres http(s)); puste adresy
+     * są pomijane (np. niewypełnione zmienne `.env`), kolejność jak w enumie.
+     *
+     * @param array<array-key, mixed> $links
+     *
+     * @return list<array{network: SocialNetwork, url: string}>
+     *
+     * @throws InvalidArgumentException Gdy serwis jest nieznany albo adres nie jest http(s).
+     */
+    private function socialLinks(string $zone, array $links): array
+    {
+        $result = [];
+
+        foreach (SocialNetwork::cases() as $network) {
+            $url = $links[$network->value] ?? null;
+
+            if ($url === null || $url === '') {
+                continue;
+            }
+
+            if (! self::isHttpUrl($url)) {
+                throw new InvalidArgumentException("Zone [{$zone}] social_links.{$network->value} must be an http(s) URL.");
+            }
+
+            $result[] = ['network' => $network, 'url' => $url];
+        }
+
+        $unknown = array_diff(array_map(strval(...), array_keys($links)), array_column(SocialNetwork::cases(), 'value'));
+
+        if ($unknown !== []) {
+            throw new InvalidArgumentException("Zone [{$zone}] social_links has unknown networks: " . implode(', ', $unknown) . '.');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Wariant layoutu aplikacji z klucza `app_layout` (wartość Enums\AppLayout); brak klucza — Sidebar.
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest wariantem layoutu.
+     */
+    private function appLayout(string $zone, mixed $layout): AppLayout
+    {
+        if ($layout === null) {
+            return AppLayout::Sidebar;
+        }
+
+        $variant = is_string($layout) ? AppLayout::tryFrom($layout) : null;
+
+        return $variant ?? throw new InvalidArgumentException("Zone [{$zone}] app_layout must be one of: " . implode(', ', array_column(AppLayout::cases(), 'value')) . '.');
     }
 
     /**
@@ -110,7 +169,7 @@ final readonly class ZoneDefinitionFactory
             return null;
         }
 
-        if (! is_string($website) || filter_var($website, FILTER_VALIDATE_URL) === false || preg_match('~^https?://~i', $website) !== 1) {
+        if (! self::isHttpUrl($website)) {
             throw new InvalidArgumentException("Zone [{$zone}] website must be an http(s) URL.");
         }
 
@@ -426,5 +485,13 @@ final readonly class ZoneDefinitionFactory
         }
 
         return $legalLinks;
+    }
+
+    /**
+     * @phpstan-assert-if-true string $value
+     */
+    private static function isHttpUrl(mixed $value): bool
+    {
+        return is_string($value) && filter_var($value, FILTER_VALIDATE_URL) !== false && preg_match('~^https?://~i', $value) === 1;
     }
 }

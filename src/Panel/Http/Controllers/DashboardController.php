@@ -14,23 +14,18 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
-use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
-use Simplysmart\Admiro\Panel\Onboarding\OnboardingProgress;
 
 /**
- * Pulpit administratora: kroki onboardingu (konfiguracja systemu w kolejności), które może wykonać, ze stanem z
- * OnboardingProgress, i odnośniki do sekcji, do których ma uprawnienia.
+ * Status systemu (pulpit administratora): odnośniki do sekcji, do których administrator ma uprawnienia; przegląd kroków
+ * onboardingu jest w OnboardingController::index.
  */
 final readonly class DashboardController
 {
-    public function __invoke(AdminContext $context, OnboardingProgress $progress): View
+    public function __invoke(AdminContext $context): View
     {
-        $steps = array_values(array_filter(OnboardingStep::cases(), static fn(OnboardingStep $step): bool => $context->can($step->permission())));
-
         return view('admiro::panel.dashboard', [
-            'onboarding' => $progress->checklist($steps),
             'canViewZones' => $context->can(Permission::ZonesView),
             'canViewOrganizations' => $context->can(Permission::OrganizationsView),
             'canAssignOwners' => $context->can(Permission::OwnersAssign),

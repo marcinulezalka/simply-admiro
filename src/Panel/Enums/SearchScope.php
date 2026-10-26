@@ -46,6 +46,19 @@ enum SearchScope: string
         };
     }
 
+    /**
+     * Ikona przy nazwie zakresu w menu „Szukaj w”.
+     */
+    public function icon(): string
+    {
+        return match ($this) {
+            self::Languages => 'locale',
+            self::Dictionaries => 'dictionaries',
+            self::Directory => 'building',
+            self::Pages => 'sitemap',
+        };
+    }
+
     public function label(): string
     {
         return text('admiro::search.scopes.' . $this->value);

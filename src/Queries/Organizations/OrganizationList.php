@@ -16,6 +16,7 @@ namespace Simplysmart\Admiro\Queries\Organizations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Database\LikePattern;
 use Simplysmart\Admiro\Models\Organization;
 
 /**
@@ -40,13 +41,12 @@ final class OrganizationList
      */
     public function search(string $term, int $limit): Collection
     {
-        $term = mb_strtolower(trim(str_replace(['%', '_'], ' ', $term)));
+        $needle = LikePattern::contains($term);
 
-        if ($term === '') {
+        if ($needle === null) {
             return new Collection();
         }
 
-        $needle = '%' . $term . '%';
         $query = Organization::query();
         $query->where(static function (Builder $match) use ($needle): void {
             $match->whereRaw('LOWER(' . ColumnNames::NAME . ') LIKE ?', [$needle])

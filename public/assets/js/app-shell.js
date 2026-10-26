@@ -1,8 +1,10 @@
 /**
  * Layout aplikacji (x-admiro::app.layout): zwijanie menu bocznego na szerokim ekranie (stan w localStorage),
  * wysuwane menu na telefonie (tło i Esc zamykają), skrót „/” do globalnej wyszukiwarki i menu rozwijane top baru
- * (<details data-ss-dropdown>: powiadomienia, konto) — otwarcie jednego zamyka inne, klik obok i Esc zamykają. Bez skryptu menu
- * zostaje rozwinięte, a na telefonie stoi nad treścią. Osadzany inline z nonce CSP (x-admiro::scripts).
+ * (<details data-ss-dropdown>: powiadomienia, konto) — otwarcie jednego zamyka inne, klik obok i Esc zamykają. W wariancie
+ * Workspace odnośniki do #ss-sitemap (np. „Mapa aplikacji” w menu) rozsuwają i zwijają mapę strony [data-ss-sitemap] pod paskiem stopki
+ * (otwarta stopka, .ss-workspace-footer--open, przestaje być przyklejona i rośnie w dół; bez skryptu mapa jest widoczna). Bez skryptu menu zostaje rozwinięte, a na telefonie stoi nad treścią.
+ * Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const STORAGE_KEY = 'ss-sidebar-collapsed';
@@ -30,6 +32,8 @@
         const toggles = [...shell.querySelectorAll('[data-ss-sidebar-toggle]')];
         const backdrop = shell.querySelector('[data-ss-sidebar-backdrop]');
         const search = shell.querySelector('[data-ss-search]');
+        const sitemapToggles = [...shell.querySelectorAll('a[href="#ss-sitemap"]')];
+        const sitemap = shell.querySelector('[data-ss-sitemap]');
 
         const sync = () => {
             const expanded = desktop.matches ? !shell.classList.contains('ss-shell--collapsed') : shell.classList.contains('ss-shell--open');
@@ -68,6 +72,24 @@
                 dropdowns.filter((other) => other !== dropdown).forEach((other) => { other.open = false; });
             }
         }));
+
+        if (sitemap && sitemapToggles.length > 0) {
+            sitemap.hidden = true;
+            sitemapToggles.forEach((toggle) => {
+                toggle.setAttribute('aria-controls', 'ss-sitemap');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    sitemap.hidden = !sitemap.hidden;
+                    sitemapToggles.forEach((other) => other.setAttribute('aria-expanded', String(!sitemap.hidden)));
+                    sitemap.closest('.ss-workspace-footer')?.classList.toggle('ss-workspace-footer--open', !sitemap.hidden);
+
+                    if (!sitemap.hidden) {
+                        sitemap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        }
 
         document.addEventListener('click', (event) => {
             dropdowns.forEach((dropdown) => {

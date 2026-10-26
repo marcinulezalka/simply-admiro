@@ -90,7 +90,7 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | Metadane nad tytułem, etykiety pól | `text-xs` / `text-sm` | `--ss-color-muted` |
 | Wartości, treść | `text-sm` / `text-base` | `--ss-color-text` |
 | Tytuł karty | `text-base font-semibold` | `--ss-color-text` |
-| Tytuł strony (nagłówek kontekstowy) | `text-2xl font-semibold` | `--ss-color-text` |
+| Tytuł strony (nagłówek kontekstowy) | `text-[1.75rem] font-bold`, opis pod nim `font-mono text-sm` | `--ss-color-text`, opis `--ss-color-muted` |
 
 ## 3. Motyw ciemny
 
@@ -209,7 +209,7 @@ Wspólne komponenty powstają w Core jako `x-admiro::…`:
 | `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
-| `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
+| `context-header` | nagłówek kontekstowy `x-admiro::app.context` (zaimplementowany): ikona w kafelku (`icon`; w strefie z bieżącej pozycji menu albo mapy strony), duży tytuł, pod nim opis krojem mono (`meta`), slot `actions` jako panel z ramką po prawej; próbka w design systemie (sekcja „Nagłówek strony”) |
 | `stepper` | stepper sterowany enumem statusu |
 | `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne, pod nimi przycisk „Strona główna” (`.ss-auth__home`, przycisk z ikoną domu do `url('/')`, jak na stronach błędów; strefa wyłącza go `auth.home_link` = false); pola i przyciski mają wysokość `--ss-auth-control-height` (pole bez pionowego wcięcia, więc wysokość daje token); dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: odnośniki prawne strefy (`legal_links`), polityka cookies i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
 | `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i odnośnikami cookies nad i pod treścią (bez przełącznika motywu; odnośniki `.ss-link` bez podkreślenia, podkreślone pod kursorem), spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł z opcjonalną ikoną `icon`, `lead`) i treścią w `.ss-prose` (tekst do 70ch, bloki na całą szerokość; odnośniki pogrubione w kolorze akcentu, podkreślone dopiero pod kursorem i przy fokusie); na stronie polityki cookies lista cookies `.ss-cookie-list` jako panele `.ss-card--muted` na całą szerokość z zawijaniem długich wartości i przycisk ustawień z ikoną, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
@@ -259,9 +259,10 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
 - **Pole PIN-u** `x-admiro::pin-field` (kroki logowania z PIN-em, ustawienie PIN-u, zmiana PIN-u w bezpieczeństwie):
   `.ss-input--code` (cyfry rozstrzelone, w rozmiarze tekstu pól) z opcjonalną subtelną ikoną po lewej (prop `icon`;
   w logowaniu `lock`) i przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
-  modal `.ss-keypad` (natywny `<dialog>`, `js/pin-keypad.js`) w kolorach karty formularza logowania (tło surface-muted,
-  ramka border-strong): nazwa pola, kropki wpisanych cyfr z zamknięciem obok (`.ss-keypad__bar`), smukłe, małe klawisze
-  w wysokości przycisków z ikoną (40 px) (1–9, „C” czyści, „0” na dwie kolumny) i stopka z ikoną `backspace` (usuwa ostatnią cyfrę) obok
+  modal `.ss-keypad` (natywny `<dialog>` nazwany etykietą pola, `js/pin-keypad.js`) w szerokości treści i w kolorach
+  karty formularza logowania (tło surface-muted, ramka border-strong): u góry pole z kropkami wpisanych cyfr, pod nim
+  smukłe, małe klawisze w wysokości przycisków z ikoną (40 px) (1–9, w dolnym rzędzie „C” czyści, „0” na środku,
+  `backspace` w prawym dolnym rogu usuwa ostatnią cyfrę) i stopka z „Wstecz” (zamyka okno) obok
   „Zatwierdź PIN” z ikoną `check`, które zamyka okno i od razu wysyła formularz (`requestSubmit`), a gdy formularz nie
   jest jeszcze poprawny, przenosi fokus do pierwszego niepoprawnego pola (np. powtórzenia PIN-u). Kropki pokazują liczbę
   wpisanych cyfr (liczba także dla czytników ekranu), cyfry trafiają do pola na bieżąco (do `maxlength`), fizyczna
@@ -375,7 +376,29 @@ bieżąca), a podpozycje bez ikon (`.ss-sidebar__sublist`) łączą linie drzewa
 do każdej (`--ss-sidebar-tree-line`); w menu zwiniętym do ikon gałąź jest zwykłym odnośnikiem pozycji; obszary widoków
 w nawigacji design systemu mają te same linie), zwijane do ikon
 i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
-globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
+wariant layoutu z `app_layout` strefy (`Enums\AppLayout`, prop `variant`): `sidebar` jak wyżej albo `workspace`
+(`.ss-shell--workspace`: bez menu ustawień i ikony ustawień — strefa z `Contracts\ZoneSitemap` pokazuje w menu
+bocznym tylko `groups()`, a wszystkie strony w mapie strony, bez niej ustawienia i konto są w głównym menu; nagłówki
+grup nad kartami, pasek przewijania menu z odstępem od kart; konto (`.ss-account-card`: karta z przerywaną ramką, bardzo delikatnym gradientem i cieniem): awatar w kształcie
+i rozmiarze przycisku z ikoną, w obramowaniu jak karty, imię i pod nim nazwisko krojem mono wielkimi literami, po prawej ikona wylogowania bez tła z rozwijaną nazwą; pod nim rząd ikon bez tła (`.ss-account-panel`) z opisem
+rozwijanym po najechaniu — zwijanie menu, profil, powiadomienia `x-admiro::app.notifications drawer`, przełącznik
+kontekstu `x-admiro::app.context-switch` i profile społecznościowe strefy `social_links`; niżej grupa „System” (w admiro:
+status aplikacji, onboarding, mapa aplikacji — odnośnik `#ss-sitemap` rozsuwa mapę strony w stopce — dziennik zdarzeń,
+ustawienia), a na stronach ustawień czyste menu ustawień
+z powrotem do aplikacji; powiadomienia
+w panelu wysuwanym przy krawędzi menu na najwyższej warstwie (`.ss-notifications--drawer`); bez logo simplysmart
+w menu i bez top baru; pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: logo z wersją
+admiro w pigułce, globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
+`.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions`, suwaki zakresów zamiast lupy —
+przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu nad
+polem), mapa strony rozsuwana pod paskiem (odnośniki do `#ss-sitemap`, bez
+przycisku w stopce; strony w kolumnach i duży logotyp simplysmart na środku, przycięty od dołu tak, że ścina ogonki „p”
+i „y”; otwarta stopka przestaje być przyklejona i rośnie w dół) oraz
+na prawym końcu kalendarz (`x-admiro::app.calendar`: jeden panel o stałej szerokości z ikoną kalendarza i dniem tygodnia
+na wspólnym szarym tle i datą krojem mono — po najechaniu szare tło rozsuwa się w „pon, tydzień 44”, a data się chowa,
+bez przesuwania reszty stopki;, `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
+z `CalendarMonths`): klik otwiera panel z prawej krawędzi okna z miesiącem `.ss-mini-calendar` (dziś, dni wolne
+aplikacji z kropką), podglądem wybranego dnia i miejscem na skrzynkę pocztową (integracja w przygotowaniu)); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
 fragment HTML z widoku `admiro::search.suggestions` z grupami `SearchResultGroup` i wynikami `SearchResult` z flagami
 albo ikoną, lista `role="listbox"` obsługiwana strzałkami, Enter i Esc, `js/global-search.js`); formularze

@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Enums\SearchScope;
 use Simplysmart\Admiro\Contracts\ZoneNavigation;
+use Simplysmart\Admiro\Contracts\ZoneSitemap;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Models\Organization;
 use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
@@ -26,14 +27,16 @@ use Simplysmart\Admiro\View\Navigation\SearchBox;
 use Simplysmart\Admiro\View\Navigation\SearchScope as SearchScopeOption;
 
 /**
- * Menu strefy administratorów w layoucie aplikacji: pulpit oraz grupy stref i kont, organizacji i systemu (dziennik
- * zdarzeń); w ustawieniach grupy aplikacji (ustawienia, polityka cookies, polityka prywatności, RODO) i słowników (słowniki, kursy walut, dni wolne)
+ * Menu strefy administratorów w layoucie aplikacji: w menu bocznym pulpit i kreator onboardingu, w mapie strony
+ * (ZoneSitemap, stopka layoutu Workspace) także grupy stref i kont, organizacji i systemu (dziennik zdarzeń) oraz
+ * ustawień; w ustawieniach grupy aplikacji (ustawienia, polityka cookies, polityka prywatności, RODO) i słowników (słowniki, kursy walut, dni wolne)
  * — każda pozycja tylko z uprawnieniem administratora (puste grupy znikają); pod pulpitem kreator „Onboarding”
  * (`settings.manage`); druga linia pod nazwą konta: role administratora w organizacji operatora. Globalna
- * wyszukiwarka na trasę `search` z podpowiedziami (`search.suggest`) i zakresami SearchScope dozwolonymi
- * administratorowi (zaznaczone z `in[]` żądania, bez nich wszystkie).
+ * wyszukiwarka na trasę `search` z podpowiedziami (`search.suggest`), zakresami SearchScope dozwolonymi
+ * administratorowi (zaznaczone z `in[]` żądania, bez nich wszystkie; z ikonami) i akcjami dodawania pod „+”
+ * (organizacja, właściciel strefy, kurs waluty, dzień wolny, polityka cookies — każda z uprawnieniem).
  */
-final readonly class AdmiroNavigation implements ZoneNavigation
+final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap
 {
     public function __construct(
         private AdminContext $context,
@@ -41,13 +44,23 @@ final readonly class AdmiroNavigation implements ZoneNavigation
         private ZoneRoleNames $roles,
     ) {}
 
+    /**
+     * Menu boczne: pulpit i kreator onboardingu; pozostałe strony są na razie w mapie strony (sitemap()) i trafiają
+     * do menu stopniowo.
+     */
     public function groups(): array
     {
-        $groups = [
-            new NavigationGroup(null, $this->items(
-                $this->item('dashboard', 'admiro::dashboard.title', 'home'),
-                $this->itemIf(Permission::SettingsManage, 'onboarding.index', 'admiro::dashboard.onboarding_title', 'rocket', 'onboarding.*'),
-            )),
+        return $this->nonEmpty([$this->startGroup()]);
+    }
+
+    /**
+     * Mapa strony w stopce layoutu (i strony panelu w globalnej wyszukiwarce): pulpit i onboarding, strefy i konta,
+     * organizacje, system oraz grupy ustawień; Core dokłada po nich grupę konta.
+     */
+    public function sitemap(): array
+    {
+        return $this->nonEmpty([
+            $this->startGroup(),
             new NavigationGroup(text('admiro::navigation.groups.zones'), $this->items(
                 $this->itemIf(Permission::ZonesView, 'zones.index', 'admiro::admin.zones_title', 'zones', 'zones.*'),
                 $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::admin.owner_title', 'user-plus', 'owners.*'),
@@ -56,12 +69,8 @@ final readonly class AdmiroNavigation implements ZoneNavigation
             new NavigationGroup(text('admiro::navigation.groups.organizations'), $this->items(
                 $this->itemIf(Permission::OrganizationsView, 'organizations.index', 'admiro::admin.organizations_title', 'building', 'organizations.*'),
             )),
-            new NavigationGroup(text('admiro::navigation.groups.system'), $this->items(
-                $this->itemIf(Permission::AuditView, 'audit.index', 'admiro::admin.audit_title', 'history', 'audit.*'),
-            )),
-        ];
-
-        return $this->nonEmpty($groups);
+            ...$this->settings(),
+        ]);
     }
 
     public function settings(): array
@@ -85,7 +94,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation
         $zone = $this->context->zone();
         $requested = $this->request->has('in') ? $this->request->input('in') : null;
         $scopes = array_map(
-            static fn(SearchScope $scope): SearchScopeOption => new SearchScopeOption($scope->value, $scope->label(), ! is_array($requested) || in_array($scope->value, $requested, true)),
+            static fn(SearchScope $scope): SearchScopeOption => new SearchScopeOption($scope->value, $scope->label(), ! is_array($requested) || in_array($scope->value, $requested, true), $scope->icon()),
             SearchScope::available($this->context),
         );
 
@@ -95,6 +104,13 @@ final readonly class AdmiroNavigation implements ZoneNavigation
             value: $this->request->string('q')->toString(),
             scopes: $scopes,
             suggestUrl: route($zone->routeName('search.suggest')),
+            actions: $this->items(
+                $this->itemIf(Permission::OrganizationsManage, 'organizations.create', 'admiro::search.actions.organization', 'building', 'organizations.create'),
+                $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::search.actions.owner', 'user-plus', 'owners.create'),
+                $this->itemIf(Permission::SettingsManage, 'exchange-rates.index', 'admiro::search.actions.exchange_rate', 'credit-card', 'exchange-rates.index'),
+                $this->itemIf(Permission::SettingsManage, 'holidays.index', 'admiro::search.actions.holiday', 'calendar', 'holidays.index'),
+                $this->itemIf(Permission::SettingsManage, 'cookie-policy.index', 'admiro::search.actions.cookie_policy', 'cookie', 'cookie-policy.index'),
+            ),
         );
     }
 
@@ -103,6 +119,21 @@ final readonly class AdmiroNavigation implements ZoneNavigation
         $roles = array_map($this->context->zone()->roleLabel(...), $this->roles->of($this->context->admin(), Organization::OPERATOR_ID));
 
         return $roles === [] ? null : implode(' · ', $roles);
+    }
+
+    /**
+     * Grupa „System”: status aplikacji (pulpit), onboarding, mapa aplikacji (rozsuwa mapę strony w stopce, NavigationItem::SITEMAP_ANCHOR),
+     * dziennik zdarzeń i ustawienia (na stronach ustawień menu boczne przełącza się na menu ustawień z powrotem).
+     */
+    private function startGroup(): NavigationGroup
+    {
+        return new NavigationGroup(text('admiro::navigation.groups.system'), $this->items(
+            $this->item('dashboard', 'admiro::navigation.status', 'flag'),
+            $this->itemIf(Permission::SettingsManage, 'onboarding.index', 'admiro::dashboard.onboarding_title', 'rocket', 'onboarding.*'),
+            new NavigationItem(text('admiro::navigation.sitemap'), '#' . NavigationItem::SITEMAP_ANCHOR, 'sitemap'),
+            $this->itemIf(Permission::AuditView, 'audit.index', 'admiro::admin.audit_title', 'history', 'audit.*'),
+            $this->itemIf(Permission::SettingsView, 'settings.show', 'admiro::navigation.system_settings', 'settings', 'settings.*'),
+        ));
     }
 
     /**

@@ -21,6 +21,8 @@ return [
     'dark' => 'Dark',
 
     'sections' => [
+        'header' => 'Page header',
+        'header_lead' => 'Context header (x-admiro::app.context): an icon tile, a large title and a smaller monospace description below; page actions sit on the right in a framed panel (at most one primary). In a zone the icon comes from the current menu item unless the page gives its own.',
         'colors' => 'Colors',
         'colors_lead' => 'Semantic tokens only; views never use the base palette or hard-coded values.',
         'palettes' => 'Color schemes',
@@ -43,6 +45,12 @@ return [
     ],
 
     'sample' => [
+        'header_title' => 'Organizations',
+        'header_meta' => '12 organizations · last change 26.10.2026',
+        'header_secondary' => 'Export',
+        'header_primary' => 'New organization',
+        'header_plain_title' => 'Application status',
+        'header_plain_meta' => 'All services are running',
         'placeholder_hint' => 'The placeholder shows just an example of the format (no “e.g.”) and disappears while typing — the label above the field stays.',
         'palette_inverse' => 'Inverse card',
         'page_title' => 'Page title',

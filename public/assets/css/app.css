@@ -1670,20 +1670,41 @@ textarea.ss-input {
 }
 
 /**
- * .ss-context — nagłówek kontekstowy: powrót, metadane, duży tytuł, akcje po prawej (na telefonie pod tytułem).
+ * .ss-context — nagłówek kontekstowy: ikona w kafelku (__icon), powrót, duży tytuł i pod nim mniejszy opis krojem mono
+ * (__meta), a po prawej panel akcji z ramką (__actions; na telefonie pod tytułem).
  */
 .ss-context {
     display: flex;
     flex-wrap: wrap;
     gap: var(--ss-space-4);
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
+}
+
+.ss-context__heading {
+    display: flex;
+    gap: var(--ss-space-4);
+    align-items: center;
+    min-width: 0;
+}
+
+.ss-context__icon {
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    padding: 0.75rem;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+    color: var(--ss-color-text);
 }
 
 .ss-context__text {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-1);
+    min-width: 0;
 }
 
 .ss-context__back {
@@ -1691,8 +1712,9 @@ textarea.ss-input {
     gap: var(--ss-space-1);
     align-items: center;
     align-self: flex-start;
-    margin-bottom: var(--ss-space-2);
+    margin-bottom: var(--ss-space-1);
     color: var(--ss-color-muted);
+    font-size: 0.8125rem;
     text-decoration: none;
 }
 
@@ -1701,23 +1723,36 @@ textarea.ss-input {
     height: 1rem;
 }
 
+.ss-context__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
 .ss-context__meta {
     margin: 0;
     color: var(--ss-color-muted);
-    font-size: 0.75rem;
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
 }
 
-.ss-context__title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1.25;
-}
-
+/* Panel akcji strony: przyciski w jednej ramce na jasnym tle. */
 .ss-context__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-1);
+    border: 1px solid var(--ss-color-border);
+    border-radius: calc(var(--ss-radius-button) + var(--ss-space-1));
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-context__actions form {
+    margin: 0;
 }
 
 /**
@@ -3409,16 +3444,16 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js) w kolorach karty formularza
- * logowania (.ss-card--tinted: tło surface-muted, ramka border-strong): nazwa pola, pasek (__bar) z kropkami wpisanych
- * cyfr (__display, __dot) i zamknięciem obok, siatka smukłych, małych klawiszy w wysokości przycisków z ikoną
+ * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js) w szerokości treści (fit-content)
+ * i w kolorach karty formularza logowania (.ss-card--tinted: tło surface-muted, ramka border-strong): pole z kropkami
+ * wpisanych cyfr (__display, __dot), siatka smukłych, małych klawiszy w wysokości przycisków z ikoną
  * (40 px, --ss-keypad-key-width × --ss-keypad-key-height; __key; --muted —
- * wyczyść, --wide — 0 na dwie kolumny) i stopka (__footer) z usuwaniem ostatniej cyfry obok „Zatwierdź PIN”.
+ * wyczyść i usuwanie ostatniej cyfry; __key-icon) i stopka (__footer) z „Wstecz” obok „Zatwierdź PIN”.
  */
 .ss-keypad {
     --ss-keypad-key-width: 3.5rem;
     --ss-keypad-key-height: 2.5rem;
-    width: auto;
+    width: fit-content;
     max-width: calc(100% - 2 * var(--ss-space-4));
     padding: var(--ss-space-6);
     border: 1px solid var(--ss-color-border-strong);
@@ -3438,13 +3473,6 @@ a.ss-notification:focus-visible {
     background: rgb(10 12 20 / 0.6);
 }
 
-.ss-keypad__title {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.ss-keypad__bar,
 .ss-keypad__footer {
     display: flex;
     gap: var(--ss-space-2);
@@ -3453,7 +3481,6 @@ a.ss-notification:focus-visible {
 
 .ss-keypad__display {
     display: flex;
-    flex: 1;
     flex-wrap: wrap;
     gap: var(--ss-space-2);
     align-items: center;
@@ -3515,8 +3542,9 @@ a.ss-notification:focus-visible {
     font-size: 0.875rem;
 }
 
-.ss-keypad__key--wide {
-    grid-column: span 2;
+.ss-keypad__key-icon {
+    width: 1.125rem;
+    height: 1.125rem;
 }
 
 .ss-keypad__done {
@@ -4479,7 +4507,6 @@ a.ss-notification:focus-visible {
     font-size: 0.875rem;
 }
 
-
 .ss-cookie-links {
     display: flex;
     flex-wrap: wrap;
@@ -4759,3 +4786,889 @@ a.ss-notification:focus-visible {
 .ss-toast {
     font-family: var(--ss-font-sans);
 }
+
+/**
+ * .ss-shell--workspace — wariant layoutu aplikacji Workspace (Enums\AppLayout, `app_layout` strefy): węższy pasek
+ * zwiniętego menu; nagłówek grupy nad kartą (karta to sama lista pozycji); akcje pod nazwą konta w rzędzie, z wyraźnym
+ * stanem najechania; przyciski-ikony po najechaniu pokazują unoszący się tytuł (biała karta jak pozycja menu, nad
+ * sąsiednimi przyciskami, bez przesuwania układu: .ss-icon-button--expand, .ss-icon-button__label); menu nad treścią, a powiadomienia
+ * w panelu wysuwanym przy krawędzi menu na najwyższej warstwie (.ss-notifications--drawer); pasek przewijania menu
+ * z odstępem od kart; bez top baru; stopka treści (.ss-workspace-footer) przyklejona do dołu, półprzezroczysta: logo simplysmart z wersją, wyszukiwarka na środku (podpowiedzi nad polem), motyw i mapa strony.
+ */
+.ss-shell--workspace {
+    --ss-sidebar-collapsed-width: 3.5rem;
+}
+
+.ss-shell--workspace .ss-sidebar__section {
+    gap: var(--ss-space-2);
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+.ss-shell--workspace .ss-sidebar__group {
+    margin: 0;
+    padding: 0 var(--ss-space-2);
+}
+
+.ss-shell--workspace .ss-sidebar__list {
+    padding: var(--ss-space-1);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-sidebar-section);
+}
+
+.ss-shell--workspace .ss-sidebar__actions {
+    align-items: center;
+}
+
+.ss-shell--workspace .ss-sidebar__actions .ss-icon-button:hover,
+.ss-shell--workspace .ss-sidebar__actions details[open] > .ss-icon-button {
+    border-color: var(--ss-color-border);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+    color: var(--ss-color-text);
+}
+
+.ss-shell--workspace .ss-sidebar__nav {
+    padding-right: var(--ss-space-2);
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+}
+
+.ss-icon-button--expand {
+    position: relative;
+}
+
+.ss-icon-button--expand > .ss-icon {
+    position: relative;
+    z-index: 2;
+}
+
+/* Tytuł unosi się nad sąsiednimi przyciskami od krawędzi przycisku (bez przesuwania układu): biała karta jak bieżąca
+   pozycja menu, rozsuwana w prawo, a w narzędziach stopki (przy prawej krawędzi okna) w lewo. */
+.ss-icon-button__label {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    min-width: calc(100% + 2px);
+    max-width: calc(100% + 2px);
+    padding: 0 var(--ss-space-3) 0 2.5rem;
+    overflow: hidden;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-width 0.25s ease, opacity 0.15s ease;
+}
+
+.ss-icon-button--expand:is(:hover, :focus-visible) {
+    z-index: 5;
+    color: var(--ss-color-text);
+}
+
+.ss-icon-button--expand:is(:hover, :focus-visible) .ss-icon-button__label {
+    max-width: 16rem;
+    opacity: 1;
+}
+
+.ss-workspace-footer__tools .ss-icon-button__label {
+    right: -1px;
+    left: auto;
+    justify-content: flex-end;
+    padding: 0 2.5rem 0 var(--ss-space-3);
+}
+
+.ss-notifications--drawer .ss-notifications__panel {
+    position: fixed;
+    z-index: 90;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(24rem, 100vw);
+    padding: var(--ss-space-4);
+    overflow-y: auto;
+    border-width: 0 1px 0 0;
+    border-radius: 0;
+    animation: ss-drawer-in 0.2s ease-out;
+}
+
+.ss-notifications--drawer .ss-notifications__list {
+    max-height: none;
+}
+
+@keyframes ss-drawer-in {
+    from {
+        opacity: 0;
+        transform: translateX(-1rem);
+    }
+}
+
+.ss-workspace-footer {
+    position: relative;
+    bottom: 0;
+    z-index: 15;
+    margin-top: auto;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border);
+}
+
+/* Tło stopki z rozmyciem na pseudo-elemencie: backdrop-filter na samej stopce zamknąłby w niej panele position: fixed
+   (kalendarz). */
+.ss-workspace-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--ss-color-surface) 92%, transparent);
+    backdrop-filter: blur(12px);
+}
+
+.ss-workspace-footer__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+.ss-workspace-footer__brand {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: 0;
+}
+
+.ss-workspace-footer__logo {
+    flex: none;
+    width: 7rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-workspace-footer__search .ss-search {
+    max-width: 36rem;
+    margin: 0 auto;
+}
+
+.ss-workspace-footer__version {
+    white-space: nowrap;
+}
+
+.ss-workspace-footer .ss-search__suggestions {
+    top: auto;
+    bottom: calc(100% + var(--ss-space-2));
+}
+
+.ss-workspace-footer .ss-search__scopes-panel {
+    top: auto;
+    bottom: calc(100% + var(--ss-space-3));
+}
+
+.ss-workspace-footer__tools {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-self: end;
+}
+
+.ss-workspace-footer__sitemap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--ss-space-6);
+    margin-top: var(--ss-space-4);
+    padding-top: var(--ss-space-6);
+    border-top: 1px dashed var(--ss-color-border-strong);
+}
+
+/* Ze skryptem stopka jest przyklejona do dołu okna; otwarta mapa strony odkleja ją, więc rozsuwa się w dół na końcu
+   strony, z dużym logotypem simplysmart na samym dole (bez skryptu mapa jest widoczna, a stopka zostaje na końcu). */
+.ss-shell--js .ss-workspace-footer:not(.ss-workspace-footer--open) {
+    position: sticky;
+}
+
+/* Duży logotyp na środku pod mapą strony, przycięty od dołu (lekko ścina ogonki „p” i „y”): kadr o proporcjach
+   792 × 140 z logotypu 792 × 159. */
+.ss-workspace-footer__wordmark {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 56rem);
+    aspect-ratio: 792 / 140;
+    margin: var(--ss-space-8) 0 calc(-1 * var(--ss-space-3));
+    overflow: hidden;
+    color: var(--ss-color-text);
+    opacity: 0.08;
+}
+
+.ss-workspace-footer__wordmark .ss-logo {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+}
+
+.ss-workspace-footer__link {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-workspace-footer__link-icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-workspace-footer__links [aria-current="page"] {
+    font-weight: 600;
+}
+
+/* Telefon: wyszukiwarka na całą szerokość w pierwszym rzędzie, pod nią logo i kalendarz; bez plakietki wersji. */
+@media (max-width: 40rem) {
+    .ss-workspace-footer__bar {
+        grid-template-areas: "search search" "brand tools";
+        grid-template-columns: 1fr auto;
+        row-gap: var(--ss-space-2);
+    }
+
+    .ss-workspace-footer__brand {
+        grid-area: brand;
+    }
+
+    .ss-workspace-footer__search {
+        grid-area: search;
+    }
+
+    .ss-workspace-footer__tools {
+        grid-area: tools;
+    }
+
+    .ss-workspace-footer__version {
+        display: none;
+    }
+
+    .ss-workspace-footer__logo {
+        width: 5.5rem;
+    }
+
+    .ss-search--compose {
+        flex: 1;
+        max-width: none;
+        padding: var(--ss-space-1);
+    }
+
+    .ss-search--compose .ss-search__input {
+        display: block;
+    }
+}
+
+.ss-workspace-footer__sitemap[hidden] {
+    display: none;
+}
+
+.ss-workspace-footer__heading {
+    margin: 0 0 var(--ss-space-2);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-workspace-footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-workspace-footer__child {
+    padding-left: var(--ss-space-3);
+}
+
+@media (min-width: 64rem) {
+    .ss-shell--workspace .ss-sidebar {
+        z-index: 50;
+    }
+
+    /* Top bar wariantu Workspace służy tylko do otwierania menu na węższych ekranach. */
+    .ss-shell--workspace .ss-topbar {
+        display: none;
+    }
+
+    .ss-shell--workspace .ss-notifications--drawer .ss-notifications__panel {
+        left: var(--ss-sidebar-width);
+        width: min(24rem, calc(100vw - var(--ss-sidebar-width)));
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-notifications--drawer .ss-notifications__panel {
+        left: var(--ss-sidebar-collapsed-width);
+    }
+
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-notifications--drawer .ss-notifications__panel {
+        animation: none;
+    }
+
+    .ss-icon-button--expand {
+        transition: none;
+    }
+}
+
+/**
+ * Wariant Workspace, cd.: kalendarz na prawym końcu stopki (.ss-calendar-panel: panel z ikoną kalendarza i dniem
+ * tygodnia na wspólnym szarym tle i datą — po najechaniu tło rozsuwa się w „pon, tydzień 44” nad datą; prawy panel z miesiącem .ss-mini-calendar, podglądem dnia i miejscem na
+ * pocztę); wyszukiwarka w stylu okna czatu (.ss-search--compose): szare tło, „+” z akcjami i suwaki zakresów po lewej,
+ * zaokrąglony przycisk szukania z rakietą po prawej.
+ */
+
+@media (min-width: 64rem) {
+
+}
+
+/**
+ * .ss-account-panel — panel ikon pod kartą konta (wariant Workspace): profil, powiadomienia, kontekst i wylogowanie,
+ * a w osobnym rzędzie profile społecznościowe; każda ikona po najechaniu rozwija opis nad sąsiednimi przyciskami
+ * (.ss-icon-button--expand).
+ */
+
+.ss-search--compose {
+    gap: var(--ss-space-1);
+    padding: var(--ss-space-1);
+    border: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface-muted);
+    box-shadow: none;
+}
+
+.ss-shell .ss-search--compose {
+    background: var(--ss-color-surface-muted);
+    box-shadow: none;
+}
+
+.ss-search--compose .ss-search__input {
+    padding: 0 var(--ss-space-2);
+}
+
+.ss-search__menu {
+    position: relative;
+    flex: none;
+}
+
+.ss-search__menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--ss-radius-pill);
+    color: var(--ss-color-muted);
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-search__menu-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-search__menu-toggle:hover,
+.ss-search__menu[open] > .ss-search__menu-toggle {
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+}
+
+.ss-search__menu-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-search__menu-panel {
+    position: absolute;
+    top: calc(100% + var(--ss-space-3));
+    left: calc(-1 * var(--ss-space-1));
+    z-index: 45;
+    min-width: 15rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+    color: var(--ss-color-text);
+}
+
+.ss-search--compose .ss-search__scopes-panel {
+    right: auto;
+    left: calc(-1 * var(--ss-space-1));
+}
+
+.ss-workspace-footer .ss-search__menu-panel {
+    top: auto;
+    bottom: calc(100% + var(--ss-space-3));
+}
+
+.ss-search__send {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    cursor: pointer;
+}
+
+.ss-search__send:hover {
+    background: var(--ss-color-accent-hover, var(--ss-color-accent));
+}
+
+.ss-search__send:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-search__send-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-search__scope.ss-switch {
+    padding: var(--ss-space-2) 0;
+}
+
+.ss-search__scope.ss-switch:first-of-type {
+    border-top: 0;
+}
+
+.ss-switch__label {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-switch__icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-icon-button__label {
+        transition: none;
+    }
+}
+
+.ss-calendar-panel {
+    position: relative;
+    flex: none;
+}
+
+.ss-calendar-panel__toggle {
+    position: relative;
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    width: 12.75rem;
+    height: 2.5rem;
+    padding: 3px var(--ss-space-3) 3px 3px;
+    overflow: hidden;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-calendar-panel__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-calendar-panel__toggle:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/* Ikona i dzień tygodnia na wspólnym szarym tle; po najechaniu tło rozsuwa się („pon, tydzień 44”) w miejscu daty,
+   która się chowa. Panel ma stałą szerokość, więc rozsuwanie nie przesuwa wyszukiwarki ani reszty stopki. */
+.ss-calendar-panel__chip {
+    z-index: 1;
+    flex: 0 1 auto;
+    transition: flex-grow 0.25s ease;
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    align-self: stretch;
+    padding: 0 var(--ss-space-2);
+    border-radius: calc(var(--ss-radius-button) - 3px);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ss-calendar-panel__week,
+.ss-calendar-panel__date {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    transition: max-width 0.25s ease, opacity 0.2s ease, margin 0.25s ease;
+}
+
+.ss-calendar-panel__week {
+    max-width: 0;
+    opacity: 0;
+}
+
+.ss-calendar-panel__date {
+    max-width: 10rem;
+    margin-left: auto;
+}
+
+.ss-calendar-panel__toggle:is(:hover, :focus-visible) .ss-calendar-panel__chip,
+.ss-calendar-panel[open] .ss-calendar-panel__chip {
+    flex-grow: 1;
+}
+
+.ss-calendar-panel__toggle:is(:hover, :focus-visible) .ss-calendar-panel__week,
+.ss-calendar-panel[open] .ss-calendar-panel__week {
+    max-width: 10rem;
+    opacity: 1;
+}
+
+.ss-calendar-panel__toggle:is(:hover, :focus-visible) .ss-calendar-panel__date,
+.ss-calendar-panel[open] .ss-calendar-panel__date {
+    max-width: 0;
+    margin-left: calc(-1 * var(--ss-space-3));
+    opacity: 0;
+}
+
+.ss-calendar-panel__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-calendar-panel__date {
+    font-family: var(--ss-font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.ss-calendar-panel__drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-5, 1.25rem);
+    width: min(22rem, 100vw);
+    padding: var(--ss-space-6) var(--ss-space-4);
+    overflow-y: auto;
+    border-left: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+    color: var(--ss-color-text);
+    animation: ss-drawer-in-right 0.2s ease-out;
+}
+
+@keyframes ss-drawer-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(1rem);
+    }
+}
+
+.ss-calendar-panel__header {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-calendar-panel__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.ss-mini-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.ss-mini-calendar__weekday {
+    padding: var(--ss-space-1) 0;
+    color: var(--ss-color-muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.ss-mini-calendar__day {
+    position: relative;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--ss-radius-pill);
+    background: transparent;
+    color: var(--ss-color-text);
+    font: inherit;
+    font-family: var(--ss-font-sans);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+}
+
+.ss-mini-calendar__day:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-mini-calendar__day--outside {
+    color: var(--ss-color-muted);
+    opacity: 0.6;
+}
+
+.ss-mini-calendar__day--today {
+    border-color: var(--ss-color-accent);
+    font-weight: 600;
+}
+
+.ss-mini-calendar__day[aria-pressed="true"] {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-mini-calendar__day--holiday::after {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-warning);
+    transform: translateX(-50%);
+}
+
+.ss-mini-calendar__day:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 1px;
+}
+
+.ss-calendar-panel__preview,
+.ss-calendar-panel__mail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    padding: var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-calendar-panel__heading {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.ss-calendar-panel__heading-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-calendar-panel__note,
+.ss-calendar-panel__mail p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.ss-calendar-panel__mail .ss-button {
+    align-self: flex-start;
+}
+
+.ss-calendar-panel__messages {
+    margin: 0;
+    padding: var(--ss-space-2) 0 0;
+    border-top: 1px dashed var(--ss-color-border-strong);
+    list-style: none;
+    font-size: 0.8125rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-calendar-panel__drawer {
+        animation: none;
+    }
+
+    .ss-calendar-panel__week,
+    .ss-calendar-panel__date {
+        transition: none;
+    }
+}
+
+/**
+ * Konto w menu wariantu Workspace (.ss-account-card): karta z przerywaną ramką, bardzo delikatnym gradientem i cieniem
+ * — awatar w kształcie i rozmiarze przycisku z ikoną, w obramowaniu jak karty (ramka border-strong i biały pierścień),
+ * imię i pod nim nazwisko krojem mono wielkimi literami, po prawej ikona wylogowania bez tła z nazwą rozwijaną
+ * w lewo; pod nim rząd ikon bez tła (.ss-account-panel: zwijanie menu, profil, powiadomienia, kontekst, profile
+ * społecznościowe) z opisem rozwijanym po najechaniu. W zwiniętym menu awatar, wylogowanie i ikony w kolumnie.
+ */
+.ss-account-card {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2);
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-card);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--ss-color-surface) 70%, transparent), transparent 70%);
+    box-shadow: 0 1px 3px rgb(15 23 42 / 0.04);
+}
+
+.ss-account-card__avatar {
+    position: relative;
+    flex: none;
+}
+
+.ss-account-card__avatar .ss-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--ss-radius-button);
+    box-shadow: 0 0 0 2px var(--ss-color-surface), 0 0 0 3px var(--ss-color-border-strong);
+    font-size: 0.75rem;
+}
+
+
+
+.ss-account-card__name {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.ss-account-card__first-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.ss-account-card__last-name {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
+
+.ss-account-card__sign-out {
+    flex: none;
+    margin: 0;
+}
+
+.ss-account-card__sign-out .ss-icon-button {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-color: transparent;
+    background: transparent;
+}
+
+.ss-account-card__sign-out .ss-icon-button:hover {
+    background: var(--ss-color-surface);
+}
+
+.ss-account-card__sign-out .ss-icon-button__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/* Nazwa wylogowania rozsuwa się w lewo (przycisk stoi przy prawej krawędzi menu). */
+.ss-account-card__sign-out .ss-icon-button__label {
+    right: -1px;
+    left: auto;
+    justify-content: flex-end;
+    padding: 0 2.5rem 0 var(--ss-space-3);
+}
+
+.ss-account-panel__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-account-panel__list form {
+    margin: 0;
+}
+
+.ss-account-panel .ss-icon-button {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-color: transparent;
+    background: transparent;
+}
+
+.ss-account-panel .ss-icon-button:hover,
+.ss-account-panel details[open] > .ss-icon-button {
+    background: var(--ss-color-surface);
+}
+
+.ss-account-panel .ss-icon-button__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-account-panel summary.ss-icon-button {
+    list-style: none;
+}
+
+.ss-account-panel summary.ss-icon-button::-webkit-details-marker {
+    display: none;
+}
+
+@media (min-width: 64rem) {
+    .ss-shell--workspace.ss-shell--collapsed .ss-account-card {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-account-card__name {
+        display: none;
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-account-panel__list {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+

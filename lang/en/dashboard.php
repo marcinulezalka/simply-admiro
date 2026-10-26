@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 return [
 
-    'title' => 'Administrator panel',
+    'title' => 'Application status',
 
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Getting admiro up and running, step by step. Go through the stages in this order — each one builds on the previous one.',
@@ -28,6 +28,8 @@ return [
     'onboarding_open' => 'Go to: :name',
     'onboarding_done' => 'Done',
     'onboarding_confirmed' => 'Step “:name” confirmed.',
+    'onboarding_complete' => 'All setup steps are done.',
+    'onboarding_review' => 'Review the steps',
     'onboarding_languages_enabled' => 'Enabled languages',
     'onboarding_languages_enabled_empty' => 'No language is enabled yet.',
     'onboarding_languages_all' => 'All languages',

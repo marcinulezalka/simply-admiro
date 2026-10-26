@@ -64,6 +64,8 @@ final readonly class ZoneAuthSettingsFactory
             brand: $this->brand(Arr::get($settings, 'brand')),
             logo: $this->logo(Arr::get($settings, 'logo')),
             homeLink: Arr::boolean($settings, 'home_link', true),
+            cookiePolicyFirst: Arr::boolean($settings, 'legal.cookie_policy_first', false),
+            cookieSettingsLink: Arr::boolean($settings, 'legal.cookie_settings', true),
         );
     }
 

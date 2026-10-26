@@ -21,6 +21,7 @@ use Simplysmart\Admiro\Auth\EmailAddress;
 use Simplysmart\Admiro\Contracts\BlindIndex;
 use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
 use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Database\LikePattern;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
@@ -57,15 +58,16 @@ final readonly class ZoneAccounts
     public function search(ZoneDefinition $zone, string $term, int $limit): array
     {
         $term = trim($term);
+        $needle = LikePattern::contains($term);
 
-        if ($term === '') {
+        if ($needle === null) {
             return [];
         }
 
         $model = $zone->accountModel();
         $query = $model::query();
-        $query->where(function (Builder $match) use ($term): void {
-            $match->whereRaw('LOWER(' . AccountColumns::NAME . ') LIKE ?', ['%' . mb_strtolower(str_replace(['%', '_'], ' ', $term)) . '%']);
+        $query->where(function (Builder $match) use ($term, $needle): void {
+            $match->whereRaw('LOWER(' . AccountColumns::NAME . ') LIKE ?', [$needle]);
 
             if (str_contains($term, '@')) {
                 $match->orWhere(AccountColumns::EMAIL_HASH, $this->index->hash(EmailAddress::normalize($term)));

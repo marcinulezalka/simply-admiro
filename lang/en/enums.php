@@ -15,6 +15,24 @@ return [
 
     'tax_rate_exempt_short' => 'exempt',
 
+    'social_network' => [
+        'linkedin' => 'LinkedIn',
+        'facebook' => 'Facebook',
+        'instagram' => 'Instagram',
+        'github' => 'GitHub',
+        'youtube' => 'YouTube',
+    ],
+
+    'record_status' => [
+        'draft' => 'Draft',
+        'pending' => 'Pending',
+        'active' => 'Active',
+        'blocked' => 'Blocked',
+        'migrating' => 'Migrating',
+        'quarantined' => 'Quarantined',
+        'archived' => 'Archived',
+    ],
+
     'tax_rate_type' => [
         'standard' => 'Standard',
         'reduced' => 'Reduced',

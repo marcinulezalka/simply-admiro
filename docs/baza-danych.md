@@ -156,10 +156,19 @@ wieloetapowych ani odwołań do `Auth`/`auth()`.
     trzeba po niej filtrować, inaczej `withExists()` w zapytaniu;
   - nazwy twierdzące, bez zaprzeczeń (`is_active`, nie `is_hidden`).
 - **`status` i `is_active` — dwie różne rzeczy:**
-  - `status` — cykl życia rekordu (np. `draft`, `pending`, `approved`, `archived`), backed enum
-    (string) w `Enums/` paczki, z etykietą z tłumaczeń (kontrakt Core `Contracts\HasLabel`);
+  - `status` — standardowy stan wiersza Core `Enums\RecordStatus` (`draft`, `pending`, `active`, `blocked`,
+    `migrating`, `quarantined`, `archived`; nowy wiersz `active`, cast i wartość domyślna z `HasStandardColumns`).
+    Zmienia go tylko `Database\RecordStatusTransitions` — w transakcji z blokadą wiersza, z kontrolą przejść
+    (`draft → pending → active`, `active ↔ blocked`, `active → archived`, dowolny → `migrating` → poprzedni,
+    `quarantined → active`; stan sprzed migracji w `json_migrations.record_status.previous`, przywraca go
+    `finishMigration()`) i wpisem `record status changed` w dzienniku zdarzeń (`Audit\Events\RecordStatusChanged`).
+    Pusty `status` istniejących wierszy uzupełnia `Database\RecordStatusBackfill` (zapis przez modele: `checksum`
+    i historia spójne). Konto w stanie innym niż `active` nie zaloguje się. Model, który trzyma w `status` stan
+    dziedzinowy (np. wizyta: backed enum w `Enums/` paczki z etykietą, kontrakt `Contracts\HasLabel`), nadpisuje
+    `usesRecordStatus()` na `false` i sam podaje cast;
   - `is_active` — widoczność dla użytkownika końcowego: admin widzi np. 200 języków, użytkownik
-    tylko te, które admin włączył. O tym, czy filtrować, decyduje klasa zapytań na podstawie
+    tylko te, które admin włączył. Wiersz użyteczny w wyborach i procesach to `status = active` i `is_active`
+    (scope `usable()`). O tym, czy filtrować, decyduje klasa zapytań na podstawie
     jawnego guarda strefy, nie model.
 
 ## 6. Warstwy

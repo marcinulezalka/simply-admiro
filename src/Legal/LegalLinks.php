@@ -37,7 +37,7 @@ final readonly class LegalLinks
     /**
      * @param array<string, string> $parameters Parametry tras (np. język w adresach e-maili).
      *
-     * @return list<array{url: string, label: string}>
+     * @return list<array{url: string, label: string, key: string}> `key`: wartość LegalDocumentType albo nazwa trasy strefy.
      */
     public function for(ZoneDefinition $zone, array $parameters = []): array
     {
@@ -46,12 +46,12 @@ final readonly class LegalLinks
 
         foreach ($zone->legalDocuments as $type) {
             if (in_array($type, $published, true)) {
-                $links[] = ['url' => $this->url->route($type->routeName(), $parameters), 'label' => $type->label()];
+                $links[] = ['url' => $this->url->route($type->routeName(), $parameters), 'label' => $type->label(), 'key' => $type->value];
             }
         }
 
         foreach ($zone->legalLinks as $link) {
-            $links[] = ['url' => $this->url->route($zone->routeName($link['route']), $parameters), 'label' => text($link['label'])];
+            $links[] = ['url' => $this->url->route($zone->routeName($link['route']), $parameters), 'label' => text($link['label']), 'key' => $link['route']];
         }
 
         return $links;

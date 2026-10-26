@@ -24,6 +24,9 @@ return [
     'pin_setup_note' => '',
     'pin_setup_submit' => 'Dalej',
     'code_note' => '',
+    'legal_cookies' => '',
+    'legal_privacy' => '',
+    'legal_gdpr' => '',
     'email' => 'Adres e-mail',
     'continue' => 'Dalej',
     'code_title' => 'Wpisz kod z e-maila',
@@ -74,6 +77,9 @@ return [
     ],
 
     'admiro' => [
+        'legal_cookies' => 'Polityka Cookies',
+        'legal_privacy' => 'Polityka Prywatności',
+        'legal_gdpr' => 'Polityka RODO',
         'title' => 'Kontrola, automatyzacja i *precyzja* w każdym wdrożeniu',
         'page_title' => 'admiro',
     ],

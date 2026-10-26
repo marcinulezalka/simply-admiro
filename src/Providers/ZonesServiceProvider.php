@@ -156,7 +156,19 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('zonePalettes', $zone->has() ? $zone->get()->palettes : [])
             ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
             ->with('zoneAuthPageTitle', $settings === null ? '' : $zone->get()->signInText('page_title'))
-            ->with('zoneLegalLinks', $settings === null ? [] : $this->app->make(LegalLinks::class)->for($zone->get()))
+            ->with('zoneLegalLinks', $settings === null ? [] : array_map(
+                static function (array $link) use ($zone): array {
+                    $label = $zone->get()->signInText('legal_' . $link['key']);
+
+                    return ['url' => $link['url'], 'label' => $label !== '' && $label !== 'sign_in.legal_' . $link['key'] ? $label : $link['label']];
+                },
+                $this->app->make(LegalLinks::class)->for($zone->get()),
+            ))
+            ->with('zoneAuthCookieLinks', [
+                'first' => $settings->cookiePolicyFirst ?? false,
+                'settings' => $settings->cookieSettingsLink ?? true,
+                'policyLabel' => $settings === null || $zone->get()->signInText('legal_cookies') === '' ? null : $zone->get()->signInText('legal_cookies'),
+            ])
             ->with('zoneAuthHomeLink', $settings->homeLink ?? true)
             ->with('zoneAuthLogo', $settings?->logo === null ? null : (file_get_contents($settings->logo) ?: null))
             ->with('zoneAuthBrand', $brand === null ? null : [

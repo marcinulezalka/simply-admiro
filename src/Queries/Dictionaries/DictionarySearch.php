@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Simplysmart\Admiro\Database\CodeColumns;
 use Simplysmart\Admiro\Database\ColumnNames;
+use Simplysmart\Admiro\Database\LikePattern;
 use Simplysmart\Admiro\Models\Dictionaries\Country;
 use Simplysmart\Admiro\Models\Dictionaries\Currency;
 use Simplysmart\Admiro\Models\Dictionaries\Language;
@@ -34,7 +35,7 @@ final class DictionarySearch
      */
     public function languages(string $term, ?int $limit = null): Collection
     {
-        $needle = self::needle($term);
+        $needle = LikePattern::contains($term);
 
         if ($needle === null) {
             return new Collection();
@@ -57,7 +58,7 @@ final class DictionarySearch
      */
     public function countries(string $term, int $limit): Collection
     {
-        $needle = self::needle($term);
+        $needle = LikePattern::contains($term);
 
         if ($needle === null) {
             return new Collection();
@@ -77,7 +78,7 @@ final class DictionarySearch
      */
     public function currencies(string $term, int $limit): Collection
     {
-        $needle = self::needle($term);
+        $needle = LikePattern::contains($term);
 
         if ($needle === null) {
             return new Collection();
@@ -87,16 +88,6 @@ final class DictionarySearch
         $query->where(static fn(Builder $match) => self::matchEntry($match, CodeColumns::ALPHA_3, $needle));
 
         return self::ordered($query, Currency::codeColumn(), $limit);
-    }
-
-    /**
-     * Wzorzec LIKE z tekstu (małe litery, bez `%` i `_`, które LIKE traktuje jako symbole) albo null dla pustego tekstu.
-     */
-    private static function needle(string $term): ?string
-    {
-        $term = mb_strtolower(trim(str_replace(['%', '_'], ' ', $term)));
-
-        return $term === '' ? null : '%' . $term . '%';
     }
 
     /**

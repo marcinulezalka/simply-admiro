@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 return [
 
+    'status' => 'Application status',
+    'system_settings' => 'Settings',
+    'sitemap' => 'Application map',
     'groups' => [
         'zones' => 'Zones and accounts',
         'organizations' => 'Clients',

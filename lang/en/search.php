@@ -27,6 +27,14 @@ return [
         'pages' => 'Panel pages',
     ],
 
+    'actions' => [
+        'organization' => 'New organization',
+        'owner' => 'New zone owner',
+        'exchange_rate' => 'Exchange rate',
+        'holiday' => 'Day off',
+        'cookie_policy' => 'Cookie policy',
+    ],
+
     'groups' => [
         'languages' => 'Languages',
         'countries' => 'Countries',

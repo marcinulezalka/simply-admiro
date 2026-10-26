@@ -21,6 +21,8 @@ return [
     'dark' => 'Ciemny',
 
     'sections' => [
+        'header' => 'Nagłówek strony',
+        'header_lead' => 'Nagłówek kontekstowy (x-admiro::app.context): ikona w kafelku, duży tytuł i pod nim mniejszy opis krojem mono; gdy strona ma akcje, stoją po prawej w panelu z ramką (najwyżej jedna główna). W strefie ikona dobiera się z bieżącej pozycji menu, chyba że strona poda własną.',
         'colors' => 'Kolory',
         'colors_lead' => 'Tylko tokeny semantyczne; widoki nigdy nie używają palety bazowej ani wartości wpisanych na sztywno.',
         'palettes' => 'Kolorystyki',
@@ -43,6 +45,12 @@ return [
     ],
 
     'sample' => [
+        'header_title' => 'Organizacje',
+        'header_meta' => '12 organizacji · ostatnia zmiana 26.10.2026',
+        'header_secondary' => 'Eksport',
+        'header_primary' => 'Nowa organizacja',
+        'header_plain_title' => 'Status aplikacji',
+        'header_plain_meta' => 'Wszystkie usługi działają',
         'placeholder_hint' => 'Podpowiedź w polu pokazuje sam przykład formatu (bez „np.”) i znika przy pisaniu — etykieta nad polem zostaje.',
         'palette_inverse' => 'Karta odwrócona',
         'page_title' => 'Tytuł strony',

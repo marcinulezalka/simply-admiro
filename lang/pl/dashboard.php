@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 return [
 
-    'title' => 'Panel administratora',
+    'title' => 'Status aplikacji',
 
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Pierwsze uruchomienie admiro krok po kroku. Przejdź etapy w tej kolejności — każdy kolejny korzysta z ustawień poprzedniego.',
@@ -28,6 +28,8 @@ return [
     'onboarding_open' => 'Przejdź do: :name',
     'onboarding_done' => 'Zrobione',
     'onboarding_confirmed' => 'Krok „:name” zatwierdzony.',
+    'onboarding_complete' => 'Wszystkie kroki konfiguracji są zrobione.',
+    'onboarding_review' => 'Przejrzyj kroki',
     'onboarding_languages_enabled' => 'Włączone języki',
     'onboarding_languages_enabled_empty' => 'Żaden język nie jest jeszcze włączony.',
     'onboarding_languages_all' => 'Wszystkie języki',
