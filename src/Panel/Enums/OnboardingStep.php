@@ -18,7 +18,7 @@ use Simplysmart\Admiro\Enums\LegalDocumentType;
 /**
  * Kroki onboardingu strefy administratorów w kolejności wykonywania (pulpit i kreator `onboarding.show`). Krok jest
  * zrobiony, gdy zapisano wszystkie jego kamienie milowe (milestones(), Panel\Onboarding\OnboardingProgress) — krok
- * „Języki” oznacza zatwierdzenie w kreatorze, pozostałe Panel\Onboarding\RecordOnboardingProgress po akcji
+ * „Instalacja systemu i konto hero” jest zrobiony od początku, „Języki” oznacza zatwierdzenie w kreatorze, pozostałe Panel\Onboarding\RecordOnboardingProgress po akcji
  * administratora w panelu. Teksty: `admiro::dashboard.onboarding_<value>_title|lead`.
  */
 enum OnboardingStep: string
@@ -26,6 +26,7 @@ enum OnboardingStep: string
     /** Akcja dziennika zdarzeń, którą kreator zatwierdza krok (Panel\Http\AdminAudit, RecordOnboardingProgress). */
     public const string CONFIRMED_ACTION = 'onboarding step confirmed';
 
+    case Installation = 'installation';
     case Languages = 'languages';
     case Settings = 'settings';
     case Legal = 'legal';
@@ -39,7 +40,7 @@ enum OnboardingStep: string
     public function permission(): Permission
     {
         return match ($this) {
-            self::Languages, self::Settings, self::Legal => Permission::SettingsManage,
+            self::Installation, self::Languages, self::Settings, self::Legal => Permission::SettingsManage,
             self::Organizations => Permission::OrganizationsManage,
             self::Owners => Permission::OwnersAssign,
             self::Administrators => Permission::UsersManage,
@@ -52,6 +53,7 @@ enum OnboardingStep: string
     public function route(): string
     {
         return match ($this) {
+            self::Installation => 'dashboard',
             self::Languages => 'onboarding.show',
             self::Settings => 'settings.show',
             self::Legal => 'cookie-policy.index',
@@ -72,6 +74,7 @@ enum OnboardingStep: string
     public function icon(): string
     {
         return match ($this) {
+            self::Installation => 'check-circle',
             self::Languages => 'locale',
             self::Settings => 'settings',
             self::Legal => 'cookie',
@@ -83,12 +86,17 @@ enum OnboardingStep: string
 
     /**
      * Kamienie milowe, które razem zamykają krok; dokumenty prawne wymagają publikacji polityki cookies i każdego
-     * dokumentu z LegalDocumentType.
+     * dokumentu z LegalDocumentType. Instalacja systemu z kontem hero nie ma żadnego: robi ją wdrożenie, zanim ktokolwiek
+     * wejdzie do panelu, więc krok 1 jest zrobiony od początku.
      *
      * @return list<string>
      */
     public function milestones(): array
     {
+        if ($this === self::Installation) {
+            return [];
+        }
+
         if ($this !== self::Legal) {
             return [$this->value];
         }

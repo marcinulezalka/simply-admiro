@@ -422,13 +422,14 @@ menu pokazuje zamiast pozycji aplikacji „Wróć do aplikacji”, tytuł „Ust
 osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.
 
-Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
+Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted`, `.ss-card--dashed` (przygaszona: przerywana ramka, bez tła) i `.ss-card--link` (cała karta jako odnośnik, np. skrót
 do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
 `surface-muted`), `.ss-onboarding-wizard` (kreator onboardingu: kroki `.ss-stepper` jako odnośniki, karta kroku, stopka Wstecz/Dalej;
 krok „Języki” z panelem włączonych języków `.ss-onboarding-languages` nad listą), `.ss-dictionary-code` (kod wpisu
-słownika z flagami krajów), `.ss-onboarding` (karta kroków konfiguracji na górze pulpitu: ikona w kafelku, tytuł i opis, po
-prawej postęp z paskiem `.ss-progress` — natywny `<progress>` w kolorze akcentu — i lista numerowana kart-odnośników
-`.ss-card--muted` z dużym, przygaszonym numerem kroku w tle), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
+słownika z flagami krajów), `.ss-onboarding` (strona onboardingu: postęp w nagłówku strony — panel akcji
+`.ss-context__actions--progress` z przerywaną ramką i delikatnym cieniem, etykieta mono i pasek `.ss-progress`, natywny
+`<progress>` w kolorze akcentu — a pod nim, na tle strony bez karty, lista numerowana kart-odnośników wszystkich kroków
+z dużym, przygaszonym numerem w tle; zrobione z przerywaną ramką `.ss-card--dashed` i haczykiem), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
 `x-admiro::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie

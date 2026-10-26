@@ -69,7 +69,7 @@
         :palette-scope="$zone->name"
     >
         @isset($actions)
-            <x-slot:actions>{{ $actions }}</x-slot:actions>
+            <x-slot:actions :class="$actions->attributes->get('class')">{{ $actions }}</x-slot:actions>
         @endisset
 
         {{ $slot }}

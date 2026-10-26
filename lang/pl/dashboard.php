@@ -16,7 +16,7 @@ return [
     'title' => 'Status aplikacji',
 
     'onboarding_title' => 'Onboarding',
-    'onboarding_lead' => 'Pierwsze uruchomienie admiro krok po kroku. Przejdź etapy w tej kolejności — każdy kolejny korzysta z ustawień poprzedniego.',
+    'onboarding_lead' => 'Przejdź przez konfigurację procesów firmowych w zalecanej kolejności. Każdy etap buduje fundamenty pod kolejne funkcje Twojego systemu.',
     'onboarding_progress' => 'Zrobione :done z :total',
     'onboarding_step' => 'Krok :number',
     'onboarding_wizard_lead' => 'Skonfiguruj admiro krok po kroku. Kroki możesz przechodzić w dowolnej kolejności — zrobione mają haczyk.',
@@ -40,6 +40,8 @@ return [
     'onboarding_language_switch' => 'Język :name włączony',
     'onboarding_language_locked' => 'Język aplikacji albo interfejsu — zawsze włączony',
     'onboarding_language_save' => 'Zapisz',
+    'onboarding_installation_title' => 'Instalacja systemu i konto hero',
+    'onboarding_installation_lead' => 'System jest wdrożony, a pierwsze konto administratora (hero) ma pełne uprawnienia — ten krok zrobiło wdrożenie.',
     'onboarding_languages_title' => 'Języki',
     'onboarding_languages_lead' => 'Włącz języki, w których działa firma — tylko one pojawią się w wyborach. Domyślnie włączony jest tylko język aplikacji i języki interfejsu.',
     'onboarding_settings_title' => 'Ustawienia systemu',

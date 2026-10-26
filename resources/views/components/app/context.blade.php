@@ -1,4 +1,4 @@
-{{-- Nagłówek kontekstowy strony (docs/design-system.md §5): opcjonalna ikona w kafelku (icon), powrót (back: adres albo null), duży tytuł, pod nim mniejszy opis krojem mono (meta) i — gdy strona je ma — panel akcji po prawej (slot actions, najwyżej jedna główna; .ss-context__actions to panel z ramką); na telefonie panel akcji pod tytułem. --}}
+{{-- Nagłówek kontekstowy strony (docs/design-system.md §5): opcjonalna ikona w kafelku (icon), powrót (back: adres albo null), duży tytuł, pod nim mniejszy opis krojem mono (meta) i — gdy strona je ma — panel akcji po prawej (slot actions, najwyżej jedna główna; .ss-context__actions to panel z ramką, klasa slotu — np. .ss-context__actions--progress — trafia na panel); na telefonie panel akcji pod tytułem. --}}
 @props(['title', 'meta' => null, 'back' => null, 'icon' => null])
 <div class="ss-context">
     <div class="ss-context__heading">
@@ -16,6 +16,6 @@
         </div>
     </div>
     @isset($actions)
-        <div class="ss-context__actions" role="group" aria-label="{{ text('layout.page_actions') }}">{{ $actions }}</div>
+        <div {{ $actions->attributes->class(['ss-context__actions'])->only('class') }} role="group" aria-label="{{ text('layout.page_actions') }}">{{ $actions }}</div>
     @endisset
 </div>

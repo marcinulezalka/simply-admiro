@@ -39,6 +39,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Strona Onboarding w panelu administratora: nagłówek „Onboarding” z opisem procesu, licznik „Zrobione X z Y” z paskiem postępu po prawej w nagłówku (karta z przerywaną ramką i delikatnym cieniem — klasa slotu `actions` w `x-admiro::app.context` trafia na panel akcji, wariant `.ss-context__actions--progress`), kroki bez karty na tle strony, wszystkie, zrobione przygaszone (nowy wariant karty `.ss-card--dashed`: przerywana ramka, bez tła); nowy krok 1 „Instalacja systemu i konto hero” (`OnboardingStep::Installation`, zrobiony od początku), kolejne kroki przenumerowane.
+
 - Layout Workspace na telefonie i tablecie: przycisk menu w górnym pasku (menu boczne da się otworzyć), stopka na telefonie w dwóch rzędach (wyszukiwarka na całą szerokość, pod nią logo i kalendarz).
 - Strefa administratorów: pulpit to „Status aplikacji” (skróty do sekcji), a przegląd kroków konfiguracji z postępem jest na stronie Onboarding (`onboarding.index` zamiast przekierowania do pierwszego kroku).
 - Nowy sygnet admiro: monochromatyczny — biała korona wychodząca ukośnie z lewego dolnego rogu czarnego kafelka, z warstwową obwódką (favicon SVG i ICO, ikona ekranu startowego, awatar, wzorce w `brand/icon/`).

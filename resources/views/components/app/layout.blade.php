@@ -213,7 +213,7 @@
             <main class="ss-main">
                 <x-admiro::app.context :title="$title" :meta="$meta" :back="$back" :icon="$icon">
                     @isset($actions)
-                        <x-slot:actions>{{ $actions }}</x-slot:actions>
+                        <x-slot:actions :class="$actions->attributes->get('class')">{{ $actions }}</x-slot:actions>
                     @endisset
                 </x-admiro::app.context>
 

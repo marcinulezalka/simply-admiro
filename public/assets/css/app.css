@@ -68,7 +68,8 @@
 
 /**
  * .ss-card — karta (docs/design-system.md §4): surface, ramka border, promień karty, bez cienia;
- * .ss-card--muted — karta w karcie: surface-muted, bez ramki, mniejszy promień.
+ * .ss-card--muted — karta w karcie: surface-muted, bez ramki, mniejszy promień;
+ * .ss-card--dashed — karta przygaszona (np. zrobiony krok): przerywana ramka border-strong, bez tła i cienia.
  */
 .ss-card {
     padding: var(--ss-space-4);
@@ -81,6 +82,12 @@
     border: 0;
     border-radius: var(--ss-radius-control);
     background: var(--ss-color-surface-muted);
+}
+
+.ss-card--dashed {
+    border-style: dashed;
+    border-color: var(--ss-color-border-strong);
+    background: transparent;
 }
 
 /* .ss-card--link — cała karta jest odnośnikiem (skrót do sekcji): ikona w kafelku i etykieta w wierszu. */
@@ -111,39 +118,19 @@
 }
 
 /**
- * .ss-onboarding — karta kroków konfiguracji na górze pulpitu: nagłówek (.ss-onboarding__header) z ikoną w kafelku
- * (.ss-onboarding__icon), tytułem i opisem po lewej (.ss-onboarding__intro) i postępem po prawej
- * (.ss-onboarding__progress: etykieta i pasek .ss-progress; na telefonie pod spodem), pod nim lista numerowana paneli
- * niezrobionych kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to karta w karcie (.ss-card--muted)
- * będąca odnośnikiem, z dużym, przygaszonym numerem kroku w tle (.ss-onboarding__number, dekoracyjny), etykietą
- * „Krok N”, nazwą z ikoną i opisem. .ss-dashboard__shortcuts / .ss-dashboard__title — sekcja skrótów pod onboardingiem.
+ * .ss-onboarding — strona onboardingu (panel/onboarding/index): postęp w nagłówku strony (.ss-onboarding__progress:
+ * etykieta mono i pasek .ss-progress, w panelu akcji .ss-context__actions--progress), pod nim — bez karty, na tle
+ * strony — lista numerowana wszystkich kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to karta-odnośnik
+ * (.ss-onboarding__link) z dużym, przygaszonym numerem w tle (.ss-onboarding__number, dekoracyjny), etykietą „Krok N”,
+ * nazwą z ikoną i opisem; zrobiony krok (.ss-card--dashed) jest przygaszony, z haczykiem zamiast ikony.
+ * .ss-dashboard__title — tytuł sekcji skrótów na pulpicie.
  */
-.ss-onboarding {
-    margin-bottom: var(--ss-space-8);
-}
-
-.ss-onboarding__header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--ss-space-4) var(--ss-space-8);
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: var(--ss-space-6);
-}
-
-.ss-onboarding__intro {
-    display: flex;
-    flex: 1 1 24rem;
-    gap: var(--ss-space-4);
-    align-items: flex-start;
-}
-
 .ss-onboarding__progress {
     display: flex;
-    flex: 0 1 16rem;
     flex-direction: column;
     gap: var(--ss-space-2);
-    align-items: flex-end;
+    min-width: 12rem;
+    padding: var(--ss-space-2) var(--ss-space-3);
 }
 
 .ss-onboarding__progress-label {
@@ -181,28 +168,10 @@
     background: var(--ss-color-accent);
 }
 
-.ss-onboarding__icon {
-    width: 2.75rem;
-    height: 2.75rem;
-    color: var(--ss-color-accent);
-}
-
-.ss-onboarding__title,
 .ss-dashboard__title {
-    margin: 0;
+    margin: 0 0 var(--ss-space-4);
     font-size: 1.125rem;
     font-weight: 600;
-}
-
-.ss-dashboard__title {
-    margin-bottom: var(--ss-space-4);
-}
-
-.ss-onboarding__lead {
-    max-width: 60ch;
-    margin: var(--ss-space-1) 0 0;
-    color: var(--ss-color-muted);
-    font-size: 0.875rem;
 }
 
 .ss-onboarding__steps {
@@ -229,7 +198,17 @@
 }
 
 .ss-onboarding__link:hover {
-    background: color-mix(in srgb, var(--ss-color-surface-muted) 92%, var(--ss-color-text));
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-card--dashed.ss-onboarding__link .ss-onboarding__name,
+.ss-card--dashed.ss-onboarding__link .ss-onboarding__text {
+    color: var(--ss-color-muted);
+}
+
+.ss-card--dashed.ss-onboarding__link .ss-onboarding__name-icon {
+    color: var(--ss-color-success);
 }
 
 .ss-onboarding__link:focus-visible {
@@ -1683,6 +1662,7 @@ textarea.ss-input {
 
 .ss-context__heading {
     display: flex;
+    flex: 1 1 20rem;
     gap: var(--ss-space-4);
     align-items: center;
     min-width: 0;
@@ -1749,6 +1729,14 @@ textarea.ss-input {
     border-radius: calc(var(--ss-radius-button) + var(--ss-space-1));
     background: var(--ss-color-surface);
     box-shadow: var(--ss-shadow-soft);
+}
+
+/* .ss-context__actions--progress — panel akcji jako karta postępu: przerywana ramka, delikatny cień, bez wypełnienia. */
+.ss-context__actions--progress {
+    border-style: dashed;
+    border-color: var(--ss-color-border-strong);
+    background: transparent;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--ss-color-text) 4%, transparent), 0 6px 16px color-mix(in srgb, var(--ss-color-text) 5%, transparent);
 }
 
 .ss-context__actions form {
@@ -2067,7 +2055,7 @@ textarea.ss-input {
     background: var(--ss-color-canvas);
 }
 
-.ss-shell .ss-card:not(.ss-card--muted, .ss-card--inverse) {
+.ss-shell .ss-card:not(.ss-card--muted, .ss-card--inverse, .ss-card--dashed) {
     border-color: transparent;
     box-shadow: var(--ss-shadow-soft);
 }

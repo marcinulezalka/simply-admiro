@@ -16,7 +16,7 @@ return [
     'title' => 'Application status',
 
     'onboarding_title' => 'Onboarding',
-    'onboarding_lead' => 'Getting admiro up and running, step by step. Go through the stages in this order — each one builds on the previous one.',
+    'onboarding_lead' => 'Go through the setup of your business processes in the recommended order. Each stage lays the foundations for the next features of your system.',
     'onboarding_progress' => ':done of :total done',
     'onboarding_step' => 'Step :number',
     'onboarding_wizard_lead' => 'Set up admiro step by step. You can go through the steps in any order — finished ones are ticked.',
@@ -40,6 +40,8 @@ return [
     'onboarding_language_switch' => ':name enabled',
     'onboarding_language_locked' => 'Application or interface language — always enabled',
     'onboarding_language_save' => 'Save',
+    'onboarding_installation_title' => 'System installation and hero account',
+    'onboarding_installation_lead' => 'The system is deployed and the first administrator account (hero) has full permissions — the deployment did this step.',
     'onboarding_languages_title' => 'Languages',
     'onboarding_languages_lead' => 'Turn on the languages your company works in — only they appear in choices. By default only the application language and the interface languages are on.',
     'onboarding_settings_title' => 'System settings',
