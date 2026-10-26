@@ -4,7 +4,7 @@
     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.login.store')) }}">
         @csrf
         <x-admiro::honeypot />
-        <x-admiro::input id="email" :label="$zone->signInText('email')" icon="mail" name="email" type="email" :value="old('email')" autocomplete="email" :placeholder="$placeholder !== '' ? $placeholder : text('placeholders.email')" required autofocus :error="$errors->first('email')" />
+        <x-admiro::input id="email" :label="$zone->signInText('email')" icon="mail" name="email" type="email" :value="old('email')" autocomplete="email" :placeholder="$placeholder !== '' ? $placeholder : text('placeholders.email')" required autofocus />
         <button class="ss-button ss-button--primary ss-button--block" type="submit">{{ $zone->signInText('submit') }}<x-admiro::icon name="arrow-right" class="ss-button__icon" /></button>
     </form>
 </x-admiro::auth.layout>

@@ -206,7 +206,7 @@ Wspólne komponenty powstają w Core jako `x-admiro::…`:
 | `app/welcome` | domyślna strona startowa aplikacji (zaimplementowana): rama `.ss-frame` z dwiema kartami o zagnieżdżonych zaokrągleniach — karta z opisem, funkcjami Core jako ikona, tytuł i opis, stopką z logo Laravela i plakietką wersji admiro (`View\CoreVersion`, plik `VERSION`) oraz kartą marki (logo simplysmart na środku — odnośnik do `admiro.welcome.website`, `WELCOME_WEBSITE`, w nowej karcie — pod nim kafelki z bardzo delikatnym gradientem i przygaszonym logo zarejestrowanych stref, `View\ZoneLogos`, `.ss-welcome__zones`; logo strefy z `website` prowadzi do jej strony w nowej karcie); aplikacja nadpisuje ją plikiem `resources/views/welcome.blade.php` |
 | `BrandNames::highlight()` | wyróżnienie nazw simplysmart i admiro w tekście (`View\BrandNames`, klasa `.ss-brand-name`): najpierw escapuje, potem pogrubia; `BrandNames::withLogo()` zamiast nazwy simplysmart wstawia logo SVG w linii tekstu (`.ss-logo-inline`, nagłówek strony startowej); w treściach piszemy „admiro”, nie `simplysmart/admiro` ani „Core” |
 | `icon` | ikona liniowa inline z `public/assets/img/icons/<name>.svg` (zaimplementowany; `stroke="currentColor"`, dekoracyjna `aria-hidden`, klasa `.ss-icon`); rysunki z zestawu [Lucide](https://lucide.dev) (ISC, zaokrąglone końce i łączenia, kreska 1,75 we wspólnym nagłówku Core, w CSS z tokenu `--ss-icon-stroke`; źródło i licencja w `docs/zaleznosci.md`); nowa ikona to plik SVG 24×24 z Lucide z tym samym nagłówkiem |
-| `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja |
+| `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja; `--outline` — delikatny obrys bez wypełnienia, kolor z `--success`, `--warning`, `--danger`, `--info` albo `--muted` (np. stan kroku onboardingu) |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy `x-admiro::app.context` (zaimplementowany): ikona w kafelku (`icon`; w strefie z bieżącej pozycji menu albo mapy strony), duży tytuł, pod nim opis krojem mono (`meta`), slot `actions` jako panel z ramką po prawej; próbka w design systemie (sekcja „Nagłówek strony”) |
@@ -259,14 +259,17 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
 - **Pole PIN-u** `x-admiro::pin-field` (kroki logowania z PIN-em, ustawienie PIN-u, zmiana PIN-u w bezpieczeństwie):
   `.ss-input--code` (cyfry rozstrzelone, w rozmiarze tekstu pól) z opcjonalną subtelną ikoną po lewej (prop `icon`;
   w logowaniu `lock`) i przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
-  modal `.ss-keypad` (natywny `<dialog>` nazwany etykietą pola, `js/pin-keypad.js`) w szerokości treści i w kolorach
-  karty formularza logowania (tło surface-muted, ramka border-strong): u góry pole z kropkami wpisanych cyfr, pod nim
-  smukłe, małe klawisze w wysokości przycisków z ikoną (40 px) (1–9, w dolnym rzędzie „C” czyści, „0” na środku,
-  `backspace` w prawym dolnym rogu usuwa ostatnią cyfrę) i stopka z „Wstecz” (zamyka okno) obok
-  „Zatwierdź PIN” z ikoną `check`, które zamyka okno i od razu wysyła formularz (`requestSubmit`), a gdy formularz nie
-  jest jeszcze poprawny, przenosi fokus do pierwszego niepoprawnego pola (np. powtórzenia PIN-u). Kropki pokazują liczbę
-  wpisanych cyfr (liczba także dla czytników ekranu), cyfry trafiają do pola na bieżąco (do `maxlength`), fizyczna
-  klawiatura działa w polu i w oknie (Enter = „Zatwierdź PIN”). Bez skryptu przycisk jest ukryty.
+  modal `.ss-keypad` (natywny `<dialog>` nazwany etykietą pola, `js/pin-keypad.js`) w kolorach karty formularza
+  logowania (tło surface-muted, ramka border-strong), o szerokości siatki klawiszy: u góry pole z kropkami wpisanych
+  cyfr, pod nim klawisze 64 × 46 px (1–9, w dolnym rzędzie „C” czyści, „0” na środku, `backspace` w prawym dolnym rogu
+  usuwa ostatnią cyfrę), a na dole „Zatwierdź PIN” z ikoną Entera (`corner-down-left`) na całą szerokość i pod nim
+  „Wstecz” jako link (zamyka okno) — pole, klawisze i stopka mają tę samą szerokość. Enter albo „Zatwierdź PIN” przy
+  PIN-ie krótszym niż `minlength` pokazuje komunikat w oknie (`layout.keypad.too_short`); przy poprawnym zamyka okno
+  i przechodzi dalej: otwiera klawiaturę następnego pustego pola PIN (np. powtórzenia), a z ostatniego wysyła
+  formularz (`requestSubmit`). Enter w samym polu działa tak samo bez okna. Wartość z klawiatury ekranowej dostaje
+  `setCustomValidity`, bo przeglądarka nie sprawdza `minlength` wartości wpisanej skryptem — za krótki PIN nie wyśle
+  formularza. Kropki pokazują liczbę wpisanych cyfr (liczba także dla czytników ekranu), cyfry trafiają do pola na
+  bieżąco (do `maxlength`). Bez skryptu przycisk jest ukryty.
 - **Pole kodu z e-maila** `x-admiro::code-field` (krok kodu logowania, kod resetu PIN-u): osobne pole na każdą cyfrę
   (`.ss-code`, `.ss-code__cell`, `js/code-field.js`); cyfra przechodzi do następnej komórki, Backspace w pustej wraca,
   strzałki przesuwają, wklejenie i autouzupełnianie rozkładają cały kod. Kod trafia do ukrytego pola `name`; bez skryptu
@@ -310,7 +313,9 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   akcję (link, np. „Zobacz”, „Cofnij”). Layouty aplikacji, logowania i strony publicznej strefy pokazują toasty
   z sesji (`Toast::fromFlash()`): akcja flashuje `Toast::SESSION_KEY` z listą `Toast::toArray()`, a krótki komunikat
   `status` (`Toast::STATUS_KEY`, np. „Wylogowano” po wylogowaniu) staje się toastem powodzenia — komunikaty z sesji
-  nie trafiają do szarego `.ss-notice` w karcie. Wariant `inline` to próbki w treści strony.
+  nie trafiają do szarego `.ss-notice` w karcie. Na ekranach logowania także błędy walidacji kroku (np. zły kod,
+  słaby PIN) są globalnymi toastami błędu (`Toast::fromErrors()`), a pola nie są oznaczane na czerwono. Wariant
+  `inline` to próbki w treści strony.
 - **Powiadomienia** (`View\Notifications\NotificationPanel`, `NotificationItem`, `x-admiro::notification`):
   dzwonek pod nazwą konta w menu bocznym z licznikiem nieprzeczytanych (liczba także w tekście dla czytników) i panelem
   (`<details data-ss-dropdown>`, jak menu konta: otwarcie jednego zamyka drugie); pełna lista na osobnej stronie.
@@ -422,14 +427,16 @@ menu pokazuje zamiast pozycji aplikacji „Wróć do aplikacji”, tytuł „Ust
 osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Dodatkowe arkusze przez prop
 `stylesheets` (po `View\CoreAssets::STYLESHEETS`). Szerokości: `--ss-sidebar-width`, `--ss-sidebar-collapsed-width`.
 
-Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted`, `.ss-card--dashed` (przygaszona: przerywana ramka, bez tła) i `.ss-card--link` (cała karta jako odnośnik, np. skrót
+Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
 do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
-`surface-muted`), `.ss-onboarding-wizard` (kreator onboardingu: kroki `.ss-stepper` jako odnośniki, karta kroku, stopka Wstecz/Dalej;
-krok „Języki” z panelem włączonych języków `.ss-onboarding-languages` nad listą), `.ss-dictionary-code` (kod wpisu
+`surface-muted`), `.ss-onboarding-wizard` (kreator onboardingu: od 64rem pionowa lista kroków obok karty kroku — karty-odnośniki z numerem
+w kółku, który po zrobieniu zmienia się w haczyk, nazwą, opisem i ikoną, połączone linią; bieżący z ramką akcentu —,
+karta kroku ze stopką Wstecz/Dalej;
+krok „Języki” z panelem włączonych języków `.ss-onboarding-languages` nad wyszukiwarką z podpowiedziami, wyniki w panelach z przełącznikami), `.ss-dictionary-code` (kod wpisu
 słownika z flagami krajów), `.ss-onboarding` (strona onboardingu: postęp w nagłówku strony — panel akcji
 `.ss-context__actions--progress` z przerywaną ramką i delikatnym cieniem, etykieta mono i pasek `.ss-progress`, natywny
 `<progress>` w kolorze akcentu — a pod nim, na tle strony bez karty, lista numerowana kart-odnośników wszystkich kroków
-z dużym, przygaszonym numerem w tle; zrobione z przerywaną ramką `.ss-card--dashed` i haczykiem), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
+z dużym, przygaszonym numerem w tle; zrobione wyszarzone w kolorach hovera `.ss-card--muted`, z haczykiem), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent
 `x-admiro::stepper` z `steps` i indeksem `current`, teksty `layout.steps.*`), stronicowanie

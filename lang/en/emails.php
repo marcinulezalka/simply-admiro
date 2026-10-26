@@ -15,6 +15,7 @@ return [
 
     'layout' => [
         'automatic' => 'This message was sent automatically — please do not reply.',
+        'brand_group' => 'The simplysmart product family',
     ],
 
     'login_code' => [

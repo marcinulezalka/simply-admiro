@@ -15,6 +15,7 @@ namespace Simplysmart\Admiro\Panel\Onboarding;
 
 use Simplysmart\Admiro\Models\Organization;
 use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
+use Simplysmart\Admiro\Panel\Enums\OnboardingStepState;
 
 /**
  * Postęp onboardingu strefy administratorów: zapisane kamienie milowe (OnboardingStep::milestones()) w
@@ -39,10 +40,10 @@ final class OnboardingProgress
     }
 
     /**
-     * Kroki w podanej kolejności z numerem (pozycja na liście, od 1) i stanem.
+     * Kroki w podanej kolejności z numerem (pozycja na liście, od 1), stanem i skrótem done (stan Done).
      *
      * @param list<OnboardingStep> $steps
-     * @return list<array{step: OnboardingStep, number: int, done: bool}>
+     * @return list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool}>
      */
     public function checklist(array $steps): array
     {
@@ -51,7 +52,8 @@ final class OnboardingProgress
         $checklist = [];
 
         foreach ($steps as $index => $step) {
-            $checklist[] = ['step' => $step, 'number' => $index + 1, 'done' => array_diff($step->milestones(), $milestones) === []];
+            $state = OnboardingStepState::of($step->milestones(), $milestones);
+            $checklist[] = ['step' => $step, 'number' => $index + 1, 'state' => $state, 'done' => $state === OnboardingStepState::Done];
         }
 
         return $checklist;

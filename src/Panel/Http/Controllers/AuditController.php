@@ -16,20 +16,24 @@ namespace Simplysmart\Admiro\Panel\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Http\ManagedAccounts;
+use Simplysmart\Admiro\Panel\Onboarding\OnboardingProgress;
 use Simplysmart\Admiro\Queries\Audit\AuditLog;
 use Throwable;
 
 /**
  * Dziennik zdarzeń (`audit.view`): logowania, blokady, role i akcje administratorów, od najnowszych, z filtrami
- * strefy, zdarzenia i zakresu dat.
+ * strefy, zdarzenia i zakresu dat. Pierwsze otwarcie zamyka krok onboardingu „Dziennik zdarzeń”.
  */
 final readonly class AuditController
 {
     private const int PER_PAGE = 50;
 
-    public function __invoke(Request $request, AuditLog $log, ManagedAccounts $managed): View
+    public function __invoke(Request $request, AuditLog $log, ManagedAccounts $managed, OnboardingProgress $progress): View
     {
+        $progress->mark(OnboardingStep::Audit->value);
+
         $filters = [
             'zone' => $this->string($request, 'zone'),
             'event' => $this->string($request, 'event'),

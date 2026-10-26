@@ -15,6 +15,7 @@ return [
 
     'layout' => [
         'automatic' => 'Wiadomość wysłana automatycznie — nie odpowiadaj na nią.',
+        'brand_group' => 'Rodzina produktów simplysmart',
     ],
 
     'login_code' => [

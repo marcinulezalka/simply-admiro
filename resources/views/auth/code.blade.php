@@ -10,7 +10,7 @@
 <x-admiro::auth.layout :title="$zone->signInText('code_title')" :lead="$intro" :note="$zone->signInText('code_note')">
     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.code.store')) }}">
         @csrf
-        <x-admiro::code-field id="code" name="code" :label="$zone->signInText('code')" :length="$codeLength" icon="shield-check" :error="$errors->first('code')" autofocus />
+        <x-admiro::code-field id="code" name="code" :label="$zone->signInText('code')" :length="$codeLength" icon="shield-check" autofocus />
         @if ($rememberDeviceDays !== null)
             <x-admiro::switch id="remember_device" name="remember_device" value="1" :label="$zone->signInText('remember_device', ['days' => $rememberDeviceDays])" />
         @endif

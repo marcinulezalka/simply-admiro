@@ -54,6 +54,7 @@ return [
         'backspace' => 'Delete the last digit',
         'back' => 'Back',
         'done' => 'Confirm PIN',
+        'too_short' => 'The PIN needs at least :min digits.',
     ],
     'settings' => 'Settings',
     'back_to_app' => 'Back to the application',

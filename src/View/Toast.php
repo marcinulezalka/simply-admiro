@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\View;
 
+use Illuminate\Support\ViewErrorBag;
 use Simplysmart\Admiro\Enums\ToastType;
 
 /**
@@ -98,5 +99,22 @@ final readonly class Toast
         }
 
         return $flashed;
+    }
+
+    /**
+     * Błędy walidacji jako globalne toasty błędu (bez powtórzeń), np. na ekranach logowania, gdzie błąd dotyczy całego
+     * kroku, a pole nie jest oznaczane na czerwono.
+     *
+     * @return list<self>
+     */
+    public static function fromErrors(mixed $errors): array
+    {
+        if (! $errors instanceof ViewErrorBag) {
+            return [];
+        }
+
+        $messages = array_values(array_unique(array_filter($errors->getBag('default')->all(), is_string(...))));
+
+        return array_map(static fn(string $message): self => new self(ToastType::Danger, $message), $messages);
     }
 }

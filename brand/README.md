@@ -10,8 +10,8 @@ kopii w `public/images/`, podłączonych w `config/admiro.php` (`zone.brand`, `z
 | `logo/admiro.svg` | wzorzec logotypu „admiro” (wektor, czarne litery zamienione na krzywe, złota korona zamiast kropki nad „i”). Z niego powstają pozostałe wersje |
 | `logo/png/admiro-on-light-{800,1600,2400}.png` | logo z czarnymi literami, na jasne tło: dokumenty, prezentacje |
 | `logo/png/admiro-on-dark-{800,1600,2400}.png` | logo z białymi literami, na ciemne tło |
-| `icon/admiro-mark.svg` | wzorzec sygnetu (wektor): czarny zaokrąglony kafelek, biała korona wychodząca ukośnie z lewego dolnego rogu, z warstwową obwódką w odcieniach grafitu. Z niego powstają pozostałe wersje (render w przeglądarce bez okna) |
-| `icon/admiro-mark-on-light.png`, `icon/admiro-mark-on-dark.png` | sygnet z `admiro-mark.svg` (na jasne i ciemne tło ten sam); 1024×1024, przezroczyste tło poza kafelkiem |
+| `icon/admiro-mark.svg` | wzorzec sygnetu (wektor): zaokrąglony kafelek w grafitowym gradiencie (ciepły brąz w prawym górnym rogu), z którego wycięta jest korona wychodząca ukośnie z lewego dolnego rogu — wycięcie (przezroczyste) obejmuje cały róg, obwódka jasna i półprzezroczysta. Z niego powstają pozostałe wersje (render w przeglądarce bez okna) |
+| `icon/admiro-mark-on-light.png`, `icon/admiro-mark-on-dark.png` | sygnet z `admiro-mark.svg` (na jasne i ciemne tło ten sam); 1024×1024, przezroczyste tło poza kafelkiem i w wycięciu korony |
 | `OFL.txt` | licencja kroju Zen Dots |
 
 Nazwy `on-light` / `on-dark` mówią o **tle**, na którym logo stoi, nie o kolorze liter. Korona jest zawsze złota.
@@ -22,10 +22,10 @@ Nazwy `on-light` / `on-dark` mówią o **tle**, na którym logo stoi, nie o kolo
 | --- | --- | --- |
 | `logo.svg` | — | logotyp do osadzenia inline (litery `fill="currentColor"`, przełączają się z motywem; korona złota) |
 | `logo.png` | `brand.logo` | logo w szablonie e-maila (800 px szerokości, czarne litery i złota korona, przezroczyste tło, wolne pole) |
-| `signet.png` | `brand.signet` | awatar: sygnet na pełnym czarnym kwadracie 512×512 (bez zaokrągleń, więc znosi przycięcie do koła) |
-| `favicon.svg` | `favicon.svg` | ikona karty przeglądarki: sygnet (czarny zaokrąglony kafelek, biała korona z lewego dolnego rogu) |
+| `signet.png` | `brand.signet` | awatar: sygnet na białym kwadracie 512×512 (wycięcie korony i rogi kafelka białe, więc znosi przycięcie do koła) |
+| `favicon.svg` | `favicon.svg` | ikona karty przeglądarki: sygnet (grafitowy kafelek z wyciętą koroną z lewego dolnego rogu) |
 | `favicon.ico` | `favicon.ico` | to samo dla starszych przeglądarek (16, 32, 48 px) |
-| `apple-touch-icon.png` | `favicon.apple` | ikona ekranu startowego (180×180, pełny kwadrat — system sam zaokrągla) |
+| `apple-touch-icon.png` | `favicon.apple` | ikona ekranu startowego (180×180, sygnet na białym tle — system sam zaokrągla) |
 
 ## Krój
 
@@ -37,6 +37,7 @@ nie rozpowszechniaj samego pliku fontu pod inną nazwą.
 ## Kolory i zasady
 
 Litery logo występują tylko w czerni (`#000000`) albo bieli (`#ffffff`), jak marka simplysmart; korona w logotypie
-jest złota (`#F5B301`). Sygnet i ikony strony są monochromatyczne: biała korona na czerni z obwódką w odcieniach
-grafitu (`#2a2a2a`, `#141414`), obrócona o 45° i przycięta przez kafelek w lewym dolnym rogu. Nie rozciągaj,
+jest złota (`#F5B301`). Sygnet i ikony strony są monochromatyczne: kafelek w gradiencie grafitu (`#0e0f10` → `#22211e` → `#4a4339`
+w prawym górnym rogu), z wyciętą (przezroczystą) koroną obróconą o 28° i wychodzącą z lewego dolnego rogu, z jasną,
+półprzezroczystą obwódką (biel, krycie 0,32). Nie rozciągaj,
 nie obracaj i nie zmieniaj proporcji logo; wokół zostaw wolne pole co najmniej ¼ wysokości liter.

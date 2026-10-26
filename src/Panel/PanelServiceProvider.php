@@ -15,6 +15,8 @@ namespace Simplysmart\Admiro\Panel;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Simplysmart\Admiro\Audit\Events\AdminActionPerformed;
+use Simplysmart\Admiro\Mail\MailBrandGroups;
+use Simplysmart\Admiro\Mail\MailBrandResolver;
 use Simplysmart\Admiro\Panel\Console\CreateAdmiroAccount;
 use Simplysmart\Admiro\Panel\Onboarding\RecordOnboardingProgress;
 use Simplysmart\Admiro\Permissions\Events\ZoneRoleChanged;
@@ -29,7 +31,7 @@ use Simplysmart\Admiro\Translation\CascadeTextTranslator;
 use Simplysmart\Admiro\Zones\ZoneNavigations;
 
 /**
- * Strefa administratorów na mechanizmie stref: rejestracja strefy (config `admiro.zone`), trasy, menu, zapis postępu
+ * Strefa administratorów na mechanizmie stref: rejestracja strefy (config `admiro.zone`), trasy, menu, grupa logotypów e-maili, zapis postępu
  * onboardingu (RecordOnboardingProgress) i komenda zakładania kont. Config, widoki (`admiro::panel.*`) i teksty (`admiro::...`) ładuje provider rdzenia.
  */
 final class PanelServiceProvider extends ZoneServiceProvider
@@ -38,6 +40,23 @@ final class PanelServiceProvider extends ZoneServiceProvider
      * Namespace tekstów strefy (`text('admiro::...')`, `sign_in.admiro.*`): wspólny z rdzeniem.
      */
     public const string NAMESPACE = CascadeTextTranslator::CORE_NAMESPACE;
+
+    /**
+     * Grupa logotypów w e-mailach strefy (MailBrandGroups): simplysmart na pozycji 10, admiro na 30; pozycja 20
+     * zostaje dla produktu, który strefa obsługuje (dopisuje go paczka produktu w swoim providerze).
+     */
+    public const string MAIL_BRAND_CORE = 'simplysmart';
+
+    public const int MAIL_BRAND_CORE_POSITION = 10;
+
+    public const string MAIL_BRAND_ZONE = 'admiro';
+
+    public const int MAIL_BRAND_ZONE_POSITION = 30;
+
+    /**
+     * Pasek nagłówka e-maili strefy: grafitowy gradient z koroną wyciętą z lewego dolnego rogu (motyw sygnetu).
+     */
+    public const string MAIL_HEADER = __DIR__ . '/../../public/images/mail-header.png';
 
     public function boot(
         ZoneDefinitionFactory $factory,
@@ -49,6 +68,8 @@ final class PanelServiceProvider extends ZoneServiceProvider
         parent::boot($factory, $zones, $guards, $middleware, $routes);
 
         $this->app->make(ZoneNavigations::class)->add(config()->string('admiro.zone.name'), AdmiroNavigation::class);
+        $this->app->make(MailBrandGroups::class)->add(config()->string('admiro.zone.name'), self::MAIL_BRAND_CORE, MailBrandResolver::CORE_LOGO, self::MAIL_BRAND_CORE_POSITION);
+        $this->app->make(MailBrandGroups::class)->add(config()->string('admiro.zone.name'), self::MAIL_BRAND_ZONE, config()->string('admiro.zone.brand.logo'), self::MAIL_BRAND_ZONE_POSITION);
         $this->app->make(Dispatcher::class)->listen([AdminActionPerformed::class, ZoneRoleChanged::class], RecordOnboardingProgress::class);
 
         if ($this->app->runningInConsole()) {

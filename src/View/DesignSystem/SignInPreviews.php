@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\View\DesignSystem;
 
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 use Simplysmart\Admiro\Auth\PinLength;
@@ -23,8 +24,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Dane podglądów prawdziwych ekranów logowania (`admiro::auth.*`) w design systemie: pierwsza strefa z logowaniem,
- * jej ustawienia (długość kodu, czas ważności, PIN), błędy pól tak, jak pokazuje je logowanie (błędny kod, zbyt wiele
- * prób, wygasła sesja logowania, słaby PIN) i stany wariantów: otwarta klawiatura PIN-u (`keypadOpen`), rozwinięta
+ * jej ustawienia (długość kodu, czas ważności, PIN), błędy kroku tak, jak pokazuje je logowanie (błędny kod, zbyt wiele
+ * prób, wygasła sesja logowania, słaby PIN; udostępnione wszystkim widokom jak ShareErrorsFromSession, bo layout
+ * logowania pokazuje je jako toasty) i stany wariantów: otwarta klawiatura PIN-u (`keypadOpen`), rozwinięta
  * sekcja zapasowego adresu (`recoveryOpen`) i oczekujący kod resetu PIN-u (`codePending`). Bez strefy z logowaniem
  * podglądu nie ma (404).
  */
@@ -36,6 +38,7 @@ final readonly class SignInPreviews
 
     public function __construct(
         private ZoneRegistry $zones,
+        private ViewFactory $views,
     ) {}
 
     /**
@@ -89,6 +92,9 @@ final readonly class SignInPreviews
      */
     private function errors(array $messages): ViewErrorBag
     {
-        return (new ViewErrorBag())->put('default', new MessageBag($messages));
+        $errors = (new ViewErrorBag())->put('default', new MessageBag($messages));
+        $this->views->share('errors', $errors);
+
+        return $errors;
     }
 }

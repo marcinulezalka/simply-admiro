@@ -68,8 +68,7 @@
 
 /**
  * .ss-card — karta (docs/design-system.md §4): surface, ramka border, promień karty, bez cienia;
- * .ss-card--muted — karta w karcie: surface-muted, bez ramki, mniejszy promień;
- * .ss-card--dashed — karta przygaszona (np. zrobiony krok): przerywana ramka border-strong, bez tła i cienia.
+ * .ss-card--muted — karta w karcie: surface-muted, bez ramki, mniejszy promień.
  */
 .ss-card {
     padding: var(--ss-space-4);
@@ -82,12 +81,6 @@
     border: 0;
     border-radius: var(--ss-radius-control);
     background: var(--ss-color-surface-muted);
-}
-
-.ss-card--dashed {
-    border-style: dashed;
-    border-color: var(--ss-color-border-strong);
-    background: transparent;
 }
 
 /* .ss-card--link — cała karta jest odnośnikiem (skrót do sekcji): ikona w kafelku i etykieta w wierszu. */
@@ -122,7 +115,7 @@
  * etykieta mono i pasek .ss-progress, w panelu akcji .ss-context__actions--progress), pod nim — bez karty, na tle
  * strony — lista numerowana wszystkich kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to karta-odnośnik
  * (.ss-onboarding__link) z dużym, przygaszonym numerem w tle (.ss-onboarding__number, dekoracyjny), etykietą „Krok N”,
- * nazwą z ikoną i opisem; zrobiony krok (.ss-card--dashed) jest przygaszony, z haczykiem zamiast ikony.
+ * nazwą z ikoną i opisem; zrobiony krok (.ss-card--muted) jest wyszarzony w kolorach hovera, z haczykiem zamiast ikony.
  * .ss-dashboard__title — tytuł sekcji skrótów na pulpicie.
  */
 .ss-onboarding__progress {
@@ -134,11 +127,22 @@
 }
 
 .ss-onboarding__progress-label {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
     color: var(--ss-color-muted);
     font-family: var(--ss-font-mono);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+}
+
+/* Ikona celu przed licznikiem „Zrobione X z Y”. */
+.ss-onboarding__progress-icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-text);
 }
 
 /* .ss-progress — pasek postępu (natywny <progress>): tor surface-muted, wypełnienie w kolorze akcentu. */
@@ -202,12 +206,17 @@
     background: var(--ss-color-surface-muted);
 }
 
-.ss-card--dashed.ss-onboarding__link .ss-onboarding__name,
-.ss-card--dashed.ss-onboarding__link .ss-onboarding__text {
+.ss-onboarding__link.ss-card--muted {
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-card);
+}
+
+.ss-onboarding__link.ss-card--muted .ss-onboarding__name,
+.ss-onboarding__link.ss-card--muted .ss-onboarding__text {
     color: var(--ss-color-muted);
 }
 
-.ss-card--dashed.ss-onboarding__link .ss-onboarding__name-icon {
+.ss-onboarding__link.ss-card--muted .ss-onboarding__name-icon {
     color: var(--ss-color-success);
 }
 
@@ -350,6 +359,35 @@
     font-weight: 500;
 }
 
+/*
+ * .ss-badge--outline — delikatna plakietka z obrysem, bez wypełnienia; kolor obrysu i tekstu z modyfikatora stanu:
+ * --success, --warning, --danger, --info albo --muted (np. stan kroku onboardingu).
+ */
+.ss-badge--outline {
+    border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+    background: transparent;
+}
+
+.ss-badge--success {
+    color: var(--ss-color-success);
+}
+
+.ss-badge--warning {
+    color: var(--ss-color-warning);
+}
+
+.ss-badge--danger {
+    color: var(--ss-color-danger);
+}
+
+.ss-badge--info {
+    color: var(--ss-color-info);
+}
+
+.ss-badge--muted {
+    color: var(--ss-color-muted);
+}
+
 /* Plakietka jako przycisk (np. odebranie roli): bez ramki, z kursorem i widocznym fokusem. */
 button.ss-badge {
     border: 0;
@@ -366,32 +404,147 @@ button.ss-badge:focus-visible {
 }
 
 /**
- * .ss-onboarding-wizard — kreator onboardingu (panel/onboarding/show): kroki w .ss-stepper jako odnośniki
- * (__step-link), karta kroku z ikoną, tytułem i opisem (__header), treść i stopka Wstecz / Dalej (__footer).
+ * .ss-onboarding-wizard — kreator onboardingu (panel/onboarding/show): od 64rem dwie kolumny — pionowa lista kroków
+ * (__nav, __steps) i karta bieżącego kroku (__panel: __header z ikoną, tytułem i opisem, treść, stopka Wstecz / Dalej
+ * __footer); węziej lista nad kartą, bez opisów kroków. Krok to karta-odnośnik (__step-link) z numerem w kółku
+ * (__marker; zrobiony: haczyk na tle success), nazwą i opisem (__step-text) i ikoną w kafelku (__step-icon); karty łączy
+ * pionowa linia. Bieżący krok (aria-current="step") ma ramkę w kolorze akcentu, zrobiony (__step-link--done) jest
+ * wyszarzony w kolorach hovera.
  * .ss-onboarding-languages — krok „Języki”: panel włączonych języków (__enabled, kafelki __chip z flagą, nazwą
- * i przełącznikiem) nad listą (__list); wiersz wskazany kotwicą z wyszukiwarki (#language-<kod>) podświetlony.
+ * i przełącznikiem) nad wyszukiwarką (__list, __search z podpowiedziami); wyniki w panelach (__results, __result) — panel wskazany kotwicą (#language-<kod>) z ramką akcentu.
  * .ss-dictionary-code — kod wpisu słownika z flagami (__flags; __more — liczba pozostałych flag).
  */
-.ss-onboarding-wizard__step-link {
-    display: inline-flex;
-    gap: var(--ss-space-2);
-    align-items: center;
-    color: inherit;
-    text-decoration: none;
+.ss-onboarding-wizard {
+    display: grid;
+    gap: var(--ss-space-6);
+    align-items: start;
 }
 
-.ss-onboarding-wizard__step-link:hover .ss-stepper__label {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+@media (min-width: 64rem) {
+    .ss-onboarding-wizard {
+        grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+    }
+}
+
+.ss-onboarding-wizard__steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding-wizard__step {
+    position: relative;
+}
+
+/* Linia łącząca karty kroków: od środka numeru jednej karty do następnej. */
+.ss-onboarding-wizard__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: calc(var(--ss-space-4) + 0.875rem);
+    width: 1px;
+    height: var(--ss-space-4);
+    background: var(--ss-color-border-strong);
+}
+
+.ss-onboarding-wizard__step-link {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--ss-space-3);
+    align-items: start;
+    padding: var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+    color: var(--ss-color-text);
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ss-onboarding-wizard__step-link:hover,
+.ss-onboarding-wizard__step-link--done {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-onboarding-wizard__step-link--done {
+    box-shadow: none;
+}
+
+.ss-onboarding-wizard__step-link[aria-current="step"] {
+    border-color: var(--ss-color-accent);
+    box-shadow: 0 0 0 1px var(--ss-color-accent), var(--ss-shadow-soft);
 }
 
 .ss-onboarding-wizard__step-link:focus-visible {
     outline: 2px solid var(--ss-color-accent);
     outline-offset: 2px;
-    border-radius: var(--ss-radius-control);
 }
 
-.ss-onboarding-wizard {
+.ss-onboarding-wizard__marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.ss-onboarding-wizard__step-link--done .ss-onboarding-wizard__marker {
+    background: var(--ss-color-success);
+    color: var(--ss-color-surface);
+}
+
+.ss-onboarding-wizard__marker-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-onboarding-wizard__step-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    padding-top: 0.125rem;
+}
+
+.ss-onboarding-wizard__step-title {
+    font-weight: 600;
+}
+
+.ss-onboarding-wizard__step-lead {
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-onboarding-wizard__step-link--done .ss-onboarding-wizard__step-title {
+    color: var(--ss-color-muted);
+}
+
+.ss-onboarding-wizard__step-icon {
+    color: var(--ss-color-muted);
+}
+
+.ss-onboarding-wizard__step-link:hover .ss-onboarding-wizard__step-icon,
+.ss-onboarding-wizard__step-link--done .ss-onboarding-wizard__step-icon {
+    background: var(--ss-color-surface);
+}
+
+@media (max-width: 63.999rem) {
+    .ss-onboarding-wizard__step-lead {
+        display: none;
+    }
+}
+
+.ss-onboarding-wizard__panel {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-6);
@@ -424,8 +577,116 @@ button.ss-badge:focus-visible {
     border-top: 1px solid var(--ss-color-border);
 }
 
+.ss-onboarding-wizard__footer-start {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+/*
+ * .ss-onboarding-guide — instrukcja instalacji w kroku 1 kreatora: etapy z numerem w kółku (__number), tytułem,
+ * opisem i poleceniami w bloku kodu (__code, mono, przewijany poziomo).
+ */
+.ss-onboarding-guide__stages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding-guide__stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--ss-space-3);
+}
+
+.ss-onboarding-guide__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.ss-onboarding-guide__title {
+    margin: 0.125rem 0 var(--ss-space-1);
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.ss-onboarding-guide__text {
+    margin: 0 0 var(--ss-space-2);
+    font-size: 0.875rem;
+}
+
+.ss-onboarding-guide__code {
+    margin: 0;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    overflow-x: auto;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.7;
+}
+
 .ss-onboarding-wizard__footer form {
     margin: 0;
+}
+
+/* Przycisk zapasowy formularzy wysyłanych od razu (js/autosubmit.js): skrypt go ukrywa, a klasa przycisku nie może tego cofnąć. */
+[data-ss-autosubmit-fallback][hidden] {
+    display: none;
+}
+
+.ss-shell .ss-onboarding-languages__search {
+    max-width: none;
+    margin: 0 0 var(--ss-space-3);
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-input);
+    box-shadow: none;
+}
+
+.ss-onboarding-languages__results {
+    margin: var(--ss-space-4) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding-languages__result {
+    display: grid;
+    grid-template-areas: "flags switch" "text text";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+.ss-onboarding-languages__result .ss-onboarding-languages__chip-text {
+    display: flex;
+    grid-area: text;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-onboarding-languages__result > form,
+.ss-onboarding-languages__result > .ss-badge {
+    grid-area: switch;
+    justify-self: end;
+    margin: 0;
+}
+
+.ss-onboarding-languages__result-flags {
+    grid-area: flags;
 }
 
 .ss-onboarding-languages__chips {
@@ -489,9 +750,14 @@ button.ss-badge:focus-visible {
     font-size: 0.875rem;
 }
 
-.ss-onboarding-languages__row:target,
 .ss-table tr:target {
     background: color-mix(in srgb, var(--ss-color-accent) 8%, transparent);
+}
+
+/* Panel języka wskazany kotwicą z podpowiedzi (#language-<kod>): ramka w kolorze akcentu. */
+.ss-onboarding-languages__result:target {
+    border-color: var(--ss-color-accent);
+    box-shadow: 0 0 0 1px var(--ss-color-accent);
 }
 
 .ss-table td form[data-ss-autosubmit] {
@@ -502,7 +768,8 @@ button.ss-badge:focus-visible {
 }
 
 .ss-table td form[data-ss-autosubmit] .ss-switch,
-.ss-onboarding-languages__chip .ss-switch {
+.ss-onboarding-languages__chip .ss-switch,
+.ss-onboarding-languages__result .ss-switch {
     gap: 0;
     padding: 0;
     border-top: 0;
@@ -2055,7 +2322,7 @@ textarea.ss-input {
     background: var(--ss-color-canvas);
 }
 
-.ss-shell .ss-card:not(.ss-card--muted, .ss-card--inverse, .ss-card--dashed) {
+.ss-shell .ss-card:not(.ss-card--muted, .ss-card--inverse) {
     border-color: transparent;
     box-shadow: var(--ss-shadow-soft);
 }
@@ -3432,16 +3699,18 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js) w szerokości treści (fit-content)
- * i w kolorach karty formularza logowania (.ss-card--tinted: tło surface-muted, ramka border-strong): pole z kropkami
- * wpisanych cyfr (__display, __dot), siatka smukłych, małych klawiszy w wysokości przycisków z ikoną
- * (40 px, --ss-keypad-key-width × --ss-keypad-key-height; __key; --muted —
- * wyczyść i usuwanie ostatniej cyfry; __key-icon) i stopka (__footer) z „Wstecz” obok „Zatwierdź PIN”.
+ * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js) w kolorach karty formularza
+ * logowania (.ss-card--tinted: tło surface-muted, ramka border-strong). Szerokość wyznacza siatka klawiszy
+ * (3 × --ss-keypad-key-width i dwa odstępy): pole z kropkami wpisanych cyfr (__display, __dot), komunikat za krótkiego
+ * PIN-u (__error), klawisze (--ss-keypad-key-width × --ss-keypad-key-height; __key; --muted — wyczyść i usuwanie
+ * ostatniej cyfry; __key-icon) i stopka (__footer: „Zatwierdź PIN” na całą szerokość, pod nim „Wstecz” jako link
+ * __back) mają tę samą szerokość.
  */
 .ss-keypad {
-    --ss-keypad-key-width: 3.5rem;
-    --ss-keypad-key-height: 2.5rem;
-    width: fit-content;
+    --ss-keypad-key-width: 4rem;
+    --ss-keypad-key-height: 2.875rem;
+    --ss-keypad-gap: var(--ss-space-2);
+    width: calc(3 * var(--ss-keypad-key-width) + 2 * var(--ss-keypad-gap) + 2 * var(--ss-space-6) + 2px);
     max-width: calc(100% - 2 * var(--ss-space-4));
     padding: var(--ss-space-6);
     border: 1px solid var(--ss-color-border-strong);
@@ -3463,8 +3732,34 @@ a.ss-notification:focus-visible {
 
 .ss-keypad__footer {
     display: flex;
-    gap: var(--ss-space-2);
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    align-items: stretch;
+}
+
+.ss-keypad__back {
+    display: inline-flex;
+    gap: var(--ss-space-1);
     align-items: center;
+    align-self: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.ss-keypad__back-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-keypad__error {
+    margin: calc(-1 * var(--ss-space-2)) 0 0;
+    color: var(--ss-color-danger);
+    font-size: 0.8125rem;
+    text-align: center;
 }
 
 .ss-keypad__display {
@@ -3491,7 +3786,7 @@ a.ss-notification:focus-visible {
 .ss-keypad__keys {
     display: grid;
     grid-template-columns: repeat(3, var(--ss-keypad-key-width));
-    gap: var(--ss-space-2);
+    gap: var(--ss-keypad-gap);
     justify-content: center;
 }
 
@@ -3506,7 +3801,7 @@ a.ss-notification:focus-visible {
     background: var(--ss-color-surface);
     color: var(--ss-color-text);
     font-family: var(--ss-font-mono);
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
     touch-action: manipulation;
@@ -3536,7 +3831,7 @@ a.ss-notification:focus-visible {
 }
 
 .ss-keypad__done {
-    flex: 1;
+    width: 100%;
 }
 
 /**
@@ -4784,7 +5079,7 @@ a.ss-notification:focus-visible {
  * z odstępem od kart; bez top baru; stopka treści (.ss-workspace-footer) przyklejona do dołu, półprzezroczysta: logo simplysmart z wersją, wyszukiwarka na środku (podpowiedzi nad polem), motyw i mapa strony.
  */
 .ss-shell--workspace {
-    --ss-sidebar-collapsed-width: 3.5rem;
+    --ss-sidebar-collapsed-width: 4.25rem;
 }
 
 .ss-shell--workspace .ss-sidebar__section {
@@ -5657,6 +5952,40 @@ a.ss-notification:focus-visible {
     .ss-shell--workspace.ss-shell--collapsed .ss-account-panel__list {
         flex-direction: column;
         align-items: center;
+    }
+
+    /* Zwinięte menu: karta grupy w szerokości kafelka ikony, ikony wyśrodkowane, bez odstępu na pasek przewijania. */
+    .ss-shell--workspace.ss-shell--collapsed .ss-sidebar {
+        padding-inline: var(--ss-space-2);
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-sidebar__nav {
+        padding-right: 0;
+        overflow-x: hidden;
+        scrollbar-gutter: auto;
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-sidebar__list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ss-space-1);
+        align-items: center;
+        width: fit-content;
+        margin-inline: auto;
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-sidebar__link {
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        border-radius: var(--ss-radius-button);
+    }
+
+    .ss-shell--workspace.ss-shell--collapsed .ss-account-card {
+        align-self: center;
+        width: fit-content;
     }
 }
 

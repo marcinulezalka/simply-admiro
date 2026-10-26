@@ -54,6 +54,7 @@ return [
         'backspace' => 'Usuń ostatnią cyfrę',
         'back' => 'Wstecz',
         'done' => 'Zatwierdź PIN',
+        'too_short' => 'PIN musi mieć co najmniej :min cyfr.',
     ],
     'settings' => 'Ustawienia',
     'back_to_app' => 'Wróć do aplikacji',

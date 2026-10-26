@@ -237,10 +237,17 @@ w żądaniu. Nowy e-mail strefy dziedziczy po `ZoneMailable` (konstruktor: stref
 Layout strefy może dołączyć ramę Core (`@include('admiro::mail.frame')`: tabele 600 px, logo, karta treści,
 stopka z odnośnikami prawnymi strefy `legal_links` i copyrightem) albo mieć własny HTML. Style są inline, bo klienci
 poczty nie czytają arkuszy ani tokenów `--ss-*`. Widoki dostają `$mailZone`, `$mailPalette`, `$mailLogo`,
-`$mailOrganization` i `$mailLegalLinks`.
+`$mailOrganization`, `$mailLegalLinks` i `$mailBrandGroup`.
 
-Przykład własnego HTML: strefa administratorów (`admiro::mail.admiro`) ma layout z kartą na grafitowym tle, złotym
-paskiem u góry i logo w nagłówku karty, a szablony kodów (`login-code`, `security-code`) pokazują każdą cyfrę
+Grupa logotypów (`$mailBrandGroup`, list<`Mail\MailBrand`>: nazwa i logo PNG) pochodzi z rejestru `Mail\MailBrandGroups`
+(singleton): paczka dodaje w providerze markę do grupy strefy — `add('<strefa>', '<nazwa>', '<ścieżka PNG>', <pozycja>)`,
+mniejsza pozycja wcześniej — także do grupy innej strefy (np. produkt, który ta strefa obsługuje). Strefa bez wpisów
+ma pustą grupę i layout jej nie pokazuje.
+
+Przykład własnego HTML: strefa administratorów (`admiro::mail.admiro`) ma layout w motywie sygnetu: karta z cieniem,
+u góry pasek w grafitowym gradiencie z koroną wyciętą z lewego dolnego rogu (`public/images/mail-header.png`, źródło
+`brand/mail/mail-header.svg`), pod nim logo, treść, a na dole karty grupa logotypów z etykietą „Rodzina produktów
+simplysmart” (simplysmart na pozycji 10, admiro na 30; pozycja 20 zostaje dla produktu). Szablony kodów (`login-code`, `security-code`) pokazują każdą cyfrę
 w osobnym polu (`admiro::mail.admiro.partials.code`), jak pola kodu na stronie logowania.
 
 Logo (`Mail\MailBrandResolver`) jest osadzone w wiadomości (CID): logo organizacji z panelu (`Organizations\OrganizationBranding`,

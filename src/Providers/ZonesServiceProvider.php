@@ -23,6 +23,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use LogicException;
+use Simplysmart\Admiro\Mail\MailBrandGroups;
 use Simplysmart\Admiro\Auth\AuthBrand;
 use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Contracts\CurrentOrganization;
@@ -72,6 +73,7 @@ final class ZonesServiceProvider extends ServiceProvider
         $this->app->scoped(CurrentZone::class, RequestZone::class);
         $this->app->bind(CurrentAccount::class, RequestAccount::class);
         $this->app->singleton(ZoneNavigations::class);
+        $this->app->singleton(MailBrandGroups::class);
 
         $this->app->extend('session', fn(): ZoneSessionManager => new ZoneSessionManager($this->app));
 

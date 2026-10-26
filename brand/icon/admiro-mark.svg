@@ -1,13 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
-    <clipPath id="admiro-signet-tile"><rect width="100" height="100" rx="22"/></clipPath>
+    <radialGradient id="admiro-signet-fill" cx="92" cy="6" r="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4a4339"/>
+      <stop offset="0.45" stop-color="#22211e"/>
+      <stop offset="1" stop-color="#0e0f10"/>
+    </radialGradient>
+    <path id="admiro-signet-crown" transform="translate(42 60) rotate(28)" d="M-30 90V-27L-14 3L0-31L14 3L30-27V90Z"/>
+    <mask id="admiro-signet-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+      <rect width="100" height="100" rx="22" fill="#fff"/>
+      <use href="#admiro-signet-crown" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+    </mask>
   </defs>
-  <rect width="100" height="100" rx="22" fill="#000000"/>
-  <g clip-path="url(#admiro-signet-tile)">
-    <g transform="translate(43 60) rotate(45) scale(4.7) translate(-10 -11)">
-      <path d="M10 3.543c.227 0 .436.123.546.321l3.67 6.604L16.98 6.32a.626.626 0 0 1 1.136.46l-1.667 9.165a.625.625 0 0 1-.616.513H4.167a.625.625 0 0 1-.615-.513L1.885 6.78a.626.626 0 0 1 1.136-.459l2.764 4.147l3.67-6.604l.044-.07A.63.63 0 0 1 10 3.543z" fill="none" stroke="#2a2a2a" stroke-width="2.8" stroke-linejoin="round"/>
-      <path d="M10 3.543c.227 0 .436.123.546.321l3.67 6.604L16.98 6.32a.626.626 0 0 1 1.136.46l-1.667 9.165a.625.625 0 0 1-.616.513H4.167a.625.625 0 0 1-.615-.513L1.885 6.78a.626.626 0 0 1 1.136-.459l2.764 4.147l3.67-6.604l.044-.07A.63.63 0 0 1 10 3.543z" fill="none" stroke="#141414" stroke-width="1.4" stroke-linejoin="round"/>
-      <path d="M10 3.543c.227 0 .436.123.546.321l3.67 6.604L16.98 6.32a.626.626 0 0 1 1.136.46l-1.667 9.165a.625.625 0 0 1-.616.513H4.167a.625.625 0 0 1-.615-.513L1.885 6.78a.626.626 0 0 1 1.136-.459l2.764 4.147l3.67-6.604l.044-.07A.63.63 0 0 1 10 3.543z" fill="#ffffff"/>
-    </g>
+  <g mask="url(#admiro-signet-cut)">
+    <rect width="100" height="100" rx="22" fill="url(#admiro-signet-fill)"/>
+    <use href="#admiro-signet-crown" fill="none" stroke="#ffffff" stroke-opacity="0.32" stroke-width="8" stroke-linejoin="round"/>
   </g>
 </svg>

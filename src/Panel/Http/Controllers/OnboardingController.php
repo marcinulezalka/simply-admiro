@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -23,6 +24,7 @@ use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
+use Simplysmart\Admiro\Panel\Onboarding\InstallationGuide;
 use Simplysmart\Admiro\Panel\Onboarding\OnboardingProgress;
 use Simplysmart\Admiro\Queries\Dictionaries\DictionaryList;
 use Simplysmart\Admiro\Queries\Dictionaries\DictionarySearch;
@@ -47,7 +49,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -58,14 +60,18 @@ final readonly class OnboardingController
             'next' => $current->next($steps),
         ];
 
+        if ($current === OnboardingStep::Installation) {
+            $data['installationGuide'] = $guide->stages();
+        }
+
         if ($current === OnboardingStep::Languages) {
             $term = $request->string('q')->trim()->toString();
-            /** @var \Illuminate\Database\Eloquent\Collection<int, Language> $all */
+            /** @var Collection<int, Language> $all */
             $all = $dictionaries->entries(Dictionary::Languages);
             $data += [
                 'term' => $term,
                 'enabled' => $all->filter(static fn(Language $language): bool => $language->is_active === true)->sortBy(static fn(Language $language): string => $language->translatedName())->values(),
-                'languages' => $term === '' ? $all->sortBy(static fn(Language $language): string => $language->translatedName())->values() : $search->languages($term),
+                'languages' => $term === '' ? new Collection() : $search->languages($term),
                 'canManage' => $this->context->can(Permission::SettingsManage),
             ];
         }

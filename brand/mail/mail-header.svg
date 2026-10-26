@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 200" width="1120" height="200">
+  <defs>
+    <radialGradient id="admiro-mail-fill" cx="1060" cy="0" r="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4a4339"/>
+      <stop offset="0.45" stop-color="#22211e"/>
+      <stop offset="1" stop-color="#0e0f10"/>
+    </radialGradient>
+    <path id="admiro-mail-crown" transform="translate(150 196) rotate(28) scale(2.4)" d="M-30 90V-27L-14 3L0-31L14 3L30-27V90Z"/>
+    <mask id="admiro-mail-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="1120" height="200">
+      <path d="M30 0H1090A30 30 0 0 1 1120 30V200H0V30A30 30 0 0 1 30 0Z" fill="#fff"/>
+      <use href="#admiro-mail-crown" fill="#000" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+  <g mask="url(#admiro-mail-cut)">
+    <rect width="1120" height="200" fill="url(#admiro-mail-fill)"/>
+    <use href="#admiro-mail-crown" fill="none" stroke="#ffffff" stroke-opacity="0.32" stroke-width="3.4" stroke-linejoin="round"/>
+  </g>
+</svg>

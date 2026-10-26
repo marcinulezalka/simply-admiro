@@ -29,10 +29,12 @@ enum OnboardingStep: string
     case Installation = 'installation';
     case Languages = 'languages';
     case Settings = 'settings';
-    case Legal = 'legal';
     case Organizations = 'organizations';
-    case Owners = 'owners';
+    /** Profile i uprawnienia: role użytkowników i ich nadawanie (wartość zostaje, bo pod nią zapisany jest postęp). */
     case Administrators = 'administrators';
+    case Owners = 'owners';
+    case Audit = 'audit';
+    case Legal = 'legal';
 
     /**
      * Uprawnienie potrzebne do wykonania kroku (bez niego krok nie pojawia się na pulpicie).
@@ -44,6 +46,7 @@ enum OnboardingStep: string
             self::Organizations => Permission::OrganizationsManage,
             self::Owners => Permission::OwnersAssign,
             self::Administrators => Permission::UsersManage,
+            self::Audit => Permission::AuditView,
         };
     }
 
@@ -60,6 +63,7 @@ enum OnboardingStep: string
             self::Organizations => 'organizations.create',
             self::Owners => 'owners.create',
             self::Administrators => 'administrators.index',
+            self::Audit => 'audit.index',
         };
     }
 
@@ -74,20 +78,22 @@ enum OnboardingStep: string
     public function icon(): string
     {
         return match ($this) {
-            self::Installation => 'check-circle',
-            self::Languages => 'locale',
-            self::Settings => 'settings',
-            self::Legal => 'cookie',
+            self::Installation => 'cpu',
+            self::Languages => 'languages',
+            self::Settings => 'locale',
             self::Organizations => 'building',
+            self::Administrators => 'id-card',
             self::Owners => 'user-plus',
-            self::Administrators => 'shield-check',
+            self::Audit => 'history',
+            self::Legal => 'scale',
         };
     }
 
     /**
      * Kamienie milowe, które razem zamykają krok; dokumenty prawne wymagają publikacji polityki cookies i każdego
      * dokumentu z LegalDocumentType. Instalacja systemu z kontem hero nie ma żadnego: robi ją wdrożenie, zanim ktokolwiek
-     * wejdzie do panelu, więc krok 1 jest zrobiony od początku.
+     * wejdzie do panelu, więc krok 1 jest zrobiony od początku. Dziennik zdarzeń zamyka pierwsze otwarcie dziennika
+     * (AuditController).
      *
      * @return list<string>
      */

@@ -37,7 +37,7 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
  * `<prefiks>.layout` (wymagany), `<prefiks>.<szablon>` (HTML) i `<prefiks>.text.<szablon>`, gdy istnieją; brakujące
  * biorą się z Core (`admiro::mail.layout`, `admiro::mail.html.<szablon>`, `admiro::mail.<szablon>`).
  * Widok HTML rozszerza `$mailLayout`; widoki dostają `$mailZone`, `$mailPalette` (MailPalette strefy, `mail.palette`), `$mailLogo` (BrandFile, osadzany przez
- * `$message->embedData`), `$mailOrganization` (nazwa albo null) i `$mailLegalLinks` (list<array{url, label}>).
+ * `$message->embedData`), `$mailOrganization` (nazwa albo null), `$mailLegalLinks` (list<array{url, label}>) i `$mailBrandGroup` (list<MailBrand> z MailBrandGroups; pusta, gdy strefa nie ma grupy).
  */
 abstract class ZoneMailable extends Mailable
 {
@@ -91,6 +91,7 @@ abstract class ZoneMailable extends Mailable
                 'mailPalette' => $zone->mailPalette,
                 'mailLayout' => $this->layout($zone),
                 'mailLogo' => $container->make(MailBrandResolver::class)->logo($zone, $organization),
+                'mailBrandGroup' => $container->make(MailBrandGroups::class)->for($zone->name),
                 'mailOrganization' => $organization?->name,
                 'mailLegalLinks' => $this->legalLinks($zone),
             ],

@@ -14,7 +14,7 @@
                     <p class="ss-muted">{{ $zone->signInText('forgot_pin.recovery.code_lead') }}</p>
                     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.' . $routes::FORGOT_PIN_RESET)) }}">
                         @csrf
-                        <x-admiro::code-field id="forgot-pin-code" name="code" :label="$zone->signInText('code')" :length="$codeLength" icon="shield-check" :error="$errors->first('code')" />
+                        <x-admiro::code-field id="forgot-pin-code" name="code" :label="$zone->signInText('code')" :length="$codeLength" icon="shield-check" />
                         <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="lock" class="ss-button__icon" />{{ $zone->signInText('forgot_pin.recovery.reset') }}</button>
                     </form>
                     <form method="POST" action="{{ route($zone->routeName('auth.' . $routes::FORGOT_PIN_CANCEL)) }}">
@@ -27,7 +27,7 @@
                     @error('code') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
                     <form class="ss-form" method="POST" action="{{ route($zone->routeName('auth.' . $routes::FORGOT_PIN_CODE)) }}">
                         @csrf
-                        <x-admiro::input id="forgot-pin-email" name="email" type="email" :label="$zone->signInText('email')" icon="mail" :value="old('email')" :placeholder="text('placeholders.email')" :error="$errors->first('email')" required maxlength="255" autocomplete="email" />
+                        <x-admiro::input id="forgot-pin-email" name="email" type="email" :label="$zone->signInText('email')" icon="mail" :value="old('email')" :placeholder="text('placeholders.email')" required maxlength="255" autocomplete="email" />
                         <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="mail" class="ss-button__icon" />{{ $zone->signInText('forgot_pin.recovery.send') }}</button>
                     </form>
                 @endif
