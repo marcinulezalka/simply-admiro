@@ -2,7 +2,8 @@
 #
 # Część serwerowa wdrożenia (wysyłana na serwer przez `vendor/bin/simplysmart deploy` albo uruchamiana ręcznie w katalogu aplikacji):
 #   1. Composer 2.8+ w ~/bin/composer (instaluje, gdy go nie ma; oficjalny instalator ze sprawdzeniem sumy),
-#   2. .env i pliki wdrożeniowe na miejscu, git pull --ff-only aplikacji,
+#   2. .env (z .env.deploy, czyli .env.production wysłanego przez deploy; APP_KEY serwera zostaje, gdy plik go nie podaje)
+#      i pliki wdrożeniowe na miejscu, git pull --ff-only aplikacji,
 #   3. token GitHub dla Composera (GITHUB_TOKEN, jeśli podany),
 #   4. paczki z manifestu wdrożeniowego (COMPOSER=composer.deploy.json, --no-dev),
 #   5. APP_KEY, migracje (z DEPLOY_FRESH=1: migrate:fresh — usuwa wszystkie tabele i dane), słowniki, organizacja operatora, role, słowniki paczek (*:dictionaries:sync), cache.
@@ -42,6 +43,21 @@ if ! "${composer[@]}" --version --no-ansi 2>/dev/null | grep -qE 'version (2\.(8
 fi
 step "$("${composer[@]}" --version --no-ansi 2>/dev/null | head -n1)"
 
+if [[ -f .env.deploy ]]; then
+    step "Ustawiam .env z .env.production"
+    # Plik bez APP_KEY dostaje klucz z obecnego .env: nowy klucz unieważniłby sesje i zaszyfrowane dane.
+    env_new="$(mktemp .env.XXXXXX)"
+    if [[ -f .env ]]; then chmod --reference=.env "$env_new"; else chmod 600 "$env_new"; fi
+    if ! grep -qE '^APP_KEY=.+' .env.deploy && [[ -f .env ]] && grep -qE '^APP_KEY=.+' .env; then
+        grep -vE '^APP_KEY=' .env.deploy > "$env_new" || true
+        grep -E '^APP_KEY=.+' .env | tail -n1 >> "$env_new"
+    else
+        cat .env.deploy > "$env_new"
+    fi
+    mv -f "$env_new" .env
+    rm -f .env.deploy
+fi
+
 [[ -f .env ]] || fail "Brak .env. Skopiuj .env.example jako .env i uzupełnij (baza, APP_URL, poczta)."
 [[ -f composer.deploy.json && -f composer.deploy.lock ]] || fail "Brak composer.deploy.json / composer.deploy.lock — uruchom wdrożenie przez vendor/bin/simplysmart deploy."
 
@@ -79,6 +95,8 @@ if [[ "${DEPLOY_FRESH:-}" == 1 ]]; then
     ADMIRO_ALLOW_DESTRUCTIVE_COMMANDS=true "$php_bin" artisan migrate:fresh --force
 else
     step "Migracje"
+    # Config bez cache, żeby migracje czytały bieżący .env, a nie konfigurację z poprzedniego wdrożenia.
+    "$php_bin" artisan config:clear >/dev/null
     "$php_bin" artisan migrate --force
 fi
 

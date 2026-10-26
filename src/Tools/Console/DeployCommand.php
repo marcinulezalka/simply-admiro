@@ -28,7 +28,8 @@ use Simplysmart\Admiro\Tools\Process\ProcessRunner;
 /**
  * Polecenia `simplysmart deploy`, `simplysmart deploy:onboarding` i `simplysmart deploy:fresh`, uruchamiane na
  * komputerze deweloperskim: sprawdza repozytoria, buduje manifest wdrożeniowy (`private:install --deploy`), wysyła go
- * na serwer (scp) i uruchamia tam skrypt serwerowy przez ssh; onboarding dopisuje zakładanie kont, a `deploy:fresh`
+ * na serwer (scp) razem z lokalnym `.env.production` (na serwerze staje się `.env`, APP_KEY serwera zostaje, gdy pliku
+ * go nie podaje; bez pliku `.env` serwera bez zmian) i uruchamia tam skrypt serwerowy przez ssh; onboarding dopisuje zakładanie kont, a `deploy:fresh`
  * dodatkowo czyści bazę (`migrate:fresh`) i wymaga `--confirm=<DEPLOY_SSH>`. `--dry-run` tylko sprawdza
  * konfigurację i repozytoria oraz pokazuje plan.
  */
@@ -43,6 +44,12 @@ final readonly class DeployCommand implements Command
     private const string CONFIRM = '--confirm=';
 
     private const string ROOT = '--root=';
+
+    /** Lokalny plik środowiska produkcji (w katalogu projektu, poza repozytorium), wysyłany na serwer jako `.env`. */
+    private const string PRODUCTION_ENV = '.env.production';
+
+    /** Nazwa pliku na serwerze, który skrypt serwerowy przejmuje jako `.env` (resources/deploy/remote.sh). */
+    private const string REMOTE_ENV = '.env.deploy';
 
     /**
      * @param  Closure(list<string>|null): Command  $lockCommand  Polecenie manifestu wdrożeniowego dla danego
@@ -107,7 +114,7 @@ final readonly class DeployCommand implements Command
             }
 
             if ($dryRun) {
-                fwrite($stdout, $this->plan($deploy, $accounts));
+                fwrite($stdout, $this->plan($root, $deploy, $accounts));
 
                 return 0;
             }
@@ -150,6 +157,8 @@ final readonly class DeployCommand implements Command
             throw new DeployException("Nie udało się wysłać plików na {$config->ssh}.");
         }
 
+        $this->sendProductionEnv($root, $config, $stdout, $stderr);
+
         fwrite($stdout, "==> Uruchamiam wdrożenie na serwerze\n");
         $exitCode = $this->processes->run(['ssh', $config->ssh, 'bash -s'], $this->script->build($config, $accounts, $this->mode->resetsDatabase()));
 
@@ -162,6 +171,32 @@ final readonly class DeployCommand implements Command
         fwrite($stdout, "==> Gotowe\n");
 
         return 0;
+    }
+
+    /**
+     * Wysyła lokalny `.env.production` na serwer jako `.env.deploy`, który skrypt serwerowy przejmuje jako `.env`;
+     * bez pliku tylko ostrzega (`.env` serwera zostaje bez zmian).
+     *
+     * @param  resource  $stdout
+     * @param  resource  $stderr
+     *
+     * @throws DeployException|ProcessException
+     */
+    private function sendProductionEnv(string $root, DeployConfig $config, $stdout, $stderr): void
+    {
+        $env = self::path($root, self::PRODUCTION_ENV);
+
+        if (! is_file($env)) {
+            fwrite($stderr, 'Uwaga: brak ' . self::PRODUCTION_ENV . " — .env na serwerze zostaje bez zmian.\n");
+
+            return;
+        }
+
+        fwrite($stdout, '==> Wysyłam ' . self::PRODUCTION_ENV . " jako .env\n");
+
+        if ($this->processes->run(['scp', '-q', $env, "{$config->ssh}:{$config->path}/" . self::REMOTE_ENV]) !== 0) {
+            throw new DeployException('Nie udało się wysłać ' . self::PRODUCTION_ENV . " na {$config->ssh}.");
+        }
     }
 
     /**
@@ -209,11 +244,14 @@ final readonly class DeployCommand implements Command
     /**
      * @param  list<OnboardingAccount>  $accounts
      */
-    private function plan(DeployConfig $config, array $accounts): string
+    private function plan(string $root, DeployConfig $config, array $accounts): string
     {
         $lines = [
             "Serwer: {$config->ssh}, katalog: {$config->path}, PHP: {$config->php}.",
             'Kroki: manifest wdrożeniowy, scp ' . PrivatePackages::DEPLOY_MANIFEST . ' i ' . PrivatePackages::DEPLOY_LOCK . ', skrypt serwerowy przez ssh.',
+            is_file(self::path($root, self::PRODUCTION_ENV))
+                ? 'Środowisko: ' . self::PRODUCTION_ENV . ' zostanie wysłany jako .env (APP_KEY serwera zostaje, gdy plik go nie podaje).'
+                : 'Środowisko: brak ' . self::PRODUCTION_ENV . ' — .env na serwerze zostanie bez zmian.',
         ];
 
         if ($this->mode->resetsDatabase()) {

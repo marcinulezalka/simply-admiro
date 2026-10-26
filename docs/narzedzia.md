@@ -90,9 +90,14 @@ Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z rep
 1. sprawdza, czy projekt i paczki z `packages/*/*` są wypchnięte (niewypchnięte commity zatrzymują wdrożenie,
    niezacommitowane zmiany i nieudany `git fetch` dają ostrzeżenie; katalogi bez `.git` są pomijane),
 2. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
-3. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`),
-4. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`,
-   `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje, role, słowniki, cache
+3. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`), a gdy w katalogu projektu jest
+   `.env.production` (poza repozytorium), także jego jako `.env.deploy`; bez tego pliku ostrzega, a `.env` serwera
+   zostaje bez zmian,
+4. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`
+   (wysłany `.env.deploy` zastępuje `.env` z tymi samymi uprawnieniami; gdy nie podaje `APP_KEY`, zostaje klucz
+   z dotychczasowego `.env`, bo nowy unieważniłby sesje i zaszyfrowane dane),
+   `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje (po `config:clear`, więc czytają
+   bieżący `.env`), role, słowniki, cache
    i skrypt crona `storage/app/cron.sh` (`admiro:cron:script --php=<DEPLOY_PHP>`, gdy Core ma tę komendę; w panelu
    hostingu: program BASH, ten plik, co minutę).
    Skrypt i token idą standardowym wejściem, więc serwer nie uruchamia narzędzi z admiro, a token nie trafia do listy procesów.

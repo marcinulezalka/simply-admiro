@@ -77,6 +77,45 @@ final class DeployCommandTest extends TestCase
     }
 
     #[Test]
+    public function wysyla_env_production_jako_env_deploy_przed_skryptem_serwerowym(): void
+    {
+        file_put_contents("{$this->root}/.env.production", "APP_ENV=production\n");
+
+        [$exitCode, $stdout, $stderr] = $this->runCommand(DeployMode::Deploy, []);
+
+        $this->assertSame(0, $exitCode, $stdout);
+        $commands = array_map(fn(array $call): array => $call[0], $this->processCalls);
+        $envUpload = array_search(['scp', '-q', "{$this->root}/.env.production", 'user@host:~/app.pl/.env.deploy'], $commands, true);
+        $this->assertIsInt($envUpload);
+        $this->assertSame(array_key_last($commands), $envUpload + 1);
+        $this->assertStringContainsString("==> Wysyłam .env.production jako .env\n", $stdout);
+        $this->assertSame('', $stderr);
+    }
+
+    #[Test]
+    public function bez_env_production_ostrzega_i_nie_wysyla_srodowiska(): void
+    {
+        [$exitCode, , $stderr] = $this->runCommand(DeployMode::Deploy, []);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertSame("Uwaga: brak .env.production — .env na serwerze zostaje bez zmian.\n", $stderr);
+        $uploads = array_filter($this->processCalls, fn(array $call): bool => in_array('user@host:~/app.pl/.env.deploy', $call[0], true));
+        $this->assertSame([], $uploads);
+    }
+
+    #[Test]
+    public function dry_run_mowi_czy_env_production_zostanie_wyslany(): void
+    {
+        [, $without] = $this->runCommand(DeployMode::Deploy, ['--dry-run']);
+        file_put_contents("{$this->root}/.env.production", "APP_ENV=production\n");
+        [, $with] = $this->runCommand(DeployMode::Deploy, ['--dry-run']);
+
+        $this->assertStringContainsString('Środowisko: brak .env.production — .env na serwerze zostanie bez zmian.', $without);
+        $this->assertStringContainsString('Środowisko: .env.production zostanie wysłany jako .env (APP_KEY serwera zostaje, gdy plik go nie podaje).', $with);
+        $this->assertSame([], array_filter($this->processCalls, fn(array $call): bool => $call[0][0] === 'scp'));
+    }
+
+    #[Test]
     public function onboarding_dopisuje_konta_do_skryptu(): void
     {
         [$exitCode] = $this->runCommand(DeployMode::Onboarding, []);

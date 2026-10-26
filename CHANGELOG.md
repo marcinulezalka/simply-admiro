@@ -23,9 +23,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - Logo na stronie startowej są odnośnikami otwieranymi w nowej karcie: simplysmart do `WELCOME_WEBSITE` (domyślnie https://simplysmart.pl), logo strefy do jej strony z nowego klucza `website` w configu strefy (adres http(s), inny zatrzymuje start; strefa administratorów `ADMIRO_WEBSITE`, domyślnie https://admiro.simplysmart.pl).
 - E-maile strefy administratorów we własnym layoucie (`mail.views` = `admiro::mail.admiro`): karta na grafitowym tle ze złotym paskiem u góry, logo w nagłówku karty, kod logowania i resetu PIN-u w osobnych polach cyfr.
 - Ikona `help-circle` (Lucide).
+- Wdrożenie (`vendor/bin/simplysmart deploy`) wysyła lokalny `.env.production` na serwer jako `.env` (`--dry-run` mówi, czy plik będzie wysłany); `APP_KEY` serwera zostaje, gdy plik go nie podaje; bez pliku ostrzega, a `.env` serwera zostaje bez zmian.
 
 ### Changed
 
+- Wdrożenie czyści cache konfiguracji przed migracjami, więc migracje zawsze czytają bieżący `.env`.
 - Strona startowa w kolorystyce stron błędów: karta treści szara z ramką, karta marki ciemna i wyniesiona.
 - Przyciski na stronach błędów zaokrąglone jak w całym systemie zamiast pigułek.
 - Pola formularzy logowania mają dokładnie wysokość z `--ss-auth-control-height` (bez pionowego wcięcia, które je powiększało); cyfry pól PIN-u w rozmiarze tekstu innych pól.
