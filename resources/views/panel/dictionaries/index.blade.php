@@ -1,4 +1,4 @@
-{{-- Słownik lokalizacji: zakładki ustawień i słowników, tabela wpisów (kod, nazwa, stan i wpis domyślny jako plakietki; przy krajach odnośnik do stawek VAT) z włączaniem i wyłączaniem (settings.manage). $dictionary: Dictionary (bieżący), $dictionaries: list<Dictionary>, $entries: Collection wpisów (także wyłączonych), $codeColumn: string, $canManage: bool. --}}
+{{-- Słownik lokalizacji: zakładki ustawień i słowników, tabela wpisów (kod — przy językach z flagami krajów języka, przy krajach z flagą; nazwa; stan; wpis domyślny jako plakietka; przy krajach odnośnik do stawek VAT; wiersz z kotwicą #entry-<kod> dla globalnej wyszukiwarki) z przełącznikiem włącz/wyłącz wysyłanym od razu (settings.manage, data-ss-autosubmit; wpisu domyślnego i języka interfejsu nie da się wyłączyć). $dictionary: Dictionary (bieżący), $dictionaries: list<Dictionary>, $entries: Collection wpisów (także wyłączonych), $codeColumn: string, $canManage: bool. --}}
 <x-admiro::zone.layout :title="text('admiro::admin.dictionary.' . $dictionary->value)">
     @include('admiro::panel.dictionaries.tabs', ['current' => $dictionary])
 
@@ -19,8 +19,25 @@
                 </thead>
                 <tbody>
                     @foreach ($entries as $entry)
-                        <tr>
-                            <td class="ss-table__number">{{ $entry->getAttribute($codeColumn) }}</td>
+                        @php($code = (string) $entry->getAttribute($codeColumn))
+                        @php($flags = $entry instanceof \Simplysmart\Admiro\Models\Dictionaries\Language ? $entry->flagIcons() : array_values(array_filter([$entry->getAttribute('flag_icon')])))
+                        @php($locked = $entry->is_default || ($entry instanceof \Simplysmart\Admiro\Models\Dictionaries\Language && $entry->is_interface))
+                        <tr id="entry-{{ $code }}">
+                            <td class="ss-table__number">
+                                <span class="ss-dictionary-code">
+                                    @if ($flags !== [])
+                                        <span class="ss-dictionary-code__flags" aria-hidden="true">
+                                            @foreach (array_slice($flags, 0, 4) as $flag)
+                                                <x-admiro::flag :icon="$flag" />
+                                            @endforeach
+                                            @if (count($flags) > 4)
+                                                <span class="ss-dictionary-code__more">+{{ count($flags) - 4 }}</span>
+                                            @endif
+                                        </span>
+                                    @endif
+                                    {{ $code }}
+                                </span>
+                            </td>
                             <th scope="row">
                                 {{ $entry->translatedName() }}
                                 @if ($dictionary === \Simplysmart\Admiro\Localization\Dictionary::Countries)
@@ -35,9 +52,12 @@
                             </td>
                             @if ($canManage)
                                 <td>
-                                    <form method="POST" action="{{ route('admiro.dictionaries.toggle', ['dictionary' => $dictionary->value, 'code' => $entry->getAttribute($codeColumn)]) }}">
+                                    <form method="POST" action="{{ route('admiro.dictionaries.toggle', ['dictionary' => $dictionary->value, 'code' => $code]) }}" data-ss-autosubmit>
                                         @csrf
-                                        <button class="ss-button" type="submit">{{ $entry->is_active ? text('admiro::admin.action.deactivate') : text('admiro::admin.organization_enable') }}</button>
+                                        <x-admiro::switch :id="'entry-switch-' . $code" :label="text('admiro::admin.dictionary_switch', ['name' => $entry->translatedName()])" :checked="$entry->is_active" :disabled="$locked" hide-label />
+                                        @unless ($locked)
+                                            <button class="ss-button ss-button--sm" type="submit" data-ss-autosubmit-fallback>{{ $entry->is_active ? text('admiro::admin.action.deactivate') : text('admiro::admin.organization_enable') }}</button>
+                                        @endunless
                                     </form>
                                 </td>
                             @endif

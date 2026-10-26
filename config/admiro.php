@@ -233,6 +233,11 @@ return [
          */
         'logo' => null,
 
+        /*
+         * Przycisk „Strona główna” (strona startowa aplikacji) pod formularzem logowania; strefa może go wyłączyć.
+         */
+        'home_link' => true,
+
         'route_throttle_per_minute' => 20,
 
         'challenge_prune_hours' => 24,
@@ -425,6 +430,7 @@ return [
             'pin' => ['min_length' => filter_var(env('ADMIRO_PIN_MIN_LENGTH'), FILTER_VALIDATE_INT, ['options' => ['default' => 8]])],
             'layout' => 'split-reversed',
             'logo' => __DIR__ . '/../public/images/logo.svg',
+            'home_link' => false,
         ],
         'website' => $envString('ADMIRO_WEBSITE', 'https://admiro.simplysmart.pl'),
         'brand' => [

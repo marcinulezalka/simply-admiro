@@ -15,6 +15,7 @@ namespace Simplysmart\Admiro\Panel\Http;
 
 use Illuminate\Http\Request;
 use Simplysmart\Admiro\Panel\Enums\Permission;
+use Simplysmart\Admiro\Panel\Enums\SearchScope;
 use Simplysmart\Admiro\Contracts\ZoneNavigation;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Models\Organization;
@@ -22,12 +23,15 @@ use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Admiro\View\Navigation\NavigationGroup;
 use Simplysmart\Admiro\View\Navigation\NavigationItem;
 use Simplysmart\Admiro\View\Navigation\SearchBox;
+use Simplysmart\Admiro\View\Navigation\SearchScope as SearchScopeOption;
 
 /**
  * Menu strefy administratorów w layoucie aplikacji: pulpit oraz grupy stref i kont, organizacji i systemu (dziennik
  * zdarzeń); w ustawieniach grupy aplikacji (ustawienia, polityka cookies, polityka prywatności, RODO) i słowników (słowniki, kursy walut, dni wolne)
- * — każda pozycja tylko z uprawnieniem administratora (puste grupy znikają); druga linia pod nazwą konta: role
- * administratora w organizacji operatora. Bez wyszukiwarki (konta szuka się w strefie).
+ * — każda pozycja tylko z uprawnieniem administratora (puste grupy znikają); pod pulpitem kreator „Onboarding”
+ * (`settings.manage`); druga linia pod nazwą konta: role administratora w organizacji operatora. Globalna
+ * wyszukiwarka na trasę `search` z podpowiedziami (`search.suggest`) i zakresami SearchScope dozwolonymi
+ * administratorowi (zaznaczone z `in[]` żądania, bez nich wszystkie).
  */
 final readonly class AdmiroNavigation implements ZoneNavigation
 {
@@ -40,7 +44,10 @@ final readonly class AdmiroNavigation implements ZoneNavigation
     public function groups(): array
     {
         $groups = [
-            new NavigationGroup(null, [$this->item('dashboard', 'admiro::dashboard.title', 'home')]),
+            new NavigationGroup(null, $this->items(
+                $this->item('dashboard', 'admiro::dashboard.title', 'home'),
+                $this->itemIf(Permission::SettingsManage, 'onboarding.index', 'admiro::dashboard.onboarding_title', 'rocket', 'onboarding.*'),
+            )),
             new NavigationGroup(text('admiro::navigation.groups.zones'), $this->items(
                 $this->itemIf(Permission::ZonesView, 'zones.index', 'admiro::admin.zones_title', 'zones', 'zones.*'),
                 $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::admin.owner_title', 'user-plus', 'owners.*'),
@@ -73,9 +80,22 @@ final readonly class AdmiroNavigation implements ZoneNavigation
         ]);
     }
 
-    public function search(): ?SearchBox
+    public function search(): SearchBox
     {
-        return null;
+        $zone = $this->context->zone();
+        $requested = $this->request->has('in') ? $this->request->input('in') : null;
+        $scopes = array_map(
+            static fn(SearchScope $scope): SearchScopeOption => new SearchScopeOption($scope->value, $scope->label(), ! is_array($requested) || in_array($scope->value, $requested, true)),
+            SearchScope::available($this->context),
+        );
+
+        return new SearchBox(
+            route($zone->routeName('search')),
+            text('admiro::search.placeholder'),
+            value: $this->request->string('q')->toString(),
+            scopes: $scopes,
+            suggestUrl: route($zone->routeName('search.suggest')),
+        );
     }
 
     public function subtitle(): ?string

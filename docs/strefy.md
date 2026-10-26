@@ -26,6 +26,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     'split-reversed' — to samo w odbiciu: formularz po lewej, marka po prawej),
        // 'auth' => ['logo' => __DIR__.'/../public/images/logo.svg'] (logo strefy w karcie marki zamiast logo simplysmart;
        //     SVG z fill="currentColor" osadzany inline w kolorze karty; brak pliku zatrzymuje start),
+       // 'auth' => ['home_link' => false] (bez przycisku „Strona główna” pod formularzem logowania; domyślnie jest),
        // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
        // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout

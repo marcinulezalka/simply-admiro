@@ -21,7 +21,8 @@ use Simplysmart\Admiro\Models\Relations\SpokenInCountries;
 /**
  * Język (ISO 639, małe litery). `is_active` — do wyboru w treściach i dokumentach, `is_interface` —
  * język interfejsu (tylko w granicach APP_LOCALES), `is_default` — język aplikacji (jeden), `flag_icon` —
- * kod ikony flagi kraju kojarzonego z językiem (`en` → `gb`).
+ * kod ikony flagi kraju kojarzonego z językiem (`en` → `gb`); `json_attributes.flag_icons` (FLAG_ICONS) — flagi
+ * wszystkich krajów, w których język jest urzędowy (najpierw `flag_icon`), wypełniane przez LanguagesSeeder.
  *
  * @property string $code
  * @property string|null $native_name
@@ -34,6 +35,9 @@ final class Language extends DataModel implements DictionaryEntry
     use SpokenInCountries;
 
     public const string CODE = 'code';
+
+    /** Klucz `json_attributes` z flagami krajów języka. */
+    public const string FLAG_ICONS = 'flag_icons';
 
     protected $table = 'locale_languages';
 
@@ -50,6 +54,23 @@ final class Language extends DataModel implements DictionaryEntry
     public static function codeColumn(): string
     {
         return self::CODE;
+    }
+
+    /**
+     * Flagi krajów, w których język jest urzędowy (FLAG_ICONS), a bez nich sama `flag_icon`.
+     *
+     * @return list<string>
+     */
+    public function flagIcons(): array
+    {
+        $icons = ($this->json_attributes ?? [])[self::FLAG_ICONS] ?? null;
+        $icons = is_array($icons) ? array_values(array_filter($icons, static fn(mixed $icon): bool => is_string($icon) && $icon !== '')) : [];
+
+        if ($icons !== []) {
+            return $icons;
+        }
+
+        return $this->flag_icon !== null && $this->flag_icon !== '' ? [$this->flag_icon] : [];
     }
 
     public function translationFallback(): string

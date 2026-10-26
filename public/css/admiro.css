@@ -13,8 +13,10 @@
  *
  * Ikony liniowe w całej strefie mają grubszą, bardziej miękką kreskę (zaokrąglone końce i łączenia Core).
  * Logowanie: większy tytuł z większym odstępem od formularza, wyróżnione słowo w złocie korony z logotypu (#F5B301),
- * pola formularza i przyciski w wysokości Core (40 px, jak przyciski stron błędów) z zaokrągleniem kontrolek Core; pod przyciskami separator nad odnośnikami
- * do polityk na dole karty.
+ * pola formularza i przyciski w wysokości Core (40 px, jak przyciski stron błędów) z zaokrągleniem kontrolek Core; pola kodu z e-maila
+ * wyższe niż szersze (prostokąty 48 px); akcje pod formularzem (zmiana adresu, ponowne wysłanie kodu, „Nie pamiętam PIN-u”,
+ * powrót do logowania) jako klasyczne odnośniki z małą ikoną zamiast przycisków; bez przycisku „Strona główna”
+ * (`auth.home_link` w configu strefy); pod przyciskami separator nad odnośnikami do polityk na dole karty.
  */
 :root {
     --ss-font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -32,4 +34,28 @@
     --ss-color-accent-text: #f5b301;
     --ss-auth-legal-border: 1px solid var(--ss-color-border-strong);
     --ss-auth-legal-space: var(--ss-space-6);
+}
+
+.ss-auth .ss-code__cell {
+    max-width: 2.5rem;
+    min-height: 3rem;
+}
+
+.ss-auth__actions .ss-button {
+    --ss-button-height: auto;
+    --ss-button-icon: 1rem;
+    --ss-button-gap: var(--ss-space-1);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ss-auth__actions .ss-button:hover,
+.ss-auth__actions .ss-button:focus-visible {
+    background: none;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
 }

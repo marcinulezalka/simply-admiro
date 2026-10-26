@@ -63,6 +63,7 @@ final readonly class ZoneAuthSettingsFactory
             layout: $this->layout(Arr::string($settings, 'layout')),
             brand: $this->brand(Arr::get($settings, 'brand')),
             logo: $this->logo(Arr::get($settings, 'logo')),
+            homeLink: Arr::boolean($settings, 'home_link', true),
         );
     }
 

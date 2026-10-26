@@ -27,8 +27,9 @@ use Simplysmart\Admiro\Queries\Dictionaries\DictionaryList;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Słowniki krajów, języków i walut (`settings.view`) z włączaniem i wyłączaniem wpisów (`settings.manage`);
- * wpisu domyślnego ani języka interfejsu nie da się wyłączyć.
+ * Słowniki krajów, języków i walut (`settings.view`) z włączaniem i wyłączaniem wpisów (`settings.manage`; po zmianie
+ * powrót na stronę, z której przyszła — słownik albo kreator onboardingu); wpisu domyślnego ani języka interfejsu nie
+ * da się wyłączyć.
  */
 final readonly class DictionaryController
 {
@@ -56,7 +57,7 @@ final readonly class DictionaryController
         $kind = Dictionary::tryFrom($dictionary) ?? throw new NotFoundHttpException();
         $entry = $this->dictionaries->find($kind, $code) ?? throw new NotFoundHttpException();
         $active = $entry->getAttribute(ColumnNames::IS_ACTIVE) !== true;
-        $back = $this->redirect->route($this->context->zone()->routeName('dictionaries.index'), ['dictionary' => $kind->value]);
+        $back = $this->redirect->back(fallback: route($this->context->zone()->routeName('dictionaries.index'), ['dictionary' => $kind->value]));
 
         try {
             $management->setActive($entry, $active);

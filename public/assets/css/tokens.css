@@ -82,7 +82,7 @@
 
     /* Powłoka aplikacji (x-admiro::app.layout): neutralne szare płótno, jaśniejszy panel menu, delikatna biel
        pod najechaniem pozycji menu; aktywna pozycja i karty mają --ss-color-surface z miękkim cieniem */
-    --ss-color-canvas: light-dark(#e8e9ed, #0b0d12);
+    --ss-color-canvas: light-dark(#fbfbfc, #0b0d12);
     --ss-color-sidebar: light-dark(#f3f4f6, #141821);
     --ss-color-sidebar-hover: light-dark(rgb(255 255 255 / 0.65), rgb(255 255 255 / 0.06));
 

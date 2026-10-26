@@ -85,6 +85,7 @@ return [
     'settings_rejected' => 'Settings cannot be saved: choose at least one interface language and the default language among them.',
     'dictionaries_title' => 'Dictionaries',
     'dictionary_code' => 'Code',
+    'dictionary_switch' => ':name enabled',
     'dictionary_name' => 'Name',
     'dictionary_default' => 'default',
     'dictionary_saved' => 'Dictionary saved.',

@@ -18,9 +18,10 @@ use Simplysmart\Admiro\Models\Dictionaries\Language;
 
 /**
  * Słownik języków: języki urzędowe krajów z listy (dane ICU) z nazwą w językach interfejsu
- * i nazwą własną; ikonę flagi (LocalizationData::languageFlagIcons()) dopisuje tylko wpisom bez niej.
- * Od startu: język aplikacji domyślny, języki z APP_LOCALES jako języki interfejsu, włączone także
- * ACTIVE_LANGUAGES.
+ * i nazwą własną; ikonę flagi (LocalizationData::languageFlagIcons()) dopisuje tylko wpisom bez niej, a flagi
+ * wszystkich krajów języka (Language::FLAG_ICONS w `json_attributes`) odświeża przy każdym uruchomieniu.
+ * Od startu: język aplikacji domyślny, języki z APP_LOCALES jako języki interfejsu i tylko one włączone —
+ * pozostałe administrator włącza w onboardingu (krok „Języki”).
  */
 final class LanguagesSeeder extends DictionarySeeder
 {
@@ -28,11 +29,12 @@ final class LanguagesSeeder extends DictionarySeeder
     {
         $default = $this->defaultLocale();
         $interface = $this->interfaceLocales();
-        $active = array_values(array_unique([...$interface, ...LocalizationData::ACTIVE_LANGUAGES]));
+        $active = $interface;
         $hasDefault = Language::query()->where(ColumnNames::IS_DEFAULT, true)->exists();
 
         $codes = array_values(array_unique([...$active, ...LocalizationData::languageCodes()]));
         $flagIcons = LocalizationData::languageFlagIcons($codes);
+        $countryFlags = LocalizationData::languageCountryFlagIcons($codes);
 
         foreach ($codes as $code) {
             $language = $this->byCode(Language::class, $code);
@@ -45,6 +47,8 @@ final class LanguagesSeeder extends DictionarySeeder
             if ($language->flag_icon === null) {
                 $language->forceFill(['flag_icon' => $flagIcons[$code] ?? null]);
             }
+
+            $language->forceFill([ColumnNames::JSON_ATTRIBUTES => [...($language->json_attributes ?? []), Language::FLAG_ICONS => $countryFlags[$code] ?? []]]);
 
             if (! $language->exists) {
                 $language->forceFill([

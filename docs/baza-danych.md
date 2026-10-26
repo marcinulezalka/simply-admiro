@@ -312,6 +312,12 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   `LocalizationData::LANGUAGE_FLAGS` (`en` → `gb`, `ar` → `sa`), kraj o tym samym kodzie, w którym
   język jest urzędowy, albo kraj z największą liczbą mówiących (ICU). Seeder nie nadpisuje ustawionej
   ikony. Widok: `<x-admiro::flag :icon="$country->flag_icon" />` (`docs/design-system.md` §7).
+- `json_attributes.flag_icons` języka (`Language::FLAG_ICONS`, odczyt `Language::flagIcons()`) — flagi wszystkich
+  krajów, w których język jest urzędowy: najpierw `flag_icon`, potem kraje od największej liczby mówiących (ICU,
+  `LocalizationData::languageCountryFlagIcons()`); seeder odświeża je przy każdym uruchomieniu. Panel pokazuje je
+  w kolumnie kodu słownika i w kreatorze języków.
+- Nowa instalacja włącza tylko język aplikacji i języki interfejsu (`APP_LOCALES`); pozostałe języki administrator
+  włącza w kreatorze onboardingu (krok „Języki”). Istniejące bazy zachowują swoje wybory.
 - Stawki VAT obowiązują od `valid_from` do `valid_to` włącznie; `Queries\Dictionaries\TaxRatesInForce`
   zwraca stawki kraju w danym dniu, podstawową i stawkę aplikacji (bez słownika:
   `admiro.localization.vat_percent`).

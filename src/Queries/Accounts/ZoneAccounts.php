@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Queries\Accounts;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Simplysmart\Admiro\Auth\AccountColumns;
 use Simplysmart\Admiro\Auth\EmailAddress;
@@ -24,7 +25,8 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Konta strefy dla paneli administracyjnych: strona listy (od najnowszych) z wyszukiwaniem po dokładnym adresie
- * e-mail (przez indeks `email_hash`, bo adres jest szyfrowany) i konto po tokenie z URL.
+ * e-mail (przez indeks `email_hash`, bo adres jest szyfrowany), krótka lista do wyszukiwarki (fragment imienia
+ * i nazwiska albo dokładny adres e-mail) i konto po tokenie z URL.
  */
 final readonly class ZoneAccounts
 {
@@ -47,6 +49,32 @@ final readonly class ZoneAccounts
         $query->orderByDesc(ColumnNames::ID);
 
         return $query->paginate($perPage)->withQueryString();
+    }
+
+    /**
+     * @return list<Model&CodeAndPinAccount>
+     */
+    public function search(ZoneDefinition $zone, string $term, int $limit): array
+    {
+        $term = trim($term);
+
+        if ($term === '') {
+            return [];
+        }
+
+        $model = $zone->accountModel();
+        $query = $model::query();
+        $query->where(function (Builder $match) use ($term): void {
+            $match->whereRaw('LOWER(' . AccountColumns::NAME . ') LIKE ?', ['%' . mb_strtolower(str_replace(['%', '_'], ' ', $term)) . '%']);
+
+            if (str_contains($term, '@')) {
+                $match->orWhere(AccountColumns::EMAIL_HASH, $this->index->hash(EmailAddress::normalize($term)));
+            }
+        });
+        $query->orderBy(AccountColumns::NAME);
+        $query->limit($limit);
+
+        return array_values($query->get()->all());
     }
 
     public function find(ZoneDefinition $zone, string $token): (Model&CodeAndPinAccount)|null

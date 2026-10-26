@@ -157,6 +157,7 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
             ->with('zoneAuthPageTitle', $settings === null ? '' : $zone->get()->signInText('page_title'))
             ->with('zoneLegalLinks', $settings === null ? [] : $this->app->make(LegalLinks::class)->for($zone->get()))
+            ->with('zoneAuthHomeLink', $settings->homeLink ?? true)
             ->with('zoneAuthLogo', $settings?->logo === null ? null : (file_get_contents($settings->logo) ?: null))
             ->with('zoneAuthBrand', $brand === null ? null : [
                 'light' => $brandUrl(AuthBrand::LIGHT),

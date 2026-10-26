@@ -12,7 +12,12 @@ declare(strict_types=1);
  */
 
 use Illuminate\Support\Facades\Route;
+use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
+use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\Controllers\DashboardController;
+use Simplysmart\Admiro\Panel\Http\Controllers\OnboardingController;
+use Simplysmart\Admiro\Panel\Http\Controllers\SearchController;
+use Simplysmart\Admiro\Zones\ZonePermission;
 
 /*
 | Trasy dla zalogowanych administratorów (poziom Authenticated: Core dodaje auth:<guard>).
@@ -20,3 +25,13 @@ use Simplysmart\Admiro\Panel\Http\Controllers\DashboardController;
 */
 
 Route::get('/', DashboardController::class)->name('dashboard');
+
+Route::get('search', [SearchController::class, 'index'])->name('search');
+Route::get('search/suggest', [SearchController::class, 'suggest'])->middleware('throttle:60,1')->name('search.suggest');
+
+Route::get('onboarding', [OnboardingController::class, 'index'])->name('onboarding.index');
+Route::get('onboarding/{step}', [OnboardingController::class, 'show'])->whereIn('step', array_column(OnboardingStep::cases(), 'value'))->name('onboarding.show');
+Route::post('onboarding/{step}/confirm', [OnboardingController::class, 'confirm'])
+    ->whereIn('step', array_column(OnboardingStep::cases(), 'value'))
+    ->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:admiro.sign-in'])
+    ->name('onboarding.confirm');

@@ -47,7 +47,7 @@ odpowiednik, którym opisujemy wygląd w rozmowach i promptach.
 | `--ss-auth-button-height` | wysokość przycisków formularza logowania (bez `.ss-button--sm`/`--lg`) | `var(--ss-auth-control-height)` | | `h-10` |
 | `--ss-shadow-raised` | elementy wyniesione | | | `shadow-sm` |
 | `--ss-shadow-overlay` | modal, dropdown | | | `shadow-lg` |
-| `--ss-color-canvas` | tło powłoki aplikacji (`.ss-shell`) | `#e8e9ed` | `#0b0d12` | `bg-gray-200` |
+| `--ss-color-canvas` | tło treści powłoki aplikacji (`.ss-shell`), w jasnym motywie jaśniejsze od menu bocznego | `#fbfbfc` | `#0b0d12` | `bg-gray-50` |
 | `--ss-color-sidebar` | panel menu bocznego | `#f3f4f6` | `#141821` | `bg-gray-100` |
 | `--ss-color-sidebar-hover` | pozycja menu pod kursorem | biel 65% | biel 6% | `bg-white/65` |
 | `--ss-shadow-soft` | aktywna pozycja menu, karty i wyszukiwarka w powłoce | | | `shadow-sm` + miękki cień |
@@ -211,7 +211,7 @@ Wspólne komponenty powstają w Core jako `x-admiro::…`:
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
 | `context-header` | nagłówek kontekstowy (sloty: metadane, akcje) |
 | `stepper` | stepper sterowany enumem statusu |
-| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne, pod nimi przycisk „Strona główna” (`.ss-auth__home`, przycisk z ikoną domu do `url('/')`, jak na stronach błędów); pola i przyciski mają wysokość `--ss-auth-control-height` (pole bez pionowego wcięcia, więc wysokość daje token); dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: odnośniki prawne strefy (`legal_links`), polityka cookies i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
+| `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne, pod nimi przycisk „Strona główna” (`.ss-auth__home`, przycisk z ikoną domu do `url('/')`, jak na stronach błędów; strefa wyłącza go `auth.home_link` = false); pola i przyciski mają wysokość `--ss-auth-control-height` (pole bez pionowego wcięcia, więc wysokość daje token); dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: odnośniki prawne strefy (`legal_links`), polityka cookies i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
 | `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i odnośnikami cookies nad i pod treścią (bez przełącznika motywu; odnośniki `.ss-link` bez podkreślenia, podkreślone pod kursorem), spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł z opcjonalną ikoną `icon`, `lead`) i treścią w `.ss-prose` (tekst do 70ch, bloki na całą szerokość; odnośniki pogrubione w kolorze akcentu, podkreślone dopiero pod kursorem i przy fokusie); na stronie polityki cookies lista cookies `.ss-cookie-list` jako panele `.ss-card--muted` na całą szerokość z zawijaniem długich wartości i przycisk ustawień z ikoną, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
 | `card`, `field` | karta i para etykieta–wartość |
 | `button` | warianty: główny (akcent), drugorzędny; do czasu komponentu klasy CSS `.ss-button`, `.ss-button--primary`, `.ss-button--block` |
@@ -375,7 +375,13 @@ bieżąca), a podpozycje bez ikon (`.ss-sidebar__sublist`) łączą linie drzewa
 do każdej (`--ss-sidebar-tree-line`); w menu zwiniętym do ikon gałąź jest zwykłym odnośnikiem pozycji; obszary widoków
 w nawigacji design systemu mają te same linie), zwijane do ikon
 i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
-globalna wyszukiwarka `View\Navigation\SearchBox` (formularz GET, skrót „/”); konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
+globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
+„Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
+fragment HTML z widoku `admiro::search.suggestions` z grupami `SearchResultGroup` i wynikami `SearchResult` z flagami
+albo ikoną, lista `role="listbox"` obsługiwana strzałkami, Enter i Esc, `js/global-search.js`); formularze
+`data-ss-autosubmit` wysyłają się po zmianie pola, np. przełącznik włącz/wyłącz w wierszu tabeli (`js/autosubmit.js`,
+bez skryptu zostaje przycisk `data-ss-autosubmit-fallback`); tło treści powłoki (`--ss-color-canvas`) jest w jasnym
+motywie jaśniejsze od menu bocznego; konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy
 `x-admiro::app.context` (też w powłoce widoków design systemu). Menu ma najwyżej `--ss-sidebar-width`, a dłuższe
 pozycje, imię i druga linia zawijają się do kolejnych wierszy (bez wielokropka). Każda grupa pozycji to osobna lista
@@ -395,7 +401,9 @@ osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Do
 
 Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
 do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
-`surface-muted`), `.ss-onboarding` (karta kroków konfiguracji na górze pulpitu: ikona w kafelku, tytuł i opis, po
+`surface-muted`), `.ss-onboarding-wizard` (kreator onboardingu: kroki `.ss-stepper` jako odnośniki, karta kroku, stopka Wstecz/Dalej;
+krok „Języki” z panelem włączonych języków `.ss-onboarding-languages` nad listą), `.ss-dictionary-code` (kod wpisu
+słownika z flagami krajów), `.ss-onboarding` (karta kroków konfiguracji na górze pulpitu: ikona w kafelku, tytuł i opis, po
 prawej postęp z paskiem `.ss-progress` — natywny `<progress>` w kolorze akcentu — i lista numerowana kart-odnośników
 `.ss-card--muted` z dużym, przygaszonym numerem kroku w tle), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,

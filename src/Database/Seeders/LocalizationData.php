@@ -32,13 +32,6 @@ final class LocalizationData
     public const array ACTIVE_CURRENCIES = ['PLN', 'EUR', 'USD', 'GBP', 'CHF'];
 
     /**
-     * Języki włączone od startu obok języka aplikacji i języków interfejsu.
-     *
-     * @var list<string>
-     */
-    public const array ACTIVE_LANGUAGES = ['en'];
-
-    /**
      * Kraje na początku list wyboru, w tej kolejności (sort_order); pozostałe po nich.
      *
      * @var list<string>
@@ -363,16 +356,7 @@ final class LocalizationData
      */
     public static function languageFlagIcons(array $languages): array
     {
-        $speakers = [];
-
-        foreach (self::countryCodes() as $country) {
-            $population = self::population($country);
-
-            foreach (self::officialLanguageShares($country) as $language => $share) {
-                $speakers[$language][$country] = $population * $share;
-            }
-        }
-
+        $speakers = self::speakersByCountry();
         $icons = [];
 
         foreach ($languages as $language) {
@@ -388,6 +372,37 @@ final class LocalizationData
         }
 
         return $icons;
+    }
+
+    /**
+     * Flagi wszystkich krajów z listy, w których język jest urzędowy: najpierw flaga języka (languageFlagIcons()),
+     * potem pozostałe kraje od największej liczby mówiących (dane ICU). Język bez kraju na liście nie ma flag.
+     *
+     * @param list<string> $languages
+     *
+     * @return array<string, list<string>>
+     */
+    public static function languageCountryFlagIcons(array $languages): array
+    {
+        $speakers = self::speakersByCountry();
+        $primary = self::languageFlagIcons($languages);
+        $flags = [];
+
+        foreach ($languages as $language) {
+            $countries = $speakers[$language] ?? [];
+            arsort($countries);
+            $icons = array_map(self::countryFlagIcon(...), array_map(strval(...), array_keys($countries)));
+
+            if (isset($primary[$language])) {
+                $icons = [$primary[$language], ...$icons];
+            }
+
+            if ($icons !== []) {
+                $flags[$language] = array_values(array_unique($icons));
+            }
+        }
+
+        return $flags;
     }
 
     /**
@@ -431,6 +446,26 @@ final class LocalizationData
         }
 
         return $languages;
+    }
+
+    /**
+     * Liczba mówiących językiem urzędowym w każdym kraju z listy: język → kraj → osoby (ludność × udział).
+     *
+     * @return array<string, array<string, float>>
+     */
+    private static function speakersByCountry(): array
+    {
+        $speakers = [];
+
+        foreach (self::countryCodes() as $country) {
+            $population = self::population($country);
+
+            foreach (self::officialLanguageShares($country) as $language => $share) {
+                $speakers[$language][$country] = $population * $share;
+            }
+        }
+
+        return $speakers;
     }
 
     /**

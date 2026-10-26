@@ -85,6 +85,7 @@ return [
     'settings_rejected' => 'Nie można zapisać ustawień: wybierz co najmniej jeden język interfejsu, a język domyślny spośród nich.',
     'dictionaries_title' => 'Słowniki',
     'dictionary_code' => 'Kod',
+    'dictionary_switch' => 'Wpis :name włączony',
     'dictionary_name' => 'Nazwa',
     'dictionary_default' => 'domyślny',
     'dictionary_saved' => 'Słownik zapisany.',
