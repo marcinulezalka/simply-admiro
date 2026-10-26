@@ -43,6 +43,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Layout Workspace: zwijanie menu na dole menu bocznego od lewej; dzwonek powiadomień jako osobny przycisk w stopce przed kalendarzem, panel powiadomień wysuwany z prawej (`x-admiro::app.notifications right`); na telefonie i tablecie konto (awatar, imię i nazwisko) w stopce w miejscu logo i wersji, z menu: profil, bezpieczeństwo, wygląd, ustawienia, mapa aplikacji i wylogowanie (nowy prop `settingsUrl` layoutu aplikacji); na telefonie kalendarz w stopce bez pełnej daty.
+- Strona Onboarding: karta postępu „Zrobione X z Y” rozwija listę kroków ze stanem (haczyk albo numer, plakietka stanu) i odnośnikami do kreatora; pod separatorem przełącznik „Nie pokazuj kroków zrealizowanych” chowa zrobione karty (wybór zapamiętany w przeglądarce, `js/hide-done.js`).
 - Kreator onboardingu, krok „Języki”: zamiast listy wszystkich języków pole wyszukiwania z podpowiedziami (po nazwie języka albo kraju), wyniki w panelach (flagi, nazwa, nazwa własna i kod, przełącznik); przełączniki zapisują się od razu po zmianie. Na liście kroków zrobione kroki nie pokazują opisu.
 
 - Onboarding w nowej kolejności (8 kroków): Instalacja systemu i konto hero, Języki, Ustawienia regionalne (dawniej „Ustawienia systemu”), Organizacje, Profile i uprawnienia (dawniej „Administratorzy”), Właściciele stref, Dziennik zdarzeń (nowy krok, zrobiony po pierwszym otwarciu dziennika) i na końcu Dokumenty prawne; nowe ikony kroków (`cpu`, `languages`, `scale` z Lucide; `locale`, `id-card`, `history`).

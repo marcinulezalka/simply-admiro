@@ -18,6 +18,7 @@ return [
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Przejdź przez konfigurację procesów firmowych w zalecanej kolejności. Każdy etap buduje fundamenty pod kolejne funkcje Twojego systemu.',
     'onboarding_progress' => 'Zrobione :done z :total',
+    'onboarding_hide_done' => 'Nie pokazuj kroków zrealizowanych',
     'onboarding_step' => 'Krok :number',
     'onboarding_steps' => 'Kroki onboardingu',
     'onboarding_back' => 'Wstecz',

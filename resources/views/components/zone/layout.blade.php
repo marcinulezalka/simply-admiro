@@ -47,6 +47,7 @@
         :sitemap="$sitemap"
         :calendar="$workspace ? app(\Simplysmart\Admiro\View\Calendar\CalendarMonths::class)->current() : null"
         :settings="$workspace && ! $settingsMode ? null : $settingsMenu"
+        :settings-url="$settingsMenu?->url"
         :legal-links="$zoneLegalLinks ?? []"
         :search="$navigation?->search()"
         :account="[

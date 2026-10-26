@@ -1,4 +1,4 @@
-{{-- Onboarding (OnboardingController::index): nagłówek strony „Onboarding” z opisem, po prawej w panelu akcji karta postępu (przerywana ramka, ikona celu, etykieta „Zrobione X z Y” i pasek), pod nim — bez karty, na tle strony — lista numerowana wszystkich kroków jako paneli-odnośników do kreatora (etykieta „Krok N · stan” dla zrobionych i w trakcie; zrobione wyszarzone w kolorach hovera: .ss-card--muted, z haczykiem); po wszystkich krokach komunikat z linkiem do przeglądu. $onboarding: list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool}> --}}
+{{-- Onboarding (OnboardingController::index): nagłówek strony „Onboarding” z opisem, po prawej w panelu akcji karta postępu (przerywana ramka, ikona celu, etykieta „Zrobione X z Y” i pasek), która rozwija listę kroków (numer albo haczyk, nazwa, plakietka stanu; odnośniki do kreatora), a pod separatorem przełącznik „Nie pokazuj kroków zrealizowanych” (js/hide-done.js: chowa zrobione karty [data-ss-done], wybór zapamiętany w przeglądarce; bez skryptu ukryty), pod nim — bez karty, na tle strony — lista numerowana wszystkich kroków jako paneli-odnośników do kreatora (etykieta „Krok N · stan” dla zrobionych i w trakcie; zrobione wyszarzone w kolorach hovera: .ss-card--muted, z haczykiem); po wszystkich krokach komunikat z linkiem do przeglądu. $onboarding: list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool}> --}}
 @php
     $doneCount = count(array_filter($onboarding, static fn (array $item): bool => $item['done']));
     $total = count($onboarding);
@@ -6,10 +6,35 @@
 <x-admiro::zone.layout :title="text('admiro::dashboard.onboarding_title')" :meta="text('admiro::dashboard.onboarding_lead')">
     @if ($onboarding !== [])
         <x-slot:actions class="ss-context__actions--progress">
-            <div class="ss-onboarding__progress">
-                <label class="ss-onboarding__progress-label" for="ss-onboarding-progress"><x-admiro::icon name="target" class="ss-onboarding__progress-icon" />{{ text('admiro::dashboard.onboarding_progress', ['done' => (string) $doneCount, 'total' => (string) $total]) }}</label>
-                <progress class="ss-progress" id="ss-onboarding-progress" value="{{ $doneCount }}" max="{{ $total }}">{{ $doneCount }}/{{ $total }}</progress>
-            </div>
+            <details class="ss-onboarding__progress-menu" data-ss-dropdown>
+                <summary class="ss-onboarding__progress">
+                    <span class="ss-onboarding__progress-label" id="ss-onboarding-progress-label"><x-admiro::icon name="target" class="ss-onboarding__progress-icon" />{{ text('admiro::dashboard.onboarding_progress', ['done' => (string) $doneCount, 'total' => (string) $total]) }}<x-admiro::icon name="chevron-down" class="ss-onboarding__progress-chevron" /></span>
+                    <progress class="ss-progress" id="ss-onboarding-progress" value="{{ $doneCount }}" max="{{ $total }}" aria-labelledby="ss-onboarding-progress-label">{{ $doneCount }}/{{ $total }}</progress>
+                </summary>
+                <div class="ss-account-menu__panel ss-onboarding__progress-panel">
+                    <ol class="ss-onboarding__progress-steps">
+                        @foreach ($onboarding as ['step' => $step, 'number' => $number, 'state' => $state, 'done' => $done])
+                            <li>
+                                <a class="ss-account-menu__link ss-onboarding__progress-step" href="{{ route('admiro.onboarding.show', ['step' => $step->value]) }}">
+                                    <span @class(['ss-onboarding__progress-marker', 'ss-onboarding__progress-marker--done' => $done]) aria-hidden="true">
+                                        @if ($done)
+                                            <x-admiro::icon name="check" class="ss-onboarding__progress-marker-icon" />
+                                        @else
+                                            {{ $number }}
+                                        @endif
+                                    </span>
+                                    <span class="ss-onboarding__progress-step-name">{{ text('admiro::dashboard.onboarding_' . $step->value . '_title') }}</span>
+                                    <span class="ss-badge ss-badge--outline ss-badge--{{ $state->tone() }}">{{ $state->label() }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ol>
+                    <div class="ss-onboarding__progress-setting" data-ss-hide-done-control hidden>
+                        <x-admiro::switch id="ss-onboarding-hide-done" :label="text('admiro::dashboard.onboarding_hide_done')" data-ss-hide-done="ss-onboarding-steps" data-ss-hide-done-key="ss-onboarding-hide-done" />
+                    </div>
+                </div>
+            </details>
+            <x-admiro::scripts :files="['js/hide-done.js']" />
         </x-slot:actions>
     @endif
 
@@ -18,9 +43,9 @@
     @endif
 
     @if ($onboarding !== [])
-        <ol class="ss-onboarding__steps ss-grid ss-grid--3" aria-label="{{ text('admiro::dashboard.onboarding_steps') }}">
+        <ol class="ss-onboarding__steps ss-grid ss-grid--3" id="ss-onboarding-steps" aria-label="{{ text('admiro::dashboard.onboarding_steps') }}">
             @foreach ($onboarding as ['step' => $step, 'number' => $number, 'state' => $state, 'done' => $done])
-                <li class="ss-onboarding__step" value="{{ $number }}">
+                <li class="ss-onboarding__step" value="{{ $number }}"{!! $done ? ' data-ss-done' : '' !!}>
                     <a class="ss-card ss-onboarding__link{{ $done ? ' ss-card--muted' : '' }}" href="{{ route('admiro.onboarding.show', ['step' => $step->value]) }}">
                         <span class="ss-onboarding__number" aria-hidden="true">{{ str_pad((string) $number, 2, '0', STR_PAD_LEFT) }}</span>
                         <span class="ss-onboarding__eyebrow">{{ text('admiro::dashboard.onboarding_step', ['number' => (string) $number]) }}@if ($state !== \Simplysmart\Admiro\Panel\Enums\OnboardingStepState::NotStarted) · {{ $state->label() }}@endif</span>

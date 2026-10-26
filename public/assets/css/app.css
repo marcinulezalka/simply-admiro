@@ -137,6 +137,107 @@
     letter-spacing: 0.06em;
 }
 
+/* Karta postępu jako lista rozwijana (<details data-ss-dropdown>): panel z krokami pod kartą, przy prawej krawędzi. */
+.ss-onboarding__progress-menu {
+    position: relative;
+}
+
+.ss-onboarding__progress-menu > summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-onboarding__progress-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+.ss-onboarding__progress-chevron {
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-left: auto;
+    transition: transform 0.15s ease;
+}
+
+.ss-onboarding__progress-menu[open] .ss-onboarding__progress-chevron {
+    transform: rotate(180deg);
+}
+
+.ss-onboarding__progress-panel {
+    top: calc(100% + var(--ss-space-2));
+    right: calc(-1 * var(--ss-space-1));
+    left: auto;
+    width: min(22rem, calc(100vw - 2rem));
+}
+
+.ss-onboarding__progress-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding__progress-step {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-onboarding__progress-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-onboarding__progress-marker--done {
+    border-color: var(--ss-color-success);
+    background: var(--ss-color-success);
+    color: var(--ss-color-surface);
+}
+
+.ss-onboarding__progress-marker-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.ss-onboarding__progress-step .ss-badge {
+    margin-left: auto;
+}
+
+.ss-onboarding__progress-step-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Ustawienie pod separatorem listy kroków: przełącznik „Nie pokazuj kroków zrealizowanych” (js/hide-done.js). */
+.ss-onboarding__progress-setting {
+    margin-top: var(--ss-space-2);
+    padding: var(--ss-space-2) var(--ss-space-2) 0;
+    border-top: 1px solid var(--ss-color-border);
+}
+
+.ss-onboarding__progress-setting[hidden] {
+    display: none;
+}
+
+.ss-onboarding__progress-setting .ss-switch {
+    padding: var(--ss-space-1) 0;
+    border-top: 0;
+}
+
+/* Kontener z włączonym ukrywaniem zrobionych elementów (js/hide-done.js). */
+.ss-hide-done [data-ss-done] {
+    display: none;
+}
+
 /* Ikona celu przed licznikiem „Zrobione X z Y”. */
 .ss-onboarding__progress-icon {
     flex: none;
@@ -5355,6 +5456,142 @@ a.ss-notification:focus-visible {
     }
 }
 
+/*
+ * Konto w stopce Workspace (.ss-workspace-footer__account): tylko na ekranach bez stałego menu (poniżej 64rem) — w miejscu
+ * logo simplysmart i wersji; awatar z imieniem i nazwiskiem otwiera menu nad stopką: konto (profil, bezpieczeństwo,
+ * wygląd), ustawienia, mapa aplikacji i na dole wylogowanie.
+ */
+.ss-workspace-footer__account {
+    position: relative;
+    display: none;
+    min-width: 0;
+}
+
+.ss-workspace-footer__account-toggle {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: 0;
+    padding: var(--ss-space-1) var(--ss-space-2) var(--ss-space-1) var(--ss-space-1);
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-card);
+    font-size: 0.875rem;
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-workspace-footer__account-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-workspace-footer__account-name {
+    flex: 1 1 auto;
+    min-width: 3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-workspace-footer__account-chevron {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-workspace-footer__account[open] .ss-workspace-footer__account-chevron {
+    transform: rotate(180deg);
+}
+
+.ss-workspace-footer__account-panel {
+    top: auto;
+    right: auto;
+    bottom: calc(100% + var(--ss-space-2));
+    left: 0;
+    min-width: 15rem;
+}
+
+.ss-workspace-footer__sign-out {
+    margin: var(--ss-space-1) 0 0;
+    padding-top: var(--ss-space-1);
+    border-top: 1px solid var(--ss-color-border);
+}
+
+.ss-workspace-footer__sign-out .ss-account-menu__link {
+    width: 100%;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+@media (max-width: 63.999rem) {
+    .ss-workspace-footer__brand {
+        display: none;
+    }
+
+    .ss-workspace-footer__account {
+        display: block;
+        grid-row: 1;
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 40rem) {
+    .ss-workspace-footer__account {
+        grid-area: brand;
+    }
+
+    .ss-workspace-footer .ss-calendar-panel__date {
+        display: none;
+    }
+
+    .ss-workspace-footer .ss-calendar-panel__toggle {
+        width: auto;
+    }
+}
+
+/* Dzwonek w stopce Workspace: osobny przycisk przed kalendarzem, panel powiadomień wysuwany z prawej krawędzi okna. */
+.ss-workspace-footer__tool {
+    position: relative;
+    border: 1px solid var(--ss-color-border);
+    background: var(--ss-color-surface);
+}
+
+.ss-notifications--right .ss-notifications__panel {
+    position: fixed;
+    z-index: 90;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: min(24rem, 100vw);
+    padding: var(--ss-space-4);
+    overflow-y: auto;
+    border-width: 0 0 0 1px;
+    border-radius: 0;
+    animation: ss-drawer-in-right 0.2s ease-out;
+}
+
+.ss-notifications--right .ss-notifications__list {
+    max-height: none;
+}
+
+/*
+ * Przycisk zwijania menu Workspace na dole menu bocznego, od lewej (w zwiniętym menu wyśrodkowany).
+ */
+.ss-sidebar__footer {
+    display: flex;
+    margin-top: auto;
+    padding-top: var(--ss-space-3);
+}
+
+.ss-shell--collapsed .ss-sidebar__footer {
+    justify-content: center;
+}
+
 .ss-workspace-footer__sitemap[hidden] {
     display: none;
 }
@@ -5819,7 +6056,7 @@ a.ss-notification:focus-visible {
  * Konto w menu wariantu Workspace (.ss-account-card): karta z przerywaną ramką, bardzo delikatnym gradientem i cieniem
  * — awatar w kształcie i rozmiarze przycisku z ikoną, w obramowaniu jak karty (ramka border-strong i biały pierścień),
  * imię i pod nim nazwisko krojem mono wielkimi literami, po prawej ikona wylogowania bez tła z nazwą rozwijaną
- * w lewo; pod nim rząd ikon bez tła (.ss-account-panel: zwijanie menu, profil, powiadomienia, kontekst, profile
+ * w lewo; pod nim rząd ikon bez tła (.ss-account-panel: profil, kontekst, profile
  * społecznościowe) z opisem rozwijanym po najechaniu. W zwiniętym menu awatar, wylogowanie i ikony w kolumnie.
  */
 .ss-account-card {

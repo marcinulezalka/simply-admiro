@@ -386,13 +386,15 @@ wariant layoutu z `app_layout` strefy (`Enums\AppLayout`, prop `variant`): `side
 bocznym tylko `groups()`, a wszystkie strony w mapie strony, bez niej ustawienia i konto są w głównym menu; nagłówki
 grup nad kartami, pasek przewijania menu z odstępem od kart; konto (`.ss-account-card`: karta z przerywaną ramką, bardzo delikatnym gradientem i cieniem): awatar w kształcie
 i rozmiarze przycisku z ikoną, w obramowaniu jak karty, imię i pod nim nazwisko krojem mono wielkimi literami, po prawej ikona wylogowania bez tła z rozwijaną nazwą; pod nim rząd ikon bez tła (`.ss-account-panel`) z opisem
-rozwijanym po najechaniu — zwijanie menu, profil, powiadomienia `x-admiro::app.notifications drawer`, przełącznik
+rozwijanym po najechaniu — profil, przełącznik
 kontekstu `x-admiro::app.context-switch` i profile społecznościowe strefy `social_links`; niżej grupa „System” (w admiro:
 status aplikacji, onboarding, mapa aplikacji — odnośnik `#ss-sitemap` rozsuwa mapę strony w stopce — dziennik zdarzeń,
 ustawienia), a na stronach ustawień czyste menu ustawień
-z powrotem do aplikacji; powiadomienia
-w panelu wysuwanym przy krawędzi menu na najwyższej warstwie (`.ss-notifications--drawer`); bez logo simplysmart
-w menu i bez top baru; pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: logo z wersją
+z powrotem do aplikacji; zwijanie menu na dole menu bocznego od lewej (`.ss-sidebar__footer`); dzwonek powiadomień
+jako osobny przycisk w stopce przed kalendarzem, z panelem wysuwanym z prawej krawędzi okna
+(`x-admiro::app.notifications right`, `.ss-notifications--right`); na ekranach bez stałego menu konto (awatar, imię
+i nazwisko) w stopce w miejscu logo i wersji, z menu: konto, ustawienia, mapa aplikacji i wylogowanie na dole
+(`.ss-workspace-footer__account`); bez logo simplysmart w menu i bez top baru; pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: logo z wersją
 admiro w pigułce, globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
 `.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions`, suwaki zakresów zamiast lupy —
 przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu nad

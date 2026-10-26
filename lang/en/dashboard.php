@@ -18,6 +18,7 @@ return [
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Go through the setup of your business processes in the recommended order. Each stage lays the foundations for the next features of your system.',
     'onboarding_progress' => ':done of :total done',
+    'onboarding_hide_done' => 'Hide completed steps',
     'onboarding_step' => 'Step :number',
     'onboarding_steps' => 'Onboarding steps',
     'onboarding_back' => 'Back',

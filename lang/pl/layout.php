@@ -18,6 +18,7 @@ return [
     'search' => 'Szukaj w aplikacji',
     'search_shortcut' => 'Naciśnij /, aby szukać',
     'sitemap' => 'Mapa strony',
+    'sitemap_open' => 'Mapa aplikacji',
     'sitemap_start' => 'Start',
     'calendar' => 'Kalendarz',
     'calendar_empty' => 'Brak wydarzeń w tym dniu.',

@@ -18,6 +18,7 @@ return [
     'search' => 'Search the application',
     'search_shortcut' => 'Press / to search',
     'sitemap' => 'Site map',
+    'sitemap_open' => 'Application map',
     'sitemap_start' => 'Start',
     'calendar' => 'Calendar',
     'calendar_empty' => 'No events on this day.',
