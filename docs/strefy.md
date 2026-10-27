@@ -31,11 +31,10 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     dokumentami strefy, bez „Ustawień cookies” w karcie logowania; nazwy odnośników z tekstów
        //     `sign_in.<strefa>.legal_cookies|legal_privacy|legal_gdpr`),
        // 'social_links' => ['linkedin' => 'https://…', 'github' => 'https://…'] (Enums\SocialNetwork → adres http(s);
-       //     puste pomijane, nieznany serwis albo zły adres zatrzymuje start; ikony na karcie konta layoutu Workspace),
-       // 'app_layout' => 'workspace' (Enums\AppLayout: bez menu ustawień, akcje rozsuwane w ikonę z tytułem, powiadomienia
-       //     w wysuwanym panelu, przyklejona stopka z logo i wersją, wyszukiwarką, motywem i mapą strony; menu strefy
-       //     z Contracts\ZoneSitemap pokazuje w menu bocznym tylko groups(), a wszystkie strony — sitemap() — w mapie
-       //     strony; domyślnie `sidebar`),
+       //     puste pomijane, nieznany serwis albo zły adres zatrzymuje start; w menu konta w stopce layoutu Workspace),
+       // 'app_layout' => 'workspace' (Enums\AppLayout: bez menu bocznego, cała nawigacja w przyklejonej stopce — konto
+       //     z menu, wyszukiwarka, przełącznik kontekstu, powiadomienia, kalendarz i mapa strony; z Contracts\ZoneSitemap
+       //     mapa pokazuje sitemap(); domyślnie `sidebar`),
        // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
        // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout

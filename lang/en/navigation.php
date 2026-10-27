@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 return [
 
-    'status' => 'Application status',
+    'status' => 'Dashboard',
     'system_settings' => 'Settings',
     'sitemap' => 'Application map',
     'groups' => [

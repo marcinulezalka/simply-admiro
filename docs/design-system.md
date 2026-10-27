@@ -183,6 +183,7 @@ Strona składa się z poziomych warstw, od ogólnej do szczegółowej:
 | **Nawigacja modułowa** | ikona + etykieta (`text_*`); aktywna pozycja = pigułka `surface-muted` i tekst `text`, pozostałe `muted` | przewijanie poziome, bez łamania wiersza |
 | **Nagłówek kontekstowy** | link powrotu, metadane (`text-xs`, `muted`, np. numer, data przez `local_date`), duży tytuł, akcje po prawej (np. eksport PDF: etykieta `text_file` / `text_action`); najwyżej jedna akcja główna w kolorze akcentu | akcje pod tytułem |
 | **Stepper** | etapy procesu z ikonami połączone cienką linią; stany: zakończony (akcent), bieżący (akcent, wyróżniony), przyszły (`border-strong`). Etapy to przypadki enuma `status` rekordu (zob. [baza-danych.md](baza-danych.md)), etykiety z jego tłumaczeń | pionowo albo tylko bieżący etap z licznikiem „3 z 5” |
+| **Tło płótna** | pod wszystkimi warstwami layoutu aplikacji duży logotyp simplysmart na środku okna (`x-admiro::app.backdrop`, `.ss-backdrop`), wtopiony w płótno: kolor marki `--ss-color-brand` (czerń albo biel) z kryciem 3,5%, proporcje logo bez zmian; czysta dekoracja (`aria-hidden`), bez motywów wysokiego kontrastu i wydruku | logotyp na prawie całą szerokość |
 | **Siatka kart** | niezależne karty; w karcie pary etykieta (`muted`, lewa) → wartość (`text`, prawa). Etykieta z `text_data($model, $kolumna)`, wartość sformatowana `local_*` | jedna kolumna; para etykieta nad wartością |
 
 ## 6. Kolor i dostępność
@@ -209,7 +210,7 @@ Wspólne komponenty powstają w Core jako `x-admiro::…`:
 | `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja; `--outline` — delikatny obrys bez wypełnienia, kolor z `--success`, `--warning`, `--danger`, `--info` albo `--muted` (np. stan kroku onboardingu) |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
-| `context-header` | nagłówek kontekstowy `x-admiro::app.context` (zaimplementowany): ikona w kafelku (`icon`; w strefie z bieżącej pozycji menu albo mapy strony), duży tytuł, pod nim opis krojem mono (`meta`), slot `actions` jako panel z ramką po prawej; próbka w design systemie (sekcja „Nagłówek strony”) |
+| `context-header` | nagłówek kontekstowy `x-admiro::app.context` (zaimplementowany): ikona w jasnym kafelku z półprzezroczystą obwódką, wypełniona delikatnym odcieniem swojego koloru, w wysokości tytułu z opisem (`icon`; w strefie z bieżącej pozycji menu albo mapy strony), duży tytuł, pod nim opis krojem mono (`meta`), slot `actions` jako panel z ramką po prawej; próbka w design systemie (sekcja „Nagłówek strony”) |
 | `stepper` | stepper sterowany enumem statusu |
 | `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne, pod nimi przycisk „Strona główna” (`.ss-auth__home`, przycisk z ikoną domu do `url('/')`, jak na stronach błędów; strefa wyłącza go `auth.home_link` = false); pola i przyciski mają wysokość `--ss-auth-control-height` (pole bez pionowego wcięcia, więc wysokość daje token); dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: odnośniki prawne strefy (`legal_links`), polityka cookies i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
 | `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i odnośnikami cookies nad i pod treścią (bez przełącznika motywu; odnośniki `.ss-link` bez podkreślenia, podkreślone pod kursorem), spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł z opcjonalną ikoną `icon`, `lead`) i treścią w `.ss-prose` (tekst do 70ch, bloki na całą szerokość; odnośniki pogrubione w kolorze akcentu, podkreślone dopiero pod kursorem i przy fokusie); na stronie polityki cookies lista cookies `.ss-cookie-list` jako panele `.ss-card--muted` na całą szerokość z zawijaniem długich wartości i przycisk ustawień z ikoną, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
@@ -382,26 +383,17 @@ do każdej (`--ss-sidebar-tree-line`); w menu zwiniętym do ikon gałąź jest z
 w nawigacji design systemu mają te same linie), zwijane do ikon
 i rozwijane przyciskiem w top barze (stan w `localStorage`), na telefonie wysuwane z boku (tło i Esc zamykają);
 wariant layoutu z `app_layout` strefy (`Enums\AppLayout`, prop `variant`): `sidebar` jak wyżej albo `workspace`
-(`.ss-shell--workspace`: bez menu ustawień i ikony ustawień — strefa z `Contracts\ZoneSitemap` pokazuje w menu
-bocznym tylko `groups()`, a wszystkie strony w mapie strony, bez niej ustawienia i konto są w głównym menu; nagłówki
-grup nad kartami, pasek przewijania menu z odstępem od kart; konto (`.ss-account-card`: karta z przerywaną ramką, bardzo delikatnym gradientem i cieniem): awatar w kształcie
-i rozmiarze przycisku z ikoną, w obramowaniu jak karty, imię i pod nim nazwisko krojem mono wielkimi literami, po prawej ikona wylogowania bez tła z rozwijaną nazwą; pod nim rząd ikon bez tła (`.ss-account-panel`) z opisem
-rozwijanym po najechaniu — profil, przełącznik
-kontekstu `x-admiro::app.context-switch` i profile społecznościowe strefy `social_links`; niżej grupa „System” (w admiro:
-status aplikacji, onboarding, mapa aplikacji — odnośnik `#ss-sitemap` rozsuwa mapę strony w stopce — dziennik zdarzeń,
-ustawienia), a na stronach ustawień czyste menu ustawień
-z powrotem do aplikacji; zwijanie menu na dole menu bocznego od lewej (`.ss-sidebar__footer`); dzwonek powiadomień
-jako osobny przycisk w stopce przed kalendarzem, z panelem wysuwanym z prawej krawędzi okna
-(`x-admiro::app.notifications right`, `.ss-notifications--right`); na ekranach bez stałego menu konto (awatar, imię
-i nazwisko) w stopce w miejscu logo i wersji, z menu: konto, ustawienia, mapa aplikacji i wylogowanie na dole
-(`.ss-workspace-footer__account`); bez logo simplysmart w menu i bez top baru; pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: logo z wersją
-admiro w pigułce, globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
+(`.ss-shell--workspace`: bez menu bocznego i top baru — nawigacja jest tylko w stopce; menu strefy trafia do mapy
+strony (strefa z `Contracts\ZoneSitemap`: `sitemap()` i grupa konta); pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: po lewej konto (awatar, imię i nazwisko,
+`.ss-workspace-footer__account`) z menu nad stopką — konto, ustawienia, mapa aplikacji, profile społecznościowe strefy
+`social_links` i wylogowanie na dole; globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
 `.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions`, suwaki zakresów zamiast lupy —
 przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu nad
 polem), mapa strony rozsuwana pod paskiem (odnośniki do `#ss-sitemap`, bez
-przycisku w stopce; strony w kolumnach i duży logotyp simplysmart na środku, przycięty od dołu tak, że ścina ogonki „p”
-i „y”; otwarta stopka przestaje być przyklejona i rośnie w dół) oraz
-na prawym końcu kalendarz (`x-admiro::app.calendar`: jeden panel o stałej szerokości z ikoną kalendarza i dniem tygodnia
+przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nimi, kolumny dopasowane do szerokości,
+zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej przełącznik kontekstu
+`x-admiro::app.context-switch` (menu nad stopką), dzwonek powiadomień z panelem wysuwanym z prawej krawędzi okna
+(`x-admiro::app.notifications right`, `.ss-notifications--right`) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: jeden panel o stałej szerokości z ikoną kalendarza i dniem tygodnia
 na wspólnym szarym tle i datą krojem mono — po najechaniu szare tło rozsuwa się w „pon, tydzień 44”, a data się chowa,
 bez przesuwania reszty stopki;, `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
 z `CalendarMonths`): klik otwiera panel z prawej krawędzi okna z miesiącem `.ss-mini-calendar` (dziś, dni wolne
@@ -435,9 +427,11 @@ do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
 w kółku, który po zrobieniu zmienia się w haczyk, nazwą, opisem i ikoną, połączone linią; bieżący z ramką akcentu —,
 karta kroku ze stopką Wstecz/Dalej;
 krok „Języki” z panelem włączonych języków `.ss-onboarding-languages` nad wyszukiwarką z podpowiedziami, wyniki w panelach z przełącznikami), `.ss-dictionary-code` (kod wpisu
-słownika z flagami krajów), `.ss-onboarding` (strona onboardingu: postęp w nagłówku strony — panel akcji
-`.ss-context__actions--progress` z przerywaną ramką i delikatnym cieniem, etykieta mono i pasek `.ss-progress`, natywny
-`<progress>` w kolorze akcentu — a pod nim, na tle strony bez karty, lista numerowana kart-odnośników wszystkich kroków
+słownika z flagami krajów), `.ss-onboarding` (strona onboardingu: postęp w zakładce zwisającej z górnej krawędzi strony, z prawej — panel akcji
+`.ss-context__actions--progress` z przerywaną ramką bez górnej krawędzi i delikatnym cieniem; ciemny przycisk z ikoną
+`goal` (`.ss-onboarding__progress-button`, kolory odwrócone), obok etykieta mono i pod nią pasek `.ss-progress`, natywny
+`<progress>` w kolorze akcentu; rozwija listę kroków, na telefonie w panelu wysuwanym z prawej krawędzi okna z nagłówkiem
+i przyciskiem zamknięcia `[data-ss-dropdown-close]` — a pod nim, na tle strony bez karty, lista numerowana kart-odnośników wszystkich kroków
 z dużym, przygaszonym numerem w tle; zrobione wyszarzone w kolorach hovera `.ss-card--muted`, z haczykiem), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent

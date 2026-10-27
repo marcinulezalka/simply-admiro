@@ -1,7 +1,8 @@
 /**
  * Layout aplikacji (x-admiro::app.layout): zwijanie menu bocznego na szerokim ekranie (stan w localStorage),
  * wysuwane menu na telefonie (tło i Esc zamykają), skrót „/” do globalnej wyszukiwarki i menu rozwijane top baru
- * (<details data-ss-dropdown>: powiadomienia, konto) — otwarcie jednego zamyka inne, klik obok i Esc zamykają. W wariancie
+ * (<details data-ss-dropdown>: powiadomienia, konto) — otwarcie jednego zamyka inne, klik obok, Esc i przycisk
+ * [data-ss-dropdown-close] w panelu zamykają. W wariancie
  * Workspace odnośniki do #ss-sitemap (np. „Mapa aplikacji” w menu) rozsuwają i zwijają mapę strony [data-ss-sitemap] pod paskiem stopki
  * (otwarta stopka, .ss-workspace-footer--open, przestaje być przyklejona i rośnie w dół; bez skryptu mapa jest widoczna). Bez skryptu menu zostaje rozwinięte, a na telefonie stoi nad treścią.
  * Osadzany inline z nonce CSP (x-admiro::scripts).
@@ -90,6 +91,15 @@
                 });
             });
         }
+
+        shell.querySelectorAll('[data-ss-dropdown-close]').forEach((button) => button.addEventListener('click', () => {
+            const dropdown = button.closest('[data-ss-dropdown]');
+
+            if (dropdown instanceof HTMLDetailsElement) {
+                dropdown.open = false;
+                dropdown.querySelector('summary')?.focus();
+            }
+        }));
 
         document.addEventListener('click', (event) => {
             dropdowns.forEach((dropdown) => {

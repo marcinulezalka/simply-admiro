@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 return [
 
-    'title' => 'Application status',
+    'title' => 'Dashboard',
+    'lead' => 'Your workspace — configure it the way you want.',
 
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Go through the setup of your business processes in the recommended order. Each stage lays the foundations for the next features of your system.',

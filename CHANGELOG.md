@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Tło layoutu aplikacji: duży logotyp simplysmart na środku okna, pod treścią, wtopiony w płótno (kolor marki — czerń albo biel — z bardzo niskim kryciem, w motywie jasnym i ciemnym); bez motywów wysokiego kontrastu i na wydruku (`x-admiro::app.backdrop`).
 - Grupa logotypów w e-mailach stref: rejestr `Mail\MailBrandGroups` (paczka dodaje markę do grupy strefy z pozycją, także do innej strefy), w widokach `$mailBrandGroup` (`Mail\MailBrand`); w e-mailach admiro simplysmart i admiro z etykietą „Rodzina produktów simplysmart” (tekst `emails.layout.brand_group`).
 - Instrukcja instalacji w kroku 1 kreatora onboardingu (`Panel\Onboarding\InstallationGuide`): pobranie, środowisko, baza danych, konto hero i wdrożenie — etapami z poleceniami.
 - Plakietka z obrysem `.ss-badge--outline` z kolorami stanów (`--success`, `--warning`, `--danger`, `--info`, `--muted`); `OnboardingStepState::tone()`.
@@ -43,8 +44,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Mapa aplikacji w stopce Workspace bez dużego logotypu simplysmart: grupy stron w siatce komórek z cienkimi liniami, kolumny dopasowane do szerokości i zwarte odstępy. Ikona w nagłówku strony w jasnym kafelku z półprzezroczystą obwódką, wypełniona delikatnym odcieniem, wyrównana do tytułu z opisem.
+- Strefa administratorów: pulpit „Status aplikacji” nazywa się teraz „Dashboard” (także w menu i mapie aplikacji), pod tytułem opis „Twój workspace — konfiguruj go, jak chcesz.”.
+- Layout Workspace bez menu bocznego i górnego paska: cała nawigacja w stopce — po lewej konto (awatar, imię i nazwisko) z menu (profil, bezpieczeństwo, wygląd, ustawienia, mapa aplikacji, profile społecznościowe, wylogowanie) w miejscu logo simplysmart i wersji, po prawej przełącznik kontekstu, powiadomienia i kalendarz; wszystkie strony w mapie aplikacji. Karta konta (`.ss-account-card`), rząd ikon konta (`.ss-account-panel`), zwijanie menu Workspace, przyciski z rozwijanym opisem (`.ss-icon-button--expand`) i prop `drawer` powiadomień usunięte.
 - Layout Workspace: zwijanie menu na dole menu bocznego od lewej; dzwonek powiadomień jako osobny przycisk w stopce przed kalendarzem, panel powiadomień wysuwany z prawej (`x-admiro::app.notifications right`); na telefonie i tablecie konto (awatar, imię i nazwisko) w stopce w miejscu logo i wersji, z menu: profil, bezpieczeństwo, wygląd, ustawienia, mapa aplikacji i wylogowanie (nowy prop `settingsUrl` layoutu aplikacji); na telefonie kalendarz w stopce bez pełnej daty.
-- Strona Onboarding: karta postępu „Zrobione X z Y” rozwija listę kroków ze stanem (haczyk albo numer, plakietka stanu) i odnośnikami do kreatora; pod separatorem przełącznik „Nie pokazuj kroków zrealizowanych” chowa zrobione karty (wybór zapamiętany w przeglądarce, `js/hide-done.js`).
+- Strona Onboarding: postęp jako zakładka przy górnej krawędzi strony, z prawej — ciemny przycisk z nową ikoną celu `goal`, obok „Zrobione X z Y” i pasek postępu; rozwija listę kroków (na telefonie w panelu wysuwanym z prawej, z przyciskiem zamknięcia — w menu rozwijanych layoutu działa przycisk `[data-ss-dropdown-close]`) ze stanem (haczyk albo numer, plakietka stanu) i odnośnikami do kreatora; pod separatorem przełącznik „Nie pokazuj kroków zrealizowanych” chowa zrobione karty (wybór zapamiętany w przeglądarce, `js/hide-done.js`).
 - Kreator onboardingu, krok „Języki”: zamiast listy wszystkich języków pole wyszukiwania z podpowiedziami (po nazwie języka albo kraju), wyniki w panelach (flagi, nazwa, nazwa własna i kod, przełącznik); przełączniki zapisują się od razu po zmianie. Na liście kroków zrobione kroki nie pokazują opisu.
 
 - Onboarding w nowej kolejności (8 kroków): Instalacja systemu i konto hero, Języki, Ustawienia regionalne (dawniej „Ustawienia systemu”), Organizacje, Profile i uprawnienia (dawniej „Administratorzy”), Właściciele stref, Dziennik zdarzeń (nowy krok, zrobiony po pierwszym otwarciu dziennika) i na końcu Dokumenty prawne; nowe ikony kroków (`cpu`, `languages`, `scale` z Lucide; `locale`, `id-card`, `history`).

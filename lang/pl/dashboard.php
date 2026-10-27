@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 return [
 
-    'title' => 'Status aplikacji',
+    'title' => 'Dashboard',
+    'lead' => 'Twój workspace — konfiguruj go, jak chcesz.',
 
     'onboarding_title' => 'Onboarding',
     'onboarding_lead' => 'Przejdź przez konfigurację procesów firmowych w zalecanej kolejności. Każdy etap buduje fundamenty pod kolejne funkcje Twojego systemu.',
