@@ -55,6 +55,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Drzewo organizacji w kreatorze: cienkie przerywane linie z zaokrągleniami od ikony rodzica do ikony każdego dziecka, większe odstępy między panelami, uchwyt przeciągania w lewym górnym rogu wiersza; strefy organizacji jako odnośniki z ikoną do kont strefy (bez plakietek). Ikony zrobionych zadań w stopce karty są wypełnione.
 - Wyłączenie organizacji niczego nie usuwa: przechodzi w stan `blocked` (czasowo; `OrganizationManagement::setActive()` przez `RecordStatusTransitions`), a włączenie wraca do `active`. Drzewo w kreatorze „Organizacje” pokazuje wszystkie organizacje (licznik aktywne / wszystkie) — wyłączone wyszarzone z plakietką stanu — z cienkimi liniami między rodzicem a dziećmi, właścicielami jako awatarami (imię i nazwisko w podpowiedzi) i bez listy „Przenieś pod” (przeciąganie). Data zakończenia zadania jest w plakietce stanu („Zrobione 27 paź 2026”).
 - Karta zadania w kreatorze onboardingu: pod tytułem zamiast opisu plakietka stanu z datą zakończenia; w stopce po lewej zamiast „Wstecz” wypełnione ikony zrobionych zadań. W zadaniu „Organizacje” wyszukiwarka (bez etykiety i podpowiedzi pod polem) w prawym górnym rogu karty, a wyniki wyszukiwania nad aktywnymi organizacjami.
 - Element domyślny i wymagany zamiast zablokowanego przełącznika ma plakietkę „Domyślny”/„Domyślna”: organizacja operatora (drzewo, wyniki, podpowiedzi) i język domyślny (wiersz i wyniki w kreatorze).

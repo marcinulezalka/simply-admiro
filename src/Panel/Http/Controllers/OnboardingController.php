@@ -100,6 +100,7 @@ final readonly class OnboardingController
                 'assignments' => $assignments->of($ids),
                 'badges' => $badges->of($ids),
                 'canAssignOwners' => $this->context->can(Permission::OwnersAssign),
+                'canViewZones' => $this->context->can(Permission::ZonesView),
                 'organizations' => $term === '' ? new Collection() : $organizations->search($term, AdmiroSearch::PAGE),
                 'canManage' => $this->context->can(Permission::OrganizationsManage),
                 'organizationActions' => $navigation->organizationActions(),
