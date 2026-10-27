@@ -19,6 +19,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
+use Simplysmart\Admiro\Translation\TranslationTemplate;
 use Simplysmart\Admiro\Auth\AccountKey;
 use Simplysmart\Admiro\Models\ZoneAccount;
 use Simplysmart\Admiro\Queries\Accounts\ZoneAccounts;
@@ -78,6 +82,7 @@ final readonly class OnboardingController
         $steps = $this->steps();
         $current = $this->step($step, $steps);
         $data = [
+            'wizardActions' => $navigation->wizardActions($current),
             'checklist' => $this->progress->checklist($steps),
             'current' => $current,
             'next' => $current->next($steps),
@@ -205,6 +210,21 @@ final readonly class OnboardingController
         $audit->record(OnboardingStep::CONFIRMED_ACTION, context: ['step' => OnboardingStep::Languages->value]);
 
         return $back->with('status', text('admiro::dashboard.onboarding_regional_saved'));
+    }
+
+    /**
+     * Szablon tłumaczeń włączonego języka jako plik JSON (Translation\TranslationTemplate): teksty Core i paczek w języku
+     * domyślnym aplikacji z istniejącymi tłumaczeniami na ten język; pobranie trafia do dziennika.
+     */
+    public function translations(string $code, TranslationTemplate $template, DefaultEntries $defaults, AdminAudit $audit): Response
+    {
+        $language = Language::query()->where(Language::CODE, $code)->where('is_active', true)->first() ?? throw new NotFoundHttpException();
+        $source = $defaults->language()->code ?? config()->string('app.locale');
+        $audit->record('translation template downloaded', context: ['language' => $language->code]);
+
+        return new JsonResponse($template->for($language->code, $source), 200, [
+            'Content-Disposition' => 'attachment; filename="translations-' . $language->code . '.json"',
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     public function confirm(string $step, AdminAudit $audit): RedirectResponse

@@ -30,6 +30,11 @@ return [
     'actions' => [
         'organization' => 'Nowa organizacja',
         'owner' => 'Nowy właściciel strefy',
+        'language' => 'Słownik języków',
+        'regional' => 'Ustawienia regionalne',
+        'country' => 'Słownik krajów',
+        'currency' => 'Słownik walut',
+        'tax_rate' => 'Stawka podatkowa',
         'exchange_rate' => 'Kurs waluty',
         'holiday' => 'Dzień wolny',
         'cookie_policy' => 'Polityka cookies',

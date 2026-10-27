@@ -1,4 +1,4 @@
-{{-- Wiersz wpisu w zadaniach słownikowych kreatora onboardingu (panel/onboarding/show, Panel\Onboarding\DictionarySteps), na wzór wiersza języka: flaga albo kod, nazwa, kody, siatka faktów zależnie od zadania i po prawej akcje. Kraje — waluta, UE, dni wolne w roku, podstawowy VAT; przełącznik z gałką ON / OFF (dictionaries.toggle, od razu; wpis domyślny ma w tym miejscu wypełnioną ikonę x-admiro::default-badge). Waluty — ostatni kurs NBP (kurs, data, tabela; bez kursu „Brak kursu”); przełącznik jak w krajach. Kalendarz — dni wolne w roku i najbliższy dzień wolny; „Pobierz święta” (holidays.sync dla kraju i roku, wraca do kreatora) i odnośnik do kalendarza. Stawki podatkowe — stawki w mocy dziś (podstawowa pierwsza, brak — przerywana ramka) i odnośnik do stawek kraju. Z widoku nadrzędnego: $entry: Country|Currency, $facts: array<string, array>, $current: OnboardingStep, $year: int, $canManage: bool, $prefix: string, $zone. --}}
+{{-- Wiersz wpisu w zadaniach słownikowych kreatora onboardingu (panel/onboarding/show, Panel\Onboarding\DictionarySteps), na wzór wiersza języka: flaga albo kod, nazwa, kody, siatka faktów zależnie od zadania i po prawej akcje. Kraje — kontynent, region UN M49 z ludnością, UE (zielony haczyk albo czerwony krzyżyk, z adnotacją Schengen), dni wolne w roku, podstawowy VAT; przełącznik z gałką ON / OFF (dictionaries.toggle, od razu; wpis domyślny ma w tym miejscu wypełnioną ikonę x-admiro::default-badge). Waluty — kurs NBP względem waluty bazowej (np. 1 EUR = 4,2731 PLN; bez kursu „Brak kursu”), data i numer tabeli, kolumna synchronizacji NBP (pobranie kursów z ostatnich 7 dni, wraca do kreatora); przełącznik jak w krajach. Kalendarz — dni wolne w roku i najbliższy dzień wolny; „Pobierz święta” (holidays.sync dla kraju i roku, wraca do kreatora) i odnośnik do kalendarza. Stawki podatkowe — stawki w mocy dziś (podstawowa pierwsza, brak — przerywana ramka) i odnośnik do stawek kraju. Z widoku nadrzędnego: $entry: Country|Currency, $facts: array<string, array>, $current: OnboardingStep, $year: int, $baseCurrency: ?Currency, $canManage: bool, $prefix: string, $zone. --}}
 @php
     $isCurrency = $entry instanceof \Simplysmart\Admiro\Models\Dictionaries\Currency;
     $code = $isCurrency ? $entry->alpha_code_3 : $entry->alpha_code_2;
@@ -23,32 +23,77 @@
             <span class="ss-table__sub">{{ $isCurrency ? implode(' · ', array_filter([$entry->alpha_code_3, $entry->numeric_code])) : implode(' · ', array_filter([$entry->alpha_code_2, $entry->alpha_code_3, $entry->dial_code !== null ? '+' . ltrim($entry->dial_code, '+') : null])) }}</span>
         </span>
     </span>
-    <dl class="ss-onboarding-languages__regional">
+    <dl class="ss-onboarding-languages__regional ss-onboarding-dictionary__facts">
         @if ($step === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Currencies)
-            <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => ($fact['rate'] ?? null) === null && $entry->is_default !== true])>
+            @php($rate = $fact['rate'] ?? null)
+            <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => $rate === null && $entry->is_default !== true])>
                 <dt>{{ text('admiro::dashboard.onboarding_currency_rate') }}</dt>
                 <dd>
                     @if ($entry->is_default === true)
                         {{ text('admiro::dashboard.onboarding_currency_base') }}
-                    @elseif (($fact['rate'] ?? null) !== null)
-                        {{ local_number((float) $fact['rate']->rate, 4) }} · {{ local_date($fact['rate']->rate_date, 'D MMM YYYY') }}
+                    @elseif ($rate !== null)
+                        {{ text('admiro::dashboard.onboarding_currency_rate_value', ['code' => $code, 'rate' => local_number((float) $rate->rate, 4), 'base' => $baseCurrency?->alpha_code_3 ?? 'PLN']) }}
                     @else
                         {{ text('admiro::dashboard.onboarding_currency_no_rate') }}
                     @endif
                 </dd>
             </div>
             <div class="ss-onboarding-languages__regional-item">
-                <dt>{{ text('admiro::dashboard.onboarding_currency_table') }}</dt>
-                <dd>{{ ($fact['rate'] ?? null)?->table_number ?? '—' }}</dd>
+                <dt>{{ text('admiro::dashboard.onboarding_currency_rate_date') }}</dt>
+                <dd>
+                    @if ($rate !== null)
+                        <span class="ss-onboarding-dictionary__stack"><span>{{ local_date($rate->rate_date, 'D MMM YYYY') }}</span>@if ($rate->table_number !== null)<span class="ss-table__sub">{{ text('admiro::dashboard.onboarding_currency_table_number', ['table' => $rate->table_number]) }}</span>@endif</span>
+                    @else
+                        —
+                    @endif
+                </dd>
+            </div>
+            <div class="ss-onboarding-languages__regional-item">
+                <dt>{{ text('admiro::dashboard.onboarding_currency_sync_column') }}</dt>
+                <dd>
+                    @if ($entry->is_default === true)
+                        —
+                    @elseif ($canManage)
+                        <form method="POST" action="{{ route($zone . 'exchange-rates.sync') }}">
+                            @csrf
+                            <input type="hidden" name="sync_from" value="{{ now()->subDays(7)->toDateString() }}">
+                            <input type="hidden" name="sync_to" value="{{ now()->toDateString() }}">
+                            <input type="hidden" name="onboarding" value="{{ $step->value }}">
+                            <button class="ss-button ss-button--sm" type="submit" title="{{ text('admiro::dashboard.onboarding_currency_sync_hint') }}"><x-admiro::icon name="refresh" class="ss-button__icon" />{{ text('admiro::dashboard.onboarding_currency_sync_short') }}</button>
+                        </form>
+                    @else
+                        {{ text('admiro::dashboard.onboarding_currency_sync_source') }}
+                    @endif
+                </dd>
             </div>
         @elseif ($step === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Countries)
             <div class="ss-onboarding-languages__regional-item">
-                <dt>{{ text('admiro::dashboard.onboarding_regional_currency') }}</dt>
-                <dd>{{ ($fact['currency'] ?? null) !== null ? $fact['currency']->alpha_code_3 . ' · ' . $fact['currency']->translatedName() : '—' }}</dd>
+                <dt>{{ text('admiro::dashboard.onboarding_country_continent') }}</dt>
+                <dd>{{ $entry->continent?->label() ?? '—' }}</dd>
+            </div>
+            <div class="ss-onboarding-languages__regional-item">
+                <dt>{{ text('admiro::dashboard.onboarding_country_region') }}</dt>
+                <dd>
+                    <span class="ss-onboarding-dictionary__stack">
+                        <span>{{ $fact['region'] ?? '—' }}</span>
+                        @if ($entry->population !== null)
+                            <span class="ss-table__sub">{{ text('admiro::dashboard.onboarding_country_population', ['count' => local_number($entry->population)]) }}</span>
+                        @endif
+                    </span>
+                </dd>
             </div>
             <div class="ss-onboarding-languages__regional-item">
                 <dt>{{ text('admiro::dashboard.onboarding_country_eu') }}</dt>
-                <dd>{{ $entry->is_eu ? text('admiro::admin.yes') : text('admiro::admin.no') }}</dd>
+                <dd>
+                    @if ($entry->is_eu)
+                        <span class="ss-onboarding-dictionary__yes" role="img" aria-label="{{ text('admiro::admin.yes') }}"><x-admiro::icon name="check" /></span>
+                    @else
+                        <span class="ss-onboarding-dictionary__no" role="img" aria-label="{{ text('admiro::admin.no') }}"><x-admiro::icon name="close" /></span>
+                    @endif
+                    @if ($entry->isSchengen())
+                        <span class="ss-badge ss-badge--outline ss-badge--info" title="{{ text('admiro::dashboard.onboarding_country_schengen_hint') }}">{{ text('admiro::dashboard.onboarding_country_schengen') }}</span>
+                    @endif
+                </dd>
             </div>
             <div class="ss-onboarding-languages__regional-item">
                 <dt>{{ text('admiro::dashboard.onboarding_regional_holidays') }}</dt>

@@ -20,7 +20,8 @@ use Simplysmart\Admiro\Permissions\Events\ZoneRoleChanged;
 /**
  * Oznacza kamienie milowe onboardingu po akcjach administratora w panelu (krok „Języki” zamyka zatwierdzenie
  * w kreatorze — OnboardingStep::CONFIRMED_ACTION — nie zmiana słownika): zapis ustawień, publikacja
- * polityki cookies i dokumentów prawnych, nowa organizacja, nowy właściciel strefy oraz nadanie roli w strefie
+ * polityki cookies i dokumentów prawnych (zapis ustawień zamyka też „Kraje”, bo ustawia kraj domyślny — także z kreatora
+ * „Język i tłumaczenia”), nowa organizacja, nowy właściciel strefy oraz nadanie roli w strefie
  * administratorów (ZoneRoleChanged — rola z konsoli przez SystemRoleGrant się nie liczy).
  */
 final readonly class RecordOnboardingProgress
@@ -35,6 +36,10 @@ final readonly class RecordOnboardingProgress
 
         if ($milestone !== null) {
             $this->progress->mark($milestone);
+        }
+
+        if ($event instanceof AdminActionPerformed && $event->action === 'settings updated') {
+            $this->progress->mark(OnboardingStep::Countries->value);
         }
     }
 

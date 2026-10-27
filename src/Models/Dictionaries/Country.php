@@ -47,6 +47,10 @@ final class Country extends DataModel implements DictionaryEntry
     use HasI18n;
     use HasOfficialLanguages;
     use HasTaxRates;
+    /**
+     * Kraje strefy Schengen (ISO 3166-1 alfa-2).
+     */
+    public const array SCHENGEN = ['AT', 'BE', 'BG', 'CH', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
 
     protected $table = 'locale_countries';
 
@@ -84,5 +88,14 @@ final class Country extends DataModel implements DictionaryEntry
             'region_code' => 'string',
             'population' => 'integer',
         ];
+    }
+
+    /**
+     * Czy kraj należy do strefy Schengen (członkowie stosujący w pełni dorobek Schengen, stan na 2025 r.: UE poza
+     * Cyprem i Irlandią oraz Islandia, Liechtenstein, Norwegia i Szwajcaria).
+     */
+    public function isSchengen(): bool
+    {
+        return in_array($this->alpha_code_2, self::SCHENGEN, true);
     }
 }

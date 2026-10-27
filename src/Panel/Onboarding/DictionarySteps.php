@@ -16,6 +16,9 @@ namespace Simplysmart\Admiro\Panel\Onboarding;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Facades\App;
+use Locale;
+use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
 use Simplysmart\Admiro\Localization\Dictionary;
 use Simplysmart\Admiro\Models\Dictionaries\Country;
 use Simplysmart\Admiro\Models\Dictionaries\Currency;
@@ -32,7 +35,8 @@ use Simplysmart\Admiro\Queries\Dictionaries\TaxRatesInForce;
 /**
  * Dane zadań słownikowych kreatora onboardingu — „Kraje”, „Waluty”, „Kalendarz i święta”, „Stawki podatkowe” — na wzór
  * zadania „Języki”: wszystkie i włączone wpisy (domyślny pierwszy), wyniki wyszukiwania (`q`) i fakty wiersza: kraj —
- * waluta, dni wolne w bieżącym roku, podstawowa stawka VAT; waluta — ostatni kurs NBP; kalendarz — dni wolne roku
+ * kontynent, region UN M49 (nazwa z intl), ludność, UE i Schengen, dni wolne w bieżącym roku, podstawowa stawka VAT;
+ * waluta — ostatni kurs NBP względem waluty domyślnej; brak kraju lub waluty domyślnej (`defaultMissing`); kalendarz — dni wolne roku
  * i najbliższy; podatki — stawki w mocy dziś.
  */
 final readonly class DictionarySteps
@@ -45,6 +49,7 @@ final readonly class DictionarySteps
         private TaxRatesInForce $taxRates,
         private HolidaysIn $holidays,
         private ExchangeRatesOn $rates,
+        private DefaultEntries $defaults,
     ) {}
 
     /**
@@ -78,6 +83,8 @@ final readonly class DictionarySteps
             'found' => $found->sortBy($defaultFirst)->values(),
             'facts' => $facts,
             'year' => $year,
+            'baseCurrency' => $this->defaults->currency(),
+            'defaultMissing' => ! $all->contains(static fn(Country|Currency $entry): bool => $entry->is_default === true),
         ];
     }
 
@@ -90,7 +97,7 @@ final readonly class DictionarySteps
     }
 
     /**
-     * @return array{currency: Currency|null, holidays: int, next: Holiday|null, tax: TaxRate|null, taxes: SupportCollection<int, TaxRate>}
+     * @return array{currency: Currency|null, region: string|null, holidays: int, next: Holiday|null, tax: TaxRate|null, taxes: SupportCollection<int, TaxRate>}
      */
     private function countryFacts(Country $country, int $year): array
     {
@@ -98,8 +105,11 @@ final readonly class DictionarySteps
         $today = CarbonImmutable::today();
         $currency = $country->currency;
 
+        $region = $country->region_code !== null && $country->region_code !== '' ? (string) Locale::getDisplayRegion('und-' . $country->region_code, App::getLocale()) : '';
+
         return [
             'currency' => $currency instanceof Currency ? $currency : null,
+            'region' => $region !== '' && $region !== $country->region_code ? $region : null,
             'holidays' => $holidays->count(),
             'next' => $holidays->first(static fn(Holiday $holiday): bool => $holiday->holiday_date->greaterThanOrEqualTo($today)),
             'tax' => $this->taxRates->standard($country),

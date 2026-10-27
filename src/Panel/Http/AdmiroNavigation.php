@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel\Http;
 
 use Illuminate\Http\Request;
+use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
+use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Enums\SearchScope;
 use Simplysmart\Admiro\Contracts\ZoneNavigation;
@@ -57,6 +59,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
         private ZoneRoleNames $roles,
         private AuditLog $audit,
         private ZoneRegistry $zones,
+        private DefaultEntries $defaults,
     ) {}
 
     /**
@@ -139,6 +142,42 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
             $this->itemIf(Permission::OrganizationsManage, 'organizations.create', 'admiro::search.actions.organization', 'building', 'organizations.create'),
             $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::search.actions.owner', 'user-plus', 'owners.create'),
         );
+    }
+
+    /**
+     * Menu „+” wyszukiwarki zadania kreatora onboardingu: akcje dodawania dopasowane do zadania (tylko dozwolone).
+     *
+     * @return list<NavigationItem>
+     */
+    public function wizardActions(OnboardingStep $step): array
+    {
+        $country = $this->defaults->country()?->alpha_code_2;
+
+        return match ($step) {
+            OnboardingStep::Organizations => $this->organizationActions(),
+            OnboardingStep::Languages => $this->items(
+                $this->itemIf(Permission::SettingsManage, 'dictionaries.index', 'admiro::search.actions.language', 'languages', 'dictionaries.*', ['dictionary' => 'languages']),
+                $this->itemIf(Permission::SettingsManage, 'settings.show', 'admiro::search.actions.regional', 'locale', 'settings.*'),
+            ),
+            OnboardingStep::Countries => $this->items(
+                $this->itemIf(Permission::SettingsManage, 'dictionaries.index', 'admiro::search.actions.country', 'flag', 'dictionaries.*', ['dictionary' => 'countries']),
+                $this->itemIf(Permission::SettingsManage, 'settings.show', 'admiro::search.actions.regional', 'locale', 'settings.*'),
+            ),
+            OnboardingStep::Currencies => $this->items(
+                $this->itemIf(Permission::SettingsManage, 'exchange-rates.index', 'admiro::search.actions.exchange_rate', 'credit-card', 'exchange-rates.*'),
+                $this->itemIf(Permission::SettingsManage, 'dictionaries.index', 'admiro::search.actions.currency', 'dictionaries', 'dictionaries.*', ['dictionary' => 'currencies']),
+            ),
+            OnboardingStep::Calendar => $this->items(
+                $this->itemIf(Permission::SettingsManage, 'holidays.index', 'admiro::search.actions.holiday', 'calendar', 'holidays.*'),
+            ),
+            OnboardingStep::Taxes => $country === null ? [] : $this->items(
+                $this->itemIf(Permission::SettingsManage, 'tax-rates.index', 'admiro::search.actions.tax_rate', 'invoice', 'tax-rates.*', ['country' => $country]),
+            ),
+            OnboardingStep::Administrators => $this->items(
+                $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::search.actions.owner', 'user-plus', 'owners.create'),
+            ),
+            default => [],
+        };
     }
 
     public function notifications(): NotificationPanel

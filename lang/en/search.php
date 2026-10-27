@@ -30,6 +30,11 @@ return [
     'actions' => [
         'organization' => 'New organization',
         'owner' => 'New zone owner',
+        'language' => 'Language dictionary',
+        'regional' => 'Regional settings',
+        'country' => 'Country dictionary',
+        'currency' => 'Currency dictionary',
+        'tax_rate' => 'Tax rate',
         'exchange_rate' => 'Exchange rate',
         'holiday' => 'Day off',
         'cookie_policy' => 'Cookie policy',
