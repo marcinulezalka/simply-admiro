@@ -18,6 +18,7 @@ return [
     'board' => 'Pulpit roboczy',
     'system_settings' => 'Ustawienia',
     'sitemap' => 'Mapa aplikacji',
+    'wiki' => 'Wiki',
     'groups' => [
         'zones' => 'Strefy i konta',
         'organizations' => 'Klienci',

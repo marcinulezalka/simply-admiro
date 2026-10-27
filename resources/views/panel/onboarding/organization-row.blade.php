@@ -1,4 +1,4 @@
-{{-- Węzeł drzewa organizacji w zadaniu „Organizacje” kreatora onboardingu (panel/onboarding/show), rekurencyjnie z dziećmi (Organizations\OrganizationTree) połączonymi cienkimi liniami: wiersz ([data-ss-tree-row]) z uchwytem przeciągania, ikoną (departament — ikona poradni), nazwą z nazwą skróconą i NIP-em, plakietkami paczek (Organizations\OrganizationBadges, np. kooperacja) i — gdy organizacja nie jest aktywna — plakietką jej stanu (RecordStatus, np. Zablokowany: wyłączona czasowo, dane zostają; wyłączona przed wprowadzeniem stanów — „Nieaktywna”; wiersz wyszarzony), strefami, których konta są jej członkami (odnośniki z ikoną do kont strefy — `zones.accounts`, przy `zones.view`, inaczej sam tekst; adres strefy w podpowiedzi; bez nich „Brak strefy”), właścicielami jako awatary (rola owner w tej organizacji; imię i nazwisko w podpowiedzi; bez nich przerywana ramka „Brak właściciela” z odnośnikiem do założenia właściciela dla tej organizacji, gdy wolno — $canAssignOwners) i przełącznikiem włączenia (data-ss-autosubmit; organizacja operatora — domyślna i wymagana — ma zamiast niego plakietkę „Domyślna”); pod nim lista dzieci. Element drzewa [data-ss-tree-item] jest przeciągalny (js/tree-dnd.js ustawia ukryte pole `parent` formularza organizations.move i go wysyła; organizacja nadrzędna widoczna jest jako rodzic w drzewie), poza operatorem i departamentami; departament i organizacja nieaktywna nie przyjmują zrzutu (data-ss-tree-locked). Linie drzewa (CSS .ss-onboarding-organizations__tree): od dolnej krawędzi ikony rodzica (wiersz z dziećmi) łukiem do ikony każdego dziecka; uchwyt przeciągania w lewym górnym rogu wiersza. Z widoku nadrzędnego: $node: array{organization: Organization, children: list<array>}, $assignments: array<int, array{zones: list<ZoneDefinition>, owners: list<array{zone: ZoneDefinition, account: ZoneAccount}>}>, $badges: array<int, list<array{label: string, tone: string}>>, $organizationSwitch, $canManage, $canAssignOwners, $canViewZones, $zone. --}}
+{{-- Węzeł drzewa organizacji w zadaniu „Organizacje” kreatora onboardingu (panel/onboarding/show), rekurencyjnie z dziećmi (Organizations\OrganizationTree) połączonymi cienkimi liniami: wiersz ([data-ss-tree-row]) z uchwytem przeciągania, ikoną (departament — ikona poradni), nazwą z nazwą skróconą i NIP-em, plakietkami paczek (Organizations\OrganizationBadges, np. kooperacja) i — gdy organizacja nie jest aktywna — plakietką jej stanu (RecordStatus, np. Zablokowany: wyłączona czasowo, dane zostają; wyłączona przed wprowadzeniem stanów — „Nieaktywna”; wiersz wyszarzony), strefami, których konta są jej członkami (favicona strefy bez nazwy — View\ZoneFavicons; bez favicony ikona i nazwa —, odnośnik do kont strefy `zones.accounts` przy `zones.view`; nazwa i adres strefy w podpowiedzi; bez nich „Brak strefy”), właścicielami jako awatary (rola owner w tej organizacji; imię i nazwisko w podpowiedzi; przy `zones.view` odnośnik do konta na liście kont strefy — `zones.accounts` z jego adresem e-mail; bez nich przerywana ramka „Brak właściciela” z odnośnikiem do założenia właściciela dla tej organizacji, gdy wolno — $canAssignOwners) i przełącznikiem włączenia (data-ss-autosubmit; organizacja operatora — domyślna i wymagana — ma zamiast niego plakietkę „Domyślna”); pod nim lista dzieci. Element drzewa [data-ss-tree-item] jest przeciągalny (js/tree-dnd.js ustawia ukryte pole `parent` formularza organizations.move i go wysyła; organizacja nadrzędna widoczna jest jako rodzic w drzewie), poza operatorem i departamentami; departament i organizacja nieaktywna nie przyjmują zrzutu (data-ss-tree-locked). Linie drzewa (CSS .ss-onboarding-organizations__tree): z dolnej krawędzi panelu rodzica (pod ikoną) łukiem do lewej krawędzi panelu każdego dziecka, z kropkami na styku; uchwyt przeciągania po lewej w pionowym środku wiersza; przełącznik z podpisem ON / OFF. Z widoku nadrzędnego: $node: array{organization: Organization, children: list<array>}, $assignments: array<int, array{zones: list<ZoneDefinition>, owners: list<array{zone: ZoneDefinition, account: ZoneAccount}>}>, $badges: array<int, list<array{label: string, tone: string}>>, $organizationSwitch, $canManage, $canAssignOwners, $canViewZones, $zone. --}}
 @php
     $organization = $node['organization'];
     $assignment = $assignments[$organization->id];
@@ -42,11 +42,14 @@
                 <dt>{{ text('admiro::dashboard.onboarding_organization_zones') }}</dt>
                 <dd>
                     @forelse ($assignment['zones'] as $memberZone)
-                        @if ($canViewZones)
-                            <a class="ss-onboarding-organizations__zone" href="{{ route($zone . 'zones.accounts', ['managedZone' => $memberZone->name]) }}" title="/{{ $memberZone->slug }}"><x-admiro::icon name="zones" class="ss-onboarding-organizations__zone-icon" />{{ $memberZone->name }}</a>
-                        @else
-                            <span class="ss-onboarding-organizations__zone" title="/{{ $memberZone->slug }}"><x-admiro::icon name="zones" class="ss-onboarding-organizations__zone-icon" />{{ $memberZone->name }}</span>
-                        @endif
+                        @php($zoneFavicon = \Simplysmart\Admiro\View\ZoneFavicons::url($memberZone))
+                        <{{ $canViewZones ? 'a' : 'span' }} class="ss-onboarding-organizations__zone" @if ($canViewZones) href="{{ route($zone . 'zones.accounts', ['managedZone' => $memberZone->name]) }}" @endif title="{{ $memberZone->name }} · /{{ $memberZone->slug }}">
+                            @if ($zoneFavicon !== null)
+                                <img class="ss-onboarding-organizations__zone-favicon" src="{{ $zoneFavicon }}" alt="{{ $memberZone->name }}" width="20" height="20">
+                            @else
+                                <x-admiro::icon name="zones" class="ss-onboarding-organizations__zone-icon" />{{ $memberZone->name }}
+                            @endif
+                        </{{ $canViewZones ? 'a' : 'span' }}>
                     @empty
                         <span class="ss-muted">{{ text('admiro::dashboard.onboarding_organization_no_zone') }}</span>
                     @endforelse
@@ -58,7 +61,11 @@
                     @if ($assignment['owners'] !== [])
                         <span class="ss-avatars">
                             @foreach ($assignment['owners'] as $owner)
-                                <x-admiro::avatar :name="$owner['account']->name" :color="$owner['account']->avatarColor()" size="sm" label :title="$owner['account']->name" />
+                                @if ($canViewZones)
+                                    <a class="ss-onboarding-organizations__owner" href="{{ route($zone . 'zones.accounts', ['managedZone' => $owner['zone']->name, 'email' => $owner['account']->email]) }}" title="{{ $owner['account']->name }}"><x-admiro::avatar :name="$owner['account']->name" :color="$owner['account']->avatarColor()" size="sm" label /></a>
+                                @else
+                                    <x-admiro::avatar :name="$owner['account']->name" :color="$owner['account']->avatarColor()" size="sm" label :title="$owner['account']->name" />
+                                @endif
                             @endforeach
                         </span>
                     @elseif ($canAssignOwners)
@@ -74,7 +81,7 @@
         @elseif ($canManage)
             <form method="POST" action="{{ route($zone . 'organizations.toggle', ['organization' => $organization->token]) }}" data-ss-autosubmit>
                 @csrf
-                <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_organization_switch', ['name' => $organization->name])" :checked="$active" hide-label />
+                <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_organization_switch', ['name' => $organization->name])" :checked="$active" hide-label states />
             </form>
         @endif
     </div>

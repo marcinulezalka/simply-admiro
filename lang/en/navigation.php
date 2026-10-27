@@ -18,6 +18,7 @@ return [
     'board' => 'Workspace board',
     'system_settings' => 'Settings',
     'sitemap' => 'Application map',
+    'wiki' => 'Wiki',
     'groups' => [
         'zones' => 'Zones and accounts',
         'organizations' => 'Clients',

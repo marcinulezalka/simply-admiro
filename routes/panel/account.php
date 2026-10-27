@@ -17,6 +17,7 @@ use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\Controllers\DashboardController;
 use Simplysmart\Admiro\Panel\Http\Controllers\OnboardingController;
 use Simplysmart\Admiro\Panel\Http\Controllers\SearchController;
+use Simplysmart\Admiro\Panel\Http\Controllers\WikiController;
 use Simplysmart\Admiro\Zones\ZonePermission;
 
 /*
@@ -27,6 +28,7 @@ use Simplysmart\Admiro\Zones\ZonePermission;
 Route::get('/', DashboardController::class)->name('dashboard');
 Route::view('favorites', 'admiro::panel.favorites')->name('favorites');
 Route::view('board', 'admiro::panel.board')->name('board');
+Route::get('wiki', WikiController::class)->name('wiki');
 
 Route::get('search', [SearchController::class, 'index'])->name('search');
 Route::get('search/suggest', [SearchController::class, 'suggest'])->middleware('throttle:60,1')->name('search.suggest');

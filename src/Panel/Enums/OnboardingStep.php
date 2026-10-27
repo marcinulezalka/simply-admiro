@@ -132,6 +132,19 @@ enum OnboardingStep: string
         return $index === false ? null : ($steps[$index + 1] ?? null);
     }
 
+    /**
+     * Pojęcie słownika (Wiki\Wiki, bez prefiksu wiki-) wyjaśniane nad treścią zadania w kreatorze; null — bez wpisu.
+     */
+    public function wiki(): ?string
+    {
+        return match ($this) {
+            self::Organizations => 'organizacja',
+            self::Administrators => 'strefa',
+            self::Owners => 'wlasciciel',
+            default => null,
+        };
+    }
+
     public static function legalMilestone(string $document): string
     {
         return self::Legal->value . '.' . $document;

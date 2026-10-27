@@ -56,7 +56,7 @@ return [
     'onboarding_regional_holidays' => 'Holidays',
     'onboarding_regional_holidays_count' => 'Days off this year: :count',
     'onboarding_regional_set' => 'Set up',
-    'onboarding_organizations_enabled' => 'Organizations',
+    'onboarding_organizations_enabled' => 'Organizational structure',
     'onboarding_organizations_active_count' => 'Active: :active of :all',
     'onboarding_organizations_enabled_empty' => 'No organization is active yet.',
     'onboarding_organizations_search_label' => 'Search for an organization',

@@ -181,7 +181,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
     }
 
     /**
-     * Grupa „System”: status aplikacji (pulpit), ulubione, pulpit roboczy, onboarding, mapa aplikacji (rozsuwa mapę strony w stopce, NavigationItem::SITEMAP_ANCHOR),
+     * Grupa „System”: status aplikacji (pulpit), ulubione, pulpit roboczy, onboarding, mapa aplikacji (rozsuwa mapę strony w stopce, NavigationItem::SITEMAP_ANCHOR), wiki (słownik pojęć),
      * dziennik zdarzeń i ustawienia (na stronach ustawień menu boczne przełącza się na menu ustawień z powrotem).
      */
     private function startGroup(): NavigationGroup
@@ -192,6 +192,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
             $this->item('board', 'admiro::navigation.board', 'board'),
             $this->itemIf(Permission::SettingsManage, 'onboarding.index', 'admiro::dashboard.onboarding_title', 'rocket', 'onboarding.*'),
             new NavigationItem(text('admiro::navigation.sitemap'), '#' . NavigationItem::SITEMAP_ANCHOR, 'sitemap'),
+            $this->item('wiki', 'admiro::navigation.wiki', 'help-circle'),
             $this->itemIf(Permission::AuditView, 'audit.index', 'admiro::admin.audit_title', 'history', 'audit.*'),
             $this->itemIf(Permission::SettingsView, 'settings.show', 'admiro::navigation.system_settings', 'settings', 'settings.*'),
         ));

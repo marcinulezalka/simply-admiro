@@ -71,6 +71,8 @@ return [
     ],
     'mask_format' => 'Format: :format',
     'switch_context' => 'Switch context',
+    'switch_on' => 'ON',
+    'switch_off' => 'OFF',
     'current' => 'current',
     'theme' => 'Theme',
     'legal' => 'Legal information',

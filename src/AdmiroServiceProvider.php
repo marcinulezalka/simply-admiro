@@ -22,6 +22,7 @@ use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
+use Simplysmart\Admiro\Wiki\Wiki;
 use Simplysmart\Admiro\Console\SeedLocalization;
 use Simplysmart\Admiro\Console\WriteCronScript;
 use Simplysmart\Admiro\Contracts\InterfaceLocales;
@@ -85,6 +86,17 @@ final class AdmiroServiceProvider extends ServiceProvider
         HolidaysServiceProvider::class,
     ];
 
+    /**
+     * Pojęcia słownika Core (Wiki\Wiki): klucz → ikona; teksty w lang/<locale>/wiki.php.
+     */
+    private const array WIKI = [
+        'organizacja' => 'building',
+        'organizacja-operatora' => 'shield-check',
+        'departament' => 'sitemap',
+        'strefa' => 'zones',
+        'wlasciciel' => 'user',
+    ];
+
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';
 
     private const string BLADE_FLAGS_FALLBACK = 'country-xx';
@@ -117,6 +129,15 @@ final class AdmiroServiceProvider extends ServiceProvider
         $this->app->bind(TextTranslator::class, CascadeTextTranslator::class);
         $this->app->bind(LocalFormatter::class, IntlLocalFormatter::class);
         $this->app->bind(InterfaceLocales::class, DictionaryInterfaceLocales::class);
+        $this->app->singleton(Wiki::class, static function (): Wiki {
+            $wiki = new Wiki();
+
+            foreach (self::WIKI as $key => $icon) {
+                $wiki->add($key, $icon);
+            }
+
+            return $wiki;
+        });
         $this->useFlatFlagFallback($config);
 
         foreach (self::AREAS as $provider) {
