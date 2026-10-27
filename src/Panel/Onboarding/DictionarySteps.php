@@ -17,6 +17,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\App;
+use IntlTimeZone;
 use Locale;
 use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
 use Simplysmart\Admiro\Localization\Dictionary;
@@ -35,7 +36,8 @@ use Simplysmart\Admiro\Queries\Dictionaries\TaxRatesInForce;
 /**
  * Dane zadań słownikowych kreatora onboardingu — „Kraje”, „Waluty”, „Kalendarz i święta”, „Stawki podatkowe” — na wzór
  * zadania „Języki”: wszystkie i włączone wpisy (domyślny pierwszy), wyniki wyszukiwania (`q`) i fakty wiersza: kraj —
- * kontynent, region UN M49 (nazwa z intl), ludność, UE i Schengen, dni wolne w bieżącym roku, podstawowa stawka VAT;
+ * kontynent, region UN M49 (nazwa z intl), ludność, UE i Schengen, czas lokalny (strefy z ICU), dni wolne w bieżącym
+ * roku, podstawowa stawka VAT;
  * waluta — ostatni kurs NBP względem waluty domyślnej; brak kraju lub waluty domyślnej (`defaultMissing`); kalendarz — dni wolne roku
  * i najbliższy; podatki — stawki w mocy dziś.
  */
@@ -97,7 +99,7 @@ final readonly class DictionarySteps
     }
 
     /**
-     * @return array{currency: Currency|null, region: string|null, holidays: int, next: Holiday|null, tax: TaxRate|null, taxes: SupportCollection<int, TaxRate>}
+     * @return array{currency: Currency|null, region: string|null, time: array{zones: int, earliest: CarbonImmutable, latest: CarbonImmutable}|null, holidays: int, next: Holiday|null, tax: TaxRate|null, taxes: SupportCollection<int, TaxRate>}
      */
     private function countryFacts(Country $country, int $year): array
     {
@@ -110,10 +112,38 @@ final readonly class DictionarySteps
         return [
             'currency' => $currency instanceof Currency ? $currency : null,
             'region' => $region !== '' && $region !== $country->region_code ? $region : null,
+            'time' => $this->localTime($country),
             'holidays' => $holidays->count(),
             'next' => $holidays->first(static fn(Holiday $holiday): bool => $holiday->holiday_date->greaterThanOrEqualTo($today)),
             'tax' => $this->taxRates->standard($country),
             'taxes' => $this->taxRates->forCountry($country),
         ];
+    }
+
+    /**
+     * Czas lokalny kraju teraz: strefy czasowe kraju z ICU (IntlTimeZone), najwcześniejszy i najpóźniejszy czas
+     * spośród nich (jedna strefa — oba równe) i liczba różnych przesunięć; kraj bez stref w ICU — null.
+     *
+     * @return array{zones: int, earliest: CarbonImmutable, latest: CarbonImmutable}|null
+     */
+    private function localTime(Country $country): ?array
+    {
+        $now = CarbonImmutable::now();
+        $times = [];
+
+        foreach (IntlTimeZone::createTimeZoneIDEnumeration(IntlTimeZone::TYPE_CANONICAL_LOCATION, $country->alpha_code_2) as $zone) {
+            if (is_string($zone)) {
+                $time = $now->setTimezone($zone);
+                $times[$time->getOffset()] = $time;
+            }
+        }
+
+        if ($times === []) {
+            return null;
+        }
+
+        ksort($times);
+
+        return ['zones' => count($times), 'earliest' => reset($times), 'latest' => end($times)];
     }
 }

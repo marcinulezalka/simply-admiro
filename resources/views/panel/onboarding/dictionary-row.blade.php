@@ -1,4 +1,4 @@
-{{-- Wiersz wpisu w zadaniach słownikowych kreatora onboardingu (panel/onboarding/show, Panel\Onboarding\DictionarySteps), na wzór wiersza języka: flaga albo kod, nazwa, kody, siatka faktów zależnie od zadania i po prawej akcje. Kraje — kontynent, region UN M49 z ludnością, UE (zielony haczyk albo czerwony krzyżyk, z adnotacją Schengen), dni wolne w roku, podstawowy VAT; przełącznik z gałką ON / OFF (dictionaries.toggle, od razu; wpis domyślny ma w tym miejscu wypełnioną ikonę x-admiro::default-badge). Waluty — kurs NBP względem waluty bazowej (np. 1 EUR = 4,2731 PLN; bez kursu „Brak kursu”), data i numer tabeli, kolumna synchronizacji NBP (pobranie kursów z ostatnich 7 dni, wraca do kreatora); przełącznik jak w krajach. Kalendarz — dni wolne w roku i najbliższy dzień wolny; „Pobierz święta” (holidays.sync dla kraju i roku, wraca do kreatora) i odnośnik do kalendarza. Stawki podatkowe — stawki w mocy dziś (podstawowa pierwsza, brak — przerywana ramka) i odnośnik do stawek kraju. Z widoku nadrzędnego: $entry: Country|Currency, $facts: array<string, array>, $current: OnboardingStep, $year: int, $baseCurrency: ?Currency, $canManage: bool, $prefix: string, $zone. --}}
+{{-- Wiersz wpisu w zadaniach słownikowych kreatora onboardingu (panel/onboarding/show, Panel\Onboarding\DictionarySteps), na wzór wiersza języka: flaga albo kod, nazwa, kody, siatka faktów zależnie od zadania i po prawej akcje. Kraje — kontynent, region UN M49 z ludnością, UE (zielony haczyk albo czerwony krzyżyk, z adnotacją Schengen), dni wolne w roku, czas lokalny teraz (jedna strefa — godzina i przesunięcie UTC, kilka — zakres godzin i liczba stref); przełącznik z gałką ON / OFF (dictionaries.toggle, od razu; wpis domyślny ma w tym miejscu wypełnioną ikonę x-admiro::default-badge). Waluty — kurs NBP względem waluty bazowej (np. 1 EUR = 4,2731 PLN; bez kursu „Brak kursu”), data i numer tabeli, kolumna synchronizacji NBP (pobranie kursów z ostatnich 7 dni, wraca do kreatora); przełącznik jak w krajach. Kalendarz — dni wolne w roku i najbliższy dzień wolny; „Pobierz święta” (holidays.sync dla kraju i roku, wraca do kreatora) i odnośnik do kalendarza. Stawki podatkowe — stawki w mocy dziś (podstawowa pierwsza, brak — przerywana ramka) i odnośnik do stawek kraju. Z widoku nadrzędnego: $entry: Country|Currency, $facts: array<string, array>, $current: OnboardingStep, $year: int, $baseCurrency: ?Currency, $canManage: bool, $prefix: string, $zone. --}}
 @php
     $isCurrency = $entry instanceof \Simplysmart\Admiro\Models\Dictionaries\Currency;
     $code = $isCurrency ? $entry->alpha_code_3 : $entry->alpha_code_2;
@@ -100,8 +100,17 @@
                 <dd>{{ local_number($fact['holidays'] ?? 0) }}</dd>
             </div>
             <div class="ss-onboarding-languages__regional-item">
-                <dt>{{ text('admiro::dashboard.onboarding_regional_taxes') }}</dt>
-                <dd>{{ ($fact['tax'] ?? null) !== null ? text('admiro::dashboard.onboarding_regional_vat', ['rate' => local_number((float) $fact['tax']->rate, 0)]) : '—' }}</dd>
+                <dt>{{ text('admiro::dashboard.onboarding_country_time') }}</dt>
+                <dd>
+                    @php($time = $fact['time'] ?? null)
+                    @if ($time === null)
+                        —
+                    @elseif ($time['zones'] === 1)
+                        <span class="ss-onboarding-dictionary__stack"><span>{{ $time['earliest']->format('H:i') }}</span><span class="ss-table__sub">UTC{{ $time['earliest']->format('P') }}</span></span>
+                    @else
+                        <span class="ss-onboarding-dictionary__stack"><span>{{ $time['earliest']->format('H:i') }}–{{ $time['latest']->format('H:i') }}</span><span class="ss-table__sub">{{ text('admiro::dashboard.onboarding_country_time_zones', ['count' => $time['zones']]) }}</span></span>
+                    @endif
+                </dd>
             </div>
         @elseif ($step === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Calendar)
             <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => ($fact['holidays'] ?? 0) === 0])>
