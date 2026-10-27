@@ -117,7 +117,6 @@
  * strony — lista numerowana wszystkich kroków (.ss-onboarding__steps w siatce .ss-grid). Panel kroku to karta-odnośnik
  * (.ss-onboarding__link) z dużym, przygaszonym numerem w tle (.ss-onboarding__number, dekoracyjny), etykietą „Krok N”,
  * nazwą z ikoną i opisem; zrobiony krok (.ss-card--muted) jest wyszarzony w kolorach hovera, z haczykiem zamiast ikony.
- * .ss-dashboard__title — tytuł sekcji skrótów na pulpicie.
  */
 .ss-onboarding__progress {
     display: flex;
@@ -332,10 +331,147 @@
     background: var(--ss-color-accent);
 }
 
-.ss-dashboard__title {
-    margin: 0 0 var(--ss-space-4);
-    font-size: 1.125rem;
+/**
+ * .ss-onboarding-card — karta-odnośnik do Onboardingu na Dashboardzie (panel/dashboard): duża, przygaszona,
+ * nieruchoma ikona celu w tle (__watermark, dekoracyjna, przechylona), nagłówek z ikoną w ciemnym kafelku po lewej
+ * i obok małą etykietą mono nad tytułem (__heading), opis, postęp (etykieta z procentem i pasek .ss-progress)
+ * i wezwanie do działania (następne zadanie) ze strzałką przesuwaną w hoverze; .ss-onboarding-card--complete —
+ * wszystko zrobione: ikona w kolorze sukcesu.
+ */
+.ss-onboarding-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    max-width: 40rem;
+    overflow: hidden;
+    color: var(--ss-color-text);
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ss-onboarding-card:hover {
+    border-color: var(--ss-color-border-strong);
+}
+
+.ss-onboarding-card:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-onboarding-card > :not(.ss-onboarding-card__watermark) {
+    position: relative;
+}
+
+.ss-onboarding-card__watermark {
+    position: absolute;
+    top: -2.5rem;
+    right: -2.5rem;
+    width: 14rem;
+    height: 14rem;
+    color: color-mix(in srgb, var(--ss-color-text) 5%, transparent);
+    pointer-events: none;
+    transform: rotate(-12deg);
+}
+
+.ss-onboarding-card__watermark svg {
+    width: 100%;
+    height: 100%;
+}
+
+.ss-onboarding-card__head {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+.ss-onboarding-card__icon {
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
+}
+
+.ss-onboarding-card--complete .ss-onboarding-card__icon {
+    background: var(--ss-color-success-surface);
+    color: var(--ss-color-success);
+}
+
+.ss-onboarding-card__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.ss-onboarding-card__eyebrow {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ss-onboarding-card__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+}
+
+.ss-onboarding-card__lead {
+    max-width: 44ch;
+    color: var(--ss-color-muted);
+}
+
+.ss-onboarding-card__progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin-top: var(--ss-space-2);
+}
+
+.ss-onboarding-card__progress-label {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+}
+
+.ss-onboarding-card__percent {
+    color: var(--ss-color-text);
     font-weight: 600;
+}
+
+.ss-onboarding-card__action {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    align-self: flex-start;
+    margin-top: var(--ss-space-2);
+    font-weight: 600;
+}
+
+.ss-onboarding-card__arrow {
+    width: 1.125rem;
+    height: 1.125rem;
+    transition: transform 0.15s ease;
+}
+
+.ss-onboarding-card:hover .ss-onboarding-card__arrow {
+    transform: translateX(0.25rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-onboarding-card__arrow {
+        transition: none;
+    }
 }
 
 .ss-onboarding__steps {
@@ -2685,7 +2821,7 @@ textarea.ss-input {
  * (.ss-shell--js): menu wysuwane z lewej (.ss-shell--open) nad przyciemnionym tłem; bez skryptu nad treścią.
  */
 /*
- * Powłoka aplikacji jak „soft UI”: neutralne szare płótno (--ss-color-canvas), menu jako jaśniejszy panel
+ * Powłoka aplikacji jak „soft UI”: bardzo delikatnie szare płótno (--ss-color-canvas), menu jako biały panel
  * (--ss-color-sidebar) przylegający na szerokim ekranie do krawędzi okna (bez marginesów i zaokrągleń, ramka z prawej), aktywna pozycja menu jako biała karta z miękkim
  * cieniem, a karty treści białe bez ramki z tym samym cieniem (--ss-shadow-soft). Akcent zostaje ze strefy.
  */
@@ -5583,7 +5719,7 @@ a.ss-notification:focus-visible {
 /**
  * .ss-shell--workspace — wariant layoutu aplikacji Workspace (Enums\AppLayout, `app_layout` strefy): bez menu bocznego
  * i top baru, nawigacja w stopce treści (.ss-workspace-footer) przyklejonej do dołu, półprzezroczystej: konto z menu
- * po lewej, wyszukiwarka na środku (podpowiedzi nad polem), po prawej przełącznik kontekstu, powiadomienia i kalendarz,
+ * i skróty strefy po lewej, wyszukiwarka na środku (podpowiedzi nad polem), po prawej przełącznik kontekstu, powiadomienia i kalendarz,
  * pod paskiem rozsuwana mapa strony.
  */
 
@@ -5614,8 +5750,8 @@ a.ss-notification:focus-visible {
 
 .ss-workspace-footer__bar {
     display: grid;
-    grid-template-areas: "account search tools";
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "account shortcuts search tools";
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
     gap: var(--ss-space-3);
     align-items: center;
 }
@@ -5684,11 +5820,11 @@ a.ss-notification:focus-visible {
     font-weight: 600;
 }
 
-/* Telefon: wyszukiwarka na całą szerokość w pierwszym rzędzie, pod nią konto i narzędzia. */
+/* Telefon: wyszukiwarka na całą szerokość w pierwszym rzędzie, pod nią konto, skróty i narzędzia. */
 @media (max-width: 40rem) {
     .ss-workspace-footer__bar {
-        grid-template-areas: "search search" "account tools";
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "search search search" "account shortcuts tools";
+        grid-template-columns: minmax(0, 1fr) auto auto;
         row-gap: var(--ss-space-2);
     }
 
@@ -5712,6 +5848,26 @@ a.ss-notification:focus-visible {
     position: relative;
     grid-area: account;
     min-width: 0;
+}
+
+/*
+ * Skróty strefy w stopce Workspace (Contracts\ZoneShortcuts, np. dashboard, ulubione, pulpit roboczy): ikony-odnośniki
+ * między kontem a wyszukiwarką, w stylu narzędzi stopki; bieżąca strona (aria-current) w kolorach odwróconych.
+ */
+.ss-workspace-footer__shortcuts {
+    display: flex;
+    grid-area: shortcuts;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-workspace-footer__shortcuts [aria-current="page"] {
+    border-color: var(--ss-color-surface-inverse);
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
 }
 
 .ss-workspace-footer__search {

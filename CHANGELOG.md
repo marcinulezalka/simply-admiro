@@ -6,10 +6,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Skróty strefy w stopce Workspace obok konta (nowy kontrakt `Contracts\ZoneShortcuts`): w admiro dashboard (dom), Ulubione (serce, `favorites`) i Pulpit roboczy (`board`) — obie strony na razie z informacją o pustej zawartości. Ikony `heart` i `board` (Lucide).
 - Kreator onboardingu, zadanie „Języki”: włączone języki w wierszach — najpierw język domyślny z plakietką „Domyślny” i ustawieniami regionalnymi (kraj, waluta, stawka podatku, dni wolne; dopóki zadanie „Ustawienia regionalne” nie jest zrobione — odnośnik do niego w przerywanej ramce), potem pozostałe języki, po jednym w wierszu (`Panel\Onboarding\RegionalSettingsSummary`).
 - Wyszukiwanie na żywo (`form[data-ss-live-search]`, `js/live-search.js`): wyszukiwarka języków w kreatorze od razu pokazuje pasujące języki w panelach z przełącznikami, bez podpowiedzi i przeładowania; domyślny język zawsze pierwszy.
 - Panel powiadomień z kategoriami: w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik z ikonami i przesuwanym wskaźnikiem (`.ss-tabs--slider`, `js/tabs.js`) — powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i dziennik zdarzeń; strefa daje dane panelu przez nowy kontrakt `Contracts\ZoneNotifications` (w admiro z `audit.view` ostatnie wpisy dziennika z odnośnikiem do całego dziennika).
-- Link „Wstecz” nad tytułem na każdej stronie strefy: bez `back` prowadzi do poprzedniej strony, a gdy jej nie ma — do dashboardu (`Zones\ZoneRedirects::backUrl()`).
+- Link „Wstecz” nad tytułem na stronach strefy (poza dashboardem): bez `back` prowadzi do strony nadrzędnej w hierarchii adresów, a gdy jej nie ma — do dashboardu (`Zones\ZoneRedirects::backUrl()`).
 - Kreator onboardingu: data zakończenia zadania pod plakietką stanu (postęp zapisuje datę każdego kamienia milowego; instalacja — data założenia organizacji operatora) i „Zadanie N” krojem mono przy zrobionych zadaniach na liście.
 - Tło layoutu aplikacji: duży logotyp simplysmart na środku okna, pod treścią, wtopiony w płótno (kolor marki — czerń albo biel — z bardzo niskim kryciem, w motywie jasnym i ciemnym); bez motywów wysokiego kontrastu i na wydruku (`x-admiro::app.backdrop`).
 - Grupa logotypów w e-mailach stref: rejestr `Mail\MailBrandGroups` (paczka dodaje markę do grupy strefy z pozycją, także do innej strefy), w widokach `$mailBrandGroup` (`Mail\MailBrand`); w e-mailach admiro simplysmart i admiro z etykietą „Rodzina produktów simplysmart” (tekst `emails.layout.brand_group`).
@@ -49,6 +50,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Dashboard strefy administratorów: zamiast sekcji panelu jedna karta prowadząca do Onboardingu — duża, nieruchoma ikona celu w tle, nagłówek z ikoną i małą etykietą mono, postęp „Zrobione X z Y” z procentem i paskiem, przycisk z następnym zadaniem (`.ss-onboarding-card`); po wszystkich zadaniach „Konfiguracja zakończona”.
+- Ikona Dashboardu w nawigacji (nagłówek strony, mapa strony): dom (`home`) zamiast flagi.
+- Motyw jasny: tło treści (`--ss-color-canvas`) bardzo delikatnie szare (`#f5f6f8`), nawigacja (`--ss-color-sidebar`) biała.
 - `js/autosubmit.js` łapie zmiany jednym słuchaczem na dokumencie, więc przełączniki dodane po wczytaniu strony (np. w wynikach wyszukiwania na żywo) też zapisują się od razu.
 - Onboarding mówi o zadaniach zamiast kroków („Zadanie N”, „Zadania onboardingu”, „Przejrzyj zadania”). Plakietka stanu przeniesiona w prawy górny róg karty zadania, a zamiast przycisku „Krok N →” stopka pokazuje przyciski z ikonami pozostałych niezakończonych zadań. Przełączniki w zadaniach zapisują się od razu, bez zapasowych przycisków „Zapisz”.
 - Nagłówek stron strefy bez opisu pod tytułem (layout strefy nie przyjmuje już `meta`); usunięte teksty `dashboard.lead`, `dashboard.onboarding_lead`, `account.appearance_lead`, `account.security_lead`.

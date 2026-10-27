@@ -33,8 +33,8 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'social_links' => ['linkedin' => 'https://…', 'github' => 'https://…'] (Enums\SocialNetwork → adres http(s);
        //     puste pomijane, nieznany serwis albo zły adres zatrzymuje start; w menu konta w stopce layoutu Workspace),
        // 'app_layout' => 'workspace' (Enums\AppLayout: bez menu bocznego, cała nawigacja w przyklejonej stopce — konto
-       //     z menu, wyszukiwarka, przełącznik kontekstu, powiadomienia, kalendarz i mapa strony; z Contracts\ZoneSitemap
-       //     mapa pokazuje sitemap(); domyślnie `sidebar`),
+       //     z menu, skróty, wyszukiwarka, przełącznik kontekstu, powiadomienia, kalendarz i mapa strony; z Contracts\ZoneSitemap
+       //     mapa pokazuje sitemap(), z Contracts\ZoneShortcuts obok konta są skróty shortcuts(); domyślnie `sidebar`),
        // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
        // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout

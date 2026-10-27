@@ -17,6 +17,8 @@ return [
     'owner_title' => 'Właściciel strefy',
     'administrators_title' => 'Administratorzy',
     'no_sections' => 'Twoje konto nie ma jeszcze uprawnień do żadnej sekcji panelu.',
+    'favorites_empty' => 'Nie masz jeszcze ulubionych stron.',
+    'board_empty' => 'Twój pulpit roboczy jest jeszcze pusty.',
     'zone' => 'Strefa',
     'zone_slug' => 'Adres',
     'zone_teams' => 'organizacje klientów',

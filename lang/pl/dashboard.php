@@ -16,6 +16,10 @@ return [
     'title' => 'Dashboard',
 
     'onboarding_title' => 'Onboarding',
+    'onboarding_card_title' => 'Skonfiguruj admiro',
+    'onboarding_card_complete_title' => 'Konfiguracja zakończona',
+    'onboarding_card_lead' => 'Przejdź przez zadania onboardingu, aby przygotować admiro do pracy z pierwszymi użytkownikami.',
+    'onboarding_card_next' => 'Następne zadanie: :name',
     'onboarding_progress' => 'Zrobione :done z :total',
     'onboarding_hide_done' => 'Nie pokazuj zadań zrealizowanych',
     'onboarding_step' => 'Zadanie :number',
@@ -102,6 +106,5 @@ return [
     'onboarding_owners_lead' => 'Załóż konta właścicieli stref, którzy dalej sami poprowadzą swoje zespoły.',
     'onboarding_administrators_title' => 'Profile i uprawnienia',
     'onboarding_administrators_lead' => 'Zdefiniuj role użytkowników i widoki, do których mają dostęp, a potem nadaj role administratorom.',
-    'shortcuts_title' => 'Sekcje panelu',
 
 ];

@@ -80,11 +80,11 @@
     --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));
     --ss-color-muted-inverse: light-dark(var(--ss-neutral-400), var(--ss-gray-600));
 
-    /* Powłoka aplikacji (x-admiro::app.layout): neutralne szare płótno, jaśniejszy panel menu, delikatna biel
-       pod najechaniem pozycji menu; aktywna pozycja i karty mają --ss-color-surface z miękkim cieniem */
-    --ss-color-canvas: light-dark(#fbfbfc, #0b0d12);
-    --ss-color-sidebar: light-dark(#f3f4f6, #141821);
-    --ss-color-sidebar-hover: light-dark(rgb(255 255 255 / 0.65), rgb(255 255 255 / 0.06));
+    /* Powłoka aplikacji (x-admiro::app.layout): w jasnym motywie bardzo delikatnie szare płótno i biały panel menu
+       z lekkim przyciemnieniem pod najechaniem pozycji; aktywna pozycja i karty mają --ss-color-surface z miękkim cieniem */
+    --ss-color-canvas: light-dark(#f5f6f8, #0b0d12);
+    --ss-color-sidebar: light-dark(var(--ss-white), #141821);
+    --ss-color-sidebar-hover: light-dark(rgb(15 23 42 / 0.04), rgb(255 255 255 / 0.06));
 
     /* Tło stron logowania: delikatny gradient z tła strony w odcień powierzchni */
     --ss-color-auth-from: light-dark(var(--ss-white), var(--ss-slate-900));

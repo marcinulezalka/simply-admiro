@@ -14,13 +14,15 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Simplysmart\Admiro\Contracts\CurrentZone;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Przekierowania middleware auth/guest liczone z bieżącej strefy (nie ma globalnej trasy `login`) i adres „Wstecz”
- * w nagłówku stron strefy.
+ * w nagłówku stron strefy — rodzic strony w hierarchii adresów (jak w okruszkach), nie historia przeglądarki.
  */
 final readonly class ZoneRedirects
 {
@@ -57,26 +59,52 @@ final readonly class ZoneRedirects
     }
 
     /**
-     * Adres „Wstecz” w nagłówku strony: poprzednia strona tej aplikacji (nie strona główna `/`), a gdy jej nie ma albo
-     * to ta sama strona (np. po zapisie formularza) — dashboard strefy; null na samym dashboardzie bez innej poprzedniej
-     * strony.
+     * Adres „Wstecz” w nagłówku strony: najbliższa strona nadrzędna w hierarchii adresów (jak w okruszkach) — adres
+     * bez ostatnich segmentów ścieżki, pod którym jest strona GET tej strefy (np. `/onboarding/languages` →
+     * `/onboarding`, `/organizations/{token}/edit` → `/organizations`), a bez takiej — dashboard strefy; null na samym
+     * dashboardzie (strona zerowego poziomu) i poza strefą. Nie zależy od poprzedniej strony, więc się nie zapętla.
      */
     public function backUrl(): ?string
     {
-        $current = $this->url->current();
-        $root = rtrim($this->url->to('/'), '/');
         $home = $this->route(self::HOME_ROUTE);
-        $candidates = [$this->url->previous(), $home !== null ? $this->url->route($home) : null];
 
-        foreach ($candidates as $candidate) {
-            $page = $candidate === null ? null : rtrim((string) strtok($candidate, '?#'), '/');
+        if ($home === null) {
+            return null;
+        }
 
-            if ($page !== null && str_starts_with($page . '/', $root . '/') && $page !== $root && $page !== rtrim($current, '/')) {
+        $homeUrl = $this->url->route($home);
+        $current = rtrim($this->url->current(), '/');
+
+        if ($current === rtrim($homeUrl, '/')) {
+            return null;
+        }
+
+        $root = rtrim($this->url->to('/'), '/');
+        $candidate = $current;
+
+        while (($slash = strrpos($candidate, '/')) !== false && strlen($candidate = substr($candidate, 0, $slash)) > strlen($root)) {
+            if ($candidate === rtrim($homeUrl, '/') || $this->isZonePage($candidate)) {
                 return $candidate;
             }
         }
 
-        return null;
+        return $homeUrl;
+    }
+
+    /**
+     * Czy pod adresem jest strona GET bieżącej strefy (nazwana trasa z jej prefiksem, poza logowaniem).
+     */
+    private function isZonePage(string $url): bool
+    {
+        try {
+            $name = $this->router->getRoutes()->match(Request::create($url))->getName();
+        } catch (HttpException) {
+            return false;
+        }
+
+        $zone = $this->zone->get();
+
+        return $name !== null && str_starts_with($name, $zone->routeName('')) && ! str_starts_with($name, $zone->routeName('auth.'));
     }
 
     private function route(string $name): ?string

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Panel\Enums;
 
 use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Panel\Http\AdminContext;
 
 /**
  * Kroki onboardingu strefy administratorów w kolejności wykonywania (pulpit i kreator `onboarding.show`). Krok jest
@@ -35,6 +36,16 @@ enum OnboardingStep: string
     case Owners = 'owners';
     case Audit = 'audit';
     case Legal = 'legal';
+
+    /**
+     * Kroki w kolejności wykonywania, do których administrator ma uprawnienie (pulpit i kreator onboardingu).
+     *
+     * @return list<self>
+     */
+    public static function permittedFor(AdminContext $context): array
+    {
+        return array_values(array_filter(self::cases(), static fn(self $step): bool => $context->can($step->permission())));
+    }
 
     /**
      * Uprawnienie potrzebne do wykonania kroku (bez niego krok nie pojawia się na pulpicie).

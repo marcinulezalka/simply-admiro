@@ -124,7 +124,7 @@ final readonly class OnboardingController
      */
     private function steps(): array
     {
-        return array_values(array_filter(OnboardingStep::cases(), fn(OnboardingStep $step): bool => $this->context->can($step->permission())));
+        return OnboardingStep::permittedFor($this->context);
     }
 
     /**

@@ -14,6 +14,8 @@ declare(strict_types=1);
 return [
 
     'status' => 'Dashboard',
+    'favorites' => 'Favorites',
+    'board' => 'Workspace board',
     'system_settings' => 'Settings',
     'sitemap' => 'Application map',
     'groups' => [

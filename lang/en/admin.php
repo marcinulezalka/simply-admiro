@@ -17,6 +17,8 @@ return [
     'owner_title' => 'Zone owner',
     'administrators_title' => 'Administrators',
     'no_sections' => 'Your account has no permissions for any section of the panel yet.',
+    'favorites_empty' => 'You have no favorite pages yet.',
+    'board_empty' => 'Your workspace board is empty for now.',
     'zone' => 'Zone',
     'zone_slug' => 'Address',
     'zone_teams' => 'customer organizations',

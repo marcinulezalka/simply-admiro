@@ -44,6 +44,7 @@
         :variant="$zone->appLayout"
         :navigation="$menu"
         :sitemap="$sitemap"
+        :shortcuts="$workspace && $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneShortcuts ? $navigation->shortcuts() : []"
         :calendar="$workspace ? app(\Simplysmart\Admiro\View\Calendar\CalendarMonths::class)->current() : null"
         :settings="$workspace && ! $settingsMode ? null : $settingsMenu"
         :settings-url="$settingsMenu?->url"

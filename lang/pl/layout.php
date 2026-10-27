@@ -19,6 +19,7 @@ return [
     'search_shortcut' => 'Naciśnij /, aby szukać',
     'sitemap' => 'Mapa strony',
     'sitemap_open' => 'Mapa aplikacji',
+    'shortcuts' => 'Skróty',
     'sitemap_start' => 'Start',
     'calendar' => 'Kalendarz',
     'calendar_empty' => 'Brak wydarzeń w tym dniu.',

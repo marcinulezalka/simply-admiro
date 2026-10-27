@@ -16,6 +16,10 @@ return [
     'title' => 'Dashboard',
 
     'onboarding_title' => 'Onboarding',
+    'onboarding_card_title' => 'Set up admiro',
+    'onboarding_card_complete_title' => 'Setup complete',
+    'onboarding_card_lead' => 'Go through the onboarding tasks to get admiro ready for the first users.',
+    'onboarding_card_next' => 'Next task: :name',
     'onboarding_progress' => ':done of :total done',
     'onboarding_hide_done' => 'Hide completed tasks',
     'onboarding_step' => 'Task :number',
@@ -102,6 +106,5 @@ return [
     'onboarding_owners_lead' => 'Create the zone owner accounts — the owners take their teams from there.',
     'onboarding_administrators_title' => 'Profiles and permissions',
     'onboarding_administrators_lead' => 'Define user roles and the views they can access, then give roles to the administrators.',
-    'shortcuts_title' => 'Panel sections',
 
 ];

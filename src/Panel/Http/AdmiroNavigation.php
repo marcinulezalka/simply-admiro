@@ -19,6 +19,7 @@ use Simplysmart\Admiro\Panel\Enums\SearchScope;
 use Simplysmart\Admiro\Contracts\ZoneNavigation;
 use Simplysmart\Admiro\Contracts\ZoneNotifications;
 use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Contracts\ZoneShortcuts;
 use Simplysmart\Admiro\Contracts\ZoneSitemap;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Models\AuditEvent;
@@ -43,9 +44,9 @@ use Simplysmart\Admiro\View\Notifications\NotificationPanel;
  * administratorowi (zaznaczone z `in[]` żądania, bez nich wszystkie; z ikonami) i akcjami dodawania pod „+”
  * (organizacja, właściciel strefy, kurs waluty, dzień wolny, polityka cookies — każda z uprawnieniem). Panel
  * powiadomień (ZoneNotifications): z `audit.view` zakładka dziennika z ostatnimi wpisami (AUDIT_ITEMS) i odnośnikiem do
- * dziennika.
+ * dziennika. Skróty w stopce (ZoneShortcuts): dashboard, ulubione i pulpit roboczy.
  */
-final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, ZoneNotifications
+final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, ZoneShortcuts, ZoneNotifications
 {
     /** Liczba ostatnich wpisów dziennika w panelu powiadomień. */
     public const int AUDIT_ITEMS = 5;
@@ -158,6 +159,20 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
         ), $entries)), auditUrl: $url);
     }
 
+    /**
+     * Skróty w stopce Workspace: dashboard (dom), ulubione (serce) i pulpit roboczy — dla każdego administratora.
+     *
+     * @return list<NavigationItem>
+     */
+    public function shortcuts(): array
+    {
+        return [
+            $this->item('dashboard', 'admiro::navigation.status', 'home'),
+            $this->item('favorites', 'admiro::navigation.favorites', 'heart'),
+            $this->item('board', 'admiro::navigation.board', 'board'),
+        ];
+    }
+
     public function subtitle(): ?string
     {
         $roles = array_map($this->context->zone()->roleLabel(...), $this->roles->of($this->context->admin(), Organization::OPERATOR_ID));
@@ -166,13 +181,15 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
     }
 
     /**
-     * Grupa „System”: status aplikacji (pulpit), onboarding, mapa aplikacji (rozsuwa mapę strony w stopce, NavigationItem::SITEMAP_ANCHOR),
+     * Grupa „System”: status aplikacji (pulpit), ulubione, pulpit roboczy, onboarding, mapa aplikacji (rozsuwa mapę strony w stopce, NavigationItem::SITEMAP_ANCHOR),
      * dziennik zdarzeń i ustawienia (na stronach ustawień menu boczne przełącza się na menu ustawień z powrotem).
      */
     private function startGroup(): NavigationGroup
     {
         return new NavigationGroup(text('admiro::navigation.groups.system'), $this->items(
-            $this->item('dashboard', 'admiro::navigation.status', 'flag'),
+            $this->item('dashboard', 'admiro::navigation.status', 'home'),
+            $this->item('favorites', 'admiro::navigation.favorites', 'heart'),
+            $this->item('board', 'admiro::navigation.board', 'board'),
             $this->itemIf(Permission::SettingsManage, 'onboarding.index', 'admiro::dashboard.onboarding_title', 'rocket', 'onboarding.*'),
             new NavigationItem(text('admiro::navigation.sitemap'), '#' . NavigationItem::SITEMAP_ANCHOR, 'sitemap'),
             $this->itemIf(Permission::AuditView, 'audit.index', 'admiro::admin.audit_title', 'history', 'audit.*'),
