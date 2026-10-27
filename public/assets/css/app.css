@@ -864,7 +864,7 @@ button.ss-badge:focus-visible {
     min-width: 0;
 }
 
-/* Stan zadania pod tytułem (podnagłówek): plakietka stanu i obok data zakończenia krojem mono. */
+/* Stan zadania pod tytułem (podnagłówek): plakietka stanu z datą zakończenia w środku. */
 .ss-onboarding-wizard__status {
     display: flex;
     flex-wrap: wrap;
@@ -889,10 +889,10 @@ button.ss-badge:focus-visible {
     }
 }
 
+/* Data zakończenia w plakietce stanu, po nazwie stanu, krojem mono. */
 .ss-onboarding-wizard__completed {
-    color: var(--ss-color-muted);
+    margin-left: var(--ss-space-1);
     font-family: var(--ss-font-mono);
-    font-size: 0.75rem;
     white-space: nowrap;
 }
 
@@ -1061,10 +1061,10 @@ button.ss-badge:focus-visible {
 }
 
 /*
- * .ss-onboarding-organizations — aktywne organizacje w zadaniu „Organizacje” jako drzewo (__tree, węzły __node z wierszem
- * __row i dziećmi --children z przerywaną linią): uchwyt przeciągania (__handle), nazwa z ikoną (__main), strefy
+ * .ss-onboarding-organizations — organizacje w zadaniu „Organizacje” jako drzewo (__tree, węzły __node z wierszem
+ * __row i dziećmi --children połączonymi cienkimi liniami): uchwyt przeciągania (__handle), nazwa z ikoną (__main), strefy
  * i właściciel (__facts, __fact: etykieta mono nad wartością; brak właściciela — przerywana ramka __missing, odnośnik do
- * założenia), lista „Przenieś pod” (__move) i przełącznik; przeciągany węzeł półprzezroczysty (.is-dragging), cel zrzutu
+ * założenia), plakietki stanu i paczek (__badges), wiersz wyłączonej (--inactive) i przełącznik; przeciągany węzeł półprzezroczysty (.is-dragging), cel zrzutu
  * z ramką akcentu (.is-drop-target), strefa najwyższego poziomu pod drzewem (__root); na wąskim ekranie fakty schodzą
  * pod nazwę.
  */
@@ -1077,10 +1077,61 @@ button.ss-badge:focus-visible {
     list-style: none;
 }
 
+/* Dzieci w drzewie: cienkie linie od rodzica — pionowa wzdłuż rodzeństwa (u ostatniego dziecka kończy się na jego
+   wierszu) i pozioma do każdego wiersza. */
 .ss-onboarding-organizations--children {
-    margin: var(--ss-space-2) 0 0 var(--ss-space-6);
-    padding-left: var(--ss-space-4);
-    border-left: 1px dashed var(--ss-color-border-strong);
+    --ss-tree-indent: 1.5rem;
+    --ss-tree-elbow: 1.75rem;
+    margin: var(--ss-space-2) 0 0 var(--ss-space-5);
+    padding-left: var(--ss-tree-indent);
+}
+
+.ss-onboarding-organizations--children > .ss-onboarding-organizations__node {
+    position: relative;
+}
+
+.ss-onboarding-organizations--children > .ss-onboarding-organizations__node::before,
+.ss-onboarding-organizations--children > .ss-onboarding-organizations__node::after {
+    position: absolute;
+    left: calc(-1 * var(--ss-tree-indent));
+    content: "";
+    border-color: var(--ss-color-border-strong);
+    pointer-events: none;
+}
+
+.ss-onboarding-organizations--children > .ss-onboarding-organizations__node::before {
+    top: calc(-1 * var(--ss-space-2));
+    bottom: 0;
+    border-left: 1px solid;
+}
+
+.ss-onboarding-organizations--children > .ss-onboarding-organizations__node:last-child::before {
+    bottom: auto;
+    height: calc(var(--ss-tree-elbow) + var(--ss-space-2));
+}
+
+.ss-onboarding-organizations--children > .ss-onboarding-organizations__node::after {
+    top: var(--ss-tree-elbow);
+    width: var(--ss-tree-indent);
+    border-top: 1px solid;
+}
+
+/* Organizacja wyłączona (czasowo, dane zostają): wiersz wyszarzony, z plakietką stanu. */
+.ss-onboarding-organizations__row--inactive {
+    border-style: dashed;
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-onboarding-organizations__row--inactive .ss-onboarding-organizations__main,
+.ss-onboarding-organizations__row--inactive .ss-onboarding-organizations__facts {
+    opacity: 0.65;
+}
+
+.ss-onboarding-organizations__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1);
+    margin-top: var(--ss-space-1);
 }
 
 .ss-onboarding-organizations__node[draggable="true"] > .ss-onboarding-organizations__row {
@@ -1107,20 +1158,6 @@ button.ss-badge:focus-visible {
     width: 1.25rem;
     height: 1.25rem;
     color: var(--ss-color-muted);
-}
-
-.ss-onboarding-organizations__move {
-    display: flex;
-    gap: var(--ss-space-2);
-    align-items: center;
-    margin: 0;
-}
-
-.ss-onboarding-organizations__move .ss-input {
-    min-height: 2.25rem;
-    max-width: 14rem;
-    padding-block: 0;
-    font-size: 0.875rem;
 }
 
 .ss-onboarding-organizations__root {

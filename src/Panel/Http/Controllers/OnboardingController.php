@@ -21,6 +21,7 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Localization\Dictionary;
 use Simplysmart\Admiro\Models\Dictionaries\Language;
 use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Organizations\OrganizationBadges;
 use Simplysmart\Admiro\Organizations\OrganizationTree;
 use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Enums\Permission;
@@ -58,7 +59,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, AdmiroNavigation $navigation, RegionalSettingsSummary $regional): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -89,13 +90,15 @@ final readonly class OnboardingController
 
         if ($current === OnboardingStep::Organizations) {
             $term = $request->string('q')->trim()->toString();
-            $enabled = $organizations->all()->filter(static fn(Organization $organization): bool => $organization->is_active === true)->values();
+            $all = $organizations->all();
+            $ids = array_values($all->map(static fn(Organization $organization): int => $organization->id)->all());
             $data += [
                 'term' => $term,
-                'enabled' => $enabled,
-                'tree' => OrganizationTree::of($enabled),
-                'moveTargets' => $enabled->reject(static fn(Organization $organization): bool => $organization->isDepartment())->values(),
-                'assignments' => $assignments->of(array_values($enabled->map(static fn(Organization $organization): int => $organization->id)->all())),
+                'all' => $all,
+                'activeCount' => $all->filter(static fn(Organization $organization): bool => $organization->is_active === true)->count(),
+                'tree' => OrganizationTree::of($all),
+                'assignments' => $assignments->of($ids),
+                'badges' => $badges->of($ids),
                 'canAssignOwners' => $this->context->can(Permission::OwnersAssign),
                 'organizations' => $term === '' ? new Collection() : $organizations->search($term, AdmiroSearch::PAGE),
                 'canManage' => $this->context->can(Permission::OrganizationsManage),

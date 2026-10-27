@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Rejestr plakietek organizacji `Organizations\OrganizationBadges` (singleton): paczki dopisują fakty ze swojej dziedziny, a drzewo organizacji w kreatorze je pokazuje. `RecordStatus::tone()` — ton plakietki stanu.
 - Kreator „Organizacje”: wyłączoną organizację z wyników wyszukiwania można przeciągnąć do drzewa aktywnych — upuszczona na organizację trafia pod nią, na strefę pod drzewem na najwyższy poziom, i zostaje włączona (`organizations.move` z `activate`). Przeciąganie działa w całej stronie (`js/tree-dnd.js`).
 - Podpowiedzi wyszukiwarki organizacji: obok wyniku przełącznik włączenia (zapis POST z `js/post-toggle.js`, potem przeładowanie — włączona organizacja pojawia się na liście aktywnych), a kliknięcie wyniku otwiera kreator „Organizacje” z listą wyników pod wyszukiwarką; opis z NIP-em i stanem. `SearchResult` ma `toggleUrl`, `active` i `badge`.
 - Kreator onboardingu, zadanie „Organizacje”: aktywne organizacje jako drzewo (organizacja nadrzędna → podorganizacje → departamenty) z przeciąganiem (`js/tree-dnd.js`) — jednostkę upuszczoną na inną przenosi pod nią, na strefę pod drzewem — na najwyższy poziom; w każdym wierszu ta sama zmiana z listy „Przenieś pod” (bez skryptu i z klawiatury). Nowa operacja `OrganizationManagement::move()` (te same reguły co edycja: bez cykli, operator na górze, aktywna nadrzędna; departamenty się nie przenoszą), trasa `organizations.move`, `Organizations\OrganizationTree`, ikona `grip`.
@@ -54,6 +55,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Wyłączenie organizacji niczego nie usuwa: przechodzi w stan `blocked` (czasowo; `OrganizationManagement::setActive()` przez `RecordStatusTransitions`), a włączenie wraca do `active`. Drzewo w kreatorze „Organizacje” pokazuje wszystkie organizacje (licznik aktywne / wszystkie) — wyłączone wyszarzone z plakietką stanu — z cienkimi liniami między rodzicem a dziećmi, właścicielami jako awatarami (imię i nazwisko w podpowiedzi) i bez listy „Przenieś pod” (przeciąganie). Data zakończenia zadania jest w plakietce stanu („Zrobione 27 paź 2026”).
 - Karta zadania w kreatorze onboardingu: pod tytułem zamiast opisu plakietka stanu z datą zakończenia; w stopce po lewej zamiast „Wstecz” wypełnione ikony zrobionych zadań. W zadaniu „Organizacje” wyszukiwarka (bez etykiety i podpowiedzi pod polem) w prawym górnym rogu karty, a wyniki wyszukiwania nad aktywnymi organizacjami.
 - Element domyślny i wymagany zamiast zablokowanego przełącznika ma plakietkę „Domyślny”/„Domyślna”: organizacja operatora (drzewo, wyniki, podpowiedzi) i język domyślny (wiersz i wyniki w kreatorze).
 - Dashboard strefy administratorów: zamiast sekcji panelu jedna karta prowadząca do Onboardingu — duża, nieruchoma ikona celu w tle, nagłówek z ikoną i małą etykietą mono, postęp „Zrobione X z Y” z procentem i paskiem, przycisk z następnym zadaniem (`.ss-onboarding-card`); po wszystkich zadaniach „Konfiguracja zakończona”.

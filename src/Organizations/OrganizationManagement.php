@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Organizations;
 
+use Simplysmart\Admiro\Database\RecordStatusTransitions;
+use Simplysmart\Admiro\Enums\RecordStatus;
 use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Models\Organization;
 
@@ -20,13 +22,18 @@ use Simplysmart\Admiro\Models\Organization;
  * Zakładanie i zmiany organizacji (OrganizationData: nazwa, nazwa skrócona, dane firmy; firma → oddział przez
  * `parent_id`): drzewo bez cykli, organizacja nadrzędna musi być aktywna, a organizacji operatora nie wolno wyłączyć
  * ani przenieść pod inną. Nowa organizacja bez e-maila do rozliczeń dostaje e-mail organizacji. Wyłączona organizacja
- * znika z wyboru kont (ActiveMemberships), więc jej członkowie tracą w niej uprawnienia.
+ * znika z wyboru kont (ActiveMemberships), więc jej członkowie tracą w niej uprawnienia; nic nie jest usuwane —
+ * wyłączenie przechodzi w stan RecordStatus::Blocked (czasowo), a włączenie wraca do Active (Database\RecordStatusTransitions).
  *
  * Departament (createDepartment(), Organization::IS_DEPARTMENT) leży zawsze bezpośrednio pod jednostką — organizacją
  * bez flagi — i nie ma pod sobą żadnej organizacji; flagi nie zmienia się po założeniu.
  */
 final class OrganizationManagement
 {
+    public function __construct(
+        private RecordStatusTransitions $statuses,
+    ) {}
+
     /**
      * @throws OrganizationChangeRejected
      */
@@ -111,6 +118,13 @@ final class OrganizationManagement
     {
         if (! $active && $organization->id === Organization::OPERATOR_ID) {
             throw OrganizationChangeRejected::because('the operator organization cannot be disabled.');
+        }
+
+        $from = $active ? RecordStatus::Blocked : RecordStatus::Active;
+        $to = $active ? RecordStatus::Active : RecordStatus::Blocked;
+
+        if ($organization->getAttribute(ColumnNames::STATUS) === $from) {
+            $organization->setRawAttributes($this->statuses->transition($organization, $to)->getAttributes(), true);
         }
 
         $organization->forceFill([ColumnNames::IS_ACTIVE => $active])->save();

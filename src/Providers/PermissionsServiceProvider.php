@@ -15,6 +15,7 @@ namespace Simplysmart\Admiro\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use Simplysmart\Admiro\Organizations\OrganizationBadges;
 use Simplysmart\Admiro\Console\SeedOrganizations;
 use Simplysmart\Admiro\Console\SyncZonePermissions;
 use Simplysmart\Admiro\Contracts\CurrentOrganization;
@@ -44,6 +45,7 @@ final class PermissionsServiceProvider extends ServiceProvider
         $this->app->bind(CurrentOrganization::class, SpatieCurrentOrganization::class);
         $this->app->scoped(CurrentRole::class, RequestRole::class);
         $this->app->singleton(ZoneOwnerProvisioners::class);
+        $this->app->singleton(OrganizationBadges::class);
         $this->app->singleton(PermissionFiles::class, static function (): PermissionFiles {
             $files = new PermissionFiles();
             $files->add(self::CORE_PERMISSION_FILES);

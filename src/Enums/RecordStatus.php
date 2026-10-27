@@ -67,6 +67,21 @@ enum RecordStatus: string implements HasLabel
         return in_array($this, [self::Draft, self::Pending, self::Active, self::Blocked], true);
     }
 
+    /**
+     * Ton plakietki stanu (klasa .ss-badge--<ton>): aktywny — success, zablokowany — warning, szkic i oczekujący — info,
+     * migracja i kwarantanna — danger, archiwum — muted.
+     */
+    public function tone(): string
+    {
+        return match ($this) {
+            self::Active => 'success',
+            self::Blocked => 'warning',
+            self::Draft, self::Pending => 'info',
+            self::Migrating, self::Quarantined => 'danger',
+            self::Archived => 'muted',
+        };
+    }
+
     public function label(): string
     {
         return text('enums.record_status.' . $this->value);
