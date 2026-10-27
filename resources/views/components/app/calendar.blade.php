@@ -1,13 +1,11 @@
-{{-- Data i godzina w stopce layoutu Workspace z kalendarzem: przycisk-panel o szerokości treści (ikona kalendarza i data na wspólnym szarym tle, po prawej pełna nazwa dnia tygodnia; po najechaniu szare tło rozsuwa się w „27 paź 2026, tydzień 44” i zakrywa dzień tygodnia; odświeżane skryptem po północy) otwiera panel wysuwany z prawej krawędzi okna (<details data-ss-dropdown>, js/calendar-panel.js) z miesiącem (tydzień od poniedziałku, dziś wyróżnione, dni wolne aplikacji z kropką), podglądem wybranego dnia (data i dzień wolny albo brak wydarzeń; klik w dzień zmienia podgląd), zamknięcie w nagłówku panelu i miejscem na skrzynkę pocztową (podłączenie i lista wiadomości — integracja w przygotowaniu). calendar: View\Calendar\CalendarMonth. --}}
+{{-- Data i godzina w stopce layoutu Workspace z kalendarzem: przycisk-panel o szerokości treści: ikona kalendarza i obok pełna data z godziną („wtorek, 27 paź 2026, 10:42”), bez rozsuwania; odświeżana skryptem co minutę otwiera panel wysuwany z prawej krawędzi okna (<details data-ss-dropdown>, js/calendar-panel.js) z miesiącem (tydzień od poniedziałku, dziś wyróżnione, dni wolne aplikacji z kropką), podglądem wybranego dnia (data i dzień wolny albo brak wydarzeń; klik w dzień zmienia podgląd), zamknięcie w nagłówku panelu i miejscem na skrzynkę pocztową (podłączenie i lista wiadomości — integracja w przygotowaniu). calendar: View\Calendar\CalendarMonth. --}}
 @props(['calendar'])
 @php($todayHoliday = $calendar->holiday($calendar->today))
 <details class="ss-calendar-panel" data-ss-dropdown>
     <summary class="ss-calendar-panel__toggle" data-ss-clock>
-        <span class="ss-calendar-panel__chip">
-            <x-admiro::icon name="calendar" class="ss-calendar-panel__icon" />
-            <span class="ss-calendar-panel__label"><span class="ss-calendar-panel__date" data-ss-clock-date>{{ local_date($calendar->today, 'D MMM YYYY') }}</span><span class="ss-calendar-panel__week">, <span data-ss-clock-week>{{ text('layout.calendar_week', ['week' => (string) $calendar->today->isoWeek()]) }}</span></span></span>
-        </span>
-        <span class="ss-calendar-panel__weekday" data-ss-clock-weekday>{{ local_date($calendar->today, 'dddd') }}</span>
+        @php($now = now())
+        <x-admiro::icon name="calendar" class="ss-calendar-panel__icon" />
+        <time class="ss-calendar-panel__date" datetime="{{ $now->format('Y-m-d\TH:i') }}" data-ss-clock-date>{{ local_date($now, 'dddd, D MMM YYYY') }}, {{ $now->format('H:i') }}</time>
         <span class="ss-sr-only">{{ text('layout.calendar') }}</span>
     </summary>
     <aside class="ss-calendar-panel__drawer" aria-label="{{ text('layout.calendar') }}" data-ss-calendar>

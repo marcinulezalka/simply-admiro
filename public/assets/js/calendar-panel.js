@@ -1,9 +1,8 @@
 /**
- * Data i kalendarz w stopce layoutu Workspace (x-admiro::app.calendar): [data-ss-clock] odświeża co minutę pełną nazwę dnia
- * tygodnia ([data-ss-clock-weekday]), datę ([data-ss-clock-date]: dzień, miesiąc, rok) w języku strony (lang dokumentu,
- * Intl.DateTimeFormat) i numer tygodnia ISO ([data-ss-clock-week], liczba w miejscu pierwszej liczby tekstu), więc po
- * północy pokazuje nowy dzień; w panelu [data-ss-calendar] klik w dzień [data-ss-calendar-day] zaznacza go
- * (aria-pressed) i pokazuje w podglądzie jego datę (data-label) i opis (data-note: dzień wolny albo brak wydarzeń),
+ * Data i kalendarz w stopce layoutu Workspace (x-admiro::app.calendar): [data-ss-clock] na początku każdej minuty
+ * odświeża pełną datę z godziną ([data-ss-clock-date]: „wtorek, 27 paź 2026, 10:42” i atrybut datetime) w języku
+ * strony (lang dokumentu, Intl.DateTimeFormat) i czasie przeglądarki; w panelu [data-ss-calendar] klik w dzień
+ * [data-ss-calendar-day] zaznacza go (aria-pressed) i pokazuje w podglądzie jego datę (data-label) i opis (data-note: dzień wolny albo brak wydarzeń),
  * a przycisk [data-ss-calendar-close] zamyka panel (przycisk w stopce jest wtedy pod panelem).
  * Bez skryptu zostaje data z chwili wczytania strony oraz podgląd dnia dzisiejszego. Osadzany inline
  * z nonce CSP (x-admiro::scripts).
@@ -12,32 +11,16 @@
     const locale = document.documentElement.lang || undefined;
     const weekdayFormat = new Intl.DateTimeFormat(locale, { weekday: 'long' });
     const dateFormat = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' });
-
-    const isoWeek = (date) => {
-        const day = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-        const weekday = day.getUTCDay() || 7;
-        day.setUTCDate(day.getUTCDate() + 4 - weekday);
-        const yearStart = new Date(Date.UTC(day.getUTCFullYear(), 0, 1));
-
-        return Math.ceil(((day - yearStart) / 86400000 + 1) / 7);
-    };
+    const timeFormat = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+    const pad = (number) => String(number).padStart(2, '0');
 
     const tick = (clock) => {
         const now = new Date();
-        const weekday = clock.querySelector('[data-ss-clock-weekday]');
         const date = clock.querySelector('[data-ss-clock-date]');
-        const week = clock.querySelector('[data-ss-clock-week]');
-
-        if (weekday) {
-            weekday.textContent = weekdayFormat.format(now);
-        }
 
         if (date) {
-            date.textContent = dateFormat.format(now);
-        }
-
-        if (week) {
-            week.textContent = week.textContent.replace(/\d+/, String(isoWeek(now)));
+            date.textContent = `${weekdayFormat.format(now)}, ${dateFormat.format(now)}, ${timeFormat.format(now)}`;
+            date.setAttribute('datetime', `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`);
         }
     };
 
@@ -76,7 +59,10 @@
     const start = () => {
         document.querySelectorAll('[data-ss-clock]').forEach((clock) => {
             tick(clock);
-            window.setInterval(() => tick(clock), 60000);
+            window.setTimeout(() => {
+                tick(clock);
+                window.setInterval(() => tick(clock), 60000);
+            }, 60000 - (Date.now() % 60000));
         });
         document.querySelectorAll('[data-ss-calendar]').forEach(initCalendar);
     };

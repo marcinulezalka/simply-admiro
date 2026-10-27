@@ -22,7 +22,6 @@ return [
     'sitemap_start' => 'Start',
     'calendar' => 'Kalendarz',
     'calendar_empty' => 'Brak wydarzeń w tym dniu.',
-    'calendar_week' => 'tydzień :week',
     'mailbox' => 'Skrzynka e-mail',
     'mailbox_lead' => 'Podłącz skrzynkę pocztową, aby zobaczyć tutaj najnowsze wiadomości.',
     'mailbox_connect' => 'Podłącz skrzynkę (wkrótce)',

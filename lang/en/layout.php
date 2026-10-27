@@ -22,7 +22,6 @@ return [
     'sitemap_start' => 'Start',
     'calendar' => 'Calendar',
     'calendar_empty' => 'No events on this day.',
-    'calendar_week' => 'week :week',
     'mailbox' => 'E-mail inbox',
     'mailbox_lead' => 'Connect a mailbox to see your latest messages here.',
     'mailbox_connect' => 'Connect mailbox (soon)',

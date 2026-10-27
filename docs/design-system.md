@@ -396,9 +396,7 @@ zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), p
 (`x-admiro::app.notifications right`, `.ss-notifications--right`: karta na wysokość obszaru treści — od góry okna do stopki,
 której nie zakrywa (`--ss-workspace-footer-height`) —, w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik kategorii
 z ikonami i suwakiem `.ss-tabs--slider` (`js/tabs.js`): powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i — gdy strefa
-je daje przez `Contracts\ZoneNotifications` — ostatnie wpisy dziennika zdarzeń z odnośnikiem do dziennika) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: jeden panel o szerokości treści z ikoną kalendarza i datą krojem mono
-na wspólnym szarym tle i pełną nazwą dnia tygodnia po prawej — po najechaniu szare tło rozsuwa się w „27 paź 2026, tydzień 44”, a dzień tygodnia się chowa,
-bez zmiany szerokości panelu i przesuwania reszty stopki; `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
+je daje przez `Contracts\ZoneNotifications` — ostatnie wpisy dziennika zdarzeń z odnośnikiem do dziennika) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: przycisk z ikoną kalendarza i pełną datą z godziną („wtorek, 27 paź 2026, 10:42”, odświeżaną co minutę; na telefonie sama ikona), bez rozsuwania; `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
 z `CalendarMonths`): klik otwiera panel z prawej, na wysokość obszaru treści jak powiadomienia, z miesiącem `.ss-mini-calendar` (dziś, dni wolne
 aplikacji z kropką), podglądem wybranego dnia i miejscem na skrzynkę pocztową (integracja w przygotowaniu)); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
