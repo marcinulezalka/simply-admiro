@@ -67,6 +67,7 @@ return [
     'onboarding_organizations_hint' => 'Type a name or tax ID — disabled organizations show up too. Create a new organization with the + button in the search field.',
     'onboarding_organization_switch' => ':name active',
     'onboarding_organization_locked' => 'Operator organization — always active',
+    'onboarding_organization_default' => 'Default',
     'onboarding_organization_zones' => 'Zones',
     'onboarding_organization_no_zone' => 'No zone',
     'onboarding_organization_owner' => 'Owner',

@@ -67,6 +67,7 @@ return [
     'onboarding_organizations_hint' => 'Wpisz nazwę albo NIP — znajdziesz też organizacje wyłączone. Nową organizację założysz przyciskiem + w polu wyszukiwania.',
     'onboarding_organization_switch' => 'Organizacja :name aktywna',
     'onboarding_organization_locked' => 'Organizacja operatora — zawsze aktywna',
+    'onboarding_organization_default' => 'Domyślna',
     'onboarding_organization_zones' => 'Strefy',
     'onboarding_organization_no_zone' => 'Brak strefy',
     'onboarding_organization_owner' => 'Właściciel',

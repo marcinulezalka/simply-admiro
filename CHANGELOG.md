@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Podpowiedzi wyszukiwarki organizacji: obok wyniku przełącznik włączenia (zapis POST z `js/post-toggle.js`, potem przeładowanie — włączona organizacja pojawia się na liście aktywnych), a kliknięcie wyniku otwiera kreator „Organizacje” z listą wyników pod wyszukiwarką; opis z NIP-em i stanem. `SearchResult` ma `toggleUrl`, `active` i `badge`.
 - Kreator onboardingu, zadanie „Organizacje”: aktywne organizacje jako drzewo (organizacja nadrzędna → podorganizacje → departamenty) z przeciąganiem (`js/tree-dnd.js`) — jednostkę upuszczoną na inną przenosi pod nią, na strefę pod drzewem — na najwyższy poziom; w każdym wierszu ta sama zmiana z listy „Przenieś pod” (bez skryptu i z klawiatury). Nowa operacja `OrganizationManagement::move()` (te same reguły co edycja: bez cykli, operator na górze, aktywna nadrzędna; departamenty się nie przenoszą), trasa `organizations.move`, `Organizations\OrganizationTree`, ikona `grip`.
 - Kreator onboardingu, zadanie „Organizacje”: aktywne organizacje po jednej w wierszu ze strefami, których konta do nich należą, i właścicielem (rola `owner`); bez właściciela — odnośnik „Dodaj właściciela” do formularza z tą organizacją wybraną z góry (`owners/create?organization=<token>`). Nowe zapytanie `Queries\Organizations\OrganizationAssignments`.
 - Skróty strefy w stopce Workspace obok konta (nowy kontrakt `Contracts\ZoneShortcuts`): w admiro dashboard (dom), Ulubione (serce, `favorites`) i Pulpit roboczy (`board`) — obie strony na razie z informacją o pustej zawartości. Ikony `heart` i `board` (Lucide).
@@ -52,6 +53,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Element domyślny i wymagany zamiast zablokowanego przełącznika ma plakietkę „Domyślny”/„Domyślna”: organizacja operatora (drzewo, wyniki, podpowiedzi) i język domyślny (wiersz i wyniki w kreatorze).
 - Dashboard strefy administratorów: zamiast sekcji panelu jedna karta prowadząca do Onboardingu — duża, nieruchoma ikona celu w tle, nagłówek z ikoną i małą etykietą mono, postęp „Zrobione X z Y” z procentem i paskiem, przycisk z następnym zadaniem (`.ss-onboarding-card`); po wszystkich zadaniach „Konfiguracja zakończona”.
 - Ikona Dashboardu w nawigacji (nagłówek strony, mapa strony): dom (`home`) zamiast flagi.
 - Motyw jasny: tło treści (`--ss-color-canvas`) bardzo delikatnie szare (`#f5f6f8`), nawigacja (`--ss-color-sidebar`) biała.

@@ -1211,6 +1211,13 @@ a.ss-onboarding-organizations__missing:hover {
     background: var(--ss-color-surface);
 }
 
+/* Plakietka „Domyślny” zamiast przełącznika elementu domyślnego i wymaganego (język, organizacja operatora). */
+.ss-onboarding-languages__row > .ss-badge,
+.ss-onboarding-organizations__row > .ss-badge {
+    flex: none;
+    margin-left: auto;
+}
+
 .ss-onboarding-languages__row form {
     margin: 0 0 0 auto;
 }
@@ -2266,6 +2273,30 @@ textarea.ss-input {
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+}
+
+/* Wynik z przełącznikiem albo plakietką obok (podpowiedzi, SearchResult::$toggleUrl / $badge). */
+.ss-search__row {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-search__row > .ss-search__option {
+    flex: 1;
+    min-width: 0;
+}
+
+.ss-search__row > .ss-switch {
+    flex: none;
+    gap: 0;
+    padding: 0 var(--ss-space-2) 0 0;
+    border-top: 0;
+}
+
+.ss-search__row > .ss-badge {
+    flex: none;
+    margin-right: var(--ss-space-2);
 }
 
 .ss-search__option {

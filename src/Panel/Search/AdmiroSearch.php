@@ -33,8 +33,9 @@ use Simplysmart\Admiro\View\Navigation\SearchResultGroup;
 /**
  * Wyniki globalnej wyszukiwarki strefy administratorów w zaznaczonych zakresach (SearchScope), tylko w zakresach
  * dozwolonych administratorowi: języki (także po krajach, np. „polska” → polski; z flagami krajów, do kreatora
- * języków z tym samym tekstem, a bez `settings.manage` do słownika), kraje i waluty (słowniki), organizacje
- * i administratorzy (imię i nazwisko albo dokładny e-mail), strony panelu (pozycje menu i ustawień po nazwie,
+ * języków z tym samym tekstem, a bez `settings.manage` do słownika), kraje i waluty (słowniki), organizacje (do kreatora
+ * organizacji z tym samym tekstem — lista wyników pod wyszukiwarką; z przełącznikiem włączenia przy `organizations.manage`,
+ * a organizacja operatora z plakietką „Domyślna”) i administratorzy (imię i nazwisko albo dokładny e-mail), strony panelu (pozycje menu i ustawień po nazwie,
  * bez polskich znaków i wielkości liter). Każda grupa ma najwyżej `$limit` wyników i odnośnik do reszty.
  */
 final readonly class AdmiroSearch
@@ -151,13 +152,30 @@ final readonly class AdmiroSearch
 
         $found = $this->organizations->search($term, $limit + 1);
         $canEdit = $this->context->can(Permission::OrganizationsManage);
-        $list = $this->route('organizations.index');
-        $results = array_values($found->take($limit)->map(fn(Organization $organization): SearchResult => new SearchResult(
-            $organization->name,
-            $canEdit ? $this->route('organizations.edit', ['organization' => $organization->token]) : $list,
-            $organization->nip !== null ? text('admiro::search.nip', ['nip' => $organization->nip]) : null,
-            'building',
-        ))->all());
+        $inWizard = $this->context->can(OnboardingStep::Organizations->permission());
+        $list = $inWizard
+            ? $this->route('onboarding.show', ['step' => OnboardingStep::Organizations->value, 'q' => $term])
+            : $this->route('organizations.index');
+        $results = array_values($found->take($limit)->map(function (Organization $organization) use ($canEdit, $inWizard, $list): SearchResult {
+            $operator = $organization->id === Organization::OPERATOR_ID;
+
+            return new SearchResult(
+                $organization->name,
+                match (true) {
+                    $inWizard => $list . '#organization-' . $organization->token,
+                    $canEdit => $this->route('organizations.edit', ['organization' => $organization->token]),
+                    default => $list,
+                },
+                implode(' · ', array_filter([
+                    $organization->nip !== null ? text('admiro::search.nip', ['nip' => $organization->nip]) : null,
+                    $organization->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive'),
+                ])),
+                'building',
+                toggleUrl: $canEdit && ! $operator ? $this->route('organizations.toggle', ['organization' => $organization->token]) : null,
+                active: $organization->is_active,
+                badge: $operator ? text('admiro::dashboard.onboarding_organization_default') : null,
+            );
+        })->all());
 
         return new SearchResultGroup(text('admiro::search.groups.organizations'), $results, $found->count() > $limit ? $list : null);
     }

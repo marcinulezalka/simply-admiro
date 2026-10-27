@@ -14,13 +14,17 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\View\Navigation;
 
 /**
- * Jeden wynik globalnej wyszukiwarki: etykieta, adres, opcjonalnie opis (np. kod, nazwa własna), ikona albo flagi.
+ * Jeden wynik globalnej wyszukiwarki: etykieta, adres, opcjonalnie opis (np. kod, nazwa własna), ikona albo flagi,
+ * a w podpowiedziach przełącznik stanu obok wyniku (np. włączenie organizacji) albo plakietka (np. „Domyślna”).
  */
 final readonly class SearchResult
 {
     /**
      * @param string|null $icon Nazwa ikony z `public/assets/img/icons/`; bez flag i ikony — kropka.
      * @param list<string> $flags Kody flag (x-admiro::flag), np. kraje języka; wygrywają z ikoną.
+     * @param string|null $toggleUrl Adres POST przełącznika stanu w podpowiedzi (js/post-toggle.js), np. włączenie organizacji.
+     * @param bool $active Stan przełącznika.
+     * @param string|null $badge Plakietka zamiast przełącznika (element domyślny i wymagany, np. „Domyślna”).
      */
     public function __construct(
         public string $label,
@@ -28,5 +32,8 @@ final readonly class SearchResult
         public ?string $description = null,
         public ?string $icon = null,
         public array $flags = [],
+        public ?string $toggleUrl = null,
+        public bool $active = false,
+        public ?string $badge = null,
     ) {}
 }
