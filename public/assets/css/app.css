@@ -3437,9 +3437,12 @@ summary.ss-sidebar__identity:focus-visible {
         flex-direction: row;
     }
 
+    /* Przyklejone menu tworzy własną warstwę; z-index nad treścią (pola z position: relative), więc panele menu
+       (powiadomienia, konto, kontekst) wystające nad treść nie chowają się pod jej polami. */
     .ss-sidebar {
         position: sticky;
         top: 0;
+        z-index: 20;
         flex: 0 0 var(--ss-sidebar-width);
         height: 100vh;
         border-right: 1px solid var(--ss-color-border);

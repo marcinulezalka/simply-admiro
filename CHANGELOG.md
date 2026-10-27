@@ -115,6 +115,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Panele menu bocznego (powiadomienia, konto) nie chowają się już pod polami formularzy treści: przyklejone menu na szerokim ekranie ma `z-index` nad treścią.
 - Menu „+” globalnej wyszukiwarki: nagłówek „Dodaj” stał w jednym wierszu z pierwszą pozycją; teraz jest nad listą, oddzielony linią.
 - Przycisk „Zapisz” formularzy zapisywanych po zmianie przełącznika (`data-ss-autosubmit`) był widoczny mimo skryptu — klasa przycisku nadpisywała atrybut `hidden`.
 
