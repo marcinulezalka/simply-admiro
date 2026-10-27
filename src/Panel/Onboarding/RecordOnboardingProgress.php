@@ -45,6 +45,7 @@ final readonly class RecordOnboardingProgress
         return match ($event->action) {
             OnboardingStep::CONFIRMED_ACTION => $event->context['step'] === OnboardingStep::Languages->value ? OnboardingStep::Languages->value : null,
             'settings updated' => OnboardingStep::Settings->value,
+            'dictionary entry enabled', 'dictionary entry disabled' => ($event->context['dictionary'] ?? null) === 'languages' ? OnboardingStep::Languages->value : null,
             'cookie policy published' => OnboardingStep::legalMilestone('cookies'),
             'legal document published' => is_string($document) ? OnboardingStep::legalMilestone($document) : null,
             'organization created' => OnboardingStep::Organizations->value,

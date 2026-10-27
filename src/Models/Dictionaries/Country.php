@@ -34,6 +34,7 @@ use Simplysmart\Admiro\Models\Relations\HasTaxRates;
  * @property string|null $numeric_code
  * @property string|null $dial_code
  * @property int|null $currency_id
+ * @property-read Currency|null $currency
  * @property bool $is_eu
  * @property string|null $flag_icon
  * @property Continent|null $continent

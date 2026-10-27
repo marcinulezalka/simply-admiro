@@ -46,16 +46,23 @@
                         <span class="ss-badge ss-badge--outline ss-badge--{{ $currentState->tone() }}">{{ $currentState->label() }}@if ($currentCompletedAt !== null) <time class="ss-onboarding-wizard__completed" datetime="{{ $currentCompletedAt->toIso8601String() }}">{{ local_date($currentCompletedAt, 'D MMM YYYY') }}</time>@endif</span>
                     </p>
                 </div>
-                @if ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Organizations)
+                @php
+                    $taskSearch = match ($current) {
+                        \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Organizations => ['id' => 'organizations', 'scope' => \Simplysmart\Admiro\Panel\Enums\SearchScope::Directory, 'actions' => $organizationActions],
+                        \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Languages => ['id' => 'languages', 'scope' => \Simplysmart\Admiro\Panel\Enums\SearchScope::Languages, 'actions' => []],
+                        default => null,
+                    };
+                @endphp
+                @if ($taskSearch !== null)
                     <form class="ss-search ss-onboarding-picker__search ss-onboarding-wizard__search" role="search" method="GET" action="{{ route($zone . 'onboarding.show', ['step' => $current->value]) }}" data-ss-search-suggest="{{ route($zone . 'search.suggest') }}">
-                        <input type="hidden" name="in[]" value="{{ \Simplysmart\Admiro\Panel\Enums\SearchScope::Directory->value }}">
-                        <label class="ss-sr-only" for="ss-organizations-search">{{ text('admiro::dashboard.onboarding_organizations_search_label') }}</label>
-                        @if ($organizationActions !== [])
-                            @include('admiro::search.actions', ['actions' => $organizationActions])
+                        <input type="hidden" name="in[]" value="{{ $taskSearch['scope']->value }}">
+                        <label class="ss-sr-only" for="ss-{{ $taskSearch['id'] }}-search">{{ text('admiro::dashboard.onboarding_' . $taskSearch['id'] . '_search_label') }}</label>
+                        @if ($taskSearch['actions'] !== [])
+                            @include('admiro::search.actions', ['actions' => $taskSearch['actions']])
                         @endif
                         <x-admiro::icon name="search" class="ss-search__icon" />
-                        <input class="ss-search__input" id="ss-organizations-search" name="q" type="search" value="{{ $term }}" placeholder="{{ text('admiro::dashboard.onboarding_organizations_search_placeholder') }}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ss-organizations-suggestions" data-ss-search>
-                        <div class="ss-search__suggestions" id="ss-organizations-suggestions" role="listbox" aria-label="{{ text('layout.search_suggestions') }}" hidden data-ss-search-suggestions></div>
+                        <input class="ss-search__input" id="ss-{{ $taskSearch['id'] }}-search" name="q" type="search" value="{{ $term }}" placeholder="{{ text('admiro::dashboard.onboarding_' . $taskSearch['id'] . '_search_placeholder') }}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ss-{{ $taskSearch['id'] }}-suggestions" data-ss-search>
+                        <div class="ss-search__suggestions" id="ss-{{ $taskSearch['id'] }}-suggestions" role="listbox" aria-label="{{ text('layout.search_suggestions') }}" hidden data-ss-search-suggestions></div>
                     </form>
                 @endif
             </div>
@@ -70,119 +77,61 @@
                     'id' => $prefix . '-' . $language->code,
                 ])
 
-                @php($defaultLanguage = $enabled->first(static fn (\Simplysmart\Admiro\Models\Dictionaries\Language $language): bool => $language->is_default === true))
-                @php($otherLanguages = $enabled->reject(static fn (\Simplysmart\Admiro\Models\Dictionaries\Language $language): bool => $language->is_default === true))
+                @if ($term !== '')
+                    <section class="ss-onboarding-picker__list" aria-labelledby="ss-languages-all-title">
+                        <h3 class="ss-card__title" id="ss-languages-all-title">{{ text('admiro::dashboard.onboarding_languages_results', ['term' => $term]) }}</h3>
+                        @if ($languages->isEmpty())
+                            <p class="ss-notice">{{ text('admiro::dashboard.onboarding_languages_none', ['term' => $term]) }}</p>
+                        @else
+                        <ul class="ss-grid ss-grid--3 ss-onboarding-picker__results">
+                            @foreach ($languages as $language)
+                                @php(['locked' => $locked, 'id' => $switchId] = $languageSwitch($language, 'language'))
+                                <li class="ss-card ss-onboarding-picker__result" id="language-{{ $language->code }}">
+                                    <span class="ss-dictionary-code__flags ss-onboarding-picker__result-flags" aria-hidden="true">
+                                        @foreach (array_slice($language->flagIcons(), 0, 4) as $flag)
+                                            <x-admiro::flag :icon="$flag" />
+                                        @endforeach
+                                        @if (count($language->flagIcons()) > 4)
+                                            <span class="ss-dictionary-code__more">+{{ count($language->flagIcons()) - 4 }}</span>
+                                        @endif
+                                    </span>
+                                    <span class="ss-onboarding-picker__chip-text">
+                                        <span class="ss-onboarding-picker__name">{{ $language->translatedName() }}</span>
+                                        <span class="ss-table__sub">{{ implode(' · ', array_filter([$language->native_name !== $language->translatedName() ? $language->native_name : null, $language->code])) }}</span>
+                                    </span>
+                                    @if ($language->is_default)
+                                        <span class="ss-badge ss-badge--outline ss-badge--info" title="{{ text('admiro::dashboard.onboarding_language_locked') }}">{{ text('admiro::dashboard.onboarding_language_default') }}</span>
+                                    @elseif ($canManage)
+                                        <form method="POST" action="{{ route($zone . 'dictionaries.toggle', ['dictionary' => 'languages', 'code' => $language->code]) }}" data-ss-autosubmit>
+                                            @csrf
+                                            <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_language_switch', ['name' => $language->translatedName()])" :checked="$language->is_active" :disabled="$locked" :title="$locked ? text('admiro::dashboard.onboarding_language_locked') : null" hide-label states />
+                                        </form>
+                                    @else
+                                        <span class="ss-badge">{{ $language->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive') }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                        @endif
+                    </section>
+                @endif
 
                 <section class="ss-card ss-card--muted ss-onboarding-languages" aria-labelledby="ss-languages-enabled-title">
                     <header class="ss-onboarding-languages__header">
-                        <h3 class="ss-card__title" id="ss-languages-enabled-title">{{ text('admiro::dashboard.onboarding_languages_enabled') }} <span class="ss-badge">{{ $enabled->count() }}</span></h3>
+                        <h3 class="ss-card__title" id="ss-languages-enabled-title">{{ text('admiro::dashboard.onboarding_languages_enabled') }} <span class="ss-badge" title="{{ text('admiro::dashboard.onboarding_languages_active_count', ['active' => $enabled->count(), 'all' => $all->count()]) }}">{{ $enabled->count() }}/{{ $all->count() }}</span></h3>
                     </header>
+                    @error('regional')
+                        <p class="ss-field__error" role="alert">{{ $message }}</p>
+                    @enderror
                     @if ($enabled->isEmpty())
                         <p class="ss-muted">{{ text('admiro::dashboard.onboarding_languages_enabled_empty') }}</p>
-                    @endif
-                    @if ($defaultLanguage !== null)
-                        <div class="ss-onboarding-languages__default">
-                            @include('admiro::panel.onboarding.language-row', ['language' => $defaultLanguage])
-                            @if ($regionalConfigured)
-                                <dl class="ss-onboarding-languages__regional" aria-label="{{ text('admiro::dashboard.onboarding_regional_title') }}">
-                                    <div class="ss-onboarding-languages__regional-item">
-                                        <dt>{{ text('admiro::dashboard.onboarding_regional_country') }}</dt>
-                                        <dd>
-                                            @if ($regional['country'] !== null)
-                                                @if ($regional['country']->flag_icon !== null)
-                                                    <x-admiro::flag :icon="$regional['country']->flag_icon" />
-                                                @endif
-                                                {{ $regional['country']->translatedName() }}
-                                            @else
-                                                —
-                                            @endif
-                                        </dd>
-                                    </div>
-                                    <div class="ss-onboarding-languages__regional-item">
-                                        <dt>{{ text('admiro::dashboard.onboarding_regional_currency') }}</dt>
-                                        <dd>{{ $regional['currency'] !== null ? $regional['currency']->alpha_code_3 . ' · ' . $regional['currency']->translatedName() : '—' }}</dd>
-                                    </div>
-                                    <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => $regional['tax'] === null])>
-                                        <dt>{{ text('admiro::dashboard.onboarding_regional_taxes') }}</dt>
-                                        <dd>
-                                            @if ($regional['country'] === null)
-                                                —
-                                            @else
-                                                <a class="ss-link" href="{{ route($zone . 'tax-rates.index', ['country' => $regional['country']->alpha_code_2]) }}">{{ $regional['tax'] !== null ? local_number((float) $regional['tax']->rate, 0) . '%' : text('admiro::dashboard.onboarding_regional_set') }}</a>
-                                            @endif
-                                        </dd>
-                                    </div>
-                                    <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => $regional['holidays'] === 0])>
-                                        <dt>{{ text('admiro::dashboard.onboarding_regional_holidays') }}</dt>
-                                        <dd><a class="ss-link" href="{{ route($zone . 'holidays.index') }}">{{ $regional['holidays'] === 0 ? text('admiro::dashboard.onboarding_regional_set') : text('admiro::dashboard.onboarding_regional_holidays_count', ['count' => local_number($regional['holidays'])]) }}</a></dd>
-                                    </div>
-                                </dl>
-                            @else
-                                <a class="ss-onboarding-languages__regional ss-onboarding-languages__regional--missing" href="{{ route($zone . 'onboarding.show', ['step' => \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Settings->value]) }}">
-                                    <x-admiro::icon name="locale" class="ss-onboarding-languages__regional-icon" />
-                                    <span>
-                                        <span class="ss-onboarding-languages__regional-title">{{ text('admiro::dashboard.onboarding_regional_title') }}</span>
-                                        <span class="ss-table__sub">{{ text('admiro::dashboard.onboarding_regional_missing') }}</span>
-                                    </span>
-                                </a>
-                            @endif
-                        </div>
-                    @endif
-                    @if ($otherLanguages->isNotEmpty())
+                    @else
                         <ul class="ss-onboarding-languages__rows">
-                            @foreach ($otherLanguages as $language)
+                            @foreach ($enabled as $language)
                                 <li>@include('admiro::panel.onboarding.language-row', ['language' => $language])</li>
                             @endforeach
                         </ul>
                     @endif
-                </section>
-
-                <section class="ss-onboarding-picker__list" aria-labelledby="ss-languages-all-title">
-                    <h3 class="ss-card__title" id="ss-languages-all-title">{{ text('admiro::dashboard.onboarding_languages_search_title') }}</h3>
-                    <form class="ss-search ss-onboarding-picker__search" role="search" method="GET" action="{{ route($zone . 'onboarding.show', ['step' => $current->value]) }}" data-ss-live-search="ss-languages-results">
-                        <label class="ss-sr-only" for="ss-languages-search">{{ text('admiro::dashboard.onboarding_languages_search_label') }}</label>
-                        <x-admiro::icon name="search" class="ss-search__icon" />
-                        <input class="ss-search__input" id="ss-languages-search" name="q" type="search" value="{{ $term }}" placeholder="{{ text('admiro::dashboard.onboarding_languages_search_placeholder') }}" autocomplete="off" aria-controls="ss-languages-results">
-                    </form>
-
-                    <div class="ss-onboarding-picker__live" id="ss-languages-results" aria-live="polite">
-                        @if ($term === '')
-                            <p class="ss-muted ss-onboarding-picker__hint">{{ text('admiro::dashboard.onboarding_languages_hint') }}</p>
-                        @elseif ($languages->isEmpty())
-                            <p class="ss-notice">{{ text('admiro::dashboard.onboarding_languages_none', ['term' => $term]) }}</p>
-                        @else
-                            <p class="ss-sr-only">{{ text('admiro::dashboard.onboarding_languages_results', ['term' => $term]) }}</p>
-                            <ul class="ss-grid ss-grid--3 ss-onboarding-picker__results">
-                                @foreach ($languages as $language)
-                                    @php(['locked' => $locked, 'id' => $switchId] = $languageSwitch($language, 'language'))
-                                    <li class="ss-card ss-onboarding-picker__result" id="language-{{ $language->code }}">
-                                        <span class="ss-dictionary-code__flags ss-onboarding-picker__result-flags" aria-hidden="true">
-                                            @foreach (array_slice($language->flagIcons(), 0, 4) as $flag)
-                                                <x-admiro::flag :icon="$flag" />
-                                            @endforeach
-                                            @if (count($language->flagIcons()) > 4)
-                                                <span class="ss-dictionary-code__more">+{{ count($language->flagIcons()) - 4 }}</span>
-                                            @endif
-                                        </span>
-                                        <span class="ss-onboarding-picker__chip-text">
-                                            <span class="ss-onboarding-picker__name">{{ $language->translatedName() }}</span>
-                                            <span class="ss-table__sub">{{ implode(' · ', array_filter([$language->native_name !== $language->translatedName() ? $language->native_name : null, $language->code])) }}</span>
-                                        </span>
-                                        @if ($language->is_default)
-                                            <span class="ss-badge ss-badge--outline ss-badge--info" title="{{ text('admiro::dashboard.onboarding_language_locked') }}">{{ text('admiro::dashboard.onboarding_language_default') }}</span>
-                                        @elseif ($canManage)
-                                            <form method="POST" action="{{ route($zone . 'dictionaries.toggle', ['dictionary' => 'languages', 'code' => $language->code]) }}" data-ss-autosubmit>
-                                                @csrf
-                                                <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_language_switch', ['name' => $language->translatedName()])" :checked="$language->is_active" :disabled="$locked" :title="$locked ? text('admiro::dashboard.onboarding_language_locked') : null" hide-label />
-                                            </form>
-                                        @else
-                                            <span class="ss-badge">{{ $language->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive') }}</span>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
                 </section>
             @elseif ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Organizations)
                 @php($organizationSwitch = static fn (\Simplysmart\Admiro\Models\Organization $organization, string $prefix): array => [
@@ -289,12 +238,6 @@
                                 </a>
                             @endforeach
                         </nav>
-                    @endif
-                    @if ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Languages && $canManage)
-                        <form method="POST" action="{{ route($zone . 'onboarding.confirm', ['step' => $current->value]) }}">
-                            @csrf
-                            <button class="ss-button ss-button--primary" type="submit"><x-admiro::icon name="check" class="ss-button__icon" />{{ $next === null ? text('admiro::dashboard.onboarding_confirm_last') : text('admiro::dashboard.onboarding_confirm') }}</button>
-                        </form>
                     @endif
                 </div>
 

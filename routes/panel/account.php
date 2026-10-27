@@ -39,3 +39,6 @@ Route::post('onboarding/{step}/confirm', [OnboardingController::class, 'confirm'
     ->whereIn('step', array_column(OnboardingStep::cases(), 'value'))
     ->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:admiro.sign-in'])
     ->name('onboarding.confirm');
+Route::post('onboarding/languages/regional', [OnboardingController::class, 'saveRegional'])
+    ->middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:admiro.sign-in'])
+    ->name('onboarding.regional');

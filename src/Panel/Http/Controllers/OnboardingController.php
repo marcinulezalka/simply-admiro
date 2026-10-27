@@ -18,6 +18,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Validation\Rule;
+use Simplysmart\Admiro\Localization\LocaleRouting;
+use Simplysmart\Admiro\Localization\LocalizationSettings;
+use Simplysmart\Admiro\Localization\LocalizationSettingsRejected;
 use Simplysmart\Admiro\Localization\Dictionary;
 use Simplysmart\Admiro\Models\Dictionaries\Language;
 use Simplysmart\Admiro\Models\Organization;
@@ -59,7 +63,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -78,13 +82,23 @@ final readonly class OnboardingController
             /** @var Collection<int, Language> $all */
             $all = $dictionaries->entries(Dictionary::Languages);
             $defaultFirst = static fn(Language $language): array => [$language->is_default === true ? 0 : 1, $language->translatedName()];
+            $enabled = $all->filter(static fn(Language $language): bool => $language->is_active === true)->sortBy($defaultFirst)->values();
+            $configured = collect($data['checklist'])->firstWhere('step', OnboardingStep::Settings)['done'] ?? false;
+            $regionals = [];
+
+            foreach ($enabled as $language) {
+                $regionals[$language->code] = $language->is_default === true && $configured ? $regional->summary() : $regional->forLanguage($language);
+            }
+
             $data += [
                 'term' => $term,
-                'enabled' => $all->filter(static fn(Language $language): bool => $language->is_active === true)->sortBy($defaultFirst)->values(),
+                'all' => $all,
+                'enabled' => $enabled,
                 'languages' => $term === '' ? new Collection() : $search->languages($term)->sortBy($defaultFirst)->values(),
                 'canManage' => $this->context->can(Permission::SettingsManage),
-                'regional' => $regional->summary(),
-                'regionalConfigured' => collect($data['checklist'])->firstWhere('step', OnboardingStep::Settings)['done'] ?? false,
+                'regionals' => $regionals,
+                'regionalConfigured' => $configured,
+                'defaultCandidates' => $routing->enabled(),
             ];
         }
 
@@ -108,6 +122,38 @@ final readonly class OnboardingController
         }
 
         return view('admiro::panel.onboarding.show', $data);
+    }
+
+    /**
+     * „Zapisz jako domyślne” w zadaniu „Języki”: język (`language`, jeden z APP_LOCALES) staje się domyślnym językiem
+     * aplikacji i interfejsu, a kraj i waluta — proponowanymi dla niego (RegionalSettingsSummary::forLanguage());
+     * zapis jak w ustawieniach (LocalizationSettings, dziennik `settings updated` zamyka zadanie „Ustawienia
+     * regionalne”), a zadanie „Języki” jest potwierdzone. Bez kraju lub waluty w propozycji albo przy odmowie — błąd.
+     */
+    public function saveRegional(Request $request, RegionalSettingsSummary $regional, LocalizationSettings $settings, LocaleRouting $routing, AdminAudit $audit): RedirectResponse
+    {
+        $validated = $request->validate(['language' => ['required', 'string', Rule::in($routing->enabled())]]);
+        $language = Language::query()->where(Language::CODE, $validated['language'])->first() ?? throw new NotFoundHttpException();
+        ['country' => $country, 'currency' => $currency] = $regional->forLanguage($language);
+        $back = $this->redirect->route($this->context->zone()->routeName('onboarding.show'), ['step' => OnboardingStep::Languages->value]);
+
+        if ($country === null || $currency === null) {
+            return $back->withErrors(['regional' => text('admiro::dashboard.onboarding_regional_unknown')]);
+        }
+
+        $interface = Language::query()->where('is_interface', true)->pluck(Language::CODE)->all();
+        $interface = array_values(array_intersect([...array_filter($interface, is_string(...)), $language->code], $routing->enabled()));
+
+        try {
+            $settings->update($country, $language, $currency, $interface);
+        } catch (LocalizationSettingsRejected) {
+            return $back->withErrors(['regional' => text('admiro::dashboard.onboarding_regional_unknown')]);
+        }
+
+        $audit->record('settings updated', context: ['country' => $country->alpha_code_2, 'language' => $language->code, 'currency' => $currency->alpha_code_3]);
+        $audit->record(OnboardingStep::CONFIRMED_ACTION, context: ['step' => OnboardingStep::Languages->value]);
+
+        return $back->with('status', text('admiro::dashboard.onboarding_regional_saved'));
     }
 
     public function confirm(string $step, AdminAudit $audit): RedirectResponse

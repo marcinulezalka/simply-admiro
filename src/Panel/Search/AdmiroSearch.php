@@ -33,7 +33,8 @@ use Simplysmart\Admiro\View\Navigation\SearchResultGroup;
 /**
  * Wyniki globalnej wyszukiwarki strefy administratorów w zaznaczonych zakresach (SearchScope), tylko w zakresach
  * dozwolonych administratorowi: języki (także po krajach, np. „polska” → polski; z flagami krajów, do kreatora
- * języków z tym samym tekstem, a bez `settings.manage` do słownika), kraje i waluty (słowniki), organizacje (do kreatora
+ * języków z tym samym tekstem — lista wyników nad panelem języków; z przełącznikiem włączenia przy `settings.manage`, a język
+ * domyślny i języki interfejsu z plakietką —, a bez `settings.manage` do słownika), kraje i waluty (słowniki), organizacje (do kreatora
  * organizacji z tym samym tekstem — lista wyników pod wyszukiwarką; z przełącznikiem włączenia przy `organizations.manage`,
  * a organizacja operatora z plakietką „Domyślna”) i administratorzy (imię i nazwisko albo dokładny e-mail), strony panelu (pozycje menu i ustawień po nazwie,
  * bez polskich znaków i wielkości liter). Każda grupa ma najwyżej `$limit` wyników i odnośnik do reszty.
@@ -104,12 +105,18 @@ final readonly class AdmiroSearch
             : $this->route('dictionaries.index', ['dictionary' => 'languages']);
         $results = [];
 
+        $canToggle = $this->context->can(Permission::SettingsManage);
+
         foreach ($found->take($limit) as $language) {
+            $locked = $language->is_default === true || $language->is_interface === true;
             $results[] = new SearchResult(
                 $language->translatedName(),
                 $list . '#language-' . $language->code,
-                implode(' · ', array_filter([$language->native_name, $language->code, $language->is_active ? text('admiro::admin.state_active') : null])),
+                implode(' · ', array_filter([$language->native_name, $language->code, $language->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive')])),
                 flags: $language->flagIcons(),
+                toggleUrl: $canToggle && ! $locked ? $this->route('dictionaries.toggle', ['dictionary' => 'languages', 'code' => $language->code]) : null,
+                active: $language->is_active === true,
+                badge: $language->is_default === true ? text('admiro::dashboard.onboarding_language_default') : ($locked ? text('admiro::dashboard.onboarding_language_interface') : null),
             );
         }
 

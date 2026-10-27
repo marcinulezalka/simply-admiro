@@ -1379,9 +1379,11 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 /*
- * .ss-onboarding-languages — włączone języki w zadaniu „Języki”: nagłówek (__header), wiersz języka domyślnego
- * (__default) z ustawieniami regionalnymi (__regional: kraj, waluta, podatki, święta; nieustawione — odnośnik
- * w przerywanej ramce __regional--missing), pod nim pozostałe języki po jednym w wierszu (__rows, __row).
+ * .ss-onboarding-languages — panel „Język aplikacji” w zadaniu „Języki”: nagłówek (__header), wiersze włączonych
+ * języków (__rows, __row; domyślny — __row--default z ramką akcentu): język z flagą (__main), siatka ustawień
+ * regionalnych (__regional: kraj, waluta, VAT, dni wolne; propozycja według języka — --proposed, przyciszona;
+ * brakujące w przerywanej ramce __regional-item--missing) i po prawej (__side) plakietki, „Zapisz jako domyślne”
+ * i przełącznik ON / OFF; na wąskim ekranie siatka schodzi pod nazwę.
  */
 .ss-onboarding-languages {
     display: flex;
@@ -1393,20 +1395,10 @@ a.ss-onboarding-organizations__missing:hover {
     margin: 0;
 }
 
-.ss-onboarding-languages__default {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ss-space-3);
-    padding: var(--ss-space-3);
-    border: 1px solid var(--ss-color-border);
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-surface);
-}
-
 .ss-onboarding-languages__rows {
     display: flex;
     flex-direction: column;
-    gap: var(--ss-space-2);
+    gap: var(--ss-space-3);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -1414,26 +1406,38 @@ a.ss-onboarding-organizations__missing:hover {
 
 .ss-onboarding-languages__row {
     display: flex;
-    gap: var(--ss-space-3);
+    flex-wrap: wrap;
+    gap: var(--ss-space-3) var(--ss-space-6);
     align-items: center;
-}
-
-.ss-onboarding-languages__rows .ss-onboarding-languages__row {
-    padding: var(--ss-space-2) var(--ss-space-3);
+    padding: var(--ss-space-3) var(--ss-space-4);
     border: 1px solid var(--ss-color-border);
     border-radius: var(--ss-radius-control);
     background: var(--ss-color-surface);
 }
 
-/* Plakietka „Domyślny” zamiast przełącznika elementu domyślnego i wymaganego (język, organizacja operatora). */
-.ss-onboarding-languages__row > .ss-badge,
-.ss-onboarding-organizations__row > .ss-badge {
+.ss-onboarding-languages__row--default {
+    border-color: color-mix(in srgb, var(--ss-color-accent) 35%, var(--ss-color-border));
+}
+
+.ss-onboarding-languages__main {
+    display: flex;
+    flex: 1 1 12rem;
+    gap: var(--ss-space-3);
+    align-items: center;
+    min-width: 0;
+}
+
+.ss-onboarding-languages__side {
+    display: flex;
     flex: none;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
     margin-left: auto;
 }
 
-.ss-onboarding-languages__row form {
-    margin: 0 0 0 auto;
+.ss-onboarding-languages__side form {
+    margin: 0;
 }
 
 .ss-onboarding-languages__row .ss-switch {
@@ -1444,11 +1448,16 @@ a.ss-onboarding-organizations__missing:hover {
 
 .ss-onboarding-languages__regional {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    flex: 3 1 28rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--ss-space-3);
     margin: 0;
-    padding: var(--ss-space-3) 0 0;
-    border-top: 1px solid var(--ss-color-border);
+}
+
+@media (max-width: 47.999rem) {
+    .ss-onboarding-languages__regional {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 .ss-onboarding-languages__regional-item dt {
@@ -1462,7 +1471,13 @@ a.ss-onboarding-organizations__missing:hover {
     gap: var(--ss-space-2);
     align-items: center;
     margin: var(--ss-space-1) 0 0;
+    font-size: 0.875rem;
     font-weight: 600;
+}
+
+.ss-onboarding-languages__regional--proposed .ss-onboarding-languages__regional-item dd {
+    color: var(--ss-color-muted);
+    font-weight: 500;
 }
 
 .ss-onboarding-languages__regional-item--missing {
@@ -1470,37 +1485,6 @@ a.ss-onboarding-organizations__missing:hover {
     padding: var(--ss-space-2);
     border: 1px dashed var(--ss-color-border-strong);
     border-radius: var(--ss-radius-control);
-}
-
-.ss-onboarding-languages__regional--missing {
-    display: flex;
-    gap: var(--ss-space-3);
-    align-items: center;
-    padding: var(--ss-space-3);
-    border: 1px dashed var(--ss-color-border-strong);
-    border-radius: var(--ss-radius-control);
-    color: var(--ss-color-text);
-    text-decoration: none;
-}
-
-.ss-onboarding-languages__regional--missing:hover {
-    border-color: var(--ss-color-accent);
-}
-
-.ss-onboarding-languages__regional--missing > span {
-    display: flex;
-    flex-direction: column;
-}
-
-.ss-onboarding-languages__regional-icon {
-    flex: none;
-    width: 1.25rem;
-    height: 1.25rem;
-    color: var(--ss-color-muted);
-}
-
-.ss-onboarding-languages__regional-title {
-    font-weight: 600;
 }
 
 .ss-onboarding-picker__name .ss-badge {
