@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Wariant karty `.ss-card--feature` (karty wyróżnione na pulpicie, np. Onboarding): delikatne tło z odrobiną akcentu i poświatą w prawym górnym rogu oraz warstwowy cień pod całą kartą, lekko rosnący po najechaniu (bez ruchu przy `prefers-reduced-motion`, jednolite tło w motywach kontrastu).
 - Strona „Wiki” (`wiki`, w mapie aplikacji i w wyszukiwarce stron): wszystkie pojęcia słownika — Core i paczek — jako porady i Q&A, z wyszukiwaniem. Wpis może mieć pytanie (`.question`): pokazuje się jako Q, a definicja jako odpowiedź A. Zadania kreatora mają swoje pojęcie nad treścią (`OnboardingStep::wiki()`: organizacje, profile i uprawnienia, właściciele stref).
 - Słownik pojęć (wiki): `Wiki\Wiki` (singleton, paczki dopisują pojęcia `add()`), `Wiki\WikiEntry` (identyfikator z prefiksem `wiki-`), teksty `lang/<locale>/wiki.php` (organizacja, organizacja operatora, departament, strefa, właściciel) i komponent `x-admiro::wiki-tip` — wpis jako alert informacyjny z ikoną, znacznikiem `wiki-…`, słowem kluczowym, definicją i przykładem. W kreatorze „Organizacje” nad drzewem wpis `wiki-organizacja`.
 - `View\ZoneFavicons::url()` — adres favicony strefy (SVG, PNG albo ICO); w drzewie organizacji strefy pokazane jako ich favicony (nazwa w podpowiedzi).

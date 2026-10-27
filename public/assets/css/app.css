@@ -350,6 +350,43 @@
     transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
+/*
+ * .ss-card--feature — karta wyróżniona na pulpicie (np. karta Onboardingu): delikatne tło — biel karty przechodząca
+ * w odrobinę akcentu, z miękką poświatą w prawym górnym rogu — i warstwowy cień pod całą kartą (cienka obwódka,
+ * bliski cień i szeroki, miękki cień wokół, mocniejszy pod spodem); po najechaniu cień lekko rośnie.
+ */
+.ss-shell .ss-card--feature {
+    border-color: transparent;
+    background:
+        radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--ss-color-accent) 7%, transparent), transparent 60%),
+        linear-gradient(160deg, var(--ss-color-surface) 40%, color-mix(in srgb, var(--ss-color-surface) 94%, var(--ss-color-accent)));
+    box-shadow:
+        0 0 0 1px light-dark(rgb(15 23 42 / 0.05), rgb(255 255 255 / 0.06)),
+        0 1px 2px 0 light-dark(rgb(15 23 42 / 0.05), rgb(0 0 0 / 0.35)),
+        0 6px 16px -4px light-dark(rgb(15 23 42 / 0.07), rgb(0 0 0 / 0.4)),
+        0 22px 44px -12px light-dark(rgb(15 23 42 / 0.14), rgb(0 0 0 / 0.55));
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.ss-shell a.ss-card--feature:hover {
+    box-shadow:
+        0 0 0 1px light-dark(rgb(15 23 42 / 0.07), rgb(255 255 255 / 0.08)),
+        0 2px 4px 0 light-dark(rgb(15 23 42 / 0.06), rgb(0 0 0 / 0.4)),
+        0 10px 22px -6px light-dark(rgb(15 23 42 / 0.09), rgb(0 0 0 / 0.45)),
+        0 28px 56px -14px light-dark(rgb(15 23 42 / 0.18), rgb(0 0 0 / 0.6));
+    transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-shell a.ss-card--feature:hover {
+        transform: none;
+    }
+}
+
+:root[data-theme^="contrast"] .ss-shell .ss-card--feature {
+    background: var(--ss-color-surface);
+}
+
 .ss-onboarding-card:hover {
     border-color: var(--ss-color-border-strong);
 }

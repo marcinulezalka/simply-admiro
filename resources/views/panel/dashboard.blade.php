@@ -1,4 +1,4 @@
-{{-- Dashboard (DashboardController): jedna karta-odnośnik do Onboardingu (.ss-onboarding-card) — duża, nieruchoma ikona rakiety w tle (dekoracyjna), nagłówek z ikoną po lewej i obok małą etykietą mono „Onboarding” nad tytułem, opis (inne po zrobieniu wszystkich zadań), postęp „Zrobione X z Y” z procentem i paskiem, wezwanie do działania ze strzałką — następne niezrobione zadanie, a po wszystkich „Przejrzyj zadania”; bez zadań w uprawnieniach — informacja o braku uprawnień. $onboarding: list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool}> --}}
+{{-- Dashboard (DashboardController): jedna karta-odnośnik do Onboardingu (.ss-onboarding-card, wyróżniona .ss-card--feature: delikatne tło i cień pod całą kartą) — duża, nieruchoma ikona rakiety w tle (dekoracyjna), nagłówek z ikoną po lewej i obok małą etykietą mono „Onboarding” nad tytułem, opis (inne po zrobieniu wszystkich zadań), postęp „Zrobione X z Y” z procentem i paskiem, wezwanie do działania ze strzałką — następne niezrobione zadanie, a po wszystkich „Przejrzyj zadania”; bez zadań w uprawnieniach — informacja o braku uprawnień. $onboarding: list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool}> --}}
 @php
     $doneCount = count(array_filter($onboarding, static fn (array $item): bool => $item['done']));
     $total = count($onboarding);
@@ -9,7 +9,7 @@
     @if ($onboarding === [])
         <p class="ss-notice">{{ text('admiro::admin.no_sections') }}</p>
     @else
-        <a @class(['ss-card', 'ss-onboarding-card', 'ss-onboarding-card--complete' => $complete]) href="{{ route('admiro.onboarding.index') }}">
+        <a @class(['ss-card', 'ss-card--feature', 'ss-onboarding-card', 'ss-onboarding-card--complete' => $complete]) href="{{ route('admiro.onboarding.index') }}">
             <x-admiro::icon name="rocket" class="ss-onboarding-card__watermark" />
             <span class="ss-onboarding-card__head">
                 <x-admiro::icon :name="$complete ? 'check-circle' : 'rocket'" class="ss-onboarding-card__icon" />
