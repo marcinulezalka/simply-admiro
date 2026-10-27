@@ -3280,19 +3280,51 @@ textarea.ss-input {
 
 /*
  * .ss-backdrop — tło płótna (x-admiro::app.backdrop): duży logotyp simplysmart na środku okna, pod treścią (z-index -1
- * w izolowanej powłoce), wtopiony w płótno — kolor marki (--ss-color-brand, czerń albo biel) z bardzo niskim kryciem;
- * bez motywów wysokiego kontrastu i wydruku.
+ * w izolowanej powłoce), wtopiony w płótno jak litery wycięte w papierze: lico liter (--ss-backdrop-face) prawie
+ * w kolorze płótna z delikatnym ukośnym prążkowaniem (--ss-backdrop-grain), wewnętrzny cień od góry z lewej
+ * (--ss-backdrop-shadow) i jasna krawędź od dołu z prawej (--ss-backdrop-light) z filtra SVG; bez motywów wysokiego
+ * kontrastu i wydruku.
  */
 .ss-backdrop {
+    --ss-backdrop-face: color-mix(in srgb, var(--ss-color-canvas) 99%, var(--ss-color-brand));
+    --ss-backdrop-grain: color-mix(in srgb, var(--ss-color-canvas) 96.5%, var(--ss-color-brand));
+    --ss-backdrop-shadow: light-dark(rgb(15 23 42 / 0.13), rgb(0 0 0 / 0.5));
+    --ss-backdrop-light: light-dark(rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.05));
     position: fixed;
     top: 50%;
     left: 50%;
     z-index: -1;
     width: min(72rem, 84vw);
-    color: var(--ss-color-brand);
-    opacity: 0.035;
     pointer-events: none;
     transform: translate(-50%, -40%);
+}
+
+.ss-backdrop__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.ss-backdrop__face {
+    fill: var(--ss-backdrop-face);
+}
+
+.ss-backdrop__grain {
+    stroke: var(--ss-backdrop-grain);
+    stroke-width: 0.45;
+}
+
+.ss-backdrop__shadow {
+    flood-color: var(--ss-backdrop-shadow);
+}
+
+.ss-backdrop__light {
+    flood-color: var(--ss-backdrop-light);
+}
+
+.ss-backdrop__logo path {
+    fill: url("#ss-backdrop-grain");
 }
 
 .ss-backdrop__logo {
@@ -3305,6 +3337,7 @@ textarea.ss-input {
     display: block;
     width: 100%;
     height: auto;
+    filter: url("#ss-backdrop-deboss");
 }
 
 @media print {

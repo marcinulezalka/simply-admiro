@@ -58,6 +58,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Karta Onboardingu na Dashboardzie: w tle rakieta zamiast celu. Logotyp simplysmart w tle płótna jeszcze bardziej wtopiony, jak litery wycięte w papierze: lico w kolorze płótna z delikatnym ukośnym prążkowaniem, wewnętrzny cień od góry z lewej i jasna krawędź od dołu z prawej (filtr SVG w `x-admiro::app.backdrop`, kolory z tokenów — także w motywie ciemnym).
 - Panel drzewa w zadaniu „Organizacje” nazywa się „Struktura organizacyjna”, a licznik ma postać aktywne/wszystkie (np. 2/2).
 - Drzewo organizacji: linie stykają się z krawędziami paneli (wyjście z dolnej krawędzi rodzica pod ikoną, wejście w lewą krawędź dziecka) z małą kropką na styku; uchwyt przeciągania znowu po lewej w pionowym środku wiersza; właściciele jako awatary-odnośniki do konta na liście kont strefy (filtr po e-mailu). Przełącznik ma opcjonalny podpis stanu ON / OFF (`x-admiro::switch states`), użyty w drzewie i wynikach organizacji.
 - Drzewo organizacji w kreatorze: cienkie przerywane linie z zaokrągleniami od ikony rodzica do ikony każdego dziecka, większe odstępy między panelami, uchwyt przeciągania w lewym górnym rogu wiersza; strefy organizacji jako odnośniki z ikoną do kont strefy (bez plakietek). Ikony zrobionych zadań w stopce karty są wypełnione.
