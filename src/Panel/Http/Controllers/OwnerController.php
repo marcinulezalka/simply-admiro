@@ -40,11 +40,12 @@ final readonly class OwnerController
         private Redirector $redirect,
     ) {}
 
-    public function create(): View
+    public function create(Request $request): View
     {
         return view('admiro::panel.owners.create', [
             'zones' => array_map($this->zones->get(...), $this->provisioners->zones()),
             'organizations' => $this->organizations->all(),
+            'selectedOrganization' => $request->string('organization')->toString(),
         ]);
     }
 

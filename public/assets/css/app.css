@@ -706,8 +706,8 @@ button.ss-badge:focus-visible {
  * (__marker; zrobiony: haczyk na tle success), nazwą i opisem (__step-text) i ikoną w kafelku (__step-icon); karty łączy
  * pionowa linia. Bieżący krok (aria-current="step") ma ramkę w kolorze akcentu, zrobiony (__step-link--done) jest
  * wyszarzony w kolorach hovera.
- * .ss-onboarding-picker — kroki „Języki” i „Organizacje”: panel włączonych pozycji (__enabled, kafelki __chip z flagą albo ikoną, nazwą
- * i przełącznikiem) nad wyszukiwarką (__list, __search z podpowiedziami); wyniki w panelach (__results, __result) — panel wskazany kotwicą (#language-<kod>, #organization-<token>) z ramką akcentu.
+ * .ss-onboarding-picker — kroki „Języki” i „Organizacje”: panel włączonych pozycji (__enabled; wiersze .ss-onboarding-languages
+ * i .ss-onboarding-organizations) nad wyszukiwarką (__list, __search z podpowiedziami); wyniki w panelach (__results, __result) — panel wskazany kotwicą (#language-<kod>, #organization-<token>) z ramką akcentu.
  * .ss-dictionary-code — kod wpisu słownika z flagami (__flags; __more — liczba pozostałych flag).
  */
 .ss-onboarding-wizard {
@@ -1034,6 +1034,83 @@ button.ss-badge:focus-visible {
 }
 
 /*
+ * .ss-onboarding-organizations — aktywne organizacje w zadaniu „Organizacje”, po jednej w wierszu (__row): nazwa z ikoną
+ * (__main), strefy i właściciel (__facts, __fact: etykieta mono nad wartością; brak właściciela — przerywana ramka
+ * __missing, odnośnik do założenia) i przełącznik; na wąskim ekranie fakty schodzą pod nazwę.
+ */
+.ss-onboarding-organizations {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding-organizations__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3) var(--ss-space-6);
+    align-items: center;
+    padding: var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
+.ss-onboarding-organizations__main {
+    display: flex;
+    flex: 1 1 16rem;
+    gap: var(--ss-space-3);
+    align-items: center;
+    min-width: 0;
+}
+
+.ss-onboarding-organizations__facts {
+    display: grid;
+    flex: 2 1 20rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ss-space-3);
+    margin: 0;
+}
+
+.ss-onboarding-organizations__fact dt {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-onboarding-organizations__fact dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: var(--ss-space-1) 0 0;
+}
+
+.ss-onboarding-organizations__missing {
+    padding: var(--ss-space-1) var(--ss-space-2);
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    text-decoration: none;
+}
+
+a.ss-onboarding-organizations__missing:hover {
+    border-color: var(--ss-color-accent);
+}
+
+.ss-onboarding-organizations__row form {
+    margin: 0 0 0 auto;
+}
+
+.ss-onboarding-organizations__row .ss-switch {
+    gap: 0;
+    padding: 0;
+    border-top: 0;
+}
+
+/*
  * .ss-onboarding-languages — włączone języki w zadaniu „Języki”: nagłówek (__header), wiersz języka domyślnego
  * (__default) z ustawieniami regionalnymi (__regional: kraj, waluta, podatki, święta; nieustawione — odnośnik
  * w przerywanej ramce __regional--missing), pod nim pozostałe języki po jednym w wierszu (__rows, __row).
@@ -1154,29 +1231,6 @@ button.ss-badge:focus-visible {
 .ss-onboarding-picker__name .ss-badge {
     margin-left: var(--ss-space-1);
     vertical-align: middle;
-}
-
-.ss-onboarding-picker__chips {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: var(--ss-space-2);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.ss-onboarding-picker__chip {
-    display: flex;
-    gap: var(--ss-space-3);
-    align-items: center;
-    padding: var(--ss-space-2) var(--ss-space-3);
-    border: 1px solid var(--ss-color-border);
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-surface);
-}
-
-.ss-onboarding-picker__chip form {
-    margin: 0 0 0 auto;
 }
 
 .ss-onboarding-picker__flags {

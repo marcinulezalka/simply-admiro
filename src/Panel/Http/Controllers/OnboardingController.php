@@ -32,6 +32,7 @@ use Simplysmart\Admiro\Panel\Onboarding\RegionalSettingsSummary;
 use Simplysmart\Admiro\Panel\Search\AdmiroSearch;
 use Simplysmart\Admiro\Queries\Dictionaries\DictionaryList;
 use Simplysmart\Admiro\Queries\Dictionaries\DictionarySearch;
+use Simplysmart\Admiro\Queries\Organizations\OrganizationAssignments;
 use Simplysmart\Admiro\Queries\Organizations\OrganizationList;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -56,7 +57,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, AdmiroNavigation $navigation, RegionalSettingsSummary $regional): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, AdmiroNavigation $navigation, RegionalSettingsSummary $regional): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -88,9 +89,12 @@ final readonly class OnboardingController
 
         if ($current === OnboardingStep::Organizations) {
             $term = $request->string('q')->trim()->toString();
+            $enabled = $organizations->all()->filter(static fn(Organization $organization): bool => $organization->is_active === true)->values();
             $data += [
                 'term' => $term,
-                'enabled' => $organizations->all()->filter(static fn(Organization $organization): bool => $organization->is_active === true)->values(),
+                'enabled' => $enabled,
+                'assignments' => $assignments->of(array_values($enabled->map(static fn(Organization $organization): int => $organization->id)->all())),
+                'canAssignOwners' => $this->context->can(Permission::OwnersAssign),
                 'organizations' => $term === '' ? new Collection() : $organizations->search($term, AdmiroSearch::PAGE),
                 'canManage' => $this->context->can(Permission::OrganizationsManage),
                 'organizationActions' => $navigation->organizationActions(),

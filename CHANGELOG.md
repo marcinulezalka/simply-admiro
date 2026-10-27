@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Kreator onboardingu, zadanie „Organizacje”: aktywne organizacje po jednej w wierszu ze strefami, których konta do nich należą, i właścicielem (rola `owner`); bez właściciela — odnośnik „Dodaj właściciela” do formularza z tą organizacją wybraną z góry (`owners/create?organization=<token>`). Nowe zapytanie `Queries\Organizations\OrganizationAssignments`.
 - Skróty strefy w stopce Workspace obok konta (nowy kontrakt `Contracts\ZoneShortcuts`): w admiro dashboard (dom), Ulubione (serce, `favorites`) i Pulpit roboczy (`board`) — obie strony na razie z informacją o pustej zawartości. Ikony `heart` i `board` (Lucide).
 - Kreator onboardingu, zadanie „Języki”: włączone języki w wierszach — najpierw język domyślny z plakietką „Domyślny” i ustawieniami regionalnymi (kraj, waluta, stawka podatku, dni wolne; dopóki zadanie „Ustawienia regionalne” nie jest zrobione — odnośnik do niego w przerywanej ramce), potem pozostałe języki, po jednym w wierszu (`Panel\Onboarding\RegionalSettingsSummary`).
 - Wyszukiwanie na żywo (`form[data-ss-live-search]`, `js/live-search.js`): wyszukiwarka języków w kreatorze od razu pokazuje pasujące języki w panelach z przełącznikami, bez podpowiedzi i przeładowania; domyślny język zawsze pierwszy.

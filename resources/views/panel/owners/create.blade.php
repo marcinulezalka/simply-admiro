@@ -1,4 +1,4 @@
-{{-- Założenie właściciela strefy: strefa (z ZoneOwnerProvisioner), organizacja klienta (albo operatora), imię i nazwisko i adres e-mail na karcie formularza. $zones: list<ZoneDefinition>, $organizations: Collection<Organization> (aktywne). --}}
+{{-- Założenie właściciela strefy: strefa (z ZoneOwnerProvisioner), organizacja klienta (albo operatora), imię i nazwisko i adres e-mail na karcie formularza. $zones: list<ZoneDefinition>, $organizations: Collection<Organization> (aktywne), $selectedOrganization: string (token organizacji wybranej z góry, `?organization=`, np. z kreatora onboardingu; pusty — bez wyboru). --}}
 <x-admiro::zone.layout :title="text('admiro::admin.owner_title')">
     @if ($zones === [])
         <p class="ss-notice">{{ text('admiro::admin.no_provisioners') }}</p>
@@ -22,7 +22,7 @@
                         <select class="ss-input" id="organization" name="organization">
                             <option value="">{{ text('admiro::admin.organization_operator') }}</option>
                             @foreach ($organizations as $organization)
-                                <option value="{{ $organization->token }}" @selected(old('organization') === $organization->token)>{{ $organization->name }}</option>
+                                <option value="{{ $organization->token }}" @selected(old('organization', $selectedOrganization) === $organization->token)>{{ $organization->name }}</option>
                             @endforeach
                         </select>
                         @error('organization') <p class="ss-field__error" role="alert">{{ $message }}</p> @enderror
