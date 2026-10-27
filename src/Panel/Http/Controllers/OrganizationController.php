@@ -125,22 +125,32 @@ final readonly class OrganizationController
 
     /**
      * Przeniesienie jednostki w drzewie (pole `parent`: token aktywnej organizacji albo pusty — najwyższy poziom; np.
-     * przeciągnięcie w drzewie kreatora onboardingu). Odmowa Core (cykl, operator, departament) to błąd formularza.
+     * przeciągnięcie w drzewie kreatora onboardingu); `activate` włącza przy tym wyłączoną organizację (przeciągnięcie
+     * z wyników wyszukiwania do drzewa aktywnych). Odmowa Core (cykl, operator, departament) to błąd formularza.
      */
     public function move(Request $request, string $organization, ActiveOrganizations $active): RedirectResponse
     {
         $current = $this->organization($organization);
-        $validated = $request->validate(['parent' => ['nullable', 'string', 'max:' . Organization::TOKEN_LENGTH]]);
+        $validated = $request->validate(['parent' => ['nullable', 'string', 'max:' . Organization::TOKEN_LENGTH], 'activate' => ['nullable', 'boolean']]);
         $token = $validated['parent'] ?? null;
         $parent = is_string($token) && $token !== '' ? $active->find($token) ?? throw new NotFoundHttpException() : null;
+        $activate = $request->boolean('activate') && $current->getAttribute(ColumnNames::IS_ACTIVE) !== true;
 
         try {
             $this->management->move($current, $parent);
+
+            if ($activate) {
+                $this->management->setActive($current, true);
+            }
         } catch (OrganizationChangeRejected) {
             return $this->rejected();
         }
 
         $this->audit->record('organization moved', organizationId: $current->id, context: ['parent' => $parent?->token]);
+
+        if ($activate) {
+            $this->audit->record('organization enabled', organizationId: $current->id);
+        }
         $fallback = route($this->context->zone()->routeName('organizations.index'));
 
         return $this->redirect->back(fallback: $fallback)->with('status', text('admiro::admin.organization_moved', ['name' => $current->name]));

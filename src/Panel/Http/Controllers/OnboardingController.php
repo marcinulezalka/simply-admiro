@@ -65,7 +65,6 @@ final readonly class OnboardingController
         $data = [
             'checklist' => $this->progress->checklist($steps),
             'current' => $current,
-            'previous' => $current->previous($steps),
             'next' => $current->next($steps),
         ];
 

@@ -864,13 +864,29 @@ button.ss-badge:focus-visible {
     min-width: 0;
 }
 
-/* Stan zadania w prawym górnym rogu karty, pod nim data zakończenia krojem mono. */
+/* Stan zadania pod tytułem (podnagłówek): plakietka stanu i obok data zakończenia krojem mono. */
 .ss-onboarding-wizard__status {
     display: flex;
-    flex: none;
-    flex-direction: column;
-    gap: var(--ss-space-1);
-    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1) var(--ss-space-3);
+    align-items: center;
+    margin: 0;
+}
+
+/* Wyszukiwarka zadania (np. organizacje) w prawym górnym rogu karty; na wąskim ekranie pod tytułem. */
+.ss-shell .ss-onboarding-wizard__search {
+    flex: 0 1 24rem;
+    margin: 0 0 0 auto;
+}
+
+@media (max-width: 47.999rem) {
+    .ss-onboarding-wizard__header {
+        flex-wrap: wrap;
+    }
+
+    .ss-shell .ss-onboarding-wizard__search {
+        flex-basis: 100%;
+    }
 }
 
 .ss-onboarding-wizard__completed {
@@ -884,11 +900,6 @@ button.ss-badge:focus-visible {
     margin: var(--ss-space-1) 0;
     font-size: 1.25rem;
     font-weight: 600;
-}
-
-.ss-onboarding-wizard__lead {
-    max-width: 48rem;
-    margin: 0;
 }
 
 .ss-onboarding-wizard__footer {
@@ -926,6 +937,22 @@ button.ss-badge:focus-visible {
 
 .ss-onboarding-wizard__remaining-link {
     border: 1px solid var(--ss-color-border);
+}
+
+/* Zrobione zadania w stopce (lewa strona): ikony wypełnione kolorem akcentu. */
+.ss-onboarding-wizard__finished {
+    margin-left: 0;
+}
+
+.ss-onboarding-wizard__finished-link {
+    border: 1px solid var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-onboarding-wizard__finished-link:hover {
+    background: var(--ss-color-accent-hover);
+    color: var(--ss-color-on-accent);
 }
 
 /*
@@ -1060,6 +1087,11 @@ button.ss-badge:focus-visible {
     cursor: grab;
 }
 
+.ss-onboarding-picker__result[draggable="true"] {
+    cursor: grab;
+}
+
+.ss-onboarding-picker__result.is-dragging,
 .ss-onboarding-organizations__node.is-dragging > .ss-onboarding-organizations__row {
     opacity: 0.5;
 }

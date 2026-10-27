@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Kreator „Organizacje”: wyłączoną organizację z wyników wyszukiwania można przeciągnąć do drzewa aktywnych — upuszczona na organizację trafia pod nią, na strefę pod drzewem na najwyższy poziom, i zostaje włączona (`organizations.move` z `activate`). Przeciąganie działa w całej stronie (`js/tree-dnd.js`).
 - Podpowiedzi wyszukiwarki organizacji: obok wyniku przełącznik włączenia (zapis POST z `js/post-toggle.js`, potem przeładowanie — włączona organizacja pojawia się na liście aktywnych), a kliknięcie wyniku otwiera kreator „Organizacje” z listą wyników pod wyszukiwarką; opis z NIP-em i stanem. `SearchResult` ma `toggleUrl`, `active` i `badge`.
 - Kreator onboardingu, zadanie „Organizacje”: aktywne organizacje jako drzewo (organizacja nadrzędna → podorganizacje → departamenty) z przeciąganiem (`js/tree-dnd.js`) — jednostkę upuszczoną na inną przenosi pod nią, na strefę pod drzewem — na najwyższy poziom; w każdym wierszu ta sama zmiana z listy „Przenieś pod” (bez skryptu i z klawiatury). Nowa operacja `OrganizationManagement::move()` (te same reguły co edycja: bez cykli, operator na górze, aktywna nadrzędna; departamenty się nie przenoszą), trasa `organizations.move`, `Organizations\OrganizationTree`, ikona `grip`.
 - Kreator onboardingu, zadanie „Organizacje”: aktywne organizacje po jednej w wierszu ze strefami, których konta do nich należą, i właścicielem (rola `owner`); bez właściciela — odnośnik „Dodaj właściciela” do formularza z tą organizacją wybraną z góry (`owners/create?organization=<token>`). Nowe zapytanie `Queries\Organizations\OrganizationAssignments`.
@@ -53,6 +54,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Karta zadania w kreatorze onboardingu: pod tytułem zamiast opisu plakietka stanu z datą zakończenia; w stopce po lewej zamiast „Wstecz” wypełnione ikony zrobionych zadań. W zadaniu „Organizacje” wyszukiwarka (bez etykiety i podpowiedzi pod polem) w prawym górnym rogu karty, a wyniki wyszukiwania nad aktywnymi organizacjami.
 - Element domyślny i wymagany zamiast zablokowanego przełącznika ma plakietkę „Domyślny”/„Domyślna”: organizacja operatora (drzewo, wyniki, podpowiedzi) i język domyślny (wiersz i wyniki w kreatorze).
 - Dashboard strefy administratorów: zamiast sekcji panelu jedna karta prowadząca do Onboardingu — duża, nieruchoma ikona celu w tle, nagłówek z ikoną i małą etykietą mono, postęp „Zrobione X z Y” z procentem i paskiem, przycisk z następnym zadaniem (`.ss-onboarding-card`); po wszystkich zadaniach „Konfiguracja zakończona”.
 - Ikona Dashboardu w nawigacji (nagłówek strony, mapa strony): dom (`home`) zamiast flagi.
@@ -118,6 +120,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Przełącznik w podpowiedziach wyszukiwarki nie pobiera już przekierowania odpowiedzi, więc komunikat zapisu albo odmowy pokazuje się po przeładowaniu.
 - Panele menu bocznego (powiadomienia, konto) nie chowają się już pod polami formularzy treści: przyklejone menu na szerokim ekranie ma `z-index` nad treścią.
 - Menu „+” globalnej wyszukiwarki: nagłówek „Dodaj” stał w jednym wierszu z pierwszą pozycją; teraz jest nad listą, oddzielony linią.
 - Przycisk „Zapisz” formularzy zapisywanych po zmianie przełącznika (`data-ss-autosubmit`) był widoczny mimo skryptu — klasa przycisku nadpisywała atrybut `hidden`.

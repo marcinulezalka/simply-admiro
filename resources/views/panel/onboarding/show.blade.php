@@ -1,4 +1,4 @@
-{{-- Kreator onboardingu (OnboardingController::show): nagłówek strony „Onboarding” z „Wstecz” nad tytułem (bez opisu), obok treści pionowa lista zadań jako karty-odnośniki (numer — dla zrobionych haczyk —, nazwa, opis tylko niezrobionych, a zrobione zamiast opisu „Zadanie N” krojem mono, i ikona; bieżące z aria-current="step"), karta bieżącego zadania: w nagłówku ikona, nazwa i opis, w prawym górnym rogu plakietka stanu (obrys w kolorze stanu, OnboardingStepState::tone()) i pod nią data zakończenia zrobionego zadania (completedAt, mono), pod nim treść, a w stopce po lewej Wstecz (poprzednie zadanie), po prawej przyciski z ikonami pozostałych niezakończonych zadań (nazwa w podpowiedzi) prowadzące do nich. Zadanie „Instalacja systemu i konto hero”: instrukcja etapami z poleceniami (Panel\Onboarding\InstallationGuide, $installationGuide: list<array{key: string, commands: list<string>}>). Zadanie „Języki”: panel włączonych języków (.ss-onboarding-languages: nagłówek, wiersz języka domyślnego z plakietką „Domyślny” i ustawieniami regionalnymi — kraj, waluta, podatki, święta z $regional, RegionalSettingsSummary; dopóki zadanie „Ustawienia regionalne” nie jest zrobione ($regionalConfigured), odnośnik do niego w przerywanej ramce, a brakujące podatki albo święta w przerywanych ramkach z „Ustaw” —, pod nim pozostałe języki po jednym w wierszu, panel/onboarding/language-row), pole wyszukiwania języka (także po kraju) na żywo (data-ss-live-search, js/live-search.js podmienia tylko #ss-languages-results) i — po wpisaniu `q` — wyniki w panelach (domyślny język pierwszy) (flagi krajów języka, nazwa, nazwa własna i kod, przełącznik; panel z kotwicą #language-<kod>), przełączniki zapisują się od razu, bez przycisku zapisu (data-ss-autosubmit; język domyślny — domyślny i wymagany — ma zamiast przełącznika plakietkę „Domyślny”, język interfejsu zablokowany), „Zatwierdź i dalej” w stopce zamyka zadanie. Zadanie „Organizacje” na tym samym wzorze (.ss-onboarding-picker): aktywne organizacje (domyślna organizacja operatora z plakietką „Domyślna” zamiast przełącznika) jako drzewo z przeciąganiem (panel/onboarding/organization-row, Organizations\OrganizationTree, js/tree-dnd.js: jednostkę upuszczoną na inną przenosi pod nią, na strefę pod drzewem — na najwyższy poziom; to samo lista „Przenieś pod” w wierszu; nazwa, nazwa skrócona i NIP, strefy i właściciel, przełącznik; organizacja operatora zablokowana) nad wyszukiwarką z podpowiedziami (zakres katalogu) i menu „+” zakładania organizacji (admiro::search.actions), wyniki `q` w panelach (#organization-<token>, nazwa prowadzi do edycji), przełączniki zapisują się od razu; zadanie zamyka założenie organizacji. Pozostałe zadania: opis i przejście do strony panelu. $checklist: list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool, completedAt: ?CarbonImmutable}>; $current, ?$previous, ?$next: OnboardingStep; dla języków $term: string, $enabled i $languages: Collection<int, Language>, $canManage: bool; dla organizacji $term, $enabled i $organizations: Collection<int, Organization>, $tree: list<array{organization: Organization, children: list<array>}> (OrganizationTree z $enabled), $moveTargets: Collection<int, Organization> (aktywne jednostki), $assignments: array<int, array{zones: list<ZoneDefinition>, owners: list<array{zone: ZoneDefinition, account: ZoneAccount}>}> (OrganizationAssignments, dla $enabled), $canManage, $canAssignOwners: bool, $organizationActions: list<NavigationItem>. --}}
+{{-- Kreator onboardingu (OnboardingController::show): nagłówek strony „Onboarding” z „Wstecz” nad tytułem (bez opisu), obok treści pionowa lista zadań jako karty-odnośniki (numer — dla zrobionych haczyk —, nazwa, opis tylko niezrobionych, a zrobione zamiast opisu „Zadanie N” krojem mono, i ikona; bieżące z aria-current="step"), karta bieżącego zadania: w nagłówku ikona, nazwa, a pod nią zamiast opisu plakietka stanu (obrys w kolorze stanu, OnboardingStepState::tone()) i data zakończenia zrobionego zadania (completedAt, mono); w prawym górnym rogu wyszukiwarka zadania (organizacje), pod nagłówkiem treść, a w stopce po lewej wypełnione ikony zrobionych zadań, po prawej przyciski z ikonami pozostałych niezakończonych zadań (nazwa w podpowiedzi) prowadzące do nich. Zadanie „Instalacja systemu i konto hero”: instrukcja etapami z poleceniami (Panel\Onboarding\InstallationGuide, $installationGuide: list<array{key: string, commands: list<string>}>). Zadanie „Języki”: panel włączonych języków (.ss-onboarding-languages: nagłówek, wiersz języka domyślnego z plakietką „Domyślny” i ustawieniami regionalnymi — kraj, waluta, podatki, święta z $regional, RegionalSettingsSummary; dopóki zadanie „Ustawienia regionalne” nie jest zrobione ($regionalConfigured), odnośnik do niego w przerywanej ramce, a brakujące podatki albo święta w przerywanych ramkach z „Ustaw” —, pod nim pozostałe języki po jednym w wierszu, panel/onboarding/language-row), pole wyszukiwania języka (także po kraju) na żywo (data-ss-live-search, js/live-search.js podmienia tylko #ss-languages-results) i — po wpisaniu `q` — wyniki w panelach (domyślny język pierwszy) (flagi krajów języka, nazwa, nazwa własna i kod, przełącznik; panel z kotwicą #language-<kod>), przełączniki zapisują się od razu, bez przycisku zapisu (data-ss-autosubmit; język domyślny — domyślny i wymagany — ma zamiast przełącznika plakietkę „Domyślny”, język interfejsu zablokowany), „Zatwierdź i dalej” w stopce zamyka zadanie. Zadanie „Organizacje”: wyszukiwarka bez etykiety w prawym górnym rogu karty z podpowiedziami (zakres katalogu) i menu „+” zakładania organizacji (admiro::search.actions); po wpisaniu `q` nad aktywnymi organizacjami lista wyników; aktywne organizacje (domyślna organizacja operatora z plakietką „Domyślna” zamiast przełącznika) jako drzewo z przeciąganiem (panel/onboarding/organization-row, Organizations\OrganizationTree, js/tree-dnd.js: jednostkę upuszczoną na inną przenosi pod nią, na strefę pod drzewem — na najwyższy poziom; to samo lista „Przenieś pod” w wierszu; nazwa, nazwa skrócona i NIP, strefy i właściciel, przełącznik; organizacja operatora zablokowana), wyniki `q` w panelach (#organization-<token>, nazwa prowadzi do edycji; wyłączoną organizację można przeciągnąć do drzewa aktywnych — ukryty formularz organizations.move z `activate` ją włącza i umieszcza pod celem albo na najwyższym poziomie), przełączniki zapisują się od razu; zadanie zamyka założenie organizacji. Pozostałe zadania: opis i przejście do strony panelu. $checklist: list<array{step: OnboardingStep, number: int, state: OnboardingStepState, done: bool, completedAt: ?CarbonImmutable}>; $current, ?$next: OnboardingStep; dla języków $term: string, $enabled i $languages: Collection<int, Language>, $canManage: bool; dla organizacji $term, $enabled i $organizations: Collection<int, Organization>, $tree: list<array{organization: Organization, children: list<array>}> (OrganizationTree z $enabled), $moveTargets: Collection<int, Organization> (aktywne jednostki), $assignments: array<int, array{zones: list<ZoneDefinition>, owners: list<array{zone: ZoneDefinition, account: ZoneAccount}>}> (OrganizationAssignments, dla $enabled), $canManage, $canAssignOwners: bool, $organizationActions: list<NavigationItem>. --}}
 @php
     $zone = 'admiro.';
     $stepTitle = static fn (\Simplysmart\Admiro\Panel\Enums\OnboardingStep $step): string => text('admiro::dashboard.onboarding_' . $step->value . '_title');
@@ -6,6 +6,7 @@
     $currentState = $currentItem['state'] ?? \Simplysmart\Admiro\Panel\Enums\OnboardingStepState::NotStarted;
     $currentCompletedAt = $currentItem['completedAt'] ?? null;
     $remaining = array_values(array_filter($checklist, static fn (array $item): bool => ! $item['done'] && $item['step'] !== $current));
+    $finished = array_values(array_filter($checklist, static fn (array $item): bool => $item['done'] && $item['step'] !== $current));
 @endphp
 <x-admiro::zone.layout :title="text('admiro::dashboard.onboarding_title')">
     <div class="ss-onboarding-wizard">
@@ -41,14 +42,25 @@
                 <x-admiro::icon :name="$current->icon()" class="ss-icon--tile" />
                 <div class="ss-onboarding-wizard__heading">
                     <h2 class="ss-onboarding-wizard__title" id="ss-onboarding-step-title">{{ $stepTitle($current) }}</h2>
-                    <p class="ss-muted ss-onboarding-wizard__lead">{{ text('admiro::dashboard.onboarding_' . $current->value . '_lead') }}</p>
+                    <p class="ss-onboarding-wizard__status">
+                        <span class="ss-badge ss-badge--outline ss-badge--{{ $currentState->tone() }}">{{ $currentState->label() }}</span>
+                        @if ($currentCompletedAt !== null)
+                            <time class="ss-onboarding-wizard__completed" datetime="{{ $currentCompletedAt->toIso8601String() }}">{{ text('admiro::dashboard.onboarding_completed_at', ['date' => local_date($currentCompletedAt, 'D MMM YYYY')]) }}</time>
+                        @endif
+                    </p>
                 </div>
-                <div class="ss-onboarding-wizard__status">
-                    <span class="ss-badge ss-badge--outline ss-badge--{{ $currentState->tone() }}">{{ $currentState->label() }}</span>
-                    @if ($currentCompletedAt !== null)
-                        <time class="ss-onboarding-wizard__completed" datetime="{{ $currentCompletedAt->toIso8601String() }}">{{ text('admiro::dashboard.onboarding_completed_at', ['date' => local_date($currentCompletedAt, 'D MMM YYYY')]) }}</time>
-                    @endif
-                </div>
+                @if ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Organizations)
+                    <form class="ss-search ss-onboarding-picker__search ss-onboarding-wizard__search" role="search" method="GET" action="{{ route($zone . 'onboarding.show', ['step' => $current->value]) }}" data-ss-search-suggest="{{ route($zone . 'search.suggest') }}">
+                        <input type="hidden" name="in[]" value="{{ \Simplysmart\Admiro\Panel\Enums\SearchScope::Directory->value }}">
+                        <label class="ss-sr-only" for="ss-organizations-search">{{ text('admiro::dashboard.onboarding_organizations_search_label') }}</label>
+                        @if ($organizationActions !== [])
+                            @include('admiro::search.actions', ['actions' => $organizationActions])
+                        @endif
+                        <x-admiro::icon name="search" class="ss-search__icon" />
+                        <input class="ss-search__input" id="ss-organizations-search" name="q" type="search" value="{{ $term }}" placeholder="{{ text('admiro::dashboard.onboarding_organizations_search_placeholder') }}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ss-organizations-suggestions" data-ss-search>
+                        <div class="ss-search__suggestions" id="ss-organizations-suggestions" role="listbox" aria-label="{{ text('layout.search_suggestions') }}" hidden data-ss-search-suggestions></div>
+                    </form>
+                @endif
             </div>
 
             @if ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Languages)
@@ -178,6 +190,53 @@
                     'details' => implode(' · ', array_filter([$organization->short_name, $organization->nip !== null ? text('admiro::search.nip', ['nip' => $organization->nip]) : null])),
                 ])
 
+                @if ($term !== '')
+                    <section class="ss-onboarding-picker__list" aria-labelledby="ss-organizations-all-title">
+                        <h3 class="ss-card__title" id="ss-organizations-all-title">{{ text('admiro::dashboard.onboarding_organizations_results', ['term' => $term]) }}</h3>
+                        @if ($organizations->isEmpty())
+                            <p class="ss-notice">{{ text('admiro::dashboard.onboarding_organizations_none', ['term' => $term]) }}</p>
+                        @else
+                            <ul class="ss-grid ss-grid--3 ss-onboarding-picker__results">
+                                @foreach ($organizations as $organization)
+                                    @php(['locked' => $locked, 'id' => $switchId, 'details' => $details] = $organizationSwitch($organization, 'organization'))
+                                    @php($draggable = $canManage && ! $locked && ! $organization->is_active && ! $organization->isDepartment())
+                                    <li class="ss-card ss-onboarding-picker__result" id="organization-{{ $organization->token }}" @if ($draggable) draggable="true" data-ss-tree-item="{{ $organization->token }}" title="{{ text('admiro::dashboard.onboarding_organization_drag_hint') }}" @endif>
+                                        @if ($draggable)
+                                            <form method="POST" action="{{ route($zone . 'organizations.move', ['organization' => $organization->token]) }}" hidden data-ss-tree-move>
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="parent" value="">
+                                                <input type="hidden" name="activate" value="1">
+                                            </form>
+                                        @endif
+                                        <x-admiro::icon name="building" class="ss-icon--tile ss-onboarding-picker__result-flags" />
+                                        <span class="ss-onboarding-picker__chip-text">
+                                            @if ($canManage)
+                                                <a class="ss-onboarding-picker__name" href="{{ route($zone . 'organizations.edit', ['organization' => $organization->token]) }}">{{ $organization->name }}</a>
+                                            @else
+                                                <span class="ss-onboarding-picker__name">{{ $organization->name }}</span>
+                                            @endif
+                                            @if ($details !== '')
+                                                <span class="ss-table__sub">{{ $details }}</span>
+                                            @endif
+                                        </span>
+                                        @if ($locked)
+                                            <span class="ss-badge ss-badge--outline ss-badge--info" title="{{ text('admiro::dashboard.onboarding_organization_locked') }}">{{ text('admiro::dashboard.onboarding_organization_default') }}</span>
+                                        @elseif ($canManage)
+                                            <form method="POST" action="{{ route($zone . 'organizations.toggle', ['organization' => $organization->token]) }}" data-ss-autosubmit>
+                                                @csrf
+                                                <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_organization_switch', ['name' => $organization->name])" :checked="$organization->is_active" hide-label />
+                                            </form>
+                                        @else
+                                            <span class="ss-badge">{{ $organization->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive') }}</span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </section>
+                @endif
+
                 <section class="ss-card ss-card--muted ss-onboarding-picker__enabled" aria-labelledby="ss-organizations-enabled-title">
                     <h3 class="ss-card__title" id="ss-organizations-enabled-title">{{ text('admiro::dashboard.onboarding_organizations_enabled') }} <span class="ss-badge">{{ $enabled->count() }}</span></h3>
                     @if ($enabled->isEmpty())
@@ -193,55 +252,6 @@
                                 <p class="ss-onboarding-organizations__root" data-ss-tree-root>{{ text('admiro::dashboard.onboarding_organization_root_drop') }}</p>
                             @endif
                         </div>
-                    @endif
-                </section>
-
-                <section class="ss-onboarding-picker__list" aria-labelledby="ss-organizations-all-title">
-                    <h3 class="ss-card__title" id="ss-organizations-all-title">{{ $term === '' ? text('admiro::dashboard.onboarding_organizations_search_title') : text('admiro::dashboard.onboarding_organizations_results', ['term' => $term]) }}</h3>
-                    <form class="ss-search ss-onboarding-picker__search" role="search" method="GET" action="{{ route($zone . 'onboarding.show', ['step' => $current->value]) }}" data-ss-search-suggest="{{ route($zone . 'search.suggest') }}">
-                        <input type="hidden" name="in[]" value="{{ \Simplysmart\Admiro\Panel\Enums\SearchScope::Directory->value }}">
-                        <label class="ss-sr-only" for="ss-organizations-search">{{ text('admiro::dashboard.onboarding_organizations_search_label') }}</label>
-                        @if ($organizationActions !== [])
-                            @include('admiro::search.actions', ['actions' => $organizationActions])
-                        @endif
-                        <x-admiro::icon name="search" class="ss-search__icon" />
-                        <input class="ss-search__input" id="ss-organizations-search" name="q" type="search" value="{{ $term }}" placeholder="{{ text('admiro::dashboard.onboarding_organizations_search_placeholder') }}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ss-organizations-suggestions" data-ss-search>
-                        <div class="ss-search__suggestions" id="ss-organizations-suggestions" role="listbox" aria-label="{{ text('layout.search_suggestions') }}" hidden data-ss-search-suggestions></div>
-                    </form>
-
-                    @if ($term === '')
-                        <p class="ss-muted ss-onboarding-picker__hint">{{ text('admiro::dashboard.onboarding_organizations_hint') }}</p>
-                    @elseif ($organizations->isEmpty())
-                        <p class="ss-notice">{{ text('admiro::dashboard.onboarding_organizations_none', ['term' => $term]) }}</p>
-                    @else
-                        <ul class="ss-grid ss-grid--3 ss-onboarding-picker__results">
-                            @foreach ($organizations as $organization)
-                                @php(['locked' => $locked, 'id' => $switchId, 'details' => $details] = $organizationSwitch($organization, 'organization'))
-                                <li class="ss-card ss-onboarding-picker__result" id="organization-{{ $organization->token }}">
-                                    <x-admiro::icon name="building" class="ss-icon--tile ss-onboarding-picker__result-flags" />
-                                    <span class="ss-onboarding-picker__chip-text">
-                                        @if ($canManage)
-                                            <a class="ss-onboarding-picker__name" href="{{ route($zone . 'organizations.edit', ['organization' => $organization->token]) }}">{{ $organization->name }}</a>
-                                        @else
-                                            <span class="ss-onboarding-picker__name">{{ $organization->name }}</span>
-                                        @endif
-                                        @if ($details !== '')
-                                            <span class="ss-table__sub">{{ $details }}</span>
-                                        @endif
-                                    </span>
-                                    @if ($locked)
-                                        <span class="ss-badge ss-badge--outline ss-badge--info" title="{{ text('admiro::dashboard.onboarding_organization_locked') }}">{{ text('admiro::dashboard.onboarding_organization_default') }}</span>
-                                    @elseif ($canManage)
-                                        <form method="POST" action="{{ route($zone . 'organizations.toggle', ['organization' => $organization->token]) }}" data-ss-autosubmit>
-                                            @csrf
-                                            <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_organization_switch', ['name' => $organization->name])" :checked="$organization->is_active" hide-label />
-                                        </form>
-                                    @else
-                                        <span class="ss-badge">{{ $organization->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive') }}</span>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
                     @endif
                 </section>
             @elseif ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Installation)
@@ -268,8 +278,16 @@
 
             <div class="ss-onboarding-wizard__footer">
                 <div class="ss-onboarding-wizard__footer-start">
-                    @if ($previous !== null)
-                        <a class="ss-button" href="{{ route($zone . 'onboarding.show', ['step' => $previous->value]) }}"><x-admiro::icon name="arrow-left" class="ss-button__icon" />{{ text('admiro::dashboard.onboarding_back') }}</a>
+                    @if ($finished !== [])
+                        <nav class="ss-onboarding-wizard__remaining ss-onboarding-wizard__finished" aria-label="{{ text('admiro::dashboard.onboarding_finished') }}">
+                            <span class="ss-onboarding-wizard__remaining-label">{{ text('admiro::dashboard.onboarding_finished') }}</span>
+                            @foreach ($finished as ['step' => $step, 'number' => $number])
+                                <a class="ss-icon-button ss-onboarding-wizard__finished-link" href="{{ route($zone . 'onboarding.show', ['step' => $step->value]) }}" title="{{ text('admiro::dashboard.onboarding_step', ['number' => (string) $number]) }}: {{ $stepTitle($step) }}">
+                                    <x-admiro::icon :name="$step->icon()" class="ss-icon-button__icon" />
+                                    <span class="ss-sr-only">{{ text('admiro::dashboard.onboarding_step', ['number' => (string) $number]) }}: {{ $stepTitle($step) }}</span>
+                                </a>
+                            @endforeach
+                        </nav>
                     @endif
                     @if ($current === \Simplysmart\Admiro\Panel\Enums\OnboardingStep::Languages && $canManage)
                         <form method="POST" action="{{ route($zone . 'onboarding.confirm', ['step' => $current->value]) }}">

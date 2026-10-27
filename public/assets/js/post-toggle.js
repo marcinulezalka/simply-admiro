@@ -1,7 +1,9 @@
 /**
  * Przełącznik zapisywany żądaniem POST (input[data-ss-post-toggle="<adres>"]) tam, gdzie nie może stać własny formularz
  * (np. przełącznik w podpowiedziach wyszukiwarki, wstawianych do jej formularza): zmiana wysyła POST z tokenem CSRF
- * z meta csrf-token i przeładowuje stronę, więc widać nowy stan (np. włączona organizacja na liście aktywnych).
+ * z meta csrf-token i przeładowuje stronę, więc widać nowy stan (np. włączona organizacja na liście aktywnych);
+ * przekierowanie odpowiedzi nie jest pobierane (redirect: manual), więc komunikat zapisu albo odmowy pokazuje się po
+ * przeładowaniu.
  * Słuchacz na dokumencie, więc działa też w treści wstawionej później. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
@@ -19,6 +21,7 @@
         fetch(input.dataset.ssPostToggle ?? '', {
             method: 'POST',
             credentials: 'same-origin',
+            redirect: 'manual',
             headers: { 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest', Accept: 'text/html' },
         }).finally(() => window.location.reload());
     });

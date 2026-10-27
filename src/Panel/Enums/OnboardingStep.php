@@ -132,18 +132,6 @@ enum OnboardingStep: string
         return $index === false ? null : ($steps[$index + 1] ?? null);
     }
 
-    /**
-     * Krok przed tym w podanej liście kroków albo null dla pierwszego.
-     *
-     * @param list<self> $steps
-     */
-    public function previous(array $steps): ?self
-    {
-        $index = array_search($this, $steps, true);
-
-        return $index === false || $index === 0 ? null : $steps[$index - 1];
-    }
-
     public static function legalMilestone(string $document): string
     {
         return self::Legal->value . '.' . $document;
