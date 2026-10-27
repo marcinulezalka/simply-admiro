@@ -51,16 +51,15 @@ enum OnboardingStep: string
     }
 
     /**
-     * Krótka nazwa trasy strefy, na której wykonuje się krok (języki w samym kreatorze, pozostałe na swoich stronach).
+     * Krótka nazwa trasy strefy, na której wykonuje się krok (języki i organizacje w samym kreatorze, pozostałe na swoich stronach).
      */
     public function route(): string
     {
         return match ($this) {
             self::Installation => 'dashboard',
-            self::Languages => 'onboarding.show',
+            self::Languages, self::Organizations => 'onboarding.show',
             self::Settings => 'settings.show',
             self::Legal => 'cookie-policy.index',
-            self::Organizations => 'organizations.create',
             self::Owners => 'owners.create',
             self::Administrators => 'administrators.index',
             self::Audit => 'audit.index',
@@ -72,7 +71,7 @@ enum OnboardingStep: string
      */
     public function routeParameters(): array
     {
-        return $this === self::Languages ? ['step' => $this->value] : [];
+        return in_array($this, [self::Languages, self::Organizations], true) ? ['step' => $this->value] : [];
     }
 
     public function icon(): string

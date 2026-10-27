@@ -1,6 +1,6 @@
 {{-- Profil zalogowanego konta (ProfileController): dane konta (imię i nazwisko, adres e-mail tylko do odczytu, język interfejsu, gdy włączonych jest kilka) i wygląd (kolor awatara) w jednym formularzu; w strefie z `teams` organizacje konta z rolami i przełącznikiem. $profile: ZoneAccount, $colors: list<AvatarColor>, $locales: list<string> (puste = bez wyboru), $currentLocale: ?string, $organizations: list<array{organization: Organization, roles: list<string>, current: bool}>; $zone daje Core. --}}
 @php($controller = \Simplysmart\Admiro\Http\Controllers\Account\ProfileController::class)
-<x-admiro::zone.layout :title="text('account.profile_title')" :meta="$profile->emailAddress()">
+<x-admiro::zone.layout :title="text('account.profile_title')">
     <div class="ss-form-layout">
         <form class="ss-card" method="POST" action="{{ route($zone->routeName(\Simplysmart\Admiro\Http\AccountRoutes::PROFILE_UPDATE)) }}">
             @csrf

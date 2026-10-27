@@ -1,5 +1,5 @@
 {{-- Wygląd w ustawieniach konta (trasa account.appearance, Route::view): motyw (x-admiro::theme-toggle: jasny, ciemny, kontrasty WCAG) i — gdy strefa ma kolorystyki do wyboru (`palettes`) — kolorystyka (x-admiro::palette-switch); oba wybory zapamiętuje przeglądarka (js/theme.js), bez zapisu w koncie. $zone daje Core. --}}
-<x-admiro::zone.layout :title="text('account.appearance_title')" :meta="text('account.appearance_lead')">
+<x-admiro::zone.layout :title="text('account.appearance_title')">
     <div class="ss-grid">
         <section class="ss-card" aria-labelledby="appearance-theme-title">
             <h2 class="ss-card__title" id="appearance-theme-title">{{ text('account.theme_title') }}</h2>

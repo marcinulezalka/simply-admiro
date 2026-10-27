@@ -1,4 +1,4 @@
-{{-- Dashboard (pulpit administratora, pod tytułem opis „Twój workspace…”): skróty do sekcji, do których konto ma uprawnienia (karty-odnośniki z ikoną), albo informacja o braku uprawnień; przegląd kroków konfiguracji jest na stronie Onboarding (panel/onboarding/index). $canViewZones, $canViewOrganizations, $canAssignOwners, $canManageAdministrators, $canViewAudit, $canViewSettings: bool (uprawnienia administratora). --}}
+{{-- Dashboard (pulpit administratora): skróty do sekcji, do których konto ma uprawnienia (karty-odnośniki z ikoną), albo informacja o braku uprawnień; przegląd kroków konfiguracji jest na stronie Onboarding (panel/onboarding/index). $canViewZones, $canViewOrganizations, $canAssignOwners, $canManageAdministrators, $canViewAudit, $canViewSettings: bool (uprawnienia administratora). --}}
 @php
     $shortcuts = array_filter([
         $canViewZones ? ['admiro.zones.index', 'admiro::admin.zones_title', 'zones'] : null,
@@ -9,7 +9,7 @@
         $canViewSettings ? ['admiro.settings.show', 'admiro::admin.settings_title', 'settings'] : null,
     ]);
 @endphp
-<x-admiro::zone.layout :title="text('admiro::dashboard.title')" :meta="text('admiro::dashboard.lead')">
+<x-admiro::zone.layout :title="text('admiro::dashboard.title')">
 
     @if ($shortcuts === [])
         <p class="ss-notice">{{ text('admiro::admin.no_sections') }}</p>

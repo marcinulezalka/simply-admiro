@@ -1,6 +1,6 @@
 {{-- Święta i dni wolne kraju w roku: wybór kraju i roku, tabela (dzień, nazwa, źródło) z usunięciem wpisu ręcznego; karty pobrania z kalendarza świąt i dnia wolnego ręcznego (settings.manage). $countries: Collection<Country>, $country: ?Country, $year: int, $holidays: Collection<Holiday>, $canManage: bool. --}}
 @php($column = static fn (string $name): string => text_data(\Simplysmart\Admiro\Models\Dictionaries\Holiday::class, $name))
-<x-admiro::zone.layout :title="text('admiro::admin.holidays_title')" :meta="$country?->translatedName()">
+<x-admiro::zone.layout :title="text('admiro::admin.holidays_title')">
     <p class="ss-notice"><x-admiro::icon name="info" /> {{ text('admiro::admin.holidays_lead') }}</p>
     @error('holiday') <p class="ss-notice" role="alert"><x-admiro::icon name="alert-triangle" /> {{ $message }}</p> @enderror
 

@@ -1,4 +1,4 @@
-{{-- Layout HTML e-maili strefy administratorów admiro (`mail.views` = admiro::mail.admiro, kolory `mail.palette` strefy) w motywie sygnetu: karta z zaokrągleniem, u góry pasek w grafitowym gradiencie z koroną wyciętą z lewego dolnego rogu (PanelServiceProvider::MAIL_HEADER, źródło brand/mail/mail-header.svg), pod nim logo ($mailLogo), treść, a na dole karty — na tle strony, oddzielona linią — grupa logotypów ($mailBrandGroup z MailBrandGroups, np. simplysmart · produkt · admiro) z etykietą mono; pod kartą wyśrodkowana stopka (wiadomość automatyczna, odnośniki prawne, prawa autorskie). Tabele i style inline (klienci poczty nie czytają arkuszy); obrazy osadzone w wiadomości (CID), w podglądzie bez wiadomości jako data URI. Szablon treści o nazwie maila obok (np. login-code.blade.php) zastępuje szablon Core. --}}
+{{-- Layout HTML e-maili strefy administratorów admiro (`mail.views` = admiro::mail.admiro, kolory `mail.palette` strefy) w motywie sygnetu: karta z zaokrągleniem, u góry pasek w grafitowym gradiencie z koroną wyciętą z lewego dolnego rogu i białym logotypem admiro po prawej, wyśrodkowanym w pionie (jeden obraz PanelServiceProvider::MAIL_HEADER, źródło brand/mail/mail-header.svg — logo w obrazie, bo tło CSS pod obrazem zalałoby wycięcie korony, a Outlook go nie pokazuje), pod nim treść, a na dole karty — na tle strony, oddzielona linią — grupa logotypów ($mailBrandGroup z MailBrandGroups, np. simplysmart · produkt · admiro) z etykietą mono; pod kartą wyśrodkowana stopka (wiadomość automatyczna, odnośniki prawne, prawa autorskie). Tabele i style inline (klienci poczty nie czytają arkuszy); obrazy osadzone w wiadomości (CID), w podglądzie bez wiadomości jako data URI. Szablon treści o nazwie maila obok (np. login-code.blade.php) zastępuje szablon Core. --}}
 @php
     $mailImage = static fn (\Simplysmart\Admiro\Mail\BrandFile $file): string => isset($message) ? $message->embedData($file->contents, $file->name, $file->mimeType) : $file->dataUri();
     $mailHeader = \Simplysmart\Admiro\Mail\BrandFile::fromPath(\Simplysmart\Admiro\Panel\PanelServiceProvider::MAIL_HEADER);
@@ -23,16 +23,11 @@
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td style="padding: 0; font-size: 0; line-height: 0;">
-                                        <img src="{{ $mailImage($mailHeader) }}" alt="" width="560" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0;">
+                                        <img src="{{ $mailImage($mailHeader) }}" alt="{{ $mailZone->name }}" width="560" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0;">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 28px 36px 0;">
-                                        <img src="{{ $mailImage($mailLogo) }}" alt="{{ $mailBrandName }}" height="28" style="display: block; height: 28px; width: auto; border: 0;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 24px 36px 36px;">
+                                    <td style="padding: 32px 36px 36px;">
                                         @yield('content')
                                     </td>
                                 </tr>

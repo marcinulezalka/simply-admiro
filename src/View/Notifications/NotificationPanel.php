@@ -14,16 +14,20 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\View\Notifications;
 
 /**
- * Panel powiadomień w top barze layoutu aplikacji: ostatnie powiadomienia i adres pełnej listy.
+ * Panel powiadomień layoutu aplikacji: ostatnie powiadomienia i adres pełnej listy, a w zakładce dziennika — gdy
+ * strefa go udostępnia (Contracts\ZoneNotifications) — ostatnie wpisy dziennika zdarzeń i adres pełnego dziennika.
  */
 final readonly class NotificationPanel
 {
     /**
      * @param list<NotificationItem> $items Ostatnie powiadomienia, od najnowszych.
+     * @param list<NotificationItem>|null $auditItems Ostatnie wpisy dziennika zdarzeń, od najnowszych; null = bez zakładki dziennika.
      */
     public function __construct(
         public array $items,
         public ?string $allUrl = null,
+        public ?array $auditItems = null,
+        public ?string $auditUrl = null,
     ) {}
 
     public function unreadCount(): int

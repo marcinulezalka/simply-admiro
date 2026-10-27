@@ -1,5 +1,5 @@
-{{-- Układ stron strefy. Zalogowane konto: layout aplikacji (x-admiro::app.layout) — awatar w kolorze konta z drugą linią (menu strefy albo bieżąca organizacja) i menu konta (profil, bezpieczeństwo, wygląd), ikony ustawień i powiadomień (dzwonek z pustym panelem — strefy nie mają jeszcze źródła powiadomień), wylogowanie na dole menu, przełącznik kontekstu (formularze POST: organizacja, gdy konto ma kilka; rola, gdy strefa ma `role_contexts`, a konto kilka ról — $roles, $currentRole), menu i wyszukiwarka strefy (Contracts\ZoneNavigation z Zones\ZoneNavigations), na stronach ustawień menu ustawień z powrotem do aplikacji ($settingsMenu, Zones\ZoneSettingsMenu) — w strefie z `app_layout` = workspace (Enums\AppLayout) bez menu bocznego, menu ustawień i ikony ustawień: konto, przełącznik kontekstu i powiadomienia są w stopce, a wszystkie strony w mapie strony w stopce (z Contracts\ZoneSitemap: sitemap() i grupa konta; bez niej menu strefy z grupami ustawień i konta), stopka simplysmart z odnośnikami prawnymi strefy (`legal_links`), komunikat `status` i toasty z sesji jako toasty (Toast::fromFlash()), kolorystyki strefy (`palettes`) do wyboru na stronie wyglądu (ustawienia konta). Gość (strona publiczna strefy): prosta kolumna treści, komunikaty z sesji też jako toasty. $zone, $account, $organizations, $currentOrganizationId, $currentOrganizationName, $roles, $currentRole, $navigation i $settingsMenu daje Core; meta, back, icon i slot actions trafiają do nagłówka strony (bez icon — ikona bieżącej pozycji mapy strony albo menu). --}}
-@props(['title', 'description' => null, 'keywords' => null, 'tags' => null, 'meta' => null, 'back' => null, 'icon' => null])
+{{-- Układ stron strefy. Zalogowane konto: layout aplikacji (x-admiro::app.layout) — awatar w kolorze konta z drugą linią (menu strefy albo bieżąca organizacja) i menu konta (profil, bezpieczeństwo, wygląd), ikony ustawień i powiadomień (dzwonek; panel z menu strefy, gdy implementuje Contracts\ZoneNotifications, inaczej pusty), wylogowanie na dole menu, przełącznik kontekstu (formularze POST: organizacja, gdy konto ma kilka; rola, gdy strefa ma `role_contexts`, a konto kilka ról — $roles, $currentRole), menu i wyszukiwarka strefy (Contracts\ZoneNavigation z Zones\ZoneNavigations), na stronach ustawień menu ustawień z powrotem do aplikacji ($settingsMenu, Zones\ZoneSettingsMenu) — w strefie z `app_layout` = workspace (Enums\AppLayout) bez menu bocznego, menu ustawień i ikony ustawień: konto, przełącznik kontekstu i powiadomienia są w stopce, a wszystkie strony w mapie strony w stopce (z Contracts\ZoneSitemap: sitemap() i grupa konta; bez niej menu strefy z grupami ustawień i konta), stopka simplysmart z odnośnikami prawnymi strefy (`legal_links`), komunikat `status` i toasty z sesji jako toasty (Toast::fromFlash()), kolorystyki strefy (`palettes`) do wyboru na stronie wyglądu (ustawienia konta). Gość (strona publiczna strefy): prosta kolumna treści, komunikaty z sesji też jako toasty. $zone, $account, $organizations, $currentOrganizationId, $currentOrganizationName, $roles, $currentRole, $navigation i $settingsMenu daje Core; back, icon i slot actions trafiają do nagłówka strony: nad tytułem zawsze „Wstecz” (back, a bez niego ZoneRedirects::backUrl() — poprzednia strona albo dashboard), bez opisu pod tytułem; bez icon — ikona bieżącej pozycji mapy strony albo menu. --}}
+@props(['title', 'description' => null, 'keywords' => null, 'tags' => null, 'back' => null, 'icon' => null])
 @if ($account !== null)
     @php
         $accountItems = app(\Simplysmart\Admiro\Zones\ZoneSettingsMenu::class)->accountItems($zone);
@@ -40,8 +40,7 @@
         :title="$title"
         :icon="$pageIcon"
         :description="$description"
-        :meta="$meta"
-        :back="$back"
+        :back="$back ?? app(\Simplysmart\Admiro\Zones\ZoneRedirects::class)->backUrl()"
         :variant="$zone->appLayout"
         :navigation="$menu"
         :sitemap="$sitemap"
@@ -62,7 +61,7 @@
         ]"
         :sign-out="route($zone->routeName('auth.logout'))"
         :contexts="$contexts === [] ? null : $contexts"
-        :notifications="new \Simplysmart\Admiro\View\Notifications\NotificationPanel([])"
+        :notifications="$navigation instanceof \Simplysmart\Admiro\Contracts\ZoneNotifications ? $navigation->notifications() : new \Simplysmart\Admiro\View\Notifications\NotificationPanel([])"
         :toasts="$toasts"
         :zone-stylesheets="$zone->stylesheets"
         :palettes="$zone->palettes"

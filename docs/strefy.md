@@ -244,8 +244,8 @@ mniejsza pozycja wcześniej — także do grupy innej strefy (np. produkt, któr
 ma pustą grupę i layout jej nie pokazuje.
 
 Przykład własnego HTML: strefa administratorów (`admiro::mail.admiro`) ma layout w motywie sygnetu: karta z cieniem,
-u góry pasek w grafitowym gradiencie z koroną wyciętą z lewego dolnego rogu (`public/images/mail-header.png`, źródło
-`brand/mail/mail-header.svg`), pod nim logo, treść, a na dole karty grupa logotypów z etykietą „Rodzina produktów
+u góry pasek w grafitowym gradiencie z koroną wyciętą z lewego dolnego rogu i białym logotypem admiro po prawej, wyśrodkowanym w pionie
+(jeden obraz `public/images/mail-header.png`, źródło `brand/mail/mail-header.svg`; layout nie pokazuje `$mailLogo`), pod nim treść, a na dole karty grupa logotypów z etykietą „Rodzina produktów
 simplysmart” (simplysmart na pozycji 10, admiro na 30; pozycja 20 zostaje dla produktu). Szablony kodów (`login-code`, `security-code`) pokazują każdą cyfrę
 w osobnym polu (`admiro::mail.admiro.partials.code`), jak pola kodu na stronie logowania.
 

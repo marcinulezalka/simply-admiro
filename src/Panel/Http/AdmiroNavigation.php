@@ -17,14 +17,21 @@ use Illuminate\Http\Request;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Enums\SearchScope;
 use Simplysmart\Admiro\Contracts\ZoneNavigation;
+use Simplysmart\Admiro\Contracts\ZoneNotifications;
+use Simplysmart\Admiro\Contracts\ZoneRegistry;
 use Simplysmart\Admiro\Contracts\ZoneSitemap;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
+use Simplysmart\Admiro\Models\AuditEvent;
 use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Queries\Audit\AuditLog;
 use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Admiro\View\Navigation\NavigationGroup;
 use Simplysmart\Admiro\View\Navigation\NavigationItem;
 use Simplysmart\Admiro\View\Navigation\SearchBox;
 use Simplysmart\Admiro\View\Navigation\SearchScope as SearchScopeOption;
+use Simplysmart\Admiro\View\AuditEventLabel;
+use Simplysmart\Admiro\View\Notifications\NotificationItem;
+use Simplysmart\Admiro\View\Notifications\NotificationPanel;
 
 /**
  * Menu strefy administratorów w layoucie aplikacji: w menu bocznym pulpit i kreator onboardingu, w mapie strony
@@ -34,14 +41,21 @@ use Simplysmart\Admiro\View\Navigation\SearchScope as SearchScopeOption;
  * (`settings.manage`); druga linia pod nazwą konta: role administratora w organizacji operatora. Globalna
  * wyszukiwarka na trasę `search` z podpowiedziami (`search.suggest`), zakresami SearchScope dozwolonymi
  * administratorowi (zaznaczone z `in[]` żądania, bez nich wszystkie; z ikonami) i akcjami dodawania pod „+”
- * (organizacja, właściciel strefy, kurs waluty, dzień wolny, polityka cookies — każda z uprawnieniem).
+ * (organizacja, właściciel strefy, kurs waluty, dzień wolny, polityka cookies — każda z uprawnieniem). Panel
+ * powiadomień (ZoneNotifications): z `audit.view` zakładka dziennika z ostatnimi wpisami (AUDIT_ITEMS) i odnośnikiem do
+ * dziennika.
  */
-final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap
+final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, ZoneNotifications
 {
+    /** Liczba ostatnich wpisów dziennika w panelu powiadomień. */
+    public const int AUDIT_ITEMS = 5;
+
     public function __construct(
         private AdminContext $context,
         private Request $request,
         private ZoneRoleNames $roles,
+        private AuditLog $audit,
+        private ZoneRegistry $zones,
     ) {}
 
     /**
@@ -104,14 +118,44 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap
             value: $this->request->string('q')->toString(),
             scopes: $scopes,
             suggestUrl: route($zone->routeName('search.suggest')),
-            actions: $this->items(
-                $this->itemIf(Permission::OrganizationsManage, 'organizations.create', 'admiro::search.actions.organization', 'building', 'organizations.create'),
-                $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::search.actions.owner', 'user-plus', 'owners.create'),
+            actions: [...$this->organizationActions(), ...$this->items(
                 $this->itemIf(Permission::SettingsManage, 'exchange-rates.index', 'admiro::search.actions.exchange_rate', 'credit-card', 'exchange-rates.index'),
                 $this->itemIf(Permission::SettingsManage, 'holidays.index', 'admiro::search.actions.holiday', 'calendar', 'holidays.index'),
                 $this->itemIf(Permission::SettingsManage, 'cookie-policy.index', 'admiro::search.actions.cookie_policy', 'cookie', 'cookie-policy.index'),
-            ),
+            )],
         );
+    }
+
+    /**
+     * Akcje „+” zakładające organizację: nowa organizacja i właściciel strefy w organizacji, tylko z uprawnieniami
+     * (globalna wyszukiwarka i krok „Organizacje” kreatora onboardingu).
+     *
+     * @return list<NavigationItem>
+     */
+    public function organizationActions(): array
+    {
+        return $this->items(
+            $this->itemIf(Permission::OrganizationsManage, 'organizations.create', 'admiro::search.actions.organization', 'building', 'organizations.create'),
+            $this->itemIf(Permission::OwnersAssign, 'owners.create', 'admiro::search.actions.owner', 'user-plus', 'owners.create'),
+        );
+    }
+
+    public function notifications(): NotificationPanel
+    {
+        if (! $this->context->can(Permission::AuditView)) {
+            return new NotificationPanel([]);
+        }
+
+        $url = route($this->context->zone()->routeName('audit.index'));
+        $entries = $this->audit->page(null, null, null, null, self::AUDIT_ITEMS)->items();
+
+        return new NotificationPanel([], auditItems: array_values(array_map(fn(AuditEvent $entry): NotificationItem => new NotificationItem(
+            AuditEventLabel::of($entry->event, $entry->zone !== null && $this->zones->has($entry->zone) ? $this->zones->get($entry->zone) : null),
+            local_date($entry->occurred_at) . ' ' . $entry->occurred_at->format('H:i'),
+            $entry->zone,
+            $url,
+            icon: 'history',
+        ), $entries)), auditUrl: $url);
     }
 
     public function subtitle(): ?string

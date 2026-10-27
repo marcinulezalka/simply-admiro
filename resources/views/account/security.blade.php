@@ -9,7 +9,7 @@
         $codeField('security-pin-confirmation', 'pin_confirmation', text('sign_in.pin_confirmation'), 'password', 'new-password', $pinLength->min, $pinLength->max),
     ];
 @endphp
-<x-admiro::zone.layout :title="text('account.security_title')" :meta="text('account.security_lead')">
+<x-admiro::zone.layout :title="text('account.security_title')">
     <div class="ss-form-layout">
         <section class="ss-card" id="{{ $routes::SECTION_PIN }}" aria-labelledby="security-pin-title">
             <h2 class="ss-card__title" id="security-pin-title">{{ text('account.pin_title') }}</h2>

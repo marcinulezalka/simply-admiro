@@ -1,5 +1,5 @@
 /**
- * Data i kalendarz w stopce layoutu Workspace (x-admiro::app.calendar): [data-ss-clock] odświeża co minutę dzień
+ * Data i kalendarz w stopce layoutu Workspace (x-admiro::app.calendar): [data-ss-clock] odświeża co minutę pełną nazwę dnia
  * tygodnia ([data-ss-clock-weekday]), datę ([data-ss-clock-date]: dzień, miesiąc, rok) w języku strony (lang dokumentu,
  * Intl.DateTimeFormat) i numer tygodnia ISO ([data-ss-clock-week], liczba w miejscu pierwszej liczby tekstu), więc po
  * północy pokazuje nowy dzień; w panelu [data-ss-calendar] klik w dzień [data-ss-calendar-day] zaznacza go
@@ -10,7 +10,7 @@
  */
 (() => {
     const locale = document.documentElement.lang || undefined;
-    const weekdayFormat = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+    const weekdayFormat = new Intl.DateTimeFormat(locale, { weekday: 'long' });
     const dateFormat = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 
     const isoWeek = (date) => {
@@ -29,7 +29,7 @@
         const week = clock.querySelector('[data-ss-clock-week]');
 
         if (weekday) {
-            weekday.textContent = weekdayFormat.format(now).replace(/\.$/, '');
+            weekday.textContent = weekdayFormat.format(now);
         }
 
         if (date) {

@@ -20,20 +20,27 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Localization\Dictionary;
 use Simplysmart\Admiro\Models\Dictionaries\Language;
+use Simplysmart\Admiro\Models\Organization;
 use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
+use Simplysmart\Admiro\Panel\Http\AdmiroNavigation;
 use Simplysmart\Admiro\Panel\Onboarding\InstallationGuide;
 use Simplysmart\Admiro\Panel\Onboarding\OnboardingProgress;
+use Simplysmart\Admiro\Panel\Onboarding\RegionalSettingsSummary;
+use Simplysmart\Admiro\Panel\Search\AdmiroSearch;
 use Simplysmart\Admiro\Queries\Dictionaries\DictionaryList;
 use Simplysmart\Admiro\Queries\Dictionaries\DictionarySearch;
+use Simplysmart\Admiro\Queries\Organizations\OrganizationList;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Kreator onboardingu (nagłówek „Onboarding”, kroki z OnboardingStep, które administrator może wykonać): wejście
  * pokazuje przegląd kroków z postępem (karty niezrobionych kroków); krok „Języki” to lista języków z przełącznikami (włączone osobno nad
- * listą, filtr `q` jak w globalnej wyszukiwarce — także po krajach) zatwierdzana przyciskiem, pozostałe kroki opisują
+ * listą — domyślny zawsze pierwszy, z ustawieniami regionalnymi RegionalSettingsSummary —, filtr `q` jak w globalnej wyszukiwarce — także po krajach) zatwierdzana przyciskiem; krok „Organizacje” na tym
+ * samym wzorze: aktywne organizacje nad wyszukiwarką (`q`: nazwa, nazwa skrócona, NIP; także wyłączone) z menu „+”
+ * zakładania organizacji, przełączniki zapisują się od razu, a krok zamyka założenie organizacji; pozostałe kroki opisują
  * zadanie i prowadzą do jego strony panelu. Krok spoza uprawnień albo nieznany to 404.
  */
 final readonly class OnboardingController
@@ -49,7 +56,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, AdmiroNavigation $navigation, RegionalSettingsSummary $regional): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -68,11 +75,25 @@ final readonly class OnboardingController
             $term = $request->string('q')->trim()->toString();
             /** @var Collection<int, Language> $all */
             $all = $dictionaries->entries(Dictionary::Languages);
+            $defaultFirst = static fn(Language $language): array => [$language->is_default === true ? 0 : 1, $language->translatedName()];
             $data += [
                 'term' => $term,
-                'enabled' => $all->filter(static fn(Language $language): bool => $language->is_active === true)->sortBy(static fn(Language $language): string => $language->translatedName())->values(),
-                'languages' => $term === '' ? new Collection() : $search->languages($term),
+                'enabled' => $all->filter(static fn(Language $language): bool => $language->is_active === true)->sortBy($defaultFirst)->values(),
+                'languages' => $term === '' ? new Collection() : $search->languages($term)->sortBy($defaultFirst)->values(),
                 'canManage' => $this->context->can(Permission::SettingsManage),
+                'regional' => $regional->summary(),
+                'regionalConfigured' => collect($data['checklist'])->firstWhere('step', OnboardingStep::Settings)['done'] ?? false,
+            ];
+        }
+
+        if ($current === OnboardingStep::Organizations) {
+            $term = $request->string('q')->trim()->toString();
+            $data += [
+                'term' => $term,
+                'enabled' => $organizations->all()->filter(static fn(Organization $organization): bool => $organization->is_active === true)->values(),
+                'organizations' => $term === '' ? new Collection() : $organizations->search($term, AdmiroSearch::PAGE),
+                'canManage' => $this->context->can(Permission::OrganizationsManage),
+                'organizationActions' => $navigation->organizationActions(),
             ];
         }
 

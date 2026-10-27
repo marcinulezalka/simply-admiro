@@ -210,7 +210,7 @@ Wspólne komponenty powstają w Core jako `x-admiro::…`:
 | `.ss-badge` | plakietka (klasa CSS do czasu komponentu): pigułka `surface-muted`, drobny tekst, np. wersja; `--outline` — delikatny obrys bez wypełnienia, kolor z `--success`, `--warning`, `--danger`, `--info` albo `--muted` (np. stan kroku onboardingu) |
 | `layout` | szkielet strony: top bar, nawigacja, slot treści |
 | `top-bar`, `module-nav` | top bar, nawigacja modułowa |
-| `context-header` | nagłówek kontekstowy `x-admiro::app.context` (zaimplementowany): ikona w jasnym kafelku z półprzezroczystą obwódką, wypełniona delikatnym odcieniem swojego koloru, w wysokości tytułu z opisem (`icon`; w strefie z bieżącej pozycji menu albo mapy strony), duży tytuł, pod nim opis krojem mono (`meta`), slot `actions` jako panel z ramką po prawej; próbka w design systemie (sekcja „Nagłówek strony”) |
+| `context-header` | nagłówek kontekstowy `x-admiro::app.context` (zaimplementowany): ikona w jasnym kafelku z półprzezroczystą obwódką, wypełniona delikatnym odcieniem swojego koloru, w wysokości tytułu z opisem (`icon`; w strefie z bieżącej pozycji menu albo mapy strony), nad tytułem link „Wstecz” (`back`; w strefie zawsze — bez `back` poprzednia strona albo dashboard, `Zones\ZoneRedirects::backUrl()`), duży tytuł, pod nim opis krojem mono (`meta`; layout strefy go nie pokazuje), slot `actions` jako panel z ramką po prawej; próbka w design systemie (sekcja „Nagłówek strony”) |
 | `stepper` | stepper sterowany enumem statusu |
 | `auth.layout` | strony logowania stref (zaimplementowany): tytuł, wstęp `lead`, komunikat stanu, slot `actions` na akcje drugorzędne, pod nimi przycisk „Strona główna” (`.ss-auth__home`, przycisk z ikoną domu do `url('/')`, jak na stronach błędów; strefa wyłącza go `auth.home_link` = false); pola i przyciski mają wysokość `--ss-auth-control-height` (pole bez pionowego wcięcia, więc wysokość daje token); dwa układy (`Enums\AuthLayout`, `auth.layout` strefy, prop `layout`): `centered` — jedna karta z logo, `split` — rama `.ss-frame` z kartą marki (`.ss-card--inverse`, `.ss-card--elevated`; logo simplysmart, logo SVG strefy z `auth.logo` albo baner strefy z `auth.brand` jako `<picture>` z wersją dla ciemnego motywu, `.ss-auth__brand--image`) po lewej i kartą formularza (`.ss-card--tinted`) po prawej (na telefonie i tablecie jedna pod drugą, karta formularza na całą szerokość ramy), `split-reversed` — to samo w odbiciu lustrzanym (`.ss-auth--reversed`, od 56rem `row-reverse`: formularz po lewej, marka po prawej; na telefonie marka nad formularzem); z banerem (`.ss-auth--image`) karta banera nie ma ramki ani tła, na szerokim ekranie jej wysokość wynika z proporcji obrazu (baner bez obcinania, karta formularza dopasowuje się do niego), a karta formularza nachodzi na nią o `--ss-radius-nested` i zakrywa jej zaokrąglenie (arkusz strefy może to zmienić); tło strony to delikatny gradient (`--ss-color-auth-from` → `--ss-color-auth-to`, odrobina akcentu w rogu) w każdym motywie; bez przełącznika motywu (obowiązuje motyw systemu albo zapisany wybór); na dole karty formularza drobny wiersz: odnośniki prawne strefy (`legal_links`), polityka cookies i ustawienia cookies (`.ss-auth__legal`; cookies tylko z opublikowaną polityką albo skryptami zgody) — logowanie nie ma stopki strony simplysmart; wygląd wyłącznie z klas design systemu |
 | `content.layout` | strona treści (zaimplementowany; np. polityka prywatności): pasek `content.bar` z powrotem (`back`) i odnośnikami cookies nad i pod treścią (bez przełącznika motywu; odnośniki `.ss-link` bez podkreślenia, podkreślone pod kursorem), spis treści `.ss-toc` z `toc` (`list<array{id, label}>`, na szerokim ekranie przyklejony po lewej), karta dokumentu z nagłówkiem (`eyebrow`, tytuł z opcjonalną ikoną `icon`, `lead`) i treścią w `.ss-prose` (tekst do 70ch, bloki na całą szerokość; odnośniki pogrubione w kolorze akcentu, podkreślone dopiero pod kursorem i przy fokusie); na stronie polityki cookies lista cookies `.ss-cookie-list` jako panele `.ss-card--muted` na całą szerokość z zawijaniem długich wartości i przycisk ustawień z ikoną, opcjonalna karta „Zobacz także” (slot `related`, odnośniki `.ss-related`) |
@@ -387,16 +387,19 @@ wariant layoutu z `app_layout` strefy (`Enums\AppLayout`, prop `variant`): `side
 strony (strefa z `Contracts\ZoneSitemap`: `sitemap()` i grupa konta); pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: po lewej konto (awatar, imię i nazwisko,
 `.ss-workspace-footer__account`) z menu nad stopką — konto, ustawienia, mapa aplikacji, profile społecznościowe strefy
 `social_links` i wylogowanie na dole; globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
-`.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions`, suwaki zakresów zamiast lupy —
+`.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions` (partial `admiro::search.actions`: nagłówek „Dodaj” `.ss-search__menu-title` oddzielony linią od pozycji), suwaki zakresów zamiast lupy —
 przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu nad
 polem), mapa strony rozsuwana pod paskiem (odnośniki do `#ss-sitemap`, bez
 przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nimi, kolumny dopasowane do szerokości,
 zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej przełącznik kontekstu
-`x-admiro::app.context-switch` (menu nad stopką), dzwonek powiadomień z panelem wysuwanym z prawej krawędzi okna
-(`x-admiro::app.notifications right`, `.ss-notifications--right`) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: jeden panel o stałej szerokości z ikoną kalendarza i dniem tygodnia
-na wspólnym szarym tle i datą krojem mono — po najechaniu szare tło rozsuwa się w „pon, tydzień 44”, a data się chowa,
-bez przesuwania reszty stopki;, `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
-z `CalendarMonths`): klik otwiera panel z prawej krawędzi okna z miesiącem `.ss-mini-calendar` (dziś, dni wolne
+`x-admiro::app.context-switch` (menu nad stopką), dzwonek powiadomień z panelem z prawej
+(`x-admiro::app.notifications right`, `.ss-notifications--right`: karta na wysokość obszaru treści — od góry okna do stopki,
+której nie zakrywa (`--ss-workspace-footer-height`) —, w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik kategorii
+z ikonami i suwakiem `.ss-tabs--slider` (`js/tabs.js`): powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i — gdy strefa
+je daje przez `Contracts\ZoneNotifications` — ostatnie wpisy dziennika zdarzeń z odnośnikiem do dziennika) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: jeden panel o szerokości treści z ikoną kalendarza i datą krojem mono
+na wspólnym szarym tle i pełną nazwą dnia tygodnia po prawej — po najechaniu szare tło rozsuwa się w „27 paź 2026, tydzień 44”, a dzień tygodnia się chowa,
+bez zmiany szerokości panelu i przesuwania reszty stopki; `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
+z `CalendarMonths`): klik otwiera panel z prawej, na wysokość obszaru treści jak powiadomienia, z miesiącem `.ss-mini-calendar` (dziś, dni wolne
 aplikacji z kropką), podglądem wybranego dnia i miejscem na skrzynkę pocztową (integracja w przygotowaniu)); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
 fragment HTML z widoku `admiro::search.suggestions` z grupami `SearchResultGroup` i wynikami `SearchResult` z flagami
@@ -423,15 +426,15 @@ osadza `x-admiro::scripts` z nonce CSP; bez skryptu menu zostaje rozwinięte. Do
 
 Klasy ogólne do czasu komponentów: `.ss-card`, `.ss-card--muted` i `.ss-card--link` (cała karta jako odnośnik, np. skrót
 do sekcji) (§4), `.ss-icon--tile` (ikona w kafelku
-`surface-muted`), `.ss-onboarding-wizard` (kreator onboardingu: od 64rem pionowa lista kroków obok karty kroku — karty-odnośniki z numerem
-w kółku, który po zrobieniu zmienia się w haczyk, nazwą, opisem i ikoną, połączone linią; bieżący z ramką akcentu —,
-karta kroku ze stopką Wstecz/Dalej;
-krok „Języki” z panelem włączonych języków `.ss-onboarding-languages` nad wyszukiwarką z podpowiedziami, wyniki w panelach z przełącznikami), `.ss-dictionary-code` (kod wpisu
+`surface-muted`), `.ss-onboarding-wizard` (kreator onboardingu: od 64rem pionowa lista zadań obok karty zadania — karty-odnośniki z numerem
+w kółku, który po zrobieniu zmienia się w haczyk, nazwą, opisem (zrobione zamiast opisu „Zadanie N” krojem mono, `__step-number`) i ikoną, połączone linią; bieżące z ramką akcentu —,
+karta zadania z plakietką stanu i datą zakończenia w prawym górnym rogu (`__status`, `__completed`) i stopką: Wstecz po lewej, po prawej przyciski z ikonami pozostałych niezakończonych zadań (`__remaining`);
+zadania „Języki” i „Organizacje” na wspólnym wzorze `.ss-onboarding-picker` (języki: `.ss-onboarding-languages` — nagłówek, wiersz języka domyślnego z ustawieniami regionalnymi, a nieustawione w przerywanej ramce, potem język na wiersz; wyszukiwanie na żywo `form[data-ss-live-search]`, `js/live-search.js`): panel włączonych pozycji nad wyszukiwarką z podpowiedziami — przy organizacjach z menu „+” zakładania —, wyniki w panelach z przełącznikami zapisywanymi od razu), `.ss-dictionary-code` (kod wpisu
 słownika z flagami krajów), `.ss-onboarding` (strona onboardingu: postęp w zakładce zwisającej z górnej krawędzi strony, z prawej — panel akcji
 `.ss-context__actions--progress` z przerywaną ramką bez górnej krawędzi i delikatnym cieniem; ciemny przycisk z ikoną
 `goal` (`.ss-onboarding__progress-button`, kolory odwrócone), obok etykieta mono i pod nią pasek `.ss-progress`, natywny
-`<progress>` w kolorze akcentu; rozwija listę kroków, na telefonie w panelu wysuwanym z prawej krawędzi okna z nagłówkiem
-i przyciskiem zamknięcia `[data-ss-dropdown-close]` — a pod nim, na tle strony bez karty, lista numerowana kart-odnośników wszystkich kroków
+`<progress>` w kolorze akcentu; rozwija listę zadań, na telefonie w panelu wysuwanym z prawej krawędzi okna z nagłówkiem
+i przyciskiem zamknięcia `[data-ss-dropdown-close]` — a pod nim, na tle strony bez karty, lista numerowana kart-odnośników wszystkich zadań
 z dużym, przygaszonym numerem w tle; zrobione wyszarzone w kolorach hovera `.ss-card--muted`, z haczykiem), `.ss-button:disabled`, oraz warstwy layoutu z §5: `.ss-app`, `.ss-topbar` (z `.ss-search`
 i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`), `.ss-main`, `.ss-context`,
 `.ss-stepper` (`--done`, `--current` z `aria-current="step"`, `--next`; stan także tekstem `.ss-sr-only`; komponent

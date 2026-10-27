@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Organizacje (firmy i oddziały): lista (`organizations.view`), zakładanie, zmiany, włączanie i wyłączanie
- * (`organizations.manage`). Każda zmiana trafia do dziennika; członków obsługuje OrganizationMemberController,
+ * (`organizations.manage`; przełączenie wraca na stronę, z której przyszło — lista albo kreator onboardingu). Każda zmiana trafia do dziennika; członków obsługuje OrganizationMemberController,
  * a markę (logo, sygnet, ikona strony; karta w formularzu edycji) OrganizationBrandController.
  */
 final readonly class OrganizationController
@@ -118,8 +118,9 @@ final readonly class OrganizationController
         }
 
         $this->audit->record($active ? 'organization enabled' : 'organization disabled', organizationId: $current->id);
+        $fallback = route($this->context->zone()->routeName('organizations.index'));
 
-        return $this->toIndex($active ? 'organization_enabled' : 'organization_disabled');
+        return $this->redirect->back(fallback: $fallback)->with('status', text('admiro::admin.' . ($active ? 'organization_enabled' : 'organization_disabled')));
     }
 
     /**

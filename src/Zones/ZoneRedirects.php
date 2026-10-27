@@ -19,7 +19,8 @@ use Simplysmart\Admiro\Contracts\CurrentZone;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Przekierowania middleware auth/guest liczone z bieżącej strefy; nie ma globalnej trasy `login`.
+ * Przekierowania middleware auth/guest liczone z bieżącej strefy (nie ma globalnej trasy `login`) i adres „Wstecz”
+ * w nagłówku stron strefy.
  */
 final readonly class ZoneRedirects
 {
@@ -53,6 +54,29 @@ final readonly class ZoneRedirects
         $route = $this->route(self::HOME_ROUTE);
 
         return $route !== null ? $this->url->route($route) : $this->url->to('/');
+    }
+
+    /**
+     * Adres „Wstecz” w nagłówku strony: poprzednia strona tej aplikacji (nie strona główna `/`), a gdy jej nie ma albo
+     * to ta sama strona (np. po zapisie formularza) — dashboard strefy; null na samym dashboardzie bez innej poprzedniej
+     * strony.
+     */
+    public function backUrl(): ?string
+    {
+        $current = $this->url->current();
+        $root = rtrim($this->url->to('/'), '/');
+        $home = $this->route(self::HOME_ROUTE);
+        $candidates = [$this->url->previous(), $home !== null ? $this->url->route($home) : null];
+
+        foreach ($candidates as $candidate) {
+            $page = $candidate === null ? null : rtrim((string) strtok($candidate, '?#'), '/');
+
+            if ($page !== null && str_starts_with($page . '/', $root . '/') && $page !== $root && $page !== rtrim($current, '/')) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 
     private function route(string $name): ?string

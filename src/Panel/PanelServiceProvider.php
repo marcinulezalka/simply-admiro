@@ -54,7 +54,8 @@ final class PanelServiceProvider extends ZoneServiceProvider
     public const int MAIL_BRAND_ZONE_POSITION = 30;
 
     /**
-     * Pasek nagłówka e-maili strefy: grafitowy gradient z koroną wyciętą z lewego dolnego rogu (motyw sygnetu).
+     * Pasek nagłówka e-maili strefy: grafitowy gradient z koroną wyciętą z lewego dolnego rogu (motyw sygnetu)
+     * i białym logotypem admiro po prawej, wyśrodkowanym w pionie.
      */
     public const string MAIL_HEADER = __DIR__ . '/../../public/images/mail-header.png';
 

@@ -10,6 +10,7 @@ kopii w `public/images/`, podłączonych w `config/admiro.php` (`zone.brand`, `z
 | `logo/admiro.svg` | wzorzec logotypu „admiro” (wektor, czarne litery zamienione na krzywe, złota korona zamiast kropki nad „i”). Z niego powstają pozostałe wersje |
 | `logo/png/admiro-on-light-{800,1600,2400}.png` | logo z czarnymi literami, na jasne tło: dokumenty, prezentacje |
 | `logo/png/admiro-on-dark-{800,1600,2400}.png` | logo z białymi literami, na ciemne tło |
+| `mail/mail-header.svg` | wzorzec paska nagłówka e-maili (1120×200, wyświetlany w 560×100): grafitowy gradient z wyciętą koroną w lewym dolnym rogu i białym logotypem po prawej, wyśrodkowanym w pionie; render do `public/images/mail-header.png` w przeglądarce bez okna |
 | `icon/admiro-mark.svg` | wzorzec sygnetu (wektor): zaokrąglony kafelek w grafitowym gradiencie (ciepły brąz w prawym górnym rogu), z którego wycięta jest korona wychodząca ukośnie z lewego dolnego rogu — wycięcie (przezroczyste) obejmuje cały róg, obwódka jasna i półprzezroczysta. Z niego powstają pozostałe wersje (render w przeglądarce bez okna) |
 | `icon/admiro-mark-on-light.png`, `icon/admiro-mark-on-dark.png` | sygnet z `admiro-mark.svg` (na jasne i ciemne tło ten sam); 1024×1024, przezroczyste tło poza kafelkiem i w wycięciu korony |
 | `OFL.txt` | licencja kroju Zen Dots |
