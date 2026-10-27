@@ -124,6 +124,29 @@ final readonly class OrganizationController
     }
 
     /**
+     * Przeniesienie jednostki w drzewie (pole `parent`: token aktywnej organizacji albo pusty — najwyższy poziom; np.
+     * przeciągnięcie w drzewie kreatora onboardingu). Odmowa Core (cykl, operator, departament) to błąd formularza.
+     */
+    public function move(Request $request, string $organization, ActiveOrganizations $active): RedirectResponse
+    {
+        $current = $this->organization($organization);
+        $validated = $request->validate(['parent' => ['nullable', 'string', 'max:' . Organization::TOKEN_LENGTH]]);
+        $token = $validated['parent'] ?? null;
+        $parent = is_string($token) && $token !== '' ? $active->find($token) ?? throw new NotFoundHttpException() : null;
+
+        try {
+            $this->management->move($current, $parent);
+        } catch (OrganizationChangeRejected) {
+            return $this->rejected();
+        }
+
+        $this->audit->record('organization moved', organizationId: $current->id, context: ['parent' => $parent?->token]);
+        $fallback = route($this->context->zone()->routeName('organizations.index'));
+
+        return $this->redirect->back(fallback: $fallback)->with('status', text('admiro::admin.organization_moved', ['name' => $current->name]));
+    }
+
+    /**
      * Dane organizacji (Organizations\OrganizationForm) i organizacja nadrzędna w jednej walidacji.
      *
      * @return array{OrganizationData, Organization|null}

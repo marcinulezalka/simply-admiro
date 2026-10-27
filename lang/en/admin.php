@@ -61,6 +61,7 @@ return [
     'no_members' => 'No members.',
     'organization_created' => 'Organization created.',
     'organization_updated' => 'Organization saved.',
+    'organization_moved' => 'Organization “:name” moved.',
     'organization_enabled' => 'Organization enabled.',
     'organization_disabled' => 'Organization disabled: its members have no permissions in it.',
     'organization_rejected' => 'The organization cannot be changed like this (tree cycle, disabled parent or the operator organization).',

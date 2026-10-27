@@ -50,17 +50,11 @@ final class OrganizationManagement
      */
     public function update(Organization $organization, OrganizationData $data, ?Organization $parent): void
     {
-        if ($parent !== null && $organization->id === Organization::OPERATOR_ID) {
-            throw OrganizationChangeRejected::because('the operator organization cannot have a parent.');
-        }
-
         if ($parent === null && $organization->isDepartment()) {
             throw OrganizationChangeRejected::because('a department must stay under its unit.');
         }
 
-        $this->ensureActiveParent($parent);
-        $this->ensureUnitParent($parent);
-        $this->ensureNoCycle($organization, $parent);
+        $this->ensurePlacement($organization, $parent);
 
         $organization->forceFill([
             ColumnNames::NAME => $data->name,
@@ -68,6 +62,22 @@ final class OrganizationManagement
             ...$data->columns(),
             ColumnNames::PARENT_ID => $parent?->id,
         ])->save();
+    }
+
+    /**
+     * Przeniesienie jednostki pod inną organizację albo na najwyższy poziom (null), bez zmiany danych (np. drzewo
+     * organizacji w panelu). Departament się nie przenosi: jego dane należą do jednostki (OrganizationUnits).
+     *
+     * @throws OrganizationChangeRejected
+     */
+    public function move(Organization $organization, ?Organization $parent): void
+    {
+        if ($organization->isDepartment()) {
+            throw OrganizationChangeRejected::because('a department stays under its unit.');
+        }
+
+        $this->ensurePlacement($organization, $parent);
+        $organization->forceFill([ColumnNames::PARENT_ID => $parent?->id])->save();
     }
 
     /**
@@ -104,6 +114,22 @@ final class OrganizationManagement
         }
 
         $organization->forceFill([ColumnNames::IS_ACTIVE => $active])->save();
+    }
+
+    /**
+     * Miejsce organizacji w drzewie: operator bez nadrzędnej, nadrzędna aktywna, nie departament i nie z tej gałęzi.
+     *
+     * @throws OrganizationChangeRejected
+     */
+    private function ensurePlacement(Organization $organization, ?Organization $parent): void
+    {
+        if ($parent !== null && $organization->id === Organization::OPERATOR_ID) {
+            throw OrganizationChangeRejected::because('the operator organization cannot have a parent.');
+        }
+
+        $this->ensureActiveParent($parent);
+        $this->ensureUnitParent($parent);
+        $this->ensureNoCycle($organization, $parent);
     }
 
     private function ensureActiveParent(?Organization $parent): void

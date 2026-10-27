@@ -1034,9 +1034,12 @@ button.ss-badge:focus-visible {
 }
 
 /*
- * .ss-onboarding-organizations — aktywne organizacje w zadaniu „Organizacje”, po jednej w wierszu (__row): nazwa z ikoną
- * (__main), strefy i właściciel (__facts, __fact: etykieta mono nad wartością; brak właściciela — przerywana ramka
- * __missing, odnośnik do założenia) i przełącznik; na wąskim ekranie fakty schodzą pod nazwę.
+ * .ss-onboarding-organizations — aktywne organizacje w zadaniu „Organizacje” jako drzewo (__tree, węzły __node z wierszem
+ * __row i dziećmi --children z przerywaną linią): uchwyt przeciągania (__handle), nazwa z ikoną (__main), strefy
+ * i właściciel (__facts, __fact: etykieta mono nad wartością; brak właściciela — przerywana ramka __missing, odnośnik do
+ * założenia), lista „Przenieś pod” (__move) i przełącznik; przeciągany węzeł półprzezroczysty (.is-dragging), cel zrzutu
+ * z ramką akcentu (.is-drop-target), strefa najwyższego poziomu pod drzewem (__root); na wąskim ekranie fakty schodzą
+ * pod nazwę.
  */
 .ss-onboarding-organizations {
     display: flex;
@@ -1045,6 +1048,57 @@ button.ss-badge:focus-visible {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+.ss-onboarding-organizations--children {
+    margin: var(--ss-space-2) 0 0 var(--ss-space-6);
+    padding-left: var(--ss-space-4);
+    border-left: 1px dashed var(--ss-color-border-strong);
+}
+
+.ss-onboarding-organizations__node[draggable="true"] > .ss-onboarding-organizations__row {
+    cursor: grab;
+}
+
+.ss-onboarding-organizations__node.is-dragging > .ss-onboarding-organizations__row {
+    opacity: 0.5;
+}
+
+.ss-onboarding-organizations__node.is-drop-target > .ss-onboarding-organizations__row,
+.ss-onboarding-organizations__root.is-drop-target {
+    border-color: var(--ss-color-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ss-color-accent) 25%, transparent);
+}
+
+.ss-onboarding-organizations__handle {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-onboarding-organizations__move {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+}
+
+.ss-onboarding-organizations__move .ss-input {
+    min-height: 2.25rem;
+    max-width: 14rem;
+    padding-block: 0;
+    font-size: 0.875rem;
+}
+
+.ss-onboarding-organizations__root {
+    margin: var(--ss-space-3) 0 0;
+    padding: var(--ss-space-3);
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+    text-align: center;
 }
 
 .ss-onboarding-organizations__row {

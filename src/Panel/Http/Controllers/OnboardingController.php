@@ -21,6 +21,7 @@ use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Localization\Dictionary;
 use Simplysmart\Admiro\Models\Dictionaries\Language;
 use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Organizations\OrganizationTree;
 use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
@@ -93,6 +94,8 @@ final readonly class OnboardingController
             $data += [
                 'term' => $term,
                 'enabled' => $enabled,
+                'tree' => OrganizationTree::of($enabled),
+                'moveTargets' => $enabled->reject(static fn(Organization $organization): bool => $organization->isDepartment())->values(),
                 'assignments' => $assignments->of(array_values($enabled->map(static fn(Organization $organization): int => $organization->id)->all())),
                 'canAssignOwners' => $this->context->can(Permission::OwnersAssign),
                 'organizations' => $term === '' ? new Collection() : $organizations->search($term, AdmiroSearch::PAGE),

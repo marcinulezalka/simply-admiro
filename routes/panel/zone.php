@@ -64,6 +64,7 @@ Route::middleware(ZonePermission::middleware(Permission::OrganizationsManage))->
     Route::get('organizations/{organization}/edit', [OrganizationController::class, 'edit'])->name('organizations.edit');
     Route::put('organizations/{organization}', [OrganizationController::class, 'update'])->middleware('throttle:admiro.sign-in')->name('organizations.update');
     Route::post('organizations/{organization}/toggle', [OrganizationController::class, 'toggle'])->middleware('throttle:admiro.sign-in')->name('organizations.toggle');
+    Route::put('organizations/{organization}/parent', [OrganizationController::class, 'move'])->middleware('throttle:admiro.sign-in')->name('organizations.move');
     Route::delete('organizations/{organization}/members/{managedZone}/{account}', [OrganizationMemberController::class, 'remove'])->middleware('throttle:admiro.sign-in')->name('organizations.members.remove');
     Route::get('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'show'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->name('organizations.brand.show');
     Route::post('organizations/{organization}/brand/{asset}', [OrganizationBrandController::class, 'store'])->whereIn('asset', array_column(BrandAsset::cases(), 'value'))->middleware('throttle:admiro.sign-in')->name('organizations.brand.store');

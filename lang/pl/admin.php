@@ -61,6 +61,7 @@ return [
     'no_members' => 'Brak członków.',
     'organization_created' => 'Organizacja założona.',
     'organization_updated' => 'Organizacja zapisana.',
+    'organization_moved' => 'Organizacja „:name” przeniesiona.',
     'organization_enabled' => 'Organizacja włączona.',
     'organization_disabled' => 'Organizacja wyłączona: jej członkowie nie mają w niej uprawnień.',
     'organization_rejected' => 'Nie można tak zmienić organizacji (cykl w drzewie, wyłączona organizacja nadrzędna albo organizacja operatora).',
