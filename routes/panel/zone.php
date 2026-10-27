@@ -56,6 +56,7 @@ Route::middleware(ZonePermission::middleware(Permission::UsersManage))->group(st
     Route::get('administrators', [AdministratorController::class, 'index'])->name('administrators.index');
     Route::post('administrators/{account}/roles', [AdministratorController::class, 'assign'])->middleware('throttle:admiro.sign-in')->name('administrators.roles.assign');
     Route::delete('administrators/{account}/roles/{role}', [AdministratorController::class, 'revoke'])->middleware('throttle:admiro.sign-in')->name('administrators.roles.revoke');
+    Route::post('administrators/{account}/roles/{role}/toggle', [AdministratorController::class, 'toggle'])->middleware('throttle:admiro.sign-in')->name('administrators.roles.toggle');
 });
 
 Route::middleware(ZonePermission::middleware(Permission::OrganizationsManage))->group(static function (): void {

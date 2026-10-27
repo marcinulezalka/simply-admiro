@@ -19,6 +19,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
+use Simplysmart\Admiro\Auth\AccountKey;
+use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Queries\Accounts\ZoneAccounts;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Admiro\Localization\LocaleRouting;
 use Simplysmart\Admiro\Localization\LocalizationSettings;
 use Simplysmart\Admiro\Localization\LocalizationSettingsRejected;
@@ -52,6 +56,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 final readonly class OnboardingController
 {
+    /**
+     * Najwięcej administratorów w panelu zadania „Profile i uprawnienia” (pełna lista na stronie administratorów).
+     */
+    private const int ADMINISTRATORS = 100;
+
     public function __construct(
         private AdminContext $context,
         private OnboardingProgress $progress,
@@ -63,7 +72,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing, ZoneAccounts $accounts, ZoneRoleNames $roleNames): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -99,6 +108,41 @@ final readonly class OnboardingController
                 'regionals' => $regionals,
                 'regionalConfigured' => $configured,
                 'defaultCandidates' => $routing->enabled(),
+            ];
+        }
+
+        if ($current === OnboardingStep::Administrators) {
+            $term = $request->string('q')->trim()->toString();
+            $zone = $this->context->zone();
+            $administrators = array_values(array_filter($accounts->page($zone, null, self::ADMINISTRATORS)->items(), static fn(mixed $account): bool => $account instanceof ZoneAccount));
+            $found = $term === '' ? [] : array_values(array_filter($accounts->search($zone, $term, AdmiroSearch::PAGE), static fn(mixed $account): bool => $account instanceof ZoneAccount));
+            $available = $roleNames->available($zone);
+            $rolesOf = [];
+
+            foreach ([...$administrators, ...$found] as $account) {
+                $rolesOf[AccountKey::of($account)] ??= $roleNames->of($account, Organization::OPERATOR_ID);
+            }
+
+            $counts = $roleNames->permissionCounts($zone);
+            $profiles = [];
+
+            foreach ($available as $role) {
+                $profiles[] = [
+                    'role' => $role,
+                    'permissions' => $counts[$role] ?? 0,
+                    'members' => count(array_filter($administrators, static fn(ZoneAccount $account): bool => in_array($role, $rolesOf[AccountKey::of($account)] ?? [], true))),
+                ];
+            }
+
+            $data += [
+                'term' => $term,
+                'administrators' => $administrators,
+                'found' => $found,
+                'rolesOf' => $rolesOf,
+                'availableRoles' => $available,
+                'profiles' => $profiles,
+                'self' => $this->context->admin(),
+                'canManage' => $this->context->can(Permission::UsersManage),
             ];
         }
 

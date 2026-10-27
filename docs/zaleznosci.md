@@ -43,8 +43,9 @@ repozytorium, więc nie trzeba dołączać ich treści.
 | Co | Źródło | Autor | Licencja | Ścieżka |
 | --- | --- | --- | --- | --- |
 | ikony liniowe Core (rysunki SVG, nazwy plików Core) | [Lucide](https://lucide.dev) 1.2.140 (`@iconify-json/lucide`) | Lucide Icons and Contributors; część ikon z Feather (Cole Bemis) | ISC, ikony z Feather MIT | `public/assets/img/icons/*.svg`, treść licencji w `public/assets/img/icons/LICENSE-lucide.txt` |
+| ikona wpisu domyślnego `ticket-slash` (rysunek SVG) | [Hugeicons](https://hugeicons.com) `hugeicons:ticket-slash` (Iconify, `api.iconify.design`) | Hugeicons | MIT | `public/assets/img/icons/ticket-slash.svg`, treść licencji w `public/assets/img/icons/LICENSE-hugeicons.txt` |
 
-Ikony mają wspólny nagłówek Core (`aria-hidden`, kreska 1,75, zaokrąglone końce i łączenia), a nazwa pliku Core
+Ikony mają wspólny nagłówek Core (`aria-hidden`, kreska 1,75, zaokrąglone końce i łączenia — także ikona z Hugeicons), a nazwa pliku Core
 (np. `home`, `refresh`, `settings`) wskazuje odpowiednik z Lucide (`house`, `refresh-cw`, `sliders-horizontal`), więc widoki się nie zmieniają.
 
 Każdy fragment cudzego kodu wklejony do projektu trzeba tu wpisać: źródło, autor,

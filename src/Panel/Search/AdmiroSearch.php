@@ -36,7 +36,8 @@ use Simplysmart\Admiro\View\Navigation\SearchResultGroup;
  * języków z tym samym tekstem — lista wyników nad panelem języków; z przełącznikiem włączenia przy `settings.manage`, a język
  * domyślny i języki interfejsu z plakietką —, a bez `settings.manage` do słownika), kraje i waluty (słowniki), organizacje (do kreatora
  * organizacji z tym samym tekstem — lista wyników pod wyszukiwarką; z przełącznikiem włączenia przy `organizations.manage`,
- * a organizacja operatora z plakietką „Domyślna”) i administratorzy (imię i nazwisko albo dokładny e-mail), strony panelu (pozycje menu i ustawień po nazwie,
+ * a organizacja operatora z plakietką „Domyślna”) i administratorzy (do kreatora „Profile i uprawnienia” z tym samym
+ * tekstem — wyniki nad panelami, z adresem e-mail w opisie) (imię i nazwisko albo dokładny e-mail), strony panelu (pozycje menu i ustawień po nazwie,
  * bez polskich znaków i wielkości liter). Każda grupa ma najwyżej `$limit` wyników i odnośnik do reszty.
  */
 final readonly class AdmiroSearch
@@ -117,6 +118,7 @@ final readonly class AdmiroSearch
                 toggleUrl: $canToggle && ! $locked ? $this->route('dictionaries.toggle', ['dictionary' => 'languages', 'code' => $language->code]) : null,
                 active: $language->is_active === true,
                 badge: $language->is_default === true ? text('admiro::dashboard.onboarding_language_default') : ($locked ? text('admiro::dashboard.onboarding_language_interface') : null),
+                badgeIcon: $language->is_default === true ? 'ticket-slash' : null,
             );
         }
 
@@ -181,6 +183,7 @@ final readonly class AdmiroSearch
                 toggleUrl: $canEdit && ! $operator ? $this->route('organizations.toggle', ['organization' => $organization->token]) : null,
                 active: $organization->is_active,
                 badge: $operator ? text('admiro::dashboard.onboarding_organization_default') : null,
+                badgeIcon: $operator ? 'ticket-slash' : null,
             );
         })->all());
 
@@ -194,12 +197,16 @@ final readonly class AdmiroSearch
         }
 
         $found = $this->accounts->search($this->context->zone(), $term, $limit + 1);
-        $list = $this->route('administrators.index');
+        $inWizard = $this->context->can(OnboardingStep::Administrators->permission());
+        $list = $inWizard
+            ? $this->route('onboarding.show', ['step' => OnboardingStep::Administrators->value, 'q' => $term])
+            : $this->route('administrators.index');
         $results = [];
 
         foreach (array_slice($found, 0, $limit) as $account) {
             $name = $account->getAttribute(AccountColumns::NAME);
-            $results[] = new SearchResult(is_string($name) ? $name : '', $list, null, 'shield-check');
+            $token = $account->getRouteKey();
+            $results[] = new SearchResult(is_string($name) ? $name : '', $inWizard && is_string($token) ? $list . '#administrator-' . $token : $list, $account->emailAddress(), 'shield-check');
         }
 
         return new SearchResultGroup(text('admiro::search.groups.administrators'), $results, count($found) > $limit ? $list : null);

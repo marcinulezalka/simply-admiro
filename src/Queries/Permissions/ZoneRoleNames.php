@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Queries\Permissions;
 
+use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Query\Builder;
 use Simplysmart\Admiro\Contracts\CurrentOrganization;
 use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Models\Permissions\Role;
@@ -21,12 +23,13 @@ use Simplysmart\Admiro\Permissions\PermissionTables;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
- * Nazwy ról: globalne role strefy (do formularzy nadawania) i role konta w organizacji.
+ * Nazwy ról: globalne role strefy (do formularzy nadawania), liczba uprawnień każdej z nich i role konta w organizacji.
  */
 final readonly class ZoneRoleNames
 {
     public function __construct(
         private CurrentOrganization $organization,
+        private ConnectionInterface $db,
     ) {}
 
     /**
@@ -40,6 +43,30 @@ final readonly class ZoneRoleNames
         $query->orderBy(ColumnNames::ID);
 
         return array_values(array_filter($query->pluck(ColumnNames::NAME)->all(), is_string(...)));
+    }
+
+    /**
+     * Liczba uprawnień każdej globalnej roli strefy (rola → liczba), np. do kafelków profili.
+     *
+     * @return array<string, int>
+     */
+    public function permissionCounts(ZoneDefinition $zone): array
+    {
+        $counts = [];
+
+        foreach ($this->available($zone) as $role) {
+            $query = $this->db->table(PermissionTables::ROLE_HAS_PERMISSIONS);
+            $query->whereIn(PermissionTables::ROLE_FOREIGN_KEY, static function (Builder $roles) use ($zone, $role): void {
+                $roles->select(ColumnNames::ID)->from(PermissionTables::ROLES)
+                    ->where(PermissionTables::GUARD_NAME, $zone->guard)
+                    ->where(ColumnNames::NAME, $role)
+                    ->whereNull(PermissionTables::TEAM_FOREIGN_KEY)
+                    ->whereNull(ColumnNames::DELETED_AT);
+            });
+            $counts[$role] = $query->count();
+        }
+
+        return $counts;
     }
 
     /**

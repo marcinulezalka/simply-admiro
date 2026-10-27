@@ -28,9 +28,9 @@ use Simplysmart\Admiro\Queries\Accounts\ZoneAccounts;
 use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 
 /**
- * Administratorzy i ich role (`users.manage`), w organizacji operatora: nadawanie i odbieranie ról przez
- * ZoneRoleAssignment (bez eskalacji: nie nada się roli szerszej niż własne uprawnienia); własnych ról nie
- * zmienia się tu.
+ * Administratorzy i ich role (`users.manage`), w organizacji operatora: nadawanie, odbieranie i przełączanie ról
+ * przez ZoneRoleAssignment (bez eskalacji: nie nada się roli szerszej niż własne uprawnienia); własnych ról nie
+ * zmienia się tu. Po zmianie wraca na stronę, z której przyszło żądanie (lista administratorów albo kreator).
  */
 final readonly class AdministratorController
 {
@@ -79,10 +79,21 @@ final readonly class AdministratorController
         return $this->change($account, $role, assign: false);
     }
 
+    /**
+     * Przełącznik roli (np. w kreatorze onboardingu): nadaje rolę, której konto nie ma, a odbiera tę, którą ma;
+     * te same zasady co assign() i revoke().
+     */
+    public function toggle(string $account, string $role): RedirectResponse
+    {
+        $target = $this->managed->account($this->context->zone(), $account);
+
+        return $this->change($account, $role, assign: ! in_array($role, $this->roles->of($target, Organization::OPERATOR_ID), true));
+    }
+
     private function change(string $token, string $role, bool $assign): RedirectResponse
     {
         $target = $this->managed->account($this->context->zone(), $token);
-        $back = $this->redirect->route($this->context->zone()->routeName('administrators.index'));
+        $back = $this->redirect->back(fallback: route($this->context->zone()->routeName('administrators.index')));
         $admin = $this->context->admin();
 
         if ($target->is($admin)) {
