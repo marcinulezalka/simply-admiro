@@ -1087,7 +1087,8 @@ button.ss-badge:focus-visible {
 }
 
 .ss-onboarding-picker__result > form,
-.ss-onboarding-picker__result > .ss-badge {
+.ss-onboarding-picker__result > .ss-badge,
+.ss-onboarding-picker__result > .ss-default-mark {
     grid-area: switch;
     justify-self: end;
     margin: 0;
@@ -1376,6 +1377,45 @@ a.ss-onboarding-organizations__missing:hover {
     gap: 0;
     padding: 0;
     border-top: 0;
+}
+
+/*
+ * .ss-onboarding-dictionary — zadania słownikowe kreatora (kraje, waluty, kalendarz, stawki podatkowe) na wierszach
+ * .ss-onboarding-languages: kod waluty na kafelku (__code), nagłówek panelu z akcją (__header), szerszy fakt w siatce
+ * (__wide).
+ */
+.ss-onboarding-dictionary__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-4);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-onboarding-dictionary__header form {
+    margin: 0;
+}
+
+.ss-onboarding-dictionary__code {
+    display: inline-flex;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.ss-onboarding-dictionary__wide {
+    grid-column: span 3;
+}
+
+.ss-onboarding-dictionary__wide dd {
+    flex-wrap: wrap;
 }
 
 /*
@@ -2248,6 +2288,29 @@ a.ss-onboarding-picker__name:hover {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+/**
+ * .ss-default-mark — znacznik wpisu domyślnego w miejscu przełącznika (x-admiro::default-badge): wypełnione kółko
+ * w kolorze akcentu z ikoną ticket-slash w kolorze na akcencie; nazwa w podpowiedzi i dla czytników ekranu.
+ */
+.ss-default-mark {
+    display: inline-flex;
+    flex: none;
+    width: 1.875rem;
+    height: 1.875rem;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border-radius: 50%;
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    cursor: help;
+}
+
+.ss-default-mark__icon {
+    width: 1rem;
+    height: 1rem;
 }
 
 /**

@@ -27,8 +27,21 @@ enum OnboardingStep: string
     /** Akcja dziennika zdarzeń, którą kreator zatwierdza krok (Panel\Http\AdminAudit, RecordOnboardingProgress). */
     public const string CONFIRMED_ACTION = 'onboarding step confirmed';
 
+    /**
+     * Kroki wykonywane w samym kreatorze (trasa onboarding.show z parametrem kroku).
+     */
+    public const array IN_WIZARD = [self::Languages, self::Countries, self::Currencies, self::Calendar, self::Taxes, self::Organizations];
+
     case Installation = 'installation';
     case Languages = 'languages';
+    /** Kraje: włączone kraje (waluta, UE, dni wolne, VAT). */
+    case Countries = 'countries';
+    /** Waluty: włączone waluty i ich kursy NBP. */
+    case Currencies = 'currencies';
+    /** Kalendarz i święta: dni wolne włączonych krajów. */
+    case Calendar = 'calendar';
+    /** Stawki podatkowe włączonych krajów. */
+    case Taxes = 'taxes';
     case Settings = 'settings';
     case Organizations = 'organizations';
     /** Profile i uprawnienia: role użytkowników i ich nadawanie (wartość zostaje, bo pod nią zapisany jest postęp). */
@@ -53,7 +66,7 @@ enum OnboardingStep: string
     public function permission(): Permission
     {
         return match ($this) {
-            self::Installation, self::Languages, self::Settings, self::Legal => Permission::SettingsManage,
+            self::Installation, self::Languages, self::Countries, self::Currencies, self::Calendar, self::Taxes, self::Settings, self::Legal => Permission::SettingsManage,
             self::Organizations => Permission::OrganizationsManage,
             self::Owners => Permission::OwnersAssign,
             self::Administrators => Permission::UsersManage,
@@ -62,13 +75,14 @@ enum OnboardingStep: string
     }
 
     /**
-     * Krótka nazwa trasy strefy, na której wykonuje się krok (języki i organizacje w samym kreatorze, pozostałe na swoich stronach).
+     * Krótka nazwa trasy strefy, na której wykonuje się krok (języki, kraje, waluty, kalendarz, stawki podatkowe i organizacje
+     * w samym kreatorze, pozostałe na swoich stronach).
      */
     public function route(): string
     {
         return match ($this) {
             self::Installation => 'dashboard',
-            self::Languages, self::Organizations => 'onboarding.show',
+            self::Languages, self::Countries, self::Currencies, self::Calendar, self::Taxes, self::Organizations => 'onboarding.show',
             self::Settings => 'settings.show',
             self::Legal => 'cookie-policy.index',
             self::Owners => 'owners.create',
@@ -82,7 +96,7 @@ enum OnboardingStep: string
      */
     public function routeParameters(): array
     {
-        return in_array($this, [self::Languages, self::Organizations], true) ? ['step' => $this->value] : [];
+        return in_array($this, self::IN_WIZARD, true) ? ['step' => $this->value] : [];
     }
 
     public function icon(): string
@@ -90,6 +104,10 @@ enum OnboardingStep: string
         return match ($this) {
             self::Installation => 'cpu',
             self::Languages => 'languages',
+            self::Countries => 'flag',
+            self::Currencies => 'credit-card',
+            self::Calendar => 'calendar',
+            self::Taxes => 'invoice',
             self::Settings => 'locale',
             self::Organizations => 'building',
             self::Administrators => 'id-card',

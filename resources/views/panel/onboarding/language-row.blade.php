@@ -1,4 +1,4 @@
-{{-- Wiersz włączonego języka w panelu „Język aplikacji” zadania „Języki” kreatora onboardingu (panel/onboarding/show): flaga, nazwa (domyślny z plakietką „Domyślny” z ikoną), nazwa własna i kod, siatka ustawień regionalnych (kraj z flagą, waluta, podstawowa stawka VAT z odnośnikiem do stawek kraju, dni wolne z odnośnikiem do kalendarza; brakujące w przerywanej ramce) — u języka domyślnego zapisane, a dopóki ustawienia regionalne nie są zapisane, propozycja według języka (RegionalSettingsSummary::forLanguage(), plakietka „Propozycja”) z przyciskiem „Zapisz jako domyślne” (onboarding.regional; tylko dla języków z APP_LOCALES); u pozostałych języków propozycja informacyjnie. Po prawej przełącznik z gałką ON / OFF zapisywany od razu (data-ss-autosubmit), a język domyślny — domyślny i wymagany — nie ma przełącznika, tylko przy nazwie plakietkę „Domyślny” z ikoną ticket-slash (x-admiro::default-badge) (język interfejsu zablokowany). Z widoku nadrzędnego: $language: Language, $regionals: array<string, array{country: ?Country, currency: ?Currency, tax: ?TaxRate, holidays: int}>, $regionalConfigured: bool, $defaultCandidates: list<string>, $languageSwitch, $canManage, $zone. --}}
+{{-- Wiersz włączonego języka w panelu „Język aplikacji” zadania „Języki” kreatora onboardingu (panel/onboarding/show): flaga, nazwa, nazwa własna i kod, siatka ustawień regionalnych (kraj z flagą, waluta, podstawowa stawka VAT z odnośnikiem do stawek kraju, dni wolne z odnośnikiem do kalendarza; brakujące w przerywanej ramce) — u języka domyślnego zapisane, a dopóki ustawienia regionalne nie są zapisane, propozycja według języka (RegionalSettingsSummary::forLanguage(), plakietka „Propozycja”) z przyciskiem „Zapisz jako domyślne” (onboarding.regional; tylko dla języków z APP_LOCALES); u pozostałych języków propozycja informacyjnie. Po prawej przełącznik z gałką ON / OFF zapisywany od razu (data-ss-autosubmit), a język domyślny — domyślny i wymagany — ma w miejscu przełącznika wypełnioną ikonę ticket-slash (x-admiro::default-badge) (język interfejsu zablokowany). Z widoku nadrzędnego: $language: Language, $regionals: array<string, array{country: ?Country, currency: ?Currency, tax: ?TaxRate, holidays: int}>, $regionalConfigured: bool, $defaultCandidates: list<string>, $languageSwitch, $canManage, $zone. --}}
 @php
     ['locked' => $locked, 'id' => $switchId] = $languageSwitch($language, 'enabled-language');
     $regional = $regionals[$language->code] ?? ['country' => null, 'currency' => null, 'tax' => null, 'holidays' => 0];
@@ -13,7 +13,7 @@
             @endforeach
         </span>
         <span class="ss-onboarding-picker__chip-text">
-            <span class="ss-onboarding-picker__name">{{ $language->translatedName() }}@if ($language->is_default) <x-admiro::default-badge :label="text('admiro::dashboard.onboarding_language_default')" :title="text('admiro::dashboard.onboarding_language_locked')" />@endif</span>
+            <span class="ss-onboarding-picker__name">{{ $language->translatedName() }}</span>
             <span class="ss-table__sub">{{ implode(' · ', array_filter([$language->native_name, $language->code])) }}</span>
         </span>
     </span>
@@ -67,7 +67,9 @@
                 <button class="ss-button ss-button--primary ss-button--sm" type="submit"><x-admiro::icon name="check" class="ss-button__icon" />{{ text('admiro::dashboard.onboarding_regional_save') }}</button>
             </form>
         @endif
-        @if ($canManage && ! $language->is_default)
+        @if ($language->is_default)
+            <x-admiro::default-badge :label="text('admiro::dashboard.onboarding_language_default')" :title="text('admiro::dashboard.onboarding_language_locked')" />
+        @elseif ($canManage)
             <form method="POST" action="{{ route($zone . 'dictionaries.toggle', ['dictionary' => 'languages', 'code' => $language->code]) }}" data-ss-autosubmit>
                 @csrf
                 <x-admiro::switch :id="$switchId" :label="text('admiro::dashboard.onboarding_language_switch', ['name' => $language->translatedName()])" :checked="true" :disabled="$locked" :title="$locked ? text('admiro::dashboard.onboarding_language_locked') : null" hide-label knob />

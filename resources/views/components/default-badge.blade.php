@@ -1,3 +1,3 @@
-{{-- Plakietka wpisu domyślnego i wymaganego (np. organizacja operatora, język domyślny) przy jego nazwie: ikona ticket-slash (Hugeicons) i tekst, powód w podpowiedzi. label: tekst (np. „Domyślny”); title: powód (np. „Organizacja operatora — zawsze aktywna”). --}}
+{{-- Znacznik wpisu domyślnego i wymaganego (np. organizacja operatora, język, kraj albo waluta domyślne) w miejscu przełącznika: sama wypełniona ikona ticket-slash (Hugeicons) w kółku w kolorze akcentu, bez tekstu; nazwa i powód w podpowiedzi oraz dla czytników ekranu. label: nazwa (np. „Domyślny”); title: powód (np. „Organizacja operatora — zawsze aktywna”). --}}
 @props(['label', 'title' => null])
-<span {{ $attributes->class(['ss-badge', 'ss-badge--outline', 'ss-badge--info', 'ss-badge--default']) }} @if (filled($title)) title="{{ $title }}" @endif><x-admiro::icon name="ticket-slash" class="ss-badge__icon" />{{ $label }}</span>
+<span {{ $attributes->class(['ss-default-mark']) }} role="img" aria-label="{{ $label }}{{ filled($title) ? ': ' . $title : '' }}" title="{{ $label }}{{ filled($title) ? ' — ' . $title : '' }}"><x-admiro::icon name="ticket-slash" class="ss-default-mark__icon" /></span>

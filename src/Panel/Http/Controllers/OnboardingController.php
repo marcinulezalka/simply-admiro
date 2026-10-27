@@ -36,6 +36,7 @@ use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
 use Simplysmart\Admiro\Panel\Http\AdmiroNavigation;
+use Simplysmart\Admiro\Panel\Onboarding\DictionarySteps;
 use Simplysmart\Admiro\Panel\Onboarding\InstallationGuide;
 use Simplysmart\Admiro\Panel\Onboarding\OnboardingProgress;
 use Simplysmart\Admiro\Panel\Onboarding\RegionalSettingsSummary;
@@ -72,7 +73,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing, ZoneAccounts $accounts, ZoneRoleNames $roleNames): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing, ZoneAccounts $accounts, ZoneRoleNames $roleNames, DictionarySteps $dictionarySteps): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -108,6 +109,12 @@ final readonly class OnboardingController
                 'regionals' => $regionals,
                 'regionalConfigured' => $configured,
                 'defaultCandidates' => $routing->enabled(),
+            ];
+        }
+
+        if (in_array($current, [OnboardingStep::Countries, OnboardingStep::Currencies, OnboardingStep::Calendar, OnboardingStep::Taxes], true)) {
+            $data += $dictionarySteps->data($current, $request->string('q')->trim()->toString()) + [
+                'canManage' => $this->context->can(Permission::SettingsManage),
             ];
         }
 

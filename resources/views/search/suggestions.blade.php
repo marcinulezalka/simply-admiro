@@ -1,4 +1,4 @@
-{{-- Podpowiedzi globalnej wyszukiwarki (fragment HTML wstawiany przez js/global-search.js do .ss-search__suggestions): grupy wyników z nagłówkiem, każdy wynik jako opcja listy (role="option") z flagami albo ikoną, etykietą i opisem, a obok niego przełącznik stanu (toggleUrl, zapis POST przez js/post-toggle.js i przeładowanie strony — formularza nie da się zagnieździć w formularzu wyszukiwarki) albo plakietka (badge, np. „Domyślna”, z ikoną badgeIcon — przy wpisie domyślnym ticket-slash); pod grupą odnośnik do wszystkich wyników, gdy jest ich więcej; bez wyników — komunikat. $groups: list<View\Navigation\SearchResultGroup>; $allUrl: adres strony wszystkich wyników. --}}
+{{-- Podpowiedzi globalnej wyszukiwarki (fragment HTML wstawiany przez js/global-search.js do .ss-search__suggestions): grupy wyników z nagłówkiem, każdy wynik jako opcja listy (role="option") z flagami albo ikoną, etykietą i opisem, a obok niego przełącznik stanu (toggleUrl, zapis POST przez js/post-toggle.js i przeładowanie strony — formularza nie da się zagnieździć w formularzu wyszukiwarki) albo plakietka (badge, np. „Interfejs”), a przy wpisie domyślnym (badgeIcon) sama wypełniona ikona .ss-default-mark z nazwą w podpowiedzi; pod grupą odnośnik do wszystkich wyników, gdy jest ich więcej; bez wyników — komunikat. $groups: list<View\Navigation\SearchResultGroup>; $allUrl: adres strony wszystkich wyników. --}}
 @if ($groups === [])
     <p class="ss-search__empty">{{ text('layout.search_empty') }}</p>
 @else
@@ -26,7 +26,7 @@
                         </span>
                     </a>
                         @if ($result->badge !== null)
-                            <span class="ss-badge ss-badge--outline ss-badge--info">@if ($result->badgeIcon !== null)<x-admiro::icon :name="$result->badgeIcon" class="ss-badge__icon" />@endif{{ $result->badge }}</span>
+                            @if ($result->badgeIcon !== null)<span class="ss-default-mark" role="img" aria-label="{{ $result->badge }}" title="{{ $result->badge }}"><x-admiro::icon :name="$result->badgeIcon" class="ss-default-mark__icon" /></span>@else<span class="ss-badge ss-badge--outline ss-badge--info">{{ $result->badge }}</span>@endif
                         @else
                             <x-admiro::switch :id="'ss-search-toggle-' . $groupIndex . '-' . $resultIndex" :label="$result->label" :checked="$result->active" hide-label data-ss-post-toggle="{{ $result->toggleUrl }}" />
                         @endif

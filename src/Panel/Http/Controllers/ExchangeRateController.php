@@ -18,6 +18,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Http\AdminAudit;
 use Simplysmart\Admiro\Panel\Http\AdminContext;
@@ -138,6 +139,10 @@ final readonly class ExchangeRateController
 
     private function back(): RedirectResponse
     {
-        return $this->redirect->route($this->context->zone()->routeName('exchange-rates.index'));
+        $step = OnboardingStep::tryFrom(request()->string('onboarding')->toString());
+
+        return $step === OnboardingStep::Currencies
+            ? $this->redirect->route($this->context->zone()->routeName('onboarding.show'), ['step' => $step->value])
+            : $this->redirect->route($this->context->zone()->routeName('exchange-rates.index'));
     }
 }

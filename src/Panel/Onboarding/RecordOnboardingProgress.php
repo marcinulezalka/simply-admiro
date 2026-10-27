@@ -45,7 +45,15 @@ final readonly class RecordOnboardingProgress
         return match ($event->action) {
             OnboardingStep::CONFIRMED_ACTION => $event->context['step'] === OnboardingStep::Languages->value ? OnboardingStep::Languages->value : null,
             'settings updated' => OnboardingStep::Settings->value,
-            'dictionary entry enabled', 'dictionary entry disabled' => ($event->context['dictionary'] ?? null) === 'languages' ? OnboardingStep::Languages->value : null,
+            'dictionary entry enabled', 'dictionary entry disabled' => match ($event->context['dictionary'] ?? null) {
+                'languages' => OnboardingStep::Languages->value,
+                'countries' => OnboardingStep::Countries->value,
+                'currencies' => OnboardingStep::Currencies->value,
+                default => null,
+            },
+            'exchange rates synced', 'exchange rate added' => OnboardingStep::Currencies->value,
+            'holidays synced', 'holiday added' => OnboardingStep::Calendar->value,
+            'tax rate added', 'tax rate ended' => OnboardingStep::Taxes->value,
             'cookie policy published' => OnboardingStep::legalMilestone('cookies'),
             'legal document published' => is_string($document) ? OnboardingStep::legalMilestone($document) : null,
             'organization created' => OnboardingStep::Organizations->value,

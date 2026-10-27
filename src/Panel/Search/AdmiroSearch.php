@@ -34,7 +34,8 @@ use Simplysmart\Admiro\View\Navigation\SearchResultGroup;
  * Wyniki globalnej wyszukiwarki strefy administratorów w zaznaczonych zakresach (SearchScope), tylko w zakresach
  * dozwolonych administratorowi: języki (także po krajach, np. „polska” → polski; z flagami krajów, do kreatora
  * języków z tym samym tekstem — lista wyników nad panelem języków; z przełącznikiem włączenia przy `settings.manage`, a język
- * domyślny i języki interfejsu z plakietką —, a bez `settings.manage` do słownika), kraje i waluty (słowniki), organizacje (do kreatora
+ * domyślny i języki interfejsu z plakietką —, a bez `settings.manage` do słownika), kraje i waluty (do zadań kreatora „Kraje” i „Waluty” z tym samym tekstem, z przełącznikiem włączenia i plakietką
+ * wpisu domyślnego; bez `settings.manage` do słowników), organizacje (do kreatora
  * organizacji z tym samym tekstem — lista wyników pod wyszukiwarką; z przełącznikiem włączenia przy `organizations.manage`,
  * a organizacja operatora z plakietką „Domyślna”) i administratorzy (do kreatora „Profile i uprawnienia” z tym samym
  * tekstem — wyniki nad panelami, z adresem e-mail w opisie) (imię i nazwisko albo dokładny e-mail), strony panelu (pozycje menu i ustawień po nazwie,
@@ -128,12 +129,20 @@ final readonly class AdmiroSearch
     private function countries(string $term, int $limit): SearchResultGroup
     {
         $found = $this->dictionaries->countries($term, $limit + 1);
-        $list = $this->route('dictionaries.index', ['dictionary' => 'countries']);
-        $results = array_values($found->take($limit)->map(static fn(Country $country): SearchResult => new SearchResult(
+        $inWizard = $this->context->can(OnboardingStep::Countries->permission());
+        $list = $inWizard
+            ? $this->route('onboarding.show', ['step' => OnboardingStep::Countries->value, 'q' => $term])
+            : $this->route('dictionaries.index', ['dictionary' => 'countries']);
+        $canToggle = $this->context->can(Permission::SettingsManage);
+        $results = array_values($found->take($limit)->map(fn(Country $country): SearchResult => new SearchResult(
             $country->translatedName(),
-            $list . '#entry-' . $country->alpha_code_2,
-            implode(' · ', array_filter([$country->alpha_code_2, $country->alpha_code_3])),
+            $list . ($inWizard ? '#country-' : '#entry-') . $country->alpha_code_2,
+            implode(' · ', array_filter([$country->alpha_code_2, $country->alpha_code_3, $country->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive')])),
             flags: $country->flag_icon !== null ? [$country->flag_icon] : [],
+            toggleUrl: $canToggle && $country->is_default !== true ? $this->route('dictionaries.toggle', ['dictionary' => 'countries', 'code' => $country->alpha_code_2]) : null,
+            active: $country->is_active === true,
+            badge: $country->is_default === true ? text('admiro::dashboard.onboarding_dictionary_default') : null,
+            badgeIcon: $country->is_default === true ? 'ticket-slash' : null,
         ))->all());
 
         return new SearchResultGroup(text('admiro::search.groups.countries'), $results, $found->count() > $limit ? $list : null);
@@ -142,12 +151,20 @@ final readonly class AdmiroSearch
     private function currencies(string $term, int $limit): SearchResultGroup
     {
         $found = $this->dictionaries->currencies($term, $limit + 1);
-        $list = $this->route('dictionaries.index', ['dictionary' => 'currencies']);
-        $results = array_values($found->take($limit)->map(static fn(Currency $currency): SearchResult => new SearchResult(
+        $inWizard = $this->context->can(OnboardingStep::Currencies->permission());
+        $list = $inWizard
+            ? $this->route('onboarding.show', ['step' => OnboardingStep::Currencies->value, 'q' => $term])
+            : $this->route('dictionaries.index', ['dictionary' => 'currencies']);
+        $canToggle = $this->context->can(Permission::SettingsManage);
+        $results = array_values($found->take($limit)->map(fn(Currency $currency): SearchResult => new SearchResult(
             $currency->translatedName(),
-            $list . '#entry-' . $currency->alpha_code_3,
-            $currency->alpha_code_3,
+            $list . ($inWizard ? '#currency-' : '#entry-') . $currency->alpha_code_3,
+            implode(' · ', [$currency->alpha_code_3, $currency->is_active ? text('admiro::admin.state_active') : text('admiro::admin.state_inactive')]),
             'credit-card',
+            toggleUrl: $canToggle && $currency->is_default !== true ? $this->route('dictionaries.toggle', ['dictionary' => 'currencies', 'code' => $currency->alpha_code_3]) : null,
+            active: $currency->is_active === true,
+            badge: $currency->is_default === true ? text('admiro::dashboard.onboarding_dictionary_default') : null,
+            badgeIcon: $currency->is_default === true ? 'ticket-slash' : null,
         ))->all());
 
         return new SearchResultGroup(text('admiro::search.groups.currencies'), $results, $found->count() > $limit ? $list : null);
