@@ -6,7 +6,7 @@
     <x-slot:head>
         <x-admiro::styles :files="[...\Simplysmart\Admiro\View\CoreAssets::STYLESHEETS, ...$stylesheets]" />
         <x-admiro::zone-styles :paths="$zoneStylesheets" />
-        <x-admiro::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js', 'js/pin-keypad.js', 'js/global-search.js', 'js/autosubmit.js', 'js/calendar-panel.js', 'js/tabs.js', 'js/live-search.js', 'js/tree-dnd.js', 'js/file-drop.js', 'js/view-switch.js', 'js/post-toggle.js']" />
+        <x-admiro::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js', 'js/pin-keypad.js', 'js/global-search.js', 'js/autosubmit.js', 'js/calendar-panel.js', 'js/tabs.js', 'js/live-search.js', 'js/tree-dnd.js', 'js/file-drop.js', 'js/keep-scroll.js', 'js/view-switch.js', 'js/post-toggle.js']" />
     </x-slot:head>
 
     {{ $before ?? '' }}

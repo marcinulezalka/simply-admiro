@@ -136,13 +136,13 @@
                 @endif
 
                 @php($translationErrors = ['translations', 'files', 'files.*'])
-                @php($translationsOpen = $canManage && $errors->hasAny($translationErrors))
+                @php($translationsOpen = $canManage && ($errors->hasAny($translationErrors) || session(\Simplysmart\Admiro\Panel\Http\Controllers\OnboardingController::FOLDER) === \Simplysmart\Admiro\Panel\Http\Controllers\OnboardingController::TRANSLATIONS_FOLDER))
                 @php($languagesUrl = fn (string $view, ?string $layout): string => route($zone . 'onboarding.show', array_filter(['step' => $current->value, 'view' => $view === 'active' ? null : $view, 'layout' => $layout === null || $layout === ($view === 'active' ? 'list' : 'grid') ? null : $layout])))
                 <div class="ss-folders" data-ss-tabs>
                     <div class="ss-folders__tabs" role="tablist" aria-label="{{ text('admiro::dashboard.onboarding_languages_folders') }}" hidden data-ss-tabs-list>
-                        <button class="ss-folder__tab" type="button" role="tab" id="ss-languages-enabled-title" aria-controls="ss-folder-languages" aria-selected="{{ $translationsOpen ? 'false' : 'true' }}" data-ss-tab><span class="ss-card__title">{{ text('admiro::dashboard.onboarding_languages_enabled') }}</span></button>
+                        <button class="ss-folder__tab" type="button" role="tab" id="ss-languages-enabled-title" aria-controls="ss-folder-languages" aria-selected="{{ $translationsOpen ? 'false' : 'true' }}" data-ss-tab><x-admiro::icon name="locale" class="ss-folder__tab-icon" /><span class="ss-card__title">{{ text('admiro::dashboard.onboarding_languages_enabled') }}</span></button>
                         @if ($canManage)
-                            <button class="ss-folder__tab" type="button" role="tab" id="ss-translations-title" aria-controls="{{ \Simplysmart\Admiro\Panel\Enums\OnboardingStep::TRANSLATIONS_ANCHOR }}" aria-selected="{{ $translationsOpen ? 'true' : 'false' }}" data-ss-tab><span class="ss-card__title">{{ text('admiro::dashboard.onboarding_translations_title') }}</span></button>
+                            <button class="ss-folder__tab" type="button" role="tab" id="ss-translations-title" aria-controls="{{ \Simplysmart\Admiro\Panel\Enums\OnboardingStep::TRANSLATIONS_ANCHOR }}" aria-selected="{{ $translationsOpen ? 'true' : 'false' }}" data-ss-tab><x-admiro::icon name="languages" class="ss-folder__tab-icon" /><span class="ss-card__title">{{ text('admiro::dashboard.onboarding_translations_title') }}</span></button>
                         @endif
                     </div>
 
@@ -154,14 +154,11 @@
                                         <a class="ss-tabs__link" href="{{ $languagesUrl($view, $languageLayoutChosen ? $languageLayout : null) }}" aria-current="{{ $languageView === $view ? 'true' : 'false' }}" data-ss-view><x-admiro::icon :name="$icon" class="ss-tabs__icon" />{{ text('admiro::dashboard.onboarding_languages_view_' . $view) }}</a>
                                     @endforeach
                                 </nav>
-                                <div class="ss-folder__toolbar-end ss-onboarding-languages__layout">
-                                    <span class="ss-onboarding-languages__layout-label" id="ss-languages-layouts-label">{{ text('admiro::dashboard.onboarding_languages_layouts') }}</span>
-                                    <nav class="ss-tabs ss-tabs--slider ss-onboarding-languages__views ss-onboarding-languages__views--icons" id="ss-languages-layouts" aria-labelledby="ss-languages-layouts-label" data-ss-view-switch="ss-languages-workspace">
-                                        @foreach (['list' => 'list', 'grid' => 'grid'] as $layout => $icon)
-                                            <a class="ss-tabs__link" href="{{ $languagesUrl($languageView, $layout) }}" title="{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}" aria-current="{{ $languageLayout === $layout ? 'true' : 'false' }}" data-ss-view><x-admiro::icon :name="$icon" class="ss-tabs__icon" /><span class="ss-sr-only">{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}</span></a>
-                                        @endforeach
-                                    </nav>
-                                </div>
+                                <nav class="ss-tabs ss-tabs--slider ss-onboarding-languages__views ss-onboarding-languages__views--icons ss-folder__toolbar-end" id="ss-languages-layouts" aria-label="{{ text('admiro::dashboard.onboarding_languages_layouts') }}" data-ss-view-switch="ss-languages-workspace">
+                                    @foreach (['list' => 'list', 'grid' => 'grid'] as $layout => $icon)
+                                        <a class="ss-tabs__link" href="{{ $languagesUrl($languageView, $layout) }}" title="{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}" aria-current="{{ $languageLayout === $layout ? 'true' : 'false' }}" data-ss-view><x-admiro::icon :name="$icon" class="ss-tabs__icon" /><span class="ss-sr-only">{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}</span></a>
+                                    @endforeach
+                                </nav>
                             </div>
                             <div class="ss-folder__body">
                                 @error('regional')
@@ -230,15 +227,15 @@
                                     @if ($errors->hasAny($translationErrors))
                                         <p class="ss-field__error" role="alert">{{ $errors->first('translations') ?: ($errors->first('files') ?: $errors->first('files.*')) }}</p>
                                     @endif
-                                    <form class="ss-onboarding-translations__form" id="ss-translations-form" method="POST" action="{{ route($zone . 'onboarding.translations.import') }}" enctype="multipart/form-data" data-ss-file-drop data-ss-file-drop-max="{{ \Simplysmart\Admiro\Translation\TranslationImport::MAX_FILES }}" data-ss-file-drop-valid="{{ text('admiro::dashboard.onboarding_translations_checked') }}" data-ss-file-drop-invalid="{{ text('admiro::dashboard.onboarding_translations_rejected') }}">
+                                    <form class="ss-onboarding-translations__form" id="ss-translations-form" method="POST" action="{{ route($zone . 'onboarding.translations.import') }}" enctype="multipart/form-data" data-ss-keep-scroll data-ss-file-drop data-ss-file-drop-max="{{ \Simplysmart\Admiro\Translation\TranslationImport::MAX_FILES }}" data-ss-file-drop-valid="{{ text('admiro::dashboard.onboarding_translations_checked') }}" data-ss-file-drop-invalid="{{ text('admiro::dashboard.onboarding_translations_rejected') }}">
                                         @csrf
                                         <label class="ss-onboarding-translations__drop" for="ss-translations-files" data-ss-file-drop-zone>
+                                            <ul class="ss-onboarding-translations__files" aria-label="{{ text('admiro::dashboard.onboarding_translations_chosen') }}" aria-live="polite" hidden data-ss-file-drop-list></ul>
                                             <x-admiro::icon name="upload" class="ss-onboarding-translations__icon" />
                                             <span class="ss-onboarding-translations__drop-text">{{ text('admiro::dashboard.onboarding_translations_drop') }}</span>
                                             <span class="ss-table__sub">{{ text('admiro::dashboard.onboarding_translations_formats', ['count' => \Simplysmart\Admiro\Translation\TranslationImport::MAX_FILES, 'size' => local_number(\Simplysmart\Admiro\Translation\TranslationImport::MAX_KILOBYTES)]) }}</span>
                                             <input class="ss-onboarding-translations__input" id="ss-translations-files" name="files[]" type="file" accept=".json,application/json" multiple required>
                                         </label>
-                                        <ul class="ss-onboarding-translations__files" aria-label="{{ text('admiro::dashboard.onboarding_translations_chosen') }}" aria-live="polite" hidden data-ss-file-drop-list></ul>
                                         <noscript><button class="ss-button ss-button--primary ss-button--sm" type="submit"><x-admiro::icon name="upload" class="ss-button__icon" />{{ text('admiro::dashboard.onboarding_translations_submit') }}</button></noscript>
                                     </form>
                                 </div>

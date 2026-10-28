@@ -71,6 +71,14 @@ final readonly class OnboardingController
     public const string HIDDEN_LANGUAGES = 'hidden';
 
     /**
+     * Klucz sesji z teczką do otwarcia po powrocie do zadania „Języki” (bez kotwicy w adresie, więc strona się nie
+     * przewija) i wartość dla teczki „Tłumaczenia”.
+     */
+    public const string FOLDER = 'onboarding_folder';
+
+    public const string TRANSLATIONS_FOLDER = 'translations';
+
+    /**
      * Układy obszaru roboczego „Język interfejsu” (`layout`): lista paneli albo siatka; domyślnie aktywne języki jako
      * lista, niedostępne jako siatka.
      */
@@ -276,6 +284,7 @@ final readonly class OnboardingController
      * Import plików tłumaczeń JSON z sekcji „Tłumaczenia” zadania „Języki” (format szablonu, Translation\TranslationImport,
      * albo eksport wszystkich języków z listą `languages`): każdy dokument wskazuje włączony język (`language`), a jego niepuste tłumaczenia trafiają do nadpisań aplikacji
      * `lang/vendor/`; import trafia do dziennika. Plik bez poprawnego JSON-u albo z nieznanym językiem — błąd, bez zapisu.
+     * Powrót do zadania bez kotwicy, z teczką „Tłumaczenia” wybraną przez sesję (FOLDER).
      */
     public function importTranslations(Request $request, TranslationImport $import, DefaultEntries $defaults, AdminAudit $audit): RedirectResponse
     {
@@ -284,7 +293,7 @@ final readonly class OnboardingController
             'files.*' => ['required', 'file', 'extensions:json', 'max:' . TranslationImport::MAX_KILOBYTES],
         ]);
         $source = $defaults->language()->code ?? config()->string('app.locale');
-        $back = $this->redirect->to(route($this->context->zone()->routeName('onboarding.show'), ['step' => OnboardingStep::Languages->value]) . '#' . OnboardingStep::TRANSLATIONS_ANCHOR);
+        $back = $this->redirect->route($this->context->zone()->routeName('onboarding.show'), ['step' => OnboardingStep::Languages->value])->with(self::FOLDER, self::TRANSLATIONS_FOLDER);
         $documents = [];
 
         $files = $request->file('files');

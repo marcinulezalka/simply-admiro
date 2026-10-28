@@ -1687,6 +1687,15 @@ a.ss-onboarding-organizations__missing:hover {
     color: inherit;
 }
 
+/* Delikatna ikona przed nazwą zakładki (spójna z nazwą teczki). */
+.ss-folder__tab-icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-right: var(--ss-space-2);
+    opacity: 0.7;
+}
+
 .ss-folder__tab[aria-selected="true"] {
     z-index: 2;
     background: var(--ss-folder-back);
@@ -1761,28 +1770,23 @@ a.ss-onboarding-organizations__missing:hover {
     margin-left: auto;
 }
 
-/* Przełącznik układu „Pokaż jako”: napis mono wersalikami, obok suwak z samymi ikonami (nazwy w podpowiedzi). */
-.ss-onboarding-languages__layout {
-    display: inline-flex;
-    gap: var(--ss-space-2);
-    align-items: center;
-}
-
-.ss-onboarding-languages__layout-label {
-    color: var(--ss-color-muted);
-    font-family: var(--ss-font-mono);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
+/* Przełącznik układu lista / siatka: same ikony w okrągłych przyciskach w pigułce, wskaźnik też jest kółkiem — jak
+   przełącznik (nazwy w podpowiedzi i dla czytników ekranu). */
 .ss-tabs.ss-onboarding-languages__views.ss-onboarding-languages__views--icons {
+    grid-template-columns: repeat(2, 1.75rem);
     min-width: 0;
 }
 
+.ss-tabs.ss-onboarding-languages__views--icons::before {
+    border-radius: 50%;
+}
+
 .ss-tabs.ss-onboarding-languages__views--icons .ss-tabs__link {
-    padding-inline: var(--ss-space-3);
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border-radius: 50%;
 }
 
 .ss-folder__count-icon {
@@ -7605,14 +7609,15 @@ a.ss-notification:focus-visible {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-1);
-    margin: 0;
+    align-items: center;
+    margin: 0 0 var(--ss-space-3);
     padding: 0;
     list-style: none;
     font-family: var(--ss-font-mono);
     font-size: 0.8125rem;
 }
 
-/* Wynik sprawdzenia pliku przed importem (js/file-drop.js): gotowy — zielony znacznik, odrzucony — czerwony. */
+/* Lista wybranych plików na środku strefy, nad opisem. Wynik sprawdzenia pliku przed importem (js/file-drop.js): gotowy — zielony znacznik, odrzucony — czerwony. */
 .ss-onboarding-translations__files [data-state]::before {
     margin-right: var(--ss-space-2);
     font-weight: 700;
