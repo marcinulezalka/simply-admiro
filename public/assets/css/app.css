@@ -1761,6 +1761,30 @@ a.ss-onboarding-organizations__missing:hover {
     margin-left: auto;
 }
 
+/* Przełącznik układu „Pokaż jako”: napis mono wersalikami, obok suwak z samymi ikonami (nazwy w podpowiedzi). */
+.ss-onboarding-languages__layout {
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-onboarding-languages__layout-label {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.ss-tabs.ss-onboarding-languages__views.ss-onboarding-languages__views--icons {
+    min-width: 0;
+}
+
+.ss-tabs.ss-onboarding-languages__views--icons .ss-tabs__link {
+    padding-inline: var(--ss-space-3);
+}
+
 .ss-folder__count-icon {
     width: 0.875rem;
     height: 0.875rem;

@@ -154,11 +154,14 @@
                                         <a class="ss-tabs__link" href="{{ $languagesUrl($view, $languageLayoutChosen ? $languageLayout : null) }}" aria-current="{{ $languageView === $view ? 'true' : 'false' }}" data-ss-view><x-admiro::icon :name="$icon" class="ss-tabs__icon" />{{ text('admiro::dashboard.onboarding_languages_view_' . $view) }}</a>
                                     @endforeach
                                 </nav>
-                                <nav class="ss-tabs ss-tabs--slider ss-onboarding-languages__views ss-folder__toolbar-end" id="ss-languages-layouts" aria-label="{{ text('admiro::dashboard.onboarding_languages_layouts') }}" data-ss-view-switch="ss-languages-workspace">
-                                    @foreach (['list' => 'list', 'grid' => 'grid'] as $layout => $icon)
-                                        <a class="ss-tabs__link" href="{{ $languagesUrl($languageView, $layout) }}" aria-current="{{ $languageLayout === $layout ? 'true' : 'false' }}" data-ss-view><x-admiro::icon :name="$icon" class="ss-tabs__icon" />{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}</a>
-                                    @endforeach
-                                </nav>
+                                <div class="ss-folder__toolbar-end ss-onboarding-languages__layout">
+                                    <span class="ss-onboarding-languages__layout-label" id="ss-languages-layouts-label">{{ text('admiro::dashboard.onboarding_languages_layouts') }}</span>
+                                    <nav class="ss-tabs ss-tabs--slider ss-onboarding-languages__views ss-onboarding-languages__views--icons" id="ss-languages-layouts" aria-labelledby="ss-languages-layouts-label" data-ss-view-switch="ss-languages-workspace">
+                                        @foreach (['list' => 'list', 'grid' => 'grid'] as $layout => $icon)
+                                            <a class="ss-tabs__link" href="{{ $languagesUrl($languageView, $layout) }}" title="{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}" aria-current="{{ $languageLayout === $layout ? 'true' : 'false' }}" data-ss-view><x-admiro::icon :name="$icon" class="ss-tabs__icon" /><span class="ss-sr-only">{{ text('admiro::dashboard.onboarding_languages_layout_' . $layout) }}</span></a>
+                                        @endforeach
+                                    </nav>
+                                </div>
                             </div>
                             <div class="ss-folder__body">
                                 @error('regional')

@@ -38,7 +38,7 @@ return [
     'onboarding_review' => 'Review the tasks',
     'onboarding_languages_enabled' => 'Interface language',
     'onboarding_languages_views' => 'Languages view',
-    'onboarding_languages_layouts' => 'List layout',
+    'onboarding_languages_layouts' => 'Show as',
     'onboarding_languages_layout_list' => 'List',
     'onboarding_languages_layout_grid' => 'Grid',
     'onboarding_languages_folders' => 'Language and translations',

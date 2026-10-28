@@ -38,7 +38,7 @@ return [
     'onboarding_review' => 'Przejrzyj zadania',
     'onboarding_languages_enabled' => 'Język interfejsu',
     'onboarding_languages_views' => 'Widok języków',
-    'onboarding_languages_layouts' => 'Układ listy',
+    'onboarding_languages_layouts' => 'Pokaż jako',
     'onboarding_languages_layout_list' => 'Lista',
     'onboarding_languages_layout_grid' => 'Siatka',
     'onboarding_languages_folders' => 'Język i tłumaczenia',
