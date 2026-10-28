@@ -22,6 +22,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
+use Simplysmart\Admiro\Translation\TranslationImport;
 use Simplysmart\Admiro\Translation\TranslationTemplate;
 use Simplysmart\Admiro\Auth\AccountKey;
 use Simplysmart\Admiro\Models\ZoneAccount;
@@ -77,7 +78,7 @@ final readonly class OnboardingController
         return view('admiro::panel.onboarding.index', ['onboarding' => $this->progress->checklist($this->steps())]);
     }
 
-    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing, ZoneAccounts $accounts, ZoneRoleNames $roleNames, DictionarySteps $dictionarySteps): View
+    public function show(Request $request, string $step, DictionaryList $dictionaries, DictionarySearch $search, InstallationGuide $guide, OrganizationList $organizations, OrganizationAssignments $assignments, OrganizationBadges $badges, AdmiroNavigation $navigation, RegionalSettingsSummary $regional, LocaleRouting $routing, ZoneAccounts $accounts, ZoneRoleNames $roleNames, DictionarySteps $dictionarySteps, TranslationTemplate $template, DefaultEntries $defaults): View
     {
         $steps = $this->steps();
         $current = $this->step($step, $steps);
@@ -100,6 +101,7 @@ final readonly class OnboardingController
             $enabled = $all->filter(static fn(Language $language): bool => $language->is_active === true)->sortBy($defaultFirst)->values();
             $configured = collect($data['checklist'])->firstWhere('step', OnboardingStep::Settings)['done'] ?? false;
             $regionals = [];
+            $source = $defaults->language()->code ?? config()->string('app.locale');
 
             foreach ($enabled as $language) {
                 $regionals[$language->code] = $language->is_default === true && $configured ? $regional->summary() : $regional->forLanguage($language);
@@ -114,6 +116,7 @@ final readonly class OnboardingController
                 'regionals' => $regionals,
                 'regionalConfigured' => $configured,
                 'defaultCandidates' => $routing->enabled(),
+                'keywords' => $enabled->mapWithKeys(static fn(Language $language): array => [$language->code => $template->counts($language->code, $source)])->all(),
             ];
         }
 
@@ -225,6 +228,69 @@ final readonly class OnboardingController
         return new JsonResponse($template->for($language->code, $source), 200, [
             'Content-Disposition' => 'attachment; filename="translations-' . $language->code . '.json"',
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Eksport (ikona przy „+” w zadaniu „Języki”): jeden plik JSON z szablonami tłumaczeń wszystkich włączonych języków
+     * (`languages`: lista dokumentów w formacie pojedynczego szablonu), który import przyjmuje bez zmian.
+     */
+    public function exportTranslations(TranslationTemplate $template, DefaultEntries $defaults, AdminAudit $audit): Response
+    {
+        $source = $defaults->language()->code ?? config()->string('app.locale');
+        $languages = Language::query()->where('is_active', true)->orderBy(Language::CODE)->pluck(Language::CODE)->all();
+        $audit->record('translations exported', context: ['languages' => count($languages)]);
+
+        return new JsonResponse([
+            'source' => $source,
+            'languages' => array_map(static fn(string $code): array => $template->for($code, $source), array_values(array_filter($languages, is_string(...)))),
+        ], 200, [
+            'Content-Disposition' => 'attachment; filename="translations.json"',
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Import plików tłumaczeń JSON z sekcji „Tłumaczenia” zadania „Języki” (format szablonu, Translation\TranslationImport,
+     * albo eksport wszystkich języków z listą `languages`): każdy dokument wskazuje włączony język (`language`), a jego niepuste tłumaczenia trafiają do nadpisań aplikacji
+     * `lang/vendor/`; import trafia do dziennika. Plik bez poprawnego JSON-u albo z nieznanym językiem — błąd, bez zapisu.
+     */
+    public function importTranslations(Request $request, TranslationImport $import, DefaultEntries $defaults, AdminAudit $audit): RedirectResponse
+    {
+        $request->validate([
+            'files' => ['required', 'array', 'max:' . TranslationImport::MAX_FILES],
+            'files.*' => ['required', 'file', 'extensions:json', 'max:' . TranslationImport::MAX_KILOBYTES],
+        ]);
+        $source = $defaults->language()->code ?? config()->string('app.locale');
+        $back = $this->redirect->to(route($this->context->zone()->routeName('onboarding.show'), ['step' => OnboardingStep::Languages->value]) . '#' . OnboardingStep::TRANSLATIONS_ANCHOR);
+        $documents = [];
+
+        $files = $request->file('files');
+
+        foreach (is_array($files) ? $files : [] as $file) {
+            $decoded = json_decode((string) file_get_contents($file->getRealPath()), true);
+            $parts = is_array($decoded) && is_array($decoded['languages'] ?? null) ? $decoded['languages'] : [$decoded];
+
+            foreach ($parts as $document) {
+                $language = is_array($document) && is_string($document['language'] ?? null)
+                    ? Language::query()->where(Language::CODE, $document['language'])->where('is_active', true)->first()
+                    : null;
+
+                if ($language === null || ! is_array($document['texts'] ?? null)) {
+                    return $back->withErrors(['translations' => text('admiro::dashboard.onboarding_translations_invalid', ['file' => $file->getClientOriginalName()])]);
+                }
+
+                $documents[] = ['language' => $language->code, 'texts' => $document['texts']];
+            }
+        }
+
+        $count = 0;
+
+        foreach ($documents as $document) {
+            $imported = $import->import($document['language'], $source, $document['texts']);
+            $audit->record('translations imported', context: ['language' => $document['language'], 'texts' => $imported]);
+            $count += $imported;
+        }
+
+        return $back->with('status', text('admiro::dashboard.onboarding_translations_imported', ['count' => local_number($count)]));
     }
 
     public function confirm(string $step, AdminAudit $audit): RedirectResponse

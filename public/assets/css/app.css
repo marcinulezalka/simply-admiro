@@ -1574,7 +1574,7 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 /*
- * .ss-onboarding-languages — panel „Język aplikacji” w zadaniu „Języki”: nagłówek (__header), wiersze włączonych
+ * .ss-onboarding-languages — panel „Język aplikacji” w zadaniu „Języki” (na tle delikatna siatka kropek): nagłówek (__header), wiersze włączonych
  * języków (__rows, __row; domyślny — __row--default z ramką akcentu): język z flagą (__main), siatka ustawień
  * regionalnych (__regional: kraj, waluta, VAT, dni wolne; propozycja według języka — --proposed, przyciszona;
  * brakujące w przerywanej ramce __regional-item--missing) i po prawej (__side) plakietki, „Zapisz jako domyślne”
@@ -1584,6 +1584,18 @@ a.ss-onboarding-organizations__missing:hover {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-3);
+}
+
+/* Tło robocze panelu (np. „Język aplikacji”): bardzo delikatna siatka kropek na szarym tle karty, jak papier w kropki; w motywach kontrastu jednolite tło. */
+.ss-card--muted.ss-onboarding-languages {
+    background-color: var(--ss-color-surface-muted);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--ss-color-muted) 22%, transparent) 1px, transparent 1.2px);
+    background-position: calc(var(--ss-space-3) / 2) calc(var(--ss-space-3) / 2);
+    background-size: 20px 20px;
+}
+
+:root[data-theme^="contrast"] .ss-card--muted.ss-onboarding-languages {
+    background-image: none;
 }
 
 .ss-onboarding-languages__header .ss-card__title {
@@ -7140,3 +7152,90 @@ a.ss-notification:focus-visible {
 }
 
 
+
+/*
+ * .ss-onboarding-translations — sekcja „Tłumaczenia” w zadaniu „Języki” (otwierana z menu „+” kotwicą
+ * #translations-upload, :target; po błędzie przesyłania otwarta przez .is-open): strefa upuszczania plików JSON
+ * (__drop, przerywana ramka; pole pliku __input przykrywa ją, więc upuszczenie działa bez skryptu; przy przeciąganiu
+ * .is-drop-target, js/file-drop.js) i lista wybranych plików (__files).
+ */
+.ss-onboarding-translations {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+.ss-onboarding-translations:not(:target, .is-open) {
+    display: none;
+}
+
+.ss-onboarding-translations__header {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-onboarding-translations > p {
+    margin: 0;
+}
+
+.ss-onboarding-translations__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    align-items: flex-start;
+}
+
+.ss-onboarding-translations__drop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    align-items: center;
+    align-self: stretch;
+    padding: var(--ss-space-6) var(--ss-space-4);
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-muted);
+    text-align: center;
+    cursor: pointer;
+}
+
+.ss-onboarding-translations__drop:hover,
+.ss-onboarding-translations__drop.is-drop-target {
+    border-color: var(--ss-color-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ss-color-accent) 25%, transparent);
+}
+
+.ss-onboarding-translations__drop:has(:focus-visible) {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-onboarding-translations__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.ss-onboarding-translations__drop-text {
+    color: var(--ss-color-text);
+    font-weight: 500;
+}
+
+.ss-onboarding-translations__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.ss-onboarding-translations__files {
+    margin: 0;
+    padding-left: var(--ss-space-4);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+}

@@ -27,6 +27,9 @@ enum OnboardingStep: string
     /** Akcja dziennika zdarzeń, którą kreator zatwierdza krok (Panel\Http\AdminAudit, RecordOnboardingProgress). */
     public const string CONFIRMED_ACTION = 'onboarding step confirmed';
 
+    /** Kotwica sekcji przesyłania plików tłumaczeń w zadaniu „Języki” (menu „+”, powrót po imporcie). */
+    public const string TRANSLATIONS_ANCHOR = 'translations-upload';
+
     /**
      * Kroki wykonywane w samym kreatorze (trasa onboarding.show z parametrem kroku).
      */

@@ -1,4 +1,4 @@
-{{-- Wiersz włączonego języka w panelu „Język aplikacji” zadania „Języki” kreatora onboardingu (panel/onboarding/show): flaga, nazwa, nazwa własna i kod, siatka ustawień regionalnych (kraj z flagą, waluta, podstawowa stawka VAT z odnośnikiem do stawek kraju, dni wolne z odnośnikiem do kalendarza; brakujące w przerywanej ramce) — u języka domyślnego zapisane, a dopóki ustawienia regionalne nie są zapisane, propozycja według języka (RegionalSettingsSummary::forLanguage(), plakietka „Propozycja”) z przyciskiem „Zapisz jako domyślne” (onboarding.regional; tylko dla języków z APP_LOCALES); u pozostałych języków propozycja informacyjnie. Po prawej „Szablon tłumaczeń (JSON)” — pobranie szablonu słów kluczowych do tłumaczeń (onboarding.translations, Translation\TranslationTemplate) — i przełącznik z gałką ON / OFF zapisywany od razu (data-ss-autosubmit), a język domyślny — domyślny i wymagany — ma w miejscu przełącznika wypełnioną ikonę ticket-slash (x-admiro::default-badge) (język interfejsu zablokowany). Z widoku nadrzędnego: $language: Language, $regionals: array<string, array{country: ?Country, currency: ?Currency, tax: ?TaxRate, holidays: int}>, $regionalConfigured: bool, $defaultCandidates: list<string>, $languageSwitch, $canManage, $zone. --}}
+{{-- Wiersz włączonego języka w panelu „Język aplikacji” zadania „Języki” kreatora onboardingu (panel/onboarding/show): flaga, nazwa, nazwa własna i kod, siatka: kraj z flagą (u języka domyślnego zapisany, a dopóki ustawienia regionalne nie są zapisane, propozycja według języka — RegionalSettingsSummary::forLanguage(), plakietka „Propozycja” — z przyciskiem „Zapisz jako domyślne”, onboarding.regional; tylko dla języków z APP_LOCALES) i licznik słów kluczowych przetłumaczone/wszystkie ($keywords: array<string, array{translated: int, all: int}>, TranslationTemplate::counts()). Po prawej „Tłumaczenia (JSON)” — pobranie szablonu słów kluczowych do tłumaczeń (onboarding.translations, Translation\TranslationTemplate) — i przełącznik z gałką ON / OFF zapisywany od razu (data-ss-autosubmit), a język domyślny — domyślny i wymagany — ma w miejscu przełącznika wypełnioną ikonę ticket-slash (x-admiro::default-badge) (język interfejsu zablokowany). Z widoku nadrzędnego: $language: Language, $regionals: array<string, array{country: ?Country, currency: ?Currency, tax: ?TaxRate, holidays: int}>, $regionalConfigured: bool, $defaultCandidates: list<string>, $languageSwitch, $canManage, $zone. --}}
 @php
     ['locked' => $locked, 'id' => $switchId] = $languageSwitch($language, 'enabled-language');
     $regional = $regionals[$language->code] ?? ['country' => null, 'currency' => null, 'tax' => null, 'holidays' => 0];
@@ -32,28 +32,8 @@
             </dd>
         </div>
         <div class="ss-onboarding-languages__regional-item">
-            <dt>{{ text('admiro::dashboard.onboarding_regional_currency') }}</dt>
-            <dd>{{ $regional['currency'] !== null ? $regional['currency']->alpha_code_3 . ' · ' . $regional['currency']->translatedName() : '—' }}</dd>
-        </div>
-        <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => $regional['country'] !== null && $regional['tax'] === null])>
-            <dt>{{ text('admiro::dashboard.onboarding_regional_taxes') }}</dt>
-            <dd>
-                @if ($regional['country'] === null)
-                    —
-                @else
-                    <a class="ss-link" href="{{ route($zone . 'tax-rates.index', ['country' => $regional['country']->alpha_code_2]) }}">{{ $regional['tax'] !== null ? text('admiro::dashboard.onboarding_regional_vat', ['rate' => local_number((float) $regional['tax']->rate, 0)]) : text('admiro::dashboard.onboarding_regional_set') }}</a>
-                @endif
-            </dd>
-        </div>
-        <div @class(['ss-onboarding-languages__regional-item', 'ss-onboarding-languages__regional-item--missing' => $regional['country'] !== null && $regional['holidays'] === 0])>
-            <dt>{{ text('admiro::dashboard.onboarding_regional_holidays') }}</dt>
-            <dd>
-                @if ($regional['country'] === null)
-                    —
-                @else
-                    <a class="ss-link" href="{{ route($zone . 'holidays.index') }}">{{ $regional['holidays'] === 0 ? text('admiro::dashboard.onboarding_regional_set') : text('admiro::dashboard.onboarding_regional_holidays_count', ['count' => local_number($regional['holidays'])]) }}</a>
-                @endif
-            </dd>
+            <dt>{{ text('admiro::dashboard.onboarding_translations_keywords') }}</dt>
+            <dd title="{{ text('admiro::dashboard.onboarding_translations_keywords_hint', ['translated' => local_number($keywords[$language->code]['translated'] ?? 0), 'all' => local_number($keywords[$language->code]['all'] ?? 0)]) }}"><span class="ss-badge">{{ local_number($keywords[$language->code]['translated'] ?? 0) }}/{{ local_number($keywords[$language->code]['all'] ?? 0) }}</span></dd>
         </div>
     </dl>
     <span class="ss-onboarding-languages__side">

@@ -20,7 +20,7 @@ use Illuminate\Support\Arr;
  * Szablon tłumaczeń dla języka (np. do pobrania jako JSON w kreatorze onboardingu): wszystkie teksty plików PHP
  * każdej zarejestrowanej przestrzeni tłumaczeń (Core i paczki, `loadTranslationsFrom`) w języku źródłowym, klucz
  * `przestrzeń::plik.klucz`, z tekstem źródłowym i istniejącym tłumaczeniem w języku docelowym (brak — pusty tekst).
- * Teksty nie-tekstowe (np. listy liczb) są pomijane.
+ * Teksty nie-tekstowe (np. listy liczb) są pomijane. Wypełniony szablon wraca przez TranslationImport.
  */
 final readonly class TranslationTemplate
 {
@@ -53,5 +53,20 @@ final readonly class TranslationTemplate
         ksort($texts);
 
         return ['language' => $language, 'source' => $source, 'texts' => $texts];
+    }
+
+    /**
+     * Licznik słów kluczowych języka: klucze szablonu z niepustym tekstem źródłowym i te z nich z niepustym tłumaczeniem.
+     *
+     * @return array{translated: int, all: int}
+     */
+    public function counts(string $language, string $source): array
+    {
+        $texts = array_filter($this->for($language, $source)['texts'], static fn(array $text): bool => trim($text['source']) !== '');
+
+        return [
+            'translated' => count(array_filter($texts, static fn(array $text): bool => trim($text['translation']) !== '')),
+            'all' => count($texts),
+        ];
     }
 }
