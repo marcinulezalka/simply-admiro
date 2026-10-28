@@ -15,6 +15,7 @@ namespace Simplysmart\Admiro\Panel\Http;
 
 use Illuminate\Http\Request;
 use Simplysmart\Admiro\Panel\Enums\OnboardingStep;
+use Simplysmart\Admiro\Panel\Http\Controllers\OnboardingController;
 use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Enums\SearchScope;
@@ -156,7 +157,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
         return match ($step) {
             OnboardingStep::Organizations => $this->organizationActions(),
             OnboardingStep::Languages => $this->items(
-                $this->itemIf(Permission::SettingsManage, 'dictionaries.index', 'admiro::search.actions.language', 'languages', 'dictionaries.*', ['dictionary' => 'languages']),
+                $this->itemIf(Permission::SettingsManage, 'onboarding.show', 'admiro::search.actions.language', 'languages', 'dictionaries.*', ['step' => OnboardingStep::Languages->value, 'view' => OnboardingController::HIDDEN_LANGUAGES]),
                 $this->itemIf(Permission::SettingsManage, 'settings.show', 'admiro::search.actions.regional', 'locale', 'settings.*'),
             ),
             OnboardingStep::Countries => $this->items(

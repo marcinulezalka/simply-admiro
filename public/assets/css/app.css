@@ -1586,16 +1586,86 @@ a.ss-onboarding-organizations__missing:hover {
     gap: var(--ss-space-3);
 }
 
-/* Tło robocze panelu (np. „Język aplikacji”): bardzo delikatna siatka kropek na szarym tle karty, jak papier w kropki; w motywach kontrastu jednolite tło. */
+/* Tło robocze panelu (np. „Język aplikacji”): ledwie widoczna siatka kropek na szarym tle karty i wewnętrzny cień
+   z półprzezroczystym obrysem, przez które obszar wydaje się lekko wklęsły; w motywach kontrastu jednolite tło. */
 .ss-card--muted.ss-onboarding-languages {
     background-color: var(--ss-color-surface-muted);
-    background-image: radial-gradient(circle, color-mix(in srgb, var(--ss-color-muted) 22%, transparent) 1px, transparent 1.2px);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--ss-color-muted) 11%, transparent) 1px, transparent 1.2px);
     background-position: calc(var(--ss-space-3) / 2) calc(var(--ss-space-3) / 2);
     background-size: 20px 20px;
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--ss-color-border-strong) 45%, transparent),
+        inset 0 2px 6px color-mix(in srgb, var(--ss-color-text) 7%, transparent),
+        inset 0 -1px 0 color-mix(in srgb, var(--ss-color-surface) 70%, transparent);
 }
 
 :root[data-theme^="contrast"] .ss-card--muted.ss-onboarding-languages {
     background-image: none;
+    box-shadow: none;
+}
+
+/* Nagłówek panelu: tytuł po lewej, przełącznik widoku z suwakiem (Aktywne / Ukryte z licznikami) po prawej. Wskaźnik
+   stoi pod odnośnikiem z aria-current="true" (bez skryptu i stylów inline), js/view-switch.js przesuwa go od razu. */
+.ss-onboarding-languages__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-onboarding-languages__views {
+    --ss-tab-count: 2;
+    flex: 0 0 auto;
+    min-width: 16rem;
+}
+
+.ss-onboarding-languages__views:has(> :nth-child(2)[aria-current="true"]) {
+    --ss-tab-index: 1;
+}
+
+.ss-onboarding-languages__views .ss-tabs__link[aria-current="true"] {
+    background: none;
+    box-shadow: none;
+    color: var(--ss-color-on-accent);
+}
+
+.ss-onboarding-languages__views .ss-badge {
+    min-width: 1.5rem;
+    justify-content: center;
+}
+
+/* Ukryte języki: siatka kafelków (nazwa i przełącznik), tyle kolumn, ile mieści szerokość. */
+.ss-onboarding-languages__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-onboarding-languages__tile {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
+.ss-onboarding-languages__tile .ss-onboarding-picker__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-onboarding-languages__workspace[aria-busy="true"] {
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
 }
 
 .ss-onboarding-languages__header .ss-card__title {

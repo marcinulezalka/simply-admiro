@@ -67,6 +67,9 @@ final readonly class OnboardingController
      */
     private const int ADMINISTRATORS = 100;
 
+    /** Widok obszaru roboczego „Język aplikacji” z ukrytymi (wyłączonymi) językami (`view=hidden`; domyślnie aktywne). */
+    public const string HIDDEN_LANGUAGES = 'hidden';
+
     public function __construct(
         private AdminContext $context,
         private OnboardingProgress $progress,
@@ -111,6 +114,8 @@ final readonly class OnboardingController
                 'term' => $term,
                 'all' => $all,
                 'enabled' => $enabled,
+                'hidden' => $all->filter(static fn(Language $language): bool => $language->is_active !== true)->sortBy(static fn(Language $language): string => $language->translatedName())->values(),
+                'languageView' => $request->string('view')->toString() === self::HIDDEN_LANGUAGES ? self::HIDDEN_LANGUAGES : 'active',
                 'languages' => $term === '' ? new Collection() : $search->languages($term)->sortBy($defaultFirst)->values(),
                 'canManage' => $this->context->can(Permission::SettingsManage),
                 'regionals' => $regionals,

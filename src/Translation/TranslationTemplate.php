@@ -56,17 +56,20 @@ final readonly class TranslationTemplate
     }
 
     /**
-     * Licznik słów kluczowych języka: klucze szablonu z niepustym tekstem źródłowym i te z nich z niepustym tłumaczeniem.
+     * Licznik fraz językowych: klucze szablonu z niepustym tekstem źródłowym, te z nich z niepustym tłumaczeniem i procent uzupełnienia (w dół).
      *
-     * @return array{translated: int, all: int}
+     * @return array{translated: int, all: int, percent: int}
      */
     public function counts(string $language, string $source): array
     {
         $texts = array_filter($this->for($language, $source)['texts'], static fn(array $text): bool => trim($text['source']) !== '');
 
+        $translated = count(array_filter($texts, static fn(array $text): bool => trim($text['translation']) !== ''));
+
         return [
-            'translated' => count(array_filter($texts, static fn(array $text): bool => trim($text['translation']) !== '')),
+            'translated' => $translated,
             'all' => count($texts),
+            'percent' => $texts === [] ? 0 : intdiv($translated * 100, count($texts)),
         ];
     }
 }
