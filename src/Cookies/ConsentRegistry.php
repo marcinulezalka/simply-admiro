@@ -29,12 +29,12 @@ final readonly class ConsentRegistry
     /**
      * @param list<CookieCategory> $categories
      *
-     * @throws CookiePolicyRejected Gdy identyfikator nie jest UUID albo wersja nie jest bieżąca.
+     * @throws ConsentRejected Gdy identyfikator nie jest UUID albo wersja nie jest bieżąca.
      */
     public function record(string $consentId, int $policyVersion, int $currentVersion, ConsentDecision $decision, array $categories): CookieConsent
     {
         if (preg_match(self::UUID_PATTERN, $consentId) !== 1 || $policyVersion !== $currentVersion) {
-            throw CookiePolicyRejected::because('the consent has an invalid identifier or a stale policy version.');
+            throw ConsentRejected::because('the consent has an invalid identifier or a stale policy version.');
         }
 
         $values = array_values(array_unique([CookieCategory::Necessary->value, ...array_map(static fn(CookieCategory $category): string => $category->value, $categories)]));

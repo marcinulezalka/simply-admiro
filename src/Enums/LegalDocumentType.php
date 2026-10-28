@@ -16,12 +16,15 @@ namespace Simplysmart\Admiro\Enums;
 use Simplysmart\Admiro\Contracts\HasLabel;
 
 /**
- * Dokument prawny aplikacji w wersjach (Models\LegalDocument, poza polityką cookies, która ma własne wersje i zgody):
- * polityka prywatności i klauzula informacyjna RODO. Każdy ma publiczną stronę Core (trasa `admiro.legal.<wartość>`),
- * etykietę odnośnika, wstęp i ikonę tytułu; strefa linkuje opublikowane w karcie logowania (`legal_documents`).
+ * Dokument prawny aplikacji w wersjach (Models\LegalDocument): polityka cookies, polityka prywatności i klauzula
+ * informacyjna RODO. Każdy ma publiczną stronę Core (trasa `admiro.legal.<wartość>`, polityka cookies
+ * `admiro.cookies.policy` z listą cookies), etykietę odnośnika, wstęp i ikonę tytułu; strefa linkuje opublikowane
+ * w karcie logowania (`legal_documents`), a politykę cookies baner zgody i odnośniki cookies (zgody wskazują jej
+ * numer wersji).
  */
 enum LegalDocumentType: string implements HasLabel
 {
+    case Cookies = 'cookies';
     case Privacy = 'privacy';
     case Gdpr = 'gdpr';
 
@@ -47,6 +50,7 @@ enum LegalDocumentType: string implements HasLabel
     public function icon(): string
     {
         return match ($this) {
+            self::Cookies => 'cookie',
             self::Privacy => 'shield-check',
             self::Gdpr => 'lock',
         };
@@ -57,6 +61,9 @@ enum LegalDocumentType: string implements HasLabel
      */
     public function routeName(): string
     {
-        return 'admiro.legal.' . $this->value;
+        return match ($this) {
+            self::Cookies => 'admiro.cookies.policy',
+            self::Privacy, self::Gdpr => 'admiro.legal.' . $this->value,
+        };
     }
 }

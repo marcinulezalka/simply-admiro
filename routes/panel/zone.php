@@ -17,7 +17,6 @@ use Simplysmart\Admiro\Panel\Http\AccountAction;
 use Simplysmart\Admiro\Panel\Http\Controllers\AccountActionController;
 use Simplysmart\Admiro\Panel\Http\Controllers\AdministratorController;
 use Simplysmart\Admiro\Panel\Http\Controllers\AuditController;
-use Simplysmart\Admiro\Panel\Http\Controllers\CookiePolicyController;
 use Simplysmart\Admiro\Panel\Http\Controllers\DictionaryController;
 use Simplysmart\Admiro\Panel\Http\Controllers\ExchangeRateController;
 use Simplysmart\Admiro\Panel\Http\Controllers\HolidayController;
@@ -86,7 +85,6 @@ Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(s
     Route::get('dictionaries/{dictionary}', [DictionaryController::class, 'index'])->name('dictionaries.index');
     Route::get('tax-rates/{country}', [TaxRateController::class, 'index'])->name('tax-rates.index');
     Route::get('exchange-rates', [ExchangeRateController::class, 'index'])->name('exchange-rates.index');
-    Route::get('cookie-policy', [CookiePolicyController::class, 'index'])->name('cookie-policy.index');
     Route::get('legal-documents/{document}', [LegalDocumentController::class, 'index'])->name('legal-documents.index');
     Route::get('holidays', [HolidayController::class, 'index'])->name('holidays.index');
 });
@@ -98,8 +96,6 @@ Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'thro
     Route::post('exchange-rates/sync', [ExchangeRateController::class, 'sync'])->name('exchange-rates.sync');
     Route::post('exchange-rates', [ExchangeRateController::class, 'store'])->name('exchange-rates.store');
     Route::delete('exchange-rates/{rate}', [ExchangeRateController::class, 'destroy'])->name('exchange-rates.destroy');
-    Route::put('cookie-policy', [CookiePolicyController::class, 'update'])->name('cookie-policy.update');
-    Route::post('cookie-policy/publish', [CookiePolicyController::class, 'publish'])->name('cookie-policy.publish');
     Route::put('legal-documents/{document}', [LegalDocumentController::class, 'update'])->name('legal-documents.update');
     Route::post('legal-documents/{document}/publish', [LegalDocumentController::class, 'publish'])->name('legal-documents.publish');
     Route::post('holidays/sync', [HolidayController::class, 'sync'])->name('holidays.sync');

@@ -17,17 +17,15 @@ use Illuminate\Config\Repository;
 use Illuminate\Database\Seeder;
 use Psr\Log\LoggerInterface;
 use Simplysmart\Admiro\Contracts\InterfaceLocales;
-use Simplysmart\Admiro\Cookies\CookiePolicies;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Legal\LegalDocuments;
-use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
 use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 
 /**
- * Pierwsze wersje polityk: polityka cookies, polityka prywatności i klauzula RODO z plików Markdown
- * `database/seeders/legal/<język>/<dokument>.md` (pierwszy wiersz `# Tytuł`, reszta to treść) w każdym włączonym
- * języku interfejsu, który ma plik; `:name` i `:email` to administrator danych z `admiro.legal.controller`,
- * `:consent_days` — ważność zgody cookies. Seeder referencyjny, idempotentny: dokument, który ma już wersję albo
+ * Pierwsze wersje dokumentów prawnych (LegalDocumentType: polityka cookies, polityka prywatności, klauzula RODO)
+ * z plików Markdown `database/seeders/legal/<język>/<dokument>.md` (pierwszy wiersz `# Tytuł`, reszta to treść)
+ * w każdym włączonym języku interfejsu, który ma plik; `:name` i `:email` to administrator danych
+ * z `admiro.legal.controller`, `:consent_days` — ważność zgody cookies. Seeder referencyjny, idempotentny: dokument, który ma już wersję albo
  * szkic, zostaje bez zmian (kolejne wersje powstają w panelu administratora); bez pliku w języku domyślnym nic
  * nie jest publikowane. Każdy dokument opublikowany z szablonu trafia do logu aplikacji (ostrzeżenie) i do wyjścia
  * komendy, żeby administrator sprawdził treść i dane administratora danych.
@@ -36,13 +34,9 @@ final class LegalDocumentsSeeder extends Seeder
 {
     private const string CONTENT_PATH = __DIR__ . '/../../../database/seeders/legal';
 
-    private const string COOKIES_FILE = 'cookies';
-
     public function __construct(
         private readonly Repository $config,
         private readonly InterfaceLocales $locales,
-        private readonly CookiePolicies $cookiePolicies,
-        private readonly CookiePolicyVersions $cookieVersions,
         private readonly LegalDocuments $documents,
         private readonly LegalDocumentVersions $documentVersions,
         private readonly LoggerInterface $logger,
@@ -51,14 +45,6 @@ final class LegalDocumentsSeeder extends Seeder
     public function run(): void
     {
         $default = $this->locales->default();
-        $cookies = $this->content(self::COOKIES_FILE);
-
-        if (isset($cookies[$default]) && $this->cookieVersions->current() === null && $this->cookieVersions->draft() === null) {
-            $this->cookiePolicies->saveDraft($cookies);
-            $this->cookiePolicies->publish($default);
-            $this->reportTemplate($cookies[$default]['title']);
-        }
-
         foreach (LegalDocumentType::cases() as $type) {
             $content = $this->content($type->value);
 

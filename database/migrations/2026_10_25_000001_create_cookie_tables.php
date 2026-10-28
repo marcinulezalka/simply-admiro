@@ -18,7 +18,6 @@ use Simplysmart\Admiro\Database\Columns;
 use Simplysmart\Admiro\Database\History;
 use Simplysmart\Admiro\Database\IdSlots;
 use Simplysmart\Admiro\Models\CookieConsent;
-use Simplysmart\Admiro\Models\CookiePolicy;
 
 /**
  * Polityka cookies w wersjach (szkic bez numeru, publikacja nadaje kolejny numer; tytuł i treść Markdown w każdym
@@ -26,17 +25,19 @@ use Simplysmart\Admiro\Models\CookiePolicy;
  * zgody z przeglądarki, wersja polityki, kategorie i decyzja — bez IP, przeglądarki i danych osobowych.
  */
 return new class extends Migration {
+    private const string POLICIES = 'cookie_policies';
+
     public function up(): void
     {
-        Schema::create(CookiePolicy::TABLE, static function (Blueprint $table): void {
+        Schema::create(self::POLICIES, static function (Blueprint $table): void {
             Columns::base($table);
             $table->unsignedInteger('version')->nullable()->unique();
             $table->timestamp('published_at')->nullable();
             Columns::closing($table, i18n: true);
         });
 
-        app(History::class)->create(CookiePolicy::TABLE);
-        app(IdSlots::class)->reserve(CookiePolicy::TABLE);
+        app(History::class)->create(self::POLICIES);
+        app(IdSlots::class)->reserve(self::POLICIES);
 
         Schema::create(CookieConsent::TABLE, static function (Blueprint $table): void {
             $table->id();
@@ -51,7 +52,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists(CookieConsent::TABLE);
-        app(History::class)->drop(CookiePolicy::TABLE);
-        Schema::dropIfExists(CookiePolicy::TABLE);
+        app(History::class)->drop(self::POLICIES);
+        Schema::dropIfExists(self::POLICIES);
     }
 };

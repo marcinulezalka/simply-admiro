@@ -14,7 +14,6 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Simplysmart\Admiro\Database\RecordStatusBackfill;
 use Simplysmart\Admiro\Models\AdmiroAccount;
-use Simplysmart\Admiro\Models\CookiePolicy;
 use Simplysmart\Admiro\Models\Dictionaries\Country;
 use Simplysmart\Admiro\Models\Dictionaries\Currency;
 use Simplysmart\Admiro\Models\Dictionaries\ExchangeRate;
@@ -42,7 +41,6 @@ return new class extends Migration {
             ExchangeRate::class,
             Holiday::class,
             Organization::class,
-            CookiePolicy::class,
             LegalDocument::class,
             Role::class,
             Permission::class,

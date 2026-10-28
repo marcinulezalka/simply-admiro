@@ -100,9 +100,6 @@ final readonly class ZoneDefinition
     ) {}
 
     /**
-     * Czy strefa ma konta i logowanie.
-     */
-    /**
      * Klucz tekstu w namespace paczki strefy (dla `text()`: bez tekstu w paczce kaskada sięga do Core).
      */
     public function textKey(string $key): string
@@ -139,6 +136,9 @@ final readonly class ZoneDefinition
         return text($this->textKey('roles.' . $this->name . '.' . $role));
     }
 
+    /**
+     * Czy strefa ma konta i logowanie.
+     */
     public function requiresLogin(): bool
     {
         return $this->model !== null;

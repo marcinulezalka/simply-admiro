@@ -141,12 +141,6 @@ return [
         'table_number' => 'NBP table number',
     ],
 
-    'cookie_policy' => [
-        'name' => 'Policy version',
-        'version' => 'Version number',
-        'published_at' => 'Published at',
-        'json_i18n' => 'Title and content per language',
-    ],
     'legal_document' => [
         'name' => 'Document version',
         'document' => 'Document',

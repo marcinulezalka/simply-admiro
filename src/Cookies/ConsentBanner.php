@@ -20,9 +20,10 @@ use Illuminate\Database\QueryException;
 use Simplysmart\Admiro\Contracts\ConsentScripts;
 use Simplysmart\Admiro\Contracts\CookieCatalog;
 use Simplysmart\Admiro\Enums\CookieCategory;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Localization\LocaleRouting;
 use Simplysmart\Admiro\Providers\CoreRoutesServiceProvider;
-use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 
 /**
  * Stan banera cookies dla widoku (x-admiro::cookie-consent, x-admiro::cookie-links): baner jest potrzebny,
@@ -33,7 +34,7 @@ use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
 final readonly class ConsentBanner
 {
     public function __construct(
-        private CookiePolicyVersions $versions,
+        private LegalDocumentVersions $versions,
         private CookieCatalog $catalog,
         private ConsentScripts $scripts,
         private Repository $config,
@@ -49,7 +50,7 @@ final readonly class ConsentBanner
         }
 
         try {
-            $version = $this->versions->current()?->version;
+            $version = $this->versions->current(LegalDocumentType::Cookies)?->version;
         } catch (QueryException) {
             $version = null;
         }

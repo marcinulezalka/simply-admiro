@@ -87,7 +87,7 @@ enum OnboardingStep: string
             self::Installation => 'dashboard',
             self::Languages, self::Countries, self::Currencies, self::Calendar, self::Taxes, self::Organizations => 'onboarding.show',
             self::Settings => 'settings.show',
-            self::Legal => 'cookie-policy.index',
+            self::Legal => 'legal-documents.index',
             self::Owners => 'owners.create',
             self::Administrators => 'administrators.index',
             self::Audit => 'audit.index',
@@ -99,7 +99,11 @@ enum OnboardingStep: string
      */
     public function routeParameters(): array
     {
-        return in_array($this, self::IN_WIZARD, true) ? ['step' => $this->value] : [];
+        return match (true) {
+            in_array($this, self::IN_WIZARD, true) => ['step' => $this->value],
+            $this === self::Legal => ['document' => LegalDocumentType::Cookies->value],
+            default => [],
+        };
     }
 
     public function icon(): string
@@ -121,8 +125,8 @@ enum OnboardingStep: string
     }
 
     /**
-     * Kamienie milowe, które razem zamykają krok; dokumenty prawne wymagają publikacji polityki cookies i każdego
-     * dokumentu z LegalDocumentType. Instalacja systemu z kontem hero nie ma żadnego: robi ją wdrożenie, zanim ktokolwiek
+     * Kamienie milowe, które razem zamykają krok; dokumenty prawne wymagają publikacji każdego dokumentu
+     * z LegalDocumentType (polityka cookies, polityka prywatności, RODO). Instalacja systemu z kontem hero nie ma żadnego: robi ją wdrożenie, zanim ktokolwiek
      * wejdzie do panelu, więc krok 1 jest zrobiony od początku. Dziennik zdarzeń zamyka pierwsze otwarcie dziennika
      * (AuditController).
      *
@@ -138,7 +142,7 @@ enum OnboardingStep: string
             return [$this->value];
         }
 
-        return [self::legalMilestone('cookies'), ...array_map(static fn(LegalDocumentType $type): string => self::legalMilestone($type->value), LegalDocumentType::cases())];
+        return array_map(static fn(LegalDocumentType $type): string => self::legalMilestone($type->value), LegalDocumentType::cases());
     }
 
     /**

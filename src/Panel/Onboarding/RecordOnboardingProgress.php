@@ -59,7 +59,6 @@ final readonly class RecordOnboardingProgress
             'exchange rates synced', 'exchange rate added' => OnboardingStep::Currencies->value,
             'holidays synced', 'holiday added' => OnboardingStep::Calendar->value,
             'tax rate added', 'tax rate ended' => OnboardingStep::Taxes->value,
-            'cookie policy published' => OnboardingStep::legalMilestone('cookies'),
             'legal document published' => is_string($document) ? OnboardingStep::legalMilestone($document) : null,
             'organization created' => OnboardingStep::Organizations->value,
             'owner provisioned' => OnboardingStep::Owners->value,

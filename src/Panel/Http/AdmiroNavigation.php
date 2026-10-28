@@ -97,7 +97,6 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
         return $this->nonEmpty([
             new NavigationGroup(text('admiro::navigation.groups.application'), $this->items(
                 $this->itemIf(Permission::SettingsView, 'settings.show', 'admiro::admin.settings_title', 'settings', 'settings.*'),
-                $this->itemIf(Permission::SettingsView, 'cookie-policy.index', 'admiro::admin.cookie_policy_title', 'cookie', 'cookie-policy.*'),
                 ...array_map($this->legalDocumentItem(...), LegalDocumentType::cases()),
             )),
             new NavigationGroup(text('admiro::navigation.groups.dictionaries'), $this->items(
@@ -126,7 +125,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
             actions: [...$this->organizationActions(), ...$this->items(
                 $this->itemIf(Permission::SettingsManage, 'exchange-rates.index', 'admiro::search.actions.exchange_rate', 'credit-card', 'exchange-rates.index'),
                 $this->itemIf(Permission::SettingsManage, 'holidays.index', 'admiro::search.actions.holiday', 'calendar', 'holidays.index'),
-                $this->itemIf(Permission::SettingsManage, 'cookie-policy.index', 'admiro::search.actions.cookie_policy', 'cookie', 'cookie-policy.index'),
+                $this->itemIf(Permission::SettingsManage, 'legal-documents.index', 'admiro::search.actions.cookie_policy', LegalDocumentType::Cookies->icon(), 'legal-documents.index', ['document' => LegalDocumentType::Cookies->value]),
             )],
         );
     }

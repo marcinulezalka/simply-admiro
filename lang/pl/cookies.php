@@ -58,8 +58,6 @@ return [
         'storage' => 'do usunięcia w przeglądarce',
     ],
     'policy' => [
-        'draft_name' => 'Polityka cookies — szkic',
-        'version_name' => 'Polityka cookies, wersja :version',
         'eyebrow' => 'Wersja :version z :date',
         'content' => 'Polityka',
         'list' => 'Pliki cookies na stronie',

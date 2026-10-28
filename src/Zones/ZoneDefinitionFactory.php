@@ -304,13 +304,13 @@ final readonly class ZoneDefinitionFactory
 
     /**
      * Dokumenty prawne Core strefy z `legal_documents` (wartości {@see LegalDocumentType}, bez powtórzeń, w kolejności
-     * z configu).
+     * z configu; bez polityki cookies, którą linkują odnośniki cookies karty logowania).
      *
      * @param array<array-key, mixed> $values
      *
      * @return list<LegalDocumentType>
      *
-     * @throws InvalidArgumentException Gdy wartość nie jest znanym dokumentem albo się powtarza.
+     * @throws InvalidArgumentException Gdy wartość nie jest znanym dokumentem, jest polityką cookies albo się powtarza.
      */
     private function legalDocuments(string $zone, array $values): array
     {
@@ -319,8 +319,8 @@ final readonly class ZoneDefinitionFactory
         foreach ($values as $value) {
             $document = is_string($value) ? LegalDocumentType::tryFrom($value) : null;
 
-            if ($document === null || in_array($document, $documents, true)) {
-                throw new InvalidArgumentException("Zone [{$zone}] legal_documents must be unique values of " . LegalDocumentType::class . '.');
+            if ($document === null || $document === LegalDocumentType::Cookies || in_array($document, $documents, true)) {
+                throw new InvalidArgumentException("Zone [{$zone}] legal_documents must be unique values of " . LegalDocumentType::class . ' other than the cookie policy.');
             }
 
             $documents[] = $document;
@@ -342,15 +342,7 @@ final readonly class ZoneDefinitionFactory
             return null;
         }
 
-        $paths = [];
-
-        foreach ($files as $type => $path) {
-            if (! is_string($type) || ! is_string($path)) {
-                throw new InvalidArgumentException("Zone [{$zone}] favicon must map icon types to file paths.");
-            }
-
-            $paths[$type] = $path;
-        }
+        $paths = $this->paths($zone, $files, 'favicon must map icon types to file paths.');
 
         try {
             return new ZoneFavicon($paths);
@@ -397,9 +389,11 @@ final readonly class ZoneDefinitionFactory
     }
 
     /**
+     * Pliki marki strefy z `brand` (rodzaj pliku → ścieżka); brak klucza = marka Core.
+     *
      * @param array<array-key, mixed> $files
      *
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException Gdy rodzaj albo plik jest niepoprawny.
      */
     private function brand(string $zone, array $files): ?ZoneBrand
     {
@@ -407,21 +401,37 @@ final readonly class ZoneDefinitionFactory
             return null;
         }
 
-        $paths = [];
-
-        foreach ($files as $type => $path) {
-            if (! is_string($type) || ! is_string($path)) {
-                throw new InvalidArgumentException("Zone [{$zone}] brand must map brand files to paths.");
-            }
-
-            $paths[$type] = $path;
-        }
+        $paths = $this->paths($zone, $files, 'brand must map brand files to paths.');
 
         try {
             return new ZoneBrand($paths);
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("Zone [{$zone}] {$exception->getMessage()}", previous: $exception);
         }
+    }
+
+    /**
+     * Mapa rodzaj pliku → ścieżka z konfiguracji strefy (`favicon`, `brand`).
+     *
+     * @param array<array-key, mixed> $files
+     *
+     * @return array<string, string>
+     *
+     * @throws InvalidArgumentException Gdy klucz albo ścieżka nie jest tekstem (komunikat `$invalid`).
+     */
+    private function paths(string $zone, array $files, string $invalid): array
+    {
+        $paths = [];
+
+        foreach ($files as $type => $path) {
+            if (! is_string($type) || ! is_string($path)) {
+                throw new InvalidArgumentException("Zone [{$zone}] {$invalid}");
+            }
+
+            $paths[$type] = $path;
+        }
+
+        return $paths;
     }
 
     /**

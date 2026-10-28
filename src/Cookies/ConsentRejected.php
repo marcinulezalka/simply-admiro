@@ -16,13 +16,12 @@ namespace Simplysmart\Admiro\Cookies;
 use RuntimeException;
 
 /**
- * Zmiana polityki cookies odrzucona: szkic bez tytułu albo treści w języku domyślnym, brak szkicu do publikacji
- * albo zgoda z nieznaną wersją polityki lub kategorią.
+ * Zgoda na cookies odrzucona: identyfikator zgody nie jest UUID albo wersja polityki cookies nie jest bieżąca.
  */
-final class CookiePolicyRejected extends RuntimeException
+final class ConsentRejected extends RuntimeException
 {
     public static function because(string $reason): self
     {
-        return new self("Cookie policy change rejected: {$reason}");
+        return new self("Cookie consent rejected: {$reason}");
     }
 }

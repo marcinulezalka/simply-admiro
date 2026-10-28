@@ -65,7 +65,7 @@ final readonly class LegalDocumentController
             'html' => $body['html'],
             'toc' => $body['toc'],
             'back' => $this->back->for($request),
-            'related' => $this->links->related($type->value),
+            'related' => $this->links->related($type),
         ]);
     }
 }

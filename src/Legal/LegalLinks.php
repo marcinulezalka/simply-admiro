@@ -15,22 +15,18 @@ namespace Simplysmart\Admiro\Legal;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
-use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
 use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Odnośniki prawne: w strefie (karta logowania, stopka layoutu aplikacji, e-maile) opublikowane dokumenty Core
- * z `legal_documents` strefy, potem jej własne `legal_links`; na stronach dokumentów karta „Zobacz także”
- * z pozostałymi opublikowanymi dokumentami i polityką cookies. Nieopublikowany dokument nie ma odnośnika.
+ * z `legal_documents` strefy, potem jej własne `legal_links`; na stronach dokumentów (także polityki cookies) karta
+ * „Zobacz także” z pozostałymi opublikowanymi dokumentami. Nieopublikowany dokument nie ma odnośnika.
  */
 final readonly class LegalLinks
 {
-    public const string COOKIES = 'cookies';
-
     public function __construct(
         private LegalDocumentVersions $documents,
-        private CookiePolicyVersions $cookies,
         private UrlGenerator $url,
     ) {}
 
@@ -58,22 +54,18 @@ final readonly class LegalLinks
     }
 
     /**
-     * Pozostałe opublikowane dokumenty (bez `$current`: wartość LegalDocumentType albo self::COOKIES).
+     * Pozostałe opublikowane dokumenty (bez `$current`).
      *
      * @return list<array{url: string, title: string, text: string, icon: string}>
      */
-    public function related(string $current): array
+    public function related(LegalDocumentType $current): array
     {
         $related = [];
 
         foreach ($this->documents->publishedTypes() as $type) {
-            if ($type->value !== $current) {
+            if ($type !== $current) {
                 $related[] = ['url' => $this->url->route($type->routeName()), 'title' => $type->label(), 'text' => $type->lead(), 'icon' => $type->icon()];
             }
-        }
-
-        if ($current !== self::COOKIES && $this->cookies->current() !== null) {
-            $related[] = ['url' => $this->url->route('admiro.cookies.policy'), 'title' => text('cookies.links.policy'), 'text' => text('legal.cookies_lead'), 'icon' => 'cookie'];
         }
 
         return $related;

@@ -17,6 +17,10 @@ return [
      * Core legal documents (Enums\LegalDocumentType, Models\LegalDocument): links, page leads, version names.
      */
     'documents' => [
+        'cookies' => [
+            'link' => 'Cookie policy',
+            'lead' => 'Which cookies the application uses, why, and how to manage your consent.',
+        ],
         'privacy' => [
             'link' => 'Privacy policy',
             'lead' => 'Who processes the data of the application users, why, for how long and what your rights are.',
@@ -26,7 +30,6 @@ return [
             'lead' => 'Information on the processing of personal data under Articles 13 and 14 GDPR.',
         ],
     ],
-    'cookies_lead' => 'Which cookies the application uses, why, and how to manage your consent.',
     'eyebrow' => 'Version :version of :date',
     'draft_name' => ':document — draft',
     'version_name' => ':document, version :version',

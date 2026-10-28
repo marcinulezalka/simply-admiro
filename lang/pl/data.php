@@ -141,12 +141,6 @@ return [
         'table_number' => 'Numer tabeli NBP',
     ],
 
-    'cookie_policy' => [
-        'name' => 'Wersja polityki',
-        'version' => 'Numer wersji',
-        'published_at' => 'Opublikowano',
-        'json_i18n' => 'Tytuł i treść w językach',
-    ],
     'legal_document' => [
         'name' => 'Wersja dokumentu',
         'document' => 'Dokument',

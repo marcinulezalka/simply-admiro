@@ -65,6 +65,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- `ZoneDefinitionFactory`: wspólne czytanie mapy plików `favicon` i `brand` (`paths()`); opis `ZoneDefinition::requiresLogin()` wrócił nad tę metodę.
+- **BREAKING** Polityka cookies jest dokumentem prawnym jak polityka prywatności i RODO: `LegalDocumentType::Cookies` (strona publiczna nadal `admiro.cookies.policy`), wersje w `legal_documents` przez `Legal\LegalDocuments` i `Queries\Legal\LegalDocumentVersions`. Migracja `move_cookie_policies_to_legal_documents` przenosi wersje i historię z `cookie_policies` (ten sam token i numery wersji, więc zgody `cookie_consents.policy_version` dalej się zgadzają) i usuwa tę tabelę. Usunięte: `Cookies\CookiePolicies`, `Queries\Cookies\CookiePolicyVersions` (liczba zgód: `Queries\Cookies\ConsentCounts`), `Models\CookiePolicy`, panelowy `CookiePolicyController` i trasy `cookie-policy.*` — polityka cookies jest w panelu pod `legal-documents/cookies` z liczbą zgód; `Cookies\CookiePolicyRejected` → `Cookies\ConsentRejected` (tylko odrzucona zgoda); `LegalLinks::related()` przyjmuje `LegalDocumentType` (bez `LegalLinks::COOKIES`); teksty panelu `admin.cookie_policy_*` wspólne dla dokumentów → `admin.legal_document_*`. Publikacja polityki cookies trafia do dziennika jako `legal document published` z `document: cookies`. Strefa nie może wpisać `cookies` w `legal_documents` (politykę linkują odnośniki cookies).
 - Zakładki teczek mają delikatne ikony (`locale` przy „Język interfejsu”, `languages` przy „Tłumaczeniach”). Wybrane pliki tłumaczeń są wypisane na środku strefy upuszczania, nad opisem. Po przesłaniu tłumaczeń strona wraca bez kotwicy, z teczką „Tłumaczenia” wybraną przez sesję, i zostaje w tym samym miejscu (`form[data-ss-keep-scroll]`, `js/keep-scroll.js`). Procent uzupełnienia fraz liczy się względem fraz języka domyślnego z jednym miejscem po przecinku (w dół), więc kilka przetłumaczonych fraz nie pokazuje już 0%.
 - Placeholdery wyszukiwarek zadań „Języki”, „Kraje” i „Waluty” to same przykłady (bez „np.”), a zbyt długi placeholder pola wyszukiwania kończy się wielokropkiem.
 - Ikona wpisu domyślnego (`x-admiro::default-badge`, plakietki w podpowiedziach wyszukiwarki) to teraz dom z kropką `home-dot` (Hugeicons `home-06`, MIT) zamiast `ticket-slash`, który usunięto z ikon.
@@ -144,6 +146,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- `x-admiro::zone.layout` znów przyjmuje `meta` i pokazuje go pod tytułem strony (od zmiany „Wstecz” w nagłówku layout po cichu go pomijał, więc strony stref traciły opis, np. godziny przyjęć czy okres grafiku); bez `meta` nagłówek jest jak dotąd.
 - Przełącznik w podpowiedziach wyszukiwarki nie pobiera już przekierowania odpowiedzi, więc komunikat zapisu albo odmowy pokazuje się po przeładowaniu.
 - Panele menu bocznego (powiadomienia, konto) nie chowają się już pod polami formularzy treści: przyklejone menu na szerokim ekranie ma `z-index` nad treścią.
 - Menu „+” globalnej wyszukiwarki: nagłówek „Dodaj” stał w jednym wierszu z pierwszą pozycją; teraz jest nad listą, oddzielony linią.

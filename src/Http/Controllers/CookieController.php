@@ -21,13 +21,14 @@ use Illuminate\Validation\Rule;
 use Simplysmart\Admiro\Contracts\CookieCatalog;
 use Simplysmart\Admiro\Contracts\InterfaceLocales;
 use Simplysmart\Admiro\Cookies\ConsentRegistry;
-use Simplysmart\Admiro\Cookies\CookiePolicyRejected;
+use Simplysmart\Admiro\Cookies\ConsentRejected;
 use Simplysmart\Admiro\Cookies\PolicyMarkdown;
 use Simplysmart\Admiro\Enums\ConsentDecision;
 use Simplysmart\Admiro\Enums\CookieCategory;
+use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Legal\BackLink;
 use Simplysmart\Admiro\Legal\LegalLinks;
-use Simplysmart\Admiro\Queries\Cookies\CookiePolicyVersions;
+use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,12 +38,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final readonly class CookieController
 {
     public function __construct(
-        private CookiePolicyVersions $versions,
+        private LegalDocumentVersions $versions,
     ) {}
 
     public function policy(Request $request, CookieCatalog $catalog, InterfaceLocales $locales, LegalLinks $links, BackLink $back): View
     {
-        $policy = $this->versions->current() ?? throw new NotFoundHttpException();
+        $policy = $this->versions->current(LegalDocumentType::Cookies) ?? throw new NotFoundHttpException();
         $content = $policy->content(App::getLocale());
 
         if (trim($content['body']) === '') {
@@ -55,7 +56,7 @@ final readonly class CookieController
             'html' => PolicyMarkdown::html($content['body']),
             'cookies' => $catalog->all(),
             'back' => $back->for($request),
-            'related' => $links->related(LegalLinks::COOKIES),
+            'related' => $links->related(LegalDocumentType::Cookies),
         ]);
     }
 
@@ -74,11 +75,11 @@ final readonly class CookieController
             $registry->record(
                 is_string($validated['consent_id']) ? $validated['consent_id'] : '',
                 is_numeric($validated['version']) ? (int) $validated['version'] : -1,
-                $this->versions->current()->version ?? 0,
+                $this->versions->current(LegalDocumentType::Cookies)->version ?? 0,
                 ConsentDecision::from(is_string($validated['decision']) ? $validated['decision'] : ''),
                 $categories,
             );
-        } catch (CookiePolicyRejected) {
+        } catch (ConsentRejected) {
             return new JsonResponse(['recorded' => false], 422);
         }
 

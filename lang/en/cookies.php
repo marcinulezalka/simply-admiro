@@ -58,8 +58,6 @@ return [
         'storage' => 'until removed in the browser',
     ],
     'policy' => [
-        'draft_name' => 'Cookie policy — draft',
-        'version_name' => 'Cookie policy, version :version',
         'eyebrow' => 'Version :version of :date',
         'content' => 'Policy',
         'list' => 'Cookies on this site',

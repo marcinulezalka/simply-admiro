@@ -24,16 +24,20 @@ use Simplysmart\Admiro\Contracts\InterfaceLocales;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Legal\LegalDocumentRejected;
 use Simplysmart\Admiro\Legal\LegalDocuments;
+use Simplysmart\Admiro\Queries\Cookies\ConsentCounts;
 use Simplysmart\Admiro\Queries\Legal\LegalDocumentVersions;
 
 /**
- * Dokumenty prawne Core (`settings.view`; polityka prywatności, klauzula RODO — dokument z adresu, nieznany → 404):
- * szkic z tytułem i treścią Markdown w każdym języku interfejsu i opublikowane wersje; zapis szkicu i publikacja
- * nowej wersji (`settings.manage`, w dzienniku zdarzeń).
+ * Dokumenty prawne Core (`settings.view`; polityka cookies, polityka prywatności, klauzula RODO — dokument z adresu,
+ * nieznany → 404): szkic z tytułem i treścią Markdown w każdym języku interfejsu i opublikowane wersje, przy polityce
+ * cookies także liczba zgód według decyzji z ostatnich dni; zapis szkicu i publikacja nowej wersji
+ * (`settings.manage`, w dzienniku zdarzeń; nowa wersja polityki cookies wymaga ponownej zgody odwiedzających).
  */
 final readonly class LegalDocumentController
 {
     private const int BODY_MAX_LENGTH = 100000;
+
+    private const int CONSENT_STATS_DAYS = 30;
 
     public function __construct(
         private AdminContext $context,
@@ -43,15 +47,20 @@ final readonly class LegalDocumentController
         private Redirector $redirect,
     ) {}
 
-    public function index(LegalDocumentType $document): View
+    public function index(LegalDocumentType $document, ConsentCounts $consents): View
     {
         $draft = $this->versions->draft($document);
+        $isCookiePolicy = $document === LegalDocumentType::Cookies;
 
         return view('admiro::panel.legal-documents.index', [
             'document' => $document,
             'draft' => $draft ?? $this->versions->current($document),
             'isDraft' => $draft !== null,
             'versions' => $this->versions->published($document),
+            'lead' => text($isCookiePolicy ? 'admiro::admin.cookie_policy_lead' : 'admiro::admin.legal_document_lead'),
+            'publishLead' => text($isCookiePolicy ? 'admiro::admin.cookie_policy_publish_lead' : 'admiro::admin.legal_document_publish_lead'),
+            'consents' => $isCookiePolicy ? $consents->lastDays(self::CONSENT_STATS_DAYS) : null,
+            'consentDays' => self::CONSENT_STATS_DAYS,
             'locales' => $this->locales->enabled(),
             'defaultLocale' => $this->locales->default(),
             'canManage' => $this->context->can(Permission::SettingsManage),

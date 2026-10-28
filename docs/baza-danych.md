@@ -345,15 +345,16 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   z ICU, stawki UE na 2025 r. do weryfikacji w TEDB). Ponowne uruchomienie dopisuje tylko brakujące
   wpisy, a wybory administratora (włączenie, domyślny, usunięte stawki) zostają.
 
-## 14a. Polityka cookies i rejestr zgód
+## 14a. Rejestr zgód na cookies
 
 | Tabela | Model | Kolumny |
 | --- | --- | --- |
-| `cookie_policies` | `CookiePolicy` | standardowe; `version` (null = szkic, unikalny), `published_at`; tytuł i treść Markdown w każdym języku interfejsu w `json_i18n` (`{język: {title, body}}`, bez `HasI18n`) |
 | `cookie_consents` | `CookieConsent` | dziennik bez kolumn standardowych i historii: `recorded_at`, `consent_id` (losowy UUID z ciasteczka), `policy_version`, `decision` (`Enums\ConsentDecision`), `categories` (JSON) |
 
-- Szkic jest jeden; zaczyna się od treści bieżącej wersji, publikacja (`Cookies\CookiePolicies::publish()`)
-  wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer. Opublikowanej wersji się nie zmienia.
+- Polityka cookies jest dokumentem prawnym (`LegalDocumentType::Cookies`, §14b); `policy_version` to numer jej wersji.
+  Do 0.3.x miała własną tabelę `cookie_policies`; migracja `move_cookie_policies_to_legal_documents` przeniosła jej
+  wersje i historię do `legal_documents`.
+- Liczbę zgód według decyzji z ostatnich dni (panel polityki cookies) czyta `Queries\Cookies\ConsentCounts`.
 - Rejestr zgód (`Cookies\ConsentRegistry`) nie ma IP, przeglądarki ani danych osobowych; przyjmuje tylko zgodę na
   bieżącą wersję polityki. `admiro:cookies:prune` (codziennie) usuwa wpisy starsze niż
   `COOKIE_CONSENT_RETENTION_DAYS` (domyślnie 1826 dni).
@@ -362,14 +363,15 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 
 | Tabela | Model | Kolumny |
 | --- | --- | --- |
-| `legal_documents` | `LegalDocument` | standardowe; `document` (`Enums\LegalDocumentType`: `privacy`, `gdpr`), `version` (null = szkic, unikalny w obrębie dokumentu), `published_at`; tytuł i treść Markdown w każdym języku interfejsu w `json_i18n` (`{język: {title, body}}`, jak w polityce cookies) |
+| `legal_documents` | `LegalDocument` | standardowe; `document` (`Enums\LegalDocumentType`: `cookies`, `privacy`, `gdpr`), `version` (null = szkic, unikalny w obrębie dokumentu), `published_at`; tytuł i treść Markdown w każdym języku interfejsu w `json_i18n` (`{język: {title, body}}`, bez `HasI18n`) |
 
 - Każdy dokument ma jeden szkic; zaczyna się od treści bieżącej wersji, publikacja (`Legal\LegalDocuments::publish()`)
   wymaga tytułu i treści w języku domyślnym i nadaje kolejny numer dokumentu. Opublikowanej wersji się nie zmienia;
   wersje czyta `Queries\Legal\LegalDocumentVersions`.
-- Publiczne strony to trasy Core `admiro.legal.privacy` (`/polityka-prywatnosci`) i `admiro.legal.gdpr`
-  (`/rodo`); bez opublikowanej wersji 404. Spis treści strony powstaje z nagłówków sekcji `##` treści. Strefa linkuje opublikowane dokumenty z `legal_documents` w configu
-  (`Legal\LegalLinks`: karta logowania, stopka layoutu aplikacji, e-maile).
+- Publiczne strony to trasy Core `admiro.cookies.policy` (`/cookies`, z listą cookies), `admiro.legal.privacy`
+  (`/polityka-prywatnosci`) i `admiro.legal.gdpr` (`/rodo`); bez opublikowanej wersji 404. Spis treści strony powstaje z nagłówków sekcji `##` treści. Strefa linkuje opublikowane dokumenty z `legal_documents` w configu
+  (`Legal\LegalLinks`: karta logowania, stopka layoutu aplikacji, e-maile); polityki cookies tam nie ma — linkują ją
+  baner zgody i odnośniki cookies. Nowa wersja polityki cookies wymaga ponownej zgody odwiedzających.
 - Pierwsze wersje polityki cookies, polityki prywatności i klauzuli RODO publikuje `php artisan admiro:legal:seed`
   (`Database\Seeders\LegalDocumentsSeeder`, treść z `database/seeders/legal/<język>/<dokument>.md`, administrator danych
   z `LEGAL_CONTROLLER_NAME` i `LEGAL_CONTROLLER_EMAIL`); idempotentnie — dokument z wersją albo szkicem zostaje.

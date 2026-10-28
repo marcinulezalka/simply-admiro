@@ -13,51 +13,19 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Queries\Cookies;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Simplysmart\Admiro\Enums\ConsentDecision;
 use Simplysmart\Admiro\Models\CookieConsent;
-use Simplysmart\Admiro\Models\CookiePolicy;
 
 /**
- * Wersje polityki cookies: bieżąca (najwyższy opublikowany numer), szkic, opublikowane od najnowszej i liczba zgód
- * według decyzji z ostatnich dni (bez identyfikatorów).
+ * Liczba zgód na cookies według decyzji z ostatnich dni (bez identyfikatorów), do statystyki panelu polityki cookies.
  */
-final class CookiePolicyVersions
+final class ConsentCounts
 {
-    public function current(): ?CookiePolicy
-    {
-        $query = CookiePolicy::query();
-        $query->whereNotNull('version');
-        $query->orderByDesc('version');
-
-        return $query->first();
-    }
-
-    public function draft(): ?CookiePolicy
-    {
-        $query = CookiePolicy::query();
-        $query->whereNull('version');
-
-        return $query->first();
-    }
-
-    /**
-     * @return Collection<int, CookiePolicy>
-     */
-    public function published(): Collection
-    {
-        $query = CookiePolicy::query();
-        $query->whereNotNull('version');
-        $query->orderByDesc('version');
-
-        return $query->get();
-    }
-
     /**
      * @return array<string, int> Decyzja → liczba zgód z ostatnich `$days` dni (każda decyzja, także 0).
      */
-    public function consentCounts(int $days): array
+    public function lastDays(int $days): array
     {
         $query = CookieConsent::query();
         $query->where('recorded_at', '>=', Carbon::now()->subDays($days));
