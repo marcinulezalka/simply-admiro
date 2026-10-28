@@ -56,6 +56,23 @@ final readonly class TranslationTemplate
     }
 
     /**
+     * Pusty szablon do uzupełnienia nowym językiem: teksty języka źródłowego z pustymi tłumaczeniami i puste pole
+     * `language` (użytkownik wpisuje kod włączonego języka, uzupełnia `translation` i wgrywa plik).
+     *
+     * @return array{language: string, source: string, texts: array<string, array{source: string, translation: string}>}
+     */
+    public function blank(string $source): array
+    {
+        $template = $this->for($source, $source);
+
+        return [
+            'language' => '',
+            'source' => $source,
+            'texts' => array_map(static fn(array $text): array => ['source' => $text['source'], 'translation' => ''], $template['texts']),
+        ];
+    }
+
+    /**
      * Licznik fraz językowych: klucze szablonu z niepustym tekstem źródłowym, te z nich z niepustym tłumaczeniem i procent uzupełnienia (w dół).
      *
      * @return array{translated: int, all: int, percent: int}

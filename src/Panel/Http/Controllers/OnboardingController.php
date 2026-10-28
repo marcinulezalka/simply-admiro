@@ -70,6 +70,12 @@ final readonly class OnboardingController
     /** Widok obszaru roboczego „Język interfejsu” z ukrytymi (wyłączonymi) językami (`view=hidden`; domyślnie aktywne). */
     public const string HIDDEN_LANGUAGES = 'hidden';
 
+    /**
+     * Układy obszaru roboczego „Język interfejsu” (`layout`): lista paneli albo siatka; domyślnie aktywne języki jako
+     * lista, niedostępne jako siatka.
+     */
+    private const array LAYOUTS = ['list', 'grid'];
+
     public function __construct(
         private AdminContext $context,
         private OnboardingProgress $progress,
@@ -105,6 +111,8 @@ final readonly class OnboardingController
             $configured = collect($data['checklist'])->firstWhere('step', OnboardingStep::Settings)['done'] ?? false;
             $regionals = [];
             $source = $defaults->language()->code ?? config()->string('app.locale');
+            $languageView = $request->string('view')->toString() === self::HIDDEN_LANGUAGES ? self::HIDDEN_LANGUAGES : 'active';
+            $layout = $request->string('layout')->toString();
 
             foreach ($enabled as $language) {
                 $regionals[$language->code] = $language->is_default === true && $configured ? $regional->summary() : $regional->forLanguage($language);
@@ -115,12 +123,15 @@ final readonly class OnboardingController
                 'all' => $all,
                 'enabled' => $enabled,
                 'hidden' => $all->filter(static fn(Language $language): bool => $language->is_active !== true)->sortBy(static fn(Language $language): string => $language->translatedName())->values(),
-                'languageView' => $request->string('view')->toString() === self::HIDDEN_LANGUAGES ? self::HIDDEN_LANGUAGES : 'active',
+                'languageView' => $languageView,
+                'languageLayout' => in_array($layout, self::LAYOUTS, true) ? $layout : ($languageView === self::HIDDEN_LANGUAGES ? 'grid' : 'list'),
+                'languageLayoutChosen' => in_array($layout, self::LAYOUTS, true),
                 'languages' => $term === '' ? new Collection() : $search->languages($term)->sortBy($defaultFirst)->values(),
                 'canManage' => $this->context->can(Permission::SettingsManage),
                 'regionals' => $regionals,
                 'regionalConfigured' => $configured,
                 'defaultCandidates' => $routing->enabled(),
+                'sourceLanguage' => $source,
                 'keywords' => $enabled->mapWithKeys(static fn(Language $language): array => [$language->code => $template->counts($language->code, $source)])->all(),
             ];
         }
@@ -230,9 +241,19 @@ final readonly class OnboardingController
         $source = $defaults->language()->code ?? config()->string('app.locale');
         $audit->record('translation template downloaded', context: ['language' => $language->code]);
 
-        return new JsonResponse($template->for($language->code, $source), 200, [
-            'Content-Disposition' => 'attachment; filename="translations-' . $language->code . '.json"',
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return $this->json($template->for($language->code, $source), 'translations-' . $language->code . '.json');
+    }
+
+    /**
+     * Szablon do uzupełnienia (teczka „Tłumaczenia”): teksty Core i paczek w języku domyślnym z pustymi tłumaczeniami
+     * i pustym kodem języka (TranslationTemplate::blank()); po uzupełnieniu wraca przez import.
+     */
+    public function translationsTemplate(TranslationTemplate $template, DefaultEntries $defaults, AdminAudit $audit): Response
+    {
+        $source = $defaults->language()->code ?? config()->string('app.locale');
+        $audit->record('translation template downloaded', context: ['language' => '']);
+
+        return $this->json($template->blank($source), 'translations-template.json');
     }
 
     /**
@@ -245,12 +266,10 @@ final readonly class OnboardingController
         $languages = Language::query()->where('is_active', true)->orderBy(Language::CODE)->pluck(Language::CODE)->all();
         $audit->record('translations exported', context: ['languages' => count($languages)]);
 
-        return new JsonResponse([
+        return $this->json([
             'source' => $source,
             'languages' => array_map(static fn(string $code): array => $template->for($code, $source), array_values(array_filter($languages, is_string(...)))),
-        ], 200, [
-            'Content-Disposition' => 'attachment; filename="translations.json"',
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        ], 'translations.json');
     }
 
     /**
@@ -315,6 +334,16 @@ final readonly class OnboardingController
             : $this->redirect->route($zone->routeName('onboarding.show'), ['step' => $next->value]);
 
         return $target->with('status', text('admiro::dashboard.onboarding_confirmed', ['name' => text('admiro::dashboard.onboarding_' . $current->value . '_title')]));
+    }
+
+    /**
+     * Plik JSON tłumaczeń do pobrania (czytelny: wcięcia, znaki Unicode i ukośniki bez ucieczki).
+     *
+     * @param array<string, mixed> $data
+     */
+    private function json(array $data, string $filename): JsonResponse
+    {
+        return new JsonResponse($data, 200, ['Content-Disposition' => 'attachment; filename="' . $filename . '"'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     /**

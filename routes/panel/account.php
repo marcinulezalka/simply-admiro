@@ -43,6 +43,9 @@ Route::get('onboarding/languages/{code}/translations', [OnboardingController::cl
     ->where('code', '[a-z]{2,3}')
     ->middleware(ZonePermission::middleware(Permission::SettingsManage))
     ->name('onboarding.translations');
+Route::get('onboarding/languages/translations/template', [OnboardingController::class, 'translationsTemplate'])
+    ->middleware(ZonePermission::middleware(Permission::SettingsManage))
+    ->name('onboarding.translations.template');
 Route::get('onboarding/languages/translations/export', [OnboardingController::class, 'exportTranslations'])
     ->middleware(ZonePermission::middleware(Permission::SettingsManage))
     ->name('onboarding.translations.export');

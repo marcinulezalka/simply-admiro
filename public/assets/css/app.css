@@ -1751,6 +1751,16 @@ a.ss-onboarding-organizations__missing:hover {
     align-items: center;
 }
 
+/* Data ostatniej aktualizacji zadania na końcu stopki teczki. */
+.ss-folder__updated {
+    margin-left: auto;
+}
+
+/* Element pasa przycisków dosunięty do prawej (np. przełącznik układu lista / siatka). */
+.ss-folder__toolbar-end {
+    margin-left: auto;
+}
+
 .ss-folder__count-icon {
     width: 0.875rem;
     height: 0.875rem;
@@ -1809,6 +1819,32 @@ a.ss-onboarding-organizations__missing:hover {
 .ss-tabs.ss-onboarding-languages__views .ss-tabs__icon {
     width: 0.875rem;
     height: 0.875rem;
+}
+
+/* Układ obszaru roboczego (przełącznik „Lista” / „Siatka”, `layout`): aktywne języki w siatce kart — wiersz języka
+   układa się w kolumnę — a niedostępne jako lista kafelków jeden pod drugim. */
+.ss-onboarding-languages__rows--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+.ss-onboarding-languages__rows--grid .ss-onboarding-languages__row {
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+}
+
+.ss-onboarding-languages__rows--grid .ss-onboarding-languages__regional {
+    flex: none;
+}
+
+.ss-onboarding-languages__rows--grid .ss-onboarding-languages__side {
+    justify-content: flex-end;
+    margin-top: auto;
+}
+
+.ss-onboarding-languages__grid.ss-onboarding-languages__grid--list {
+    grid-template-columns: minmax(0, 1fr);
 }
 
 /* Ukryte języki: siatka kafelków (flaga, nazwa, pod nią kod, przycisk zasilania), tyle kolumn, ile mieści szerokość. */
@@ -2981,6 +3017,14 @@ textarea.ss-input {
     font-family: var(--ss-font-sans);
     font-size: 0.875rem;
     outline: none;
+    text-overflow: ellipsis;
+}
+
+/* Długi placeholder kończy się wielokropkiem zamiast wychodzić poza pole. */
+.ss-search__input::placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ss-search__scopes {
@@ -7461,7 +7505,7 @@ a.ss-notification:focus-visible {
 
 
 /*
- * .ss-onboarding-translations — teczka „Tłumaczenia” w zadaniu „Języki” (.ss-folders; wybierana zakładką albo kotwicą
+ * .ss-onboarding-translations — teczka „Tłumaczenia” w zadaniu „Języki” (strefa upuszczania na całym arkuszu, przycisk przesłania w pasie przycisków po sprawdzeniu plików) (.ss-folders; wybierana zakładką albo kotwicą
  * #translations-upload z menu szybkich akcji, po błędzie przesyłania wybrana): strefa upuszczania plików JSON
  * (__drop, przerywana ramka; pole pliku __input przykrywa ją, więc upuszczenie działa bez skryptu; przy przeciąganiu
  * .is-drop-target, js/file-drop.js) i lista wybranych plików (__files).
@@ -7470,33 +7514,43 @@ a.ss-notification:focus-visible {
     margin: 0;
 }
 
-.ss-onboarding-translations__form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ss-space-3);
-    align-items: flex-start;
+.ss-onboarding-translations .ss-folder__body {
+    position: relative;
+    min-height: 14rem;
 }
 
+.ss-onboarding-translations__form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+/* Strefa upuszczania na cały arkusz z kropkami: bez własnego tła, pole pliku przykrywa ją w całości; przy przeciąganiu
+   i pod kursorem przerywana ramka w kolorze akcentu. */
 .ss-onboarding-translations__drop {
     position: relative;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--ss-space-1);
     align-items: center;
-    align-self: stretch;
+    justify-content: center;
+    min-height: 12rem;
     padding: var(--ss-space-6) var(--ss-space-4);
-    border: 1px dashed var(--ss-color-border-strong);
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-surface);
+    border: 1px dashed transparent;
+    border-radius: calc(var(--ss-folder-radius, var(--ss-radius-card)) - var(--ss-space-2));
+    background: transparent;
     color: var(--ss-color-muted);
     text-align: center;
     cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .ss-onboarding-translations__drop:hover,
 .ss-onboarding-translations__drop.is-drop-target {
     border-color: var(--ss-color-accent);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ss-color-accent) 25%, transparent);
+    background: color-mix(in srgb, var(--ss-color-accent) 4%, transparent);
 }
 
 .ss-onboarding-translations__drop:has(:focus-visible) {
@@ -7524,8 +7578,39 @@ a.ss-notification:focus-visible {
 }
 
 .ss-onboarding-translations__files {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
     margin: 0;
-    padding-left: var(--ss-space-4);
+    padding: 0;
+    list-style: none;
     font-family: var(--ss-font-mono);
     font-size: 0.8125rem;
+}
+
+/* Wynik sprawdzenia pliku przed importem (js/file-drop.js): gotowy — zielony znacznik, odrzucony — czerwony. */
+.ss-onboarding-translations__files [data-state]::before {
+    margin-right: var(--ss-space-2);
+    font-weight: 700;
+}
+
+.ss-onboarding-translations__files [data-state="valid"]::before {
+    content: "✓";
+    color: var(--ss-color-success);
+}
+
+.ss-onboarding-translations__files [data-state="invalid"] {
+    color: var(--ss-color-danger);
+}
+
+.ss-onboarding-translations__files [data-state="invalid"]::before {
+    content: "✕";
+}
+
+.ss-folder__toolbar .ss-onboarding-translations__submit {
+    margin-left: auto;
+}
+
+.ss-folder__toolbar .ss-onboarding-translations__submit[hidden] {
+    display: none;
 }
