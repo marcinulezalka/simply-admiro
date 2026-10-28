@@ -5621,18 +5621,42 @@ a.ss-notification:focus-visible {
 }
 
 /* .ss-keypad--inline — ta sama klawiatura w formularzu (x-admiro::pin-field keypad-inline): panel między polem
-   a przyciskiem formularza, wyśrodkowany, bez cienia okna; rozwijany przyciskiem w polu (hidden). */
+   a przyciskiem formularza w ich szerokości, bez własnej ramki, tła i cienia okna; klawisze dzielą szerokość na trzy
+   kolumny i wyglądają jak pola formularza (wysokość, zaokrąglenie, ramka, krój interfejsu); rozwijany przyciskiem
+   w polu (hidden). */
 .ss-keypad--inline {
-    box-sizing: border-box;
-    align-self: center;
-    max-width: 100%;
+    --ss-keypad-key-height: 3rem;
+    --ss-keypad-gap: var(--ss-space-3);
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    border: 0;
+    background: none;
     box-shadow: none;
 }
 
 .ss-keypad--inline:not([hidden]) {
     display: flex;
     flex-direction: column;
-    gap: var(--ss-space-4);
+    gap: var(--ss-space-3);
+}
+
+.ss-keypad--inline .ss-keypad__error {
+    margin: 0;
+}
+
+.ss-keypad--inline .ss-keypad__keys {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ss-keypad--inline .ss-keypad__key {
+    border-radius: var(--ss-radius-input);
+    font-family: var(--ss-font-sans);
+    font-size: 1.25rem;
+}
+
+.ss-keypad--inline .ss-keypad__key--muted {
+    font-size: 0.9375rem;
 }
 
 /**
