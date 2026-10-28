@@ -18,6 +18,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Admiro\Auth\ZoneAuthSettingsFactory;
+use Simplysmart\Admiro\Enums\AppBackdrop;
 use Simplysmart\Admiro\Enums\AppLayout;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Enums\Palette;
@@ -39,7 +40,7 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
  * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)), app_layout (wariant
- * layoutu aplikacji: Enums\AppLayout), social_links (profile w serwisach społecznościowych: Enums\SocialNetwork →
+ * layoutu aplikacji: Enums\AppLayout), backdrop (tło płótna: Enums\AppBackdrop; `zone-logo` wymaga logo strefy), social_links (profile w serwisach społecznościowych: Enums\SocialNetwork →
  * adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
  * z `teams`).
  */
@@ -71,6 +72,7 @@ final readonly class ZoneDefinitionFactory
 
         $model = $this->model($config['model'] ?? null, $name);
         $authSettings = $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null;
+        $logo = $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo;
 
         return new ZoneDefinition(
             name: $name,
@@ -98,10 +100,11 @@ final readonly class ZoneDefinitionFactory
             mailViews: $this->mailViews($name, Arr::array($config, 'mail', [])),
             mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
             roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
-            logo: $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo,
+            logo: $logo,
             website: $this->website($name, $config['website'] ?? null),
             appLayout: $this->appLayout($name, $config['app_layout'] ?? null),
             socialLinks: $this->socialLinks($name, Arr::array($config, 'social_links', [])),
+            backdrop: $this->backdrop($name, $config['backdrop'] ?? null, $logo),
         );
     }
 
@@ -140,6 +143,26 @@ final readonly class ZoneDefinitionFactory
         }
 
         return $result;
+    }
+
+    /**
+     * Tło płótna z klucza `backdrop` (wartość Enums\AppBackdrop); brak klucza — logotyp simplysmart.
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest tłem albo logo strefy w tle nie ma logo strefy.
+     */
+    private function backdrop(string $zone, mixed $backdrop, ?string $logo): AppBackdrop
+    {
+        if ($backdrop === null) {
+            return AppBackdrop::Brand;
+        }
+
+        $variant = is_string($backdrop) ? AppBackdrop::tryFrom($backdrop) : null;
+
+        if ($variant === null) {
+            throw new InvalidArgumentException("Zone [{$zone}] backdrop must be one of: " . implode(', ', array_column(AppBackdrop::cases(), 'value')) . '.');
+        }
+
+        return $variant === AppBackdrop::ZoneLogo && $logo === null ? throw new InvalidArgumentException("Zone [{$zone}] backdrop zone-logo needs the zone logo.") : $variant;
     }
 
     /**

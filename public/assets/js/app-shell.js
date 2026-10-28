@@ -4,7 +4,8 @@
  * (<details data-ss-dropdown>: powiadomienia, konto) — otwarcie jednego zamyka inne, klik obok, Esc i przycisk
  * [data-ss-dropdown-close] w panelu zamykają. W wariancie
  * Workspace odnośniki do #ss-sitemap (np. „Mapa aplikacji” w menu) rozsuwają i zwijają mapę strony [data-ss-sitemap] pod paskiem stopki
- * (otwarta stopka, .ss-workspace-footer--open, przestaje być przyklejona i rośnie w dół; bez skryptu mapa jest widoczna). Bez skryptu menu zostaje rozwinięte, a na telefonie stoi nad treścią.
+ * (otwarta stopka, .ss-workspace-footer--open, przestaje być przyklejona i rośnie w dół; bez skryptu mapa jest widoczna).
+ * Odnośniki do #ss-context-switch otwierają menu przełącznika kontekstu. Bez skryptu menu zostaje rozwinięte, a na telefonie stoi nad treścią.
  * Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
@@ -90,6 +91,18 @@
                     }
                 });
             });
+        }
+
+        /* Odnośniki do #ss-context-switch (np. „Przełącz kontekst” nad tytułem) otwierają menu przełącznika kontekstu. */
+        const contextSwitch = document.getElementById('ss-context-switch');
+
+        if (contextSwitch instanceof HTMLDetailsElement) {
+            document.querySelectorAll('a[href="#ss-context-switch"]').forEach((link) => link.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                contextSwitch.open = true;
+                contextSwitch.querySelector('summary')?.focus();
+            }));
         }
 
         shell.querySelectorAll('[data-ss-dropdown-close]').forEach((button) => button.addEventListener('click', () => {

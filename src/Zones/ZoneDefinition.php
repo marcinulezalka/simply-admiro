@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Simplysmart\Admiro\Auth\ZoneAuthSettings;
 use Simplysmart\Admiro\Contracts\CodeAndPinAccount;
+use Simplysmart\Admiro\Enums\AppBackdrop;
 use Simplysmart\Admiro\Enums\AppLayout;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Enums\Palette;
@@ -64,6 +65,7 @@ final readonly class ZoneDefinition
      *                             startowej (View\ZoneLogos); null = logo bez odnośnika.
      * @param AppLayout $appLayout Wariant layoutu aplikacji po zalogowaniu (`app_layout`); Workspace — ustawienia i konto
      *                             w głównym menu, akcje z podpowiedziami, powiadomienia w wysuwanym panelu, stopka z mapą strony.
+     * @param AppBackdrop $backdrop Tło płótna layoutu aplikacji (`backdrop`): logotyp simplysmart albo logo strefy na dole.
      * @param list<array{network: SocialNetwork, url: string}> $socialLinks Profile strefy w serwisach społecznościowych
      *                                                                   (`social_links`), np. ikony na karcie konta.
      * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
@@ -97,6 +99,7 @@ final readonly class ZoneDefinition
         public ?string $website = null,
         public AppLayout $appLayout = AppLayout::Sidebar,
         public array $socialLinks = [],
+        public AppBackdrop $backdrop = AppBackdrop::Brand,
     ) {}
 
     /**

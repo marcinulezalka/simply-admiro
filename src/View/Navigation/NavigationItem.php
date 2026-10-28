@@ -23,6 +23,9 @@ final readonly class NavigationItem
     /** Identyfikator mapy strony w stopce layoutu Workspace; pozycja z adresem `#` + ten identyfikator rozsuwa mapę. */
     public const string SITEMAP_ANCHOR = 'ss-sitemap';
 
+    /** Identyfikator przełącznika kontekstu (x-admiro::app.context-switch); odnośnik `#` + ten identyfikator go otwiera. */
+    public const string CONTEXT_SWITCH_ANCHOR = 'ss-context-switch';
+
     /**
      * @param string $icon Nazwa ikony z `public/assets/img/icons/` (x-admiro::icon).
      * @param string|null $badge Krótka wartość obok etykiety, np. liczba oczekujących.

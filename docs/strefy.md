@@ -36,6 +36,9 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     z menu, skróty, wyszukiwarka, przełącznik kontekstu, powiadomienia, kalendarz i mapa strony; z Contracts\ZoneSitemap
        //     mapa pokazuje sitemap(), z Contracts\ZoneShortcuts obok konta są skróty shortcuts(); domyślnie `sidebar`;
        //     menu strefy z Contracts\ZoneAppLayout wybiera wariant dla bieżącego żądania, np. Workspace w kontekście jednej roli),
+       // 'backdrop' => 'zone-logo' (Enums\AppBackdrop: tło płótna po zalogowaniu — logo strefy `logo` wtopione w tło przy
+       //     dolnej krawędzi okna i lekko przycięte od dołu zamiast logotypu simplysmart na środku; wymaga logo strefy;
+       //     domyślnie `brand`),
        // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),
        // 'stylesheets' => [__DIR__.'/../public/css/<strefa>.css'] (style strefy po stylach Core: logowanie, layout

@@ -1,5 +1,6 @@
-{{-- Tło layoutu aplikacji (bazowe płótno): duży logotyp simplysmart (x-admiro::logo) na środku okna, pod treścią, wtopiony w płótno jak litery wycięte w papierze — lico liter w kolorze płótna z delikatnym ukośnym prążkowaniem (wzór #ss-backdrop-grain), wewnętrzny cień od góry z lewej i jasna krawędź od dołu z prawej (filtr #ss-backdrop-deboss); kolory z tokenów w CSS (.ss-backdrop), więc działa w motywie jasnym i ciemnym, bez zmiany proporcji. Czysta dekoracja (aria-hidden); bez motywów wysokiego kontrastu i wydruku. --}}
-<div class="ss-backdrop" aria-hidden="true">
+{{-- Tło layoutu aplikacji (bazowe płótno): duży logotyp simplysmart (x-admiro::logo) na środku okna — albo logo strefy (logo: treść SVG z fill="currentColor", zone `backdrop` = zone-logo, Enums\AppBackdrop) przy dolnej krawędzi okna, lekko przycięte od dołu (.ss-backdrop--bottom) — pod treścią, wtopiony w płótno jak litery wycięte w papierze — lico liter w kolorze płótna z delikatnym ukośnym prążkowaniem (wzór #ss-backdrop-grain), wewnętrzny cień od góry z lewej i jasna krawędź od dołu z prawej (filtr #ss-backdrop-deboss); kolory z tokenów w CSS (.ss-backdrop), więc działa w motywie jasnym i ciemnym, bez zmiany proporcji. Czysta dekoracja (aria-hidden); bez motywów wysokiego kontrastu i wydruku. --}}
+@props(['logo' => null])
+<div @class(['ss-backdrop', 'ss-backdrop--bottom' => $logo !== null]) aria-hidden="true">
     <svg class="ss-backdrop__defs" xmlns="http://www.w3.org/2000/svg" width="0" height="0" focusable="false">
         <defs>
             <pattern id="ss-backdrop-grain" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)">
@@ -28,5 +29,9 @@
             </filter>
         </defs>
     </svg>
-    <x-admiro::logo class="ss-backdrop__logo" />
+    @if ($logo !== null)
+        <span class="ss-backdrop__logo">{!! $logo !!}</span>
+    @else
+        <x-admiro::logo class="ss-backdrop__logo" />
+    @endif
 </div>

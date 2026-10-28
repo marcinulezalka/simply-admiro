@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\View;
 
 use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Logo zarejestrowanych stref (`logo` strefy, domyślnie `auth.logo`) do osadzenia inline, np. na stronie startowej:
@@ -25,6 +26,16 @@ final readonly class ZoneLogos
     public function __construct(
         private ZoneRegistry $zones,
     ) {}
+
+    /**
+     * Treść pliku SVG logo strefy (fill="currentColor") albo null, gdy strefa nie ma logo.
+     */
+    public function svg(ZoneDefinition $zone): ?string
+    {
+        $path = $zone->logo === null ? false : realpath($zone->logo);
+
+        return $path === false ? null : (string) file_get_contents($path);
+    }
 
     /**
      * @return list<array{svg: string, website: ?string}> Treść pliku SVG (fill="currentColor": przyjmuje kolor tekstu)

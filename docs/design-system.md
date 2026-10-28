@@ -278,6 +278,15 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   działa jak „Zatwierdź PIN”: poprawny PIN chowa kartę pod pole, a potem formularz idzie dalej; przycisk formularza
   „Zatwierdź” (`sign_in.pin_submit`, ikona Entera `corner-down-left`) przy wysuniętej karcie też najpierw ją chowa.
   Bez animacji przy `prefers-reduced-motion`.
+- **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
+  z motywem w tle (poświata akcentu w rogu i koncentryczne łuki), monogram z inicjałów, podpis (`kicker`), nazwa krojem
+  nagłówków z nazwą skróconą i pod linią adres, telefon, e-mail i NIP (puste pomijane); z `href` cała karta jest
+  odnośnikiem ze strzałką i lekkim uniesieniem pod kursorem.
+- **Obszar ustawień** (`.ss-settings-area`, layout Workspace z `Contracts\ZoneAppLayout::settingsArea()`): strony
+  ustawień tworzą jeden obszar jak ustawienia systemu — po lewej grupy menu ustawień jako lista kategorii (karty-odnośniki
+  z ikoną w kafelku, bieżąca w ramce akcentu, jak kroki kreatora; od 64rem przyklejona), po prawej parametry strony.
+- **Odnośnik nad tytułem** (`x-admiro::app.context`): domyślnie „Wstecz” ze strzałką; `backLabel` i `backIcon` zmieniają
+  etykietę i ikonę, a adres `#ss-context-switch` otwiera menu przełącznika kontekstu (`js/app-shell.js`).
 - **Pole kodu z e-maila** `x-admiro::code-field` (krok kodu logowania, kod resetu PIN-u): osobne pole na każdą cyfrę
   (`.ss-code`, `.ss-code__cell`, `js/code-field.js`); cyfra przechodzi do następnej komórki, Backspace w pustej wraca,
   strzałki przesuwają, wklejenie i autouzupełnianie rozkładają cały kod. Kod trafia do ukrytego pola `name`; bez skryptu

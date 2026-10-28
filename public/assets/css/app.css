@@ -3883,6 +3883,15 @@ textarea.ss-input {
     transform: translate(-50%, -40%);
 }
 
+/* Logo strefy w tle (.ss-backdrop--bottom, zone `backdrop` = zone-logo): szerzej, przy dolnej krawędzi okna,
+   przycięte od dołu o mniej więcej piątą część wysokości napisu. */
+.ss-backdrop--bottom {
+    top: auto;
+    bottom: 0;
+    width: min(88rem, 94vw);
+    transform: translate(-50%, 22%);
+}
+
 .ss-backdrop__defs {
     position: absolute;
     width: 0;
@@ -5685,6 +5694,231 @@ a.ss-notification:focus-visible {
 @media (prefers-reduced-motion: reduce) {
     .ss-keypad--inline:not([hidden]),
     .ss-keypad__card {
+        transition: none;
+    }
+}
+
+/**
+ * .ss-settings-area — strony ustawień jako jeden obszar (x-admiro::app.layout settingsArea, layout Workspace): od 64rem
+ * dwie kolumny — kategorie (__nav: grupy z tytułem __group-title, karty-odnośniki __link z ikoną w kafelku __icon,
+ * bieżąca z aria-current w ramce akcentu, jak kroki kreatora onboardingu) i treść strony (__panel); węziej kategorie
+ * nad treścią w dwóch kolumnach.
+ */
+.ss-settings-area {
+    display: grid;
+    gap: var(--ss-space-6);
+    align-items: start;
+}
+
+.ss-settings-area__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+}
+
+.ss-settings-area__group-title {
+    margin: 0 0 var(--ss-space-2);
+    padding-inline: var(--ss-space-1);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-settings-area__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-settings-area__link {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+    color: var(--ss-color-text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ss-settings-area__link:hover {
+    border-color: var(--ss-color-border-strong);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-settings-area__link[aria-current="page"] {
+    border-color: var(--ss-color-accent);
+    box-shadow: 0 0 0 1px var(--ss-color-accent), var(--ss-shadow-soft);
+}
+
+.ss-settings-area__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-settings-area__icon {
+    flex: none;
+    color: var(--ss-color-muted);
+}
+
+.ss-settings-area__link[aria-current="page"] .ss-settings-area__icon {
+    color: var(--ss-color-accent);
+}
+
+.ss-settings-area__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    min-width: 0;
+}
+
+@media (min-width: 64rem) {
+    .ss-settings-area {
+        grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
+    }
+
+    .ss-settings-area__nav {
+        position: sticky;
+        top: var(--ss-space-6);
+    }
+
+    .ss-settings-area__list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/**
+ * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
+ * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu), monogram (__monogram), podpis (__kicker),
+ * nazwa krojem nagłówków (__name) z nazwą skróconą (__short) i dane pod linią (__details, __detail z ikoną);
+ * --link: cała karta jest odnośnikiem, strzałka (__arrow) i lekkie uniesienie pod kursorem.
+ */
+.ss-business-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    width: 100%;
+    max-width: 32rem;
+    min-height: 17rem;
+    padding: var(--ss-space-6);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background:
+        radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--ss-color-accent) 16%, transparent) 0, transparent 50%),
+        repeating-radial-gradient(circle at 115% 125%, transparent 0 18px, color-mix(in srgb, var(--ss-color-accent) 10%, transparent) 18px 19px),
+        linear-gradient(145deg, var(--ss-color-surface) 40%, color-mix(in srgb, var(--ss-color-surface) 88%, var(--ss-color-accent)));
+    box-shadow: var(--ss-shadow-elevated);
+    color: var(--ss-color-text);
+    text-decoration: none;
+}
+
+.ss-business-card--link {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ss-business-card--link:hover {
+    border-color: var(--ss-color-border-strong);
+    transform: translateY(-2px);
+}
+
+.ss-business-card--link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 3px;
+}
+
+.ss-business-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.ss-business-card__monogram {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.ss-business-card__arrow {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--ss-color-muted);
+    transition: transform 0.2s ease;
+}
+
+.ss-business-card--link:hover .ss-business-card__arrow {
+    color: var(--ss-color-text);
+    transform: translateX(3px);
+}
+
+.ss-business-card__identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    margin-top: auto;
+}
+
+.ss-business-card__kicker {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ss-business-card__name {
+    font-family: var(--ss-font-display, inherit);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.ss-business-card__short {
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-business-card__details {
+    display: grid;
+    gap: var(--ss-space-1);
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border);
+    font-size: 0.875rem;
+}
+
+.ss-business-card__detail {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.ss-business-card__detail-icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-business-card--link,
+    .ss-business-card__arrow {
         transition: none;
     }
 }
