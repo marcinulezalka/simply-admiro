@@ -1617,36 +1617,58 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 /*
- * .ss-folder — obszar roboczy w kształcie teczki, w dwóch warstwach. Tylna, ciemniejsza (--ss-folder-back): zakładka
- * z lewej u góry z samym tytułem (__tab), zakończona skosem w kształcie litery S (::after, clip-path), i pod nią pas na
- * przyciski (__toolbar, w __back). Przednia, jaśniejsza (__body, --ss-workspace-bg z kropkami): arkusz z treścią
- * z własną cienką ramką i dużym zaokrągleniem (--ss-folder-radius), bez marginesów z boków i od dołu — sięga krawędzi teczki. Obrys całej teczki (z zakładką i skosem) daje lekki drop-shadow (filter),
- * bo zwykła ramka nie obejmie skosu. Wysokość zakładki i skosu jest stała (44 px), bo ścieżka skosu jest w pikselach.
+ * .ss-folders — teczki obok siebie jak zakładki (js/tabs.js: role="tab" w __tabs, panele [data-ss-tab-panel]): rząd
+ * zakładek (.ss-folder__tab) nad teczkami, widoczna tylko wybrana teczka. Zakładka kończy się skosem w kształcie litery
+ * S (::after, clip-path) i nachodzi na następną; wybrana jest w kolorze tylnej warstwy i na wierzchu, pozostałe —
+ * ciemniejsze, pod nią. Obrys całej grupy (zakładki ze skosami i teczka) daje lekki drop-shadow (filter), bo zwykła
+ * ramka nie obejmie skosu; w motywach kontrastu bez obrysu. Bez skryptu rząd zakładek jest ukryty, a teczki stoją
+ * jedna pod drugą. Wysokość zakładki i skosu jest stała (44 px), bo ścieżka skosu jest w pikselach.
+ *
+ * .ss-folder — teczka w dwóch warstwach. Tylna, ciemniejsza (__back, --ss-folder-back): pas na przyciski (__toolbar)
+ * i stopka (__footer) z małymi licznikami (__count). Przednia, jaśniejsza (__body, --ss-workspace-bg z kropkami):
+ * arkusz z treścią z cienką ramką i dużym zaokrągleniem, bez marginesów z boków — sięga krawędzi teczki.
  */
-.ss-folder {
+.ss-folders {
     --ss-folder-radius: 1.5rem;
     --ss-folder-back: var(--ss-color-surface-muted);
+    --ss-folder-back-inactive: color-mix(in srgb, var(--ss-color-border-strong) 35%, var(--ss-color-surface-muted));
     --ss-folder-edge: color-mix(in srgb, var(--ss-color-border-strong) 85%, transparent);
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: var(--ss-space-3);
     filter: drop-shadow(0 0 0.75px var(--ss-folder-edge));
+}
+
+.ss-folders__tabs {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: calc(-1 * var(--ss-space-3));
+    padding-right: 48px;
+}
+
+.ss-folders__tabs[hidden] {
+    display: none;
 }
 
 .ss-folder__tab {
     position: relative;
+    z-index: 1;
     display: flex;
-    align-self: flex-start;
+    flex: none;
     align-items: center;
     height: 44px;
-    margin-right: 48px;
+    margin: 0 8px 0 0;
     padding: 0 var(--ss-space-4);
+    border: 0;
     border-radius: var(--ss-folder-radius) 0 0 0;
-    background: var(--ss-folder-back);
+    background: var(--ss-folder-back-inactive);
+    color: var(--ss-color-muted);
+    font: inherit;
+    cursor: pointer;
 }
 
-.ss-folder__tab .ss-card__title {
-    margin: 0;
+.ss-folder__tab + .ss-folder__tab {
+    border-top-left-radius: calc(var(--ss-folder-radius) / 1.5);
 }
 
 .ss-folder__tab::after {
@@ -1656,16 +1678,40 @@ a.ss-onboarding-organizations__missing:hover {
     left: calc(100% - 1px);
     width: 48px;
     height: 44px;
-    background: var(--ss-folder-back);
+    background: inherit;
     clip-path: path("M0 0 H6 C15 0 18 4 21 11 L27 33 C30 40 33 44 42 44 H48 V44 H0 Z");
+}
+
+.ss-folder__tab .ss-card__title {
+    margin: 0;
+    color: inherit;
+}
+
+.ss-folder__tab[aria-selected="true"] {
+    z-index: 2;
+    background: var(--ss-folder-back);
+    color: var(--ss-color-text);
+}
+
+.ss-folder__tab:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -4px;
+}
+
+.ss-folder {
+    position: relative;
+    z-index: 2;
 }
 
 .ss-folder__back {
     display: flex;
     flex-direction: column;
-    padding: 0;
-    border-radius: 0 var(--ss-folder-radius) var(--ss-folder-radius) var(--ss-folder-radius);
+    border-radius: var(--ss-folder-radius);
     background: var(--ss-folder-back);
+}
+
+.ss-folders__tabs:not([hidden]) ~ .ss-folder > .ss-folder__back {
+    border-top-left-radius: 0;
 }
 
 .ss-folder__toolbar {
@@ -1686,7 +1732,36 @@ a.ss-onboarding-organizations__missing:hover {
     box-shadow: 0 -1px 2px color-mix(in srgb, var(--ss-color-text) 5%, transparent);
 }
 
-:root[data-theme^="contrast"] .ss-folder {
+.ss-folder__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-4);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-4);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-folder__count {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+}
+
+.ss-folder__count-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.ss-folder__count .ss-badge {
+    padding-block: 0;
+    font-size: 0.625rem;
+}
+
+:root[data-theme^="contrast"] .ss-folders {
     filter: none;
 }
 
@@ -7386,29 +7461,12 @@ a.ss-notification:focus-visible {
 
 
 /*
- * .ss-onboarding-translations — sekcja „Tłumaczenia” w zadaniu „Języki” (otwierana z menu „+” kotwicą
- * #translations-upload, :target; po błędzie przesyłania otwarta przez .is-open): strefa upuszczania plików JSON
+ * .ss-onboarding-translations — teczka „Tłumaczenia” w zadaniu „Języki” (.ss-folders; wybierana zakładką albo kotwicą
+ * #translations-upload z menu szybkich akcji, po błędzie przesyłania wybrana): strefa upuszczania plików JSON
  * (__drop, przerywana ramka; pole pliku __input przykrywa ją, więc upuszczenie działa bez skryptu; przy przeciąganiu
  * .is-drop-target, js/file-drop.js) i lista wybranych plików (__files).
  */
-.ss-onboarding-translations {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ss-space-3);
-}
-
-.ss-onboarding-translations:not(:target, .is-open) {
-    display: none;
-}
-
-.ss-onboarding-translations__header {
-    display: flex;
-    gap: var(--ss-space-3);
-    align-items: center;
-    justify-content: space-between;
-}
-
-.ss-onboarding-translations > p {
+.ss-onboarding-translations .ss-folder__body > p {
     margin: 0;
 }
 

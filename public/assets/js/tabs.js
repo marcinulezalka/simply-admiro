@@ -3,7 +3,8 @@
  * skryptu, wtedy wszystkie panele są widoczne jeden pod drugim) z przyciskami [data-ss-tab] (role="tab",
  * aria-controls) przełącza panele [data-ss-tab-panel]: wybrany ma aria-selected="true", pozostałe panele dostają
  * hidden. Liczbę zakładek i numer wybranej skrypt podaje w --ss-tab-count i --ss-tab-index listy, a CSS przesuwa po
- * nich wskaźnik (.ss-tabs--slider). Strzałki w lewo i w prawo, Home i End zmieniają zakładkę. Osadzany inline
+ * nich wskaźnik (.ss-tabs--slider). Strzałki w lewo i w prawo, Home i End zmieniają zakładkę, a kotwica panelu w adresie
+ * albo kliknięty odnośnik `#<id panelu>` (np. „Import” w menu) wybiera jego zakładkę. Osadzany inline
  * z nonce CSP (x-admiro::scripts).
  */
 (() => {
@@ -34,9 +35,29 @@
             }
         };
 
+        const indexOfPanel = (id) => tabs.findIndex((tab) => id !== '' && tab.getAttribute('aria-controls') === id);
+        const fromHash = () => indexOfPanel(decodeURIComponent(window.location.hash.slice(1)));
+
         list.hidden = false;
         list.style.setProperty('--ss-tab-count', String(tabs.length));
-        select(Math.max(0, tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true')));
+        const initial = fromHash();
+        select(initial >= 0 ? initial : Math.max(0, tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true')));
+
+        window.addEventListener('hashchange', () => {
+            const index = fromHash();
+
+            if (index >= 0) {
+                select(index);
+            }
+        });
+        document.addEventListener('click', (event) => {
+            const link = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
+            const index = link ? indexOfPanel(decodeURIComponent(link.hash.slice(1))) : -1;
+
+            if (index >= 0) {
+                select(index);
+            }
+        });
 
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => select(index));
