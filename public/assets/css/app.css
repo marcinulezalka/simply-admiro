@@ -1614,21 +1614,21 @@ a.ss-onboarding-organizations__missing:hover {
     box-shadow: none;
 }
 
-/* Nagłówek panelu: tytuł po lewej, przełącznik widoku z suwakiem (Aktywne / Ukryte z licznikami) po prawej — mniejszy, w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki z napisami mono wersalikami. Wskaźnik
+/* Nagłówek panelu: tytuł, a pod nim przełącznik widoku z suwakiem (Aktywne / Ukryte z licznikami) w kontenerze na szerokość przycisków — mniejszy, w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki z napisami mono wersalikami. Wskaźnik
    stoi pod odnośnikiem z aria-current="true" (bez skryptu i stylów inline), js/view-switch.js przesuwa go od razu. */
-.ss-onboarding-languages__header {
+.ss-onboarding-languages__header--views {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--ss-space-3);
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: flex-start;
 }
 
 .ss-tabs.ss-onboarding-languages__views {
     --ss-tab-count: 2;
     --ss-views-radius: 0.625rem;
-    flex: 0 0 auto;
+    width: fit-content;
     min-width: 13rem;
+    max-width: 100%;
     margin: 0;
     padding: var(--ss-space-1);
     border: 1px solid var(--ss-color-border);
@@ -4723,8 +4723,14 @@ button.ss-tabs__link {
 
 /*
  * .ss-switch--knob — przycisk zasilania jak na pilocie (prop knob): okrągły przycisk z ikoną power; wyłączony — szara
- * ikona, włączony — ikona świeci na zielono (kolor i poświata), ramka w delikatnej zieleni. Przy fokusie z klawiatury obrys.
+ * ikona, włączony — zieleń tylko wewnątrz przycisku (świecąca ikona na jasnozielonym tle), ramka bez zmian. Przy fokusie z klawiatury obrys.
  */
+/* Przycisk zasilania stoi sam (wiersz, kafelek): bez linii i odstępów wiersza ustawień .ss-switch. */
+.ss-switch.ss-switch--knob {
+    padding: 0;
+    border-top: 0;
+}
+
 .ss-switch__power {
     display: inline-flex;
     flex: none;
@@ -4751,8 +4757,7 @@ button.ss-tabs__link {
 }
 
 .ss-switch--knob input:checked + .ss-switch__power {
-    border-color: color-mix(in srgb, var(--ss-color-success) 45%, var(--ss-color-border));
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ss-color-success) 12%, transparent), 0 0 10px color-mix(in srgb, var(--ss-color-success) 35%, transparent);
+    background: color-mix(in srgb, var(--ss-color-success) 14%, var(--ss-color-surface));
     color: var(--ss-color-success);
 }
 

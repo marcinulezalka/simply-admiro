@@ -135,7 +135,7 @@
                 @endif
 
                 <section class="ss-card ss-card--muted ss-onboarding-languages" aria-labelledby="ss-languages-enabled-title">
-                    <header class="ss-onboarding-languages__header">
+                    <header class="ss-onboarding-languages__header ss-onboarding-languages__header--views">
                         <h3 class="ss-card__title" id="ss-languages-enabled-title">{{ text('admiro::dashboard.onboarding_languages_enabled') }}</h3>
                         <nav class="ss-tabs ss-tabs--slider ss-onboarding-languages__views" aria-label="{{ text('admiro::dashboard.onboarding_languages_views') }}" data-ss-view-switch="ss-languages-workspace">
                             @foreach (['active' => $enabled->count(), 'hidden' => $hidden->count()] as $view => $count)
