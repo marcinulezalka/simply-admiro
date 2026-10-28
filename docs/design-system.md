@@ -270,7 +270,11 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   formularz (`requestSubmit`). Enter w samym polu działa tak samo bez okna. Wartość z klawiatury ekranowej dostaje
   `setCustomValidity`, bo przeglądarka nie sprawdza `minlength` wartości wpisanej skryptem — za krótki PIN nie wyśle
   formularza. Kropki pokazują liczbę wpisanych cyfr (liczba także dla czytników ekranu), cyfry trafiają do pola na
-  bieżąco (do `maxlength`). Bez skryptu przycisk jest ukryty.
+  bieżąco (do `maxlength`). Bez skryptu przycisk jest ukryty. Z `keypad-inline` (krok PIN-u logowania) klawiatura
+  nie jest modalem: przycisk w polu rozwija i zwija (`aria-expanded`) panel `.ss-keypad--inline` między polem
+  a przyciskiem formularza, z samymi klawiszami i komunikatem za krótkiego PIN-u (bez kropek i stopki); zatwierdza
+  przycisk formularza, który w kroku PIN-u ma ikonę Entera (`corner-down-left`) jak „Zatwierdź PIN”; Enter w panelu
+  działa jak „Zatwierdź PIN”, Escape zwija panel.
 - **Pole kodu z e-maila** `x-admiro::code-field` (krok kodu logowania, kod resetu PIN-u): osobne pole na każdą cyfrę
   (`.ss-code`, `.ss-code__cell`, `js/code-field.js`); cyfra przechodzi do następnej komórki, Backspace w pustej wraca,
   strzałki przesuwają, wklejenie i autouzupełnianie rozkładają cały kod. Kod trafia do ukrytego pola `name`; bez skryptu

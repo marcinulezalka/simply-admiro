@@ -5620,6 +5620,21 @@ a.ss-notification:focus-visible {
     width: 100%;
 }
 
+/* .ss-keypad--inline — ta sama klawiatura w formularzu (x-admiro::pin-field keypad-inline): panel między polem
+   a przyciskiem formularza, wyśrodkowany, bez cienia okna; rozwijany przyciskiem w polu (hidden). */
+.ss-keypad--inline {
+    box-sizing: border-box;
+    align-self: center;
+    max-width: 100%;
+    box-shadow: none;
+}
+
+.ss-keypad--inline:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
 /**
  * .ss-context-switch — przełącznik kontekstu w rzędzie akcji menu (np. widok, organizacja): grupy z nagłówkami,
  * bieżący kontekst oznaczony haczykiem i aria-current.

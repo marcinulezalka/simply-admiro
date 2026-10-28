@@ -14,14 +14,19 @@
  * setCustomValidity z tym samym komunikatem — formularz z za krótkim PIN-em się nie wyśle. Samo zamknięcie wraca
  * fokusem do pola. Bez skryptu przycisk zostaje ukryty. Okno z [data-ss-keypad-show] otwiera się od razu po
  * załadowaniu (podgląd w design systemie). Osadzany inline z nonce CSP (x-admiro::scripts).
+ *
+ * Klawiatura w formularzu ([data-ss-keypad-inline], zwykły element zamiast <dialog>): przycisk w polu rozwija i zwija
+ * panel (aria-expanded), bez pola z kropkami i stopki; Enter w panelu działa jak „Zatwierdź PIN” (komunikat albo
+ * przejście dalej bez zwijania), Escape zwija panel i wraca fokusem do pola.
  */
 (() => {
     const init = (dialog) => {
         const input = document.getElementById(dialog.dataset.ssKeypadFor ?? '');
         const opener = input?.parentElement?.querySelector('[data-ss-keypad-open]');
         const display = dialog.querySelector('[data-ss-keypad-display]');
+        const inline = dialog.hasAttribute('data-ss-keypad-inline');
 
-        if (!(input instanceof HTMLInputElement) || opener === null || display === null || typeof dialog.showModal !== 'function') {
+        if (!(input instanceof HTMLInputElement) || opener === null || (!inline && (display === null || typeof dialog.showModal !== 'function'))) {
             return;
         }
 
@@ -42,6 +47,10 @@
         };
 
         const render = () => {
+            if (display === null) {
+                return;
+            }
+
             const count = input.value.length;
             display.replaceChildren(...Array.from({ length: count }, () => {
                 const dot = document.createElement('span');
@@ -111,9 +120,39 @@
             }
         };
 
+        const open = () => {
+            render();
+
+            if (inline) {
+                dialog.hidden = false;
+                opener.setAttribute('aria-expanded', 'true');
+            } else {
+                dialog.showModal();
+            }
+        };
+
+        const close = () => {
+            if (!inline) {
+                dialog.close();
+
+                return;
+            }
+
+            dialog.hidden = true;
+            opener.setAttribute('aria-expanded', 'false');
+            showError(false);
+            input.focus();
+        };
+
         const done = () => {
             if (isTooShort()) {
                 showError(true);
+
+                return;
+            }
+
+            if (inline) {
+                proceed(true);
 
                 return;
             }
@@ -137,7 +176,7 @@
             }
         });
 
-        dialog.querySelector('[data-ss-keypad-close]')?.addEventListener('click', () => dialog.close());
+        dialog.querySelector('[data-ss-keypad-close]')?.addEventListener('click', close);
         dialog.querySelector('[data-ss-keypad-done]')?.addEventListener('click', done);
 
         dialog.addEventListener('keydown', (event) => {
@@ -150,10 +189,13 @@
             } else if (event.key === 'Enter') {
                 event.preventDefault();
                 done();
+            } else if (inline && event.key === 'Escape') {
+                event.preventDefault();
+                close();
             }
         });
         dialog.addEventListener('click', (event) => {
-            if (event.target === dialog) {
+            if (!inline && event.target === dialog) {
                 dialog.close();
             }
         });
@@ -165,14 +207,16 @@
         });
 
         opener.addEventListener('click', () => {
-            render();
-            dialog.showModal();
+            if (inline && !dialog.hidden) {
+                close();
+            } else {
+                open();
+            }
         });
         opener.hidden = false;
 
         if (dialog.hasAttribute('data-ss-keypad-show')) {
-            render();
-            dialog.showModal();
+            open();
         }
     };
 
