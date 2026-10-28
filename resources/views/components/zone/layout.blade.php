@@ -1,4 +1,4 @@
-{{-- Układ stron strefy. Zalogowane konto: layout aplikacji (x-admiro::app.layout) — awatar w kolorze konta z drugą linią (menu strefy albo bieżąca organizacja) i menu konta (profil, bezpieczeństwo, wygląd), ikony ustawień i powiadomień (dzwonek; panel z menu strefy, gdy implementuje Contracts\ZoneNotifications, inaczej pusty), wylogowanie na dole menu, przełącznik kontekstu (formularze POST: organizacja, gdy konto ma kilka; rola, gdy strefa ma `role_contexts`, a konto kilka ról — $roles, $currentRole), menu i wyszukiwarka strefy (Contracts\ZoneNavigation z Zones\ZoneNavigations), na stronach ustawień menu ustawień z powrotem do aplikacji ($settingsMenu, Zones\ZoneSettingsMenu) — w strefie z `app_layout` = workspace (Enums\AppLayout) bez menu bocznego, menu ustawień i ikony ustawień: konto, przełącznik kontekstu i powiadomienia są w stopce, a wszystkie strony w mapie strony w stopce (z Contracts\ZoneSitemap: sitemap() i grupa konta; bez niej menu strefy z grupami ustawień i konta), stopka simplysmart z odnośnikami prawnymi strefy (`legal_links`), komunikat `status` i toasty z sesji jako toasty (Toast::fromFlash()), kolorystyki strefy (`palettes`) do wyboru na stronie wyglądu (ustawienia konta). Gość (strona publiczna strefy): prosta kolumna treści, komunikaty z sesji też jako toasty. $zone, $account, $organizations, $currentOrganizationId, $currentOrganizationName, $roles, $currentRole, $navigation i $settingsMenu daje Core; meta, back, icon i slot actions trafiają do nagłówka strony: nad tytułem zawsze „Wstecz” (back, a bez niego ZoneRedirects::backUrl() — poprzednia strona albo dashboard), pod tytułem opis meta tylko wtedy, gdy strona go poda; bez icon — ikona bieżącej pozycji mapy strony albo menu. --}}
+{{-- Układ stron strefy. Zalogowane konto: layout aplikacji (x-admiro::app.layout) — awatar w kolorze konta z drugą linią (menu strefy albo bieżąca organizacja) i menu konta (profil, bezpieczeństwo, wygląd), ikony ustawień i powiadomień (dzwonek; panel z menu strefy, gdy implementuje Contracts\ZoneNotifications, inaczej pusty), wylogowanie na dole menu, przełącznik kontekstu (formularze POST: organizacja, gdy konto ma kilka; rola, gdy strefa ma `role_contexts`, a konto kilka ról — $roles, $currentRole), menu i wyszukiwarka strefy (Contracts\ZoneNavigation z Zones\ZoneNavigations), na stronach ustawień menu ustawień z powrotem do aplikacji ($settingsMenu, Zones\ZoneSettingsMenu) — w strefie z `app_layout` = workspace (Enums\AppLayout; menu strefy z Contracts\ZoneAppLayout może wybrać wariant dla bieżącego żądania, np. według aktywnej roli) bez menu bocznego, menu ustawień i ikony ustawień: konto, przełącznik kontekstu i powiadomienia są w stopce, a wszystkie strony w mapie strony w stopce (z Contracts\ZoneSitemap: sitemap() i grupa konta; bez niej menu strefy z grupami ustawień i konta), stopka simplysmart z odnośnikami prawnymi strefy (`legal_links`), komunikat `status` i toasty z sesji jako toasty (Toast::fromFlash()), kolorystyki strefy (`palettes`) do wyboru na stronie wyglądu (ustawienia konta). Gość (strona publiczna strefy): prosta kolumna treści, komunikaty z sesji też jako toasty. $zone, $account, $organizations, $currentOrganizationId, $currentOrganizationName, $roles, $currentRole, $navigation i $settingsMenu daje Core; meta, back, icon i slot actions trafiają do nagłówka strony: nad tytułem zawsze „Wstecz” (back, a bez niego ZoneRedirects::backUrl() — poprzednia strona albo dashboard), pod tytułem opis meta tylko wtedy, gdy strona go poda; bez icon — ikona bieżącej pozycji mapy strony albo menu. --}}
 @props(['title', 'description' => null, 'keywords' => null, 'tags' => null, 'meta' => null, 'back' => null, 'icon' => null])
 @if ($account !== null)
     @php
@@ -12,7 +12,8 @@
                 $roles,
             )),
         ]));
-        $workspace = $zone->appLayout === \Simplysmart\Admiro\Enums\AppLayout::Workspace;
+        $variant = ($navigation instanceof \Simplysmart\Admiro\Contracts\ZoneAppLayout ? $navigation->appLayout() : null) ?? $zone->appLayout;
+        $workspace = $variant === \Simplysmart\Admiro\Enums\AppLayout::Workspace;
         $hasSitemap = $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneSitemap;
         $settingsMode = $workspace && ($settingsMenu?->active ?? false);
         $menu = match (true) {
@@ -42,7 +43,7 @@
         :meta="$meta"
         :description="$description"
         :back="$back ?? app(\Simplysmart\Admiro\Zones\ZoneRedirects::class)->backUrl()"
-        :variant="$zone->appLayout"
+        :variant="$variant"
         :navigation="$menu"
         :sitemap="$sitemap"
         :shortcuts="$workspace && $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneShortcuts ? $navigation->shortcuts() : []"
