@@ -910,10 +910,20 @@ button.ss-badge:focus-visible {
     margin: 0;
 }
 
-/* Wyszukiwarka zadania (np. organizacje) w prawym górnym rogu karty; na wąskim ekranie pod tytułem. */
+/* Wyszukiwarka zadania (np. organizacje) w prawym górnym rogu karty; na wąskim ekranie pod tytułem. Obramowanie jak
+   globalna wyszukiwarka i przełącznik widoku panelu: pigułka z cienką ramką na szarym tle. */
 .ss-shell .ss-onboarding-wizard__search {
     flex: 0 1 24rem;
     margin: 0 0 0 auto;
+}
+
+.ss-shell .ss-onboarding-picker__search.ss-onboarding-wizard__search {
+    margin: 0 0 0 auto;
+    padding: var(--ss-space-1) var(--ss-space-1) var(--ss-space-1) var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    box-shadow: none;
 }
 
 @media (max-width: 47.999rem) {
@@ -1604,7 +1614,7 @@ a.ss-onboarding-organizations__missing:hover {
     box-shadow: none;
 }
 
-/* Nagłówek panelu: tytuł po lewej, przełącznik widoku z suwakiem (Aktywne / Ukryte z licznikami) po prawej. Wskaźnik
+/* Nagłówek panelu: tytuł po lewej, przełącznik widoku z suwakiem (Aktywne / Ukryte z licznikami) po prawej — mniejszy, w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki z napisami mono wersalikami. Wskaźnik
    stoi pod odnośnikiem z aria-current="true" (bez skryptu i stylów inline), js/view-switch.js przesuwa go od razu. */
 .ss-onboarding-languages__header {
     display: flex;
@@ -1614,28 +1624,52 @@ a.ss-onboarding-organizations__missing:hover {
     justify-content: space-between;
 }
 
-.ss-onboarding-languages__views {
+.ss-tabs.ss-onboarding-languages__views {
     --ss-tab-count: 2;
+    --ss-views-radius: 0.625rem;
     flex: 0 0 auto;
-    min-width: 16rem;
+    min-width: 13rem;
+    margin: 0;
+    padding: var(--ss-space-1);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    box-shadow: none;
 }
 
-.ss-onboarding-languages__views:has(> :nth-child(2)[aria-current="true"]) {
+.ss-tabs.ss-onboarding-languages__views::before {
+    border-radius: var(--ss-views-radius);
+}
+
+.ss-tabs.ss-onboarding-languages__views:has(> :nth-child(2)[aria-current="true"]) {
     --ss-tab-index: 1;
 }
 
-.ss-onboarding-languages__views .ss-tabs__link[aria-current="true"] {
+.ss-tabs.ss-onboarding-languages__views .ss-tabs__link {
+    gap: var(--ss-space-1);
+    padding: var(--ss-space-1) var(--ss-space-2);
+    border-radius: var(--ss-views-radius);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.ss-tabs.ss-onboarding-languages__views .ss-tabs__link[aria-current="true"] {
     background: none;
     box-shadow: none;
     color: var(--ss-color-on-accent);
 }
 
-.ss-onboarding-languages__views .ss-badge {
-    min-width: 1.5rem;
+.ss-tabs.ss-onboarding-languages__views .ss-badge {
+    min-width: 1.25rem;
     justify-content: center;
+    padding-block: 0;
+    font-size: 0.625rem;
 }
 
-/* Ukryte języki: siatka kafelków (nazwa i przełącznik), tyle kolumn, ile mieści szerokość. */
+/* Ukryte języki: siatka kafelków (flaga, nazwa, pod nią kod, przycisk zasilania), tyle kolumn, ile mieści szerokość. */
 .ss-onboarding-languages__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
@@ -1657,7 +1691,22 @@ a.ss-onboarding-organizations__missing:hover {
     background: var(--ss-color-surface);
 }
 
-.ss-onboarding-languages__tile .ss-onboarding-picker__name {
+.ss-onboarding-languages__tile-main {
+    display: flex;
+    flex: 1;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: 0;
+}
+
+.ss-onboarding-languages__tile-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-onboarding-languages__tile .ss-onboarding-picker__name,
+.ss-onboarding-languages__tile .ss-table__sub {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -4673,50 +4722,58 @@ button.ss-tabs__link {
 }
 
 /*
- * .ss-switch--knob — wariant z kolorową gałką i napisem w niej (prop knob): wyłączony — czerwona gałka z OFF po lewej
- * na jasnoczerwonym torze, włączony — zielona gałka z ON po prawej na jasnozielonym torze; napisy z atrybutów
- * data-off / data-on toru (teksty layout.switch_*).
+ * .ss-switch--knob — przycisk zasilania jak na pilocie (prop knob): okrągły przycisk z ikoną power; wyłączony — szara
+ * ikona, włączony — ikona świeci na zielono (kolor i poświata), ramka w delikatnej zieleni. Przy fokusie z klawiatury obrys.
  */
-.ss-switch--knob .ss-switch__track {
-    width: 3.75rem;
-    height: 1.875rem;
-    border: 1px solid color-mix(in srgb, var(--ss-color-danger) 35%, var(--ss-color-border));
-    background: color-mix(in srgb, var(--ss-color-danger) 12%, var(--ss-color-surface));
-    transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.ss-switch--knob .ss-switch__track::after {
-    content: attr(data-off);
-    top: 0.125rem;
-    left: 0.125rem;
-    display: flex;
-    width: 2.125rem;
-    height: 1.5rem;
+.ss-switch__power {
+    display: inline-flex;
+    flex: none;
     align-items: center;
     justify-content: center;
-    background: var(--ss-color-danger);
-    color: #ffffff;
-    font-family: var(--ss-font-mono);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    transition: transform 0.15s ease, background 0.15s ease;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--ss-color-text) 10%, transparent);
+    color: var(--ss-color-muted);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.ss-switch--knob input:checked + .ss-switch__track {
-    border-color: color-mix(in srgb, var(--ss-color-success) 35%, var(--ss-color-border));
-    background: color-mix(in srgb, var(--ss-color-success) 12%, var(--ss-color-surface));
+.ss-switch__power-icon {
+    width: 1rem;
+    height: 1rem;
 }
 
-.ss-switch--knob input:checked + .ss-switch__track::after {
-    content: attr(data-on);
-    background: var(--ss-color-success);
-    transform: translateX(1.375rem);
+.ss-switch--knob:hover .ss-switch__power {
+    border-color: var(--ss-color-muted);
+}
+
+.ss-switch--knob input:checked + .ss-switch__power {
+    border-color: color-mix(in srgb, var(--ss-color-success) 45%, var(--ss-color-border));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ss-color-success) 12%, transparent), 0 0 10px color-mix(in srgb, var(--ss-color-success) 35%, transparent);
+    color: var(--ss-color-success);
+}
+
+.ss-switch--knob input:checked + .ss-switch__power .ss-switch__power-icon {
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--ss-color-success) 70%, transparent));
+}
+
+.ss-switch--knob input:disabled + .ss-switch__power {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.ss-switch--knob input:focus-visible + .ss-switch__power {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
     .ss-switch__track,
-    .ss-switch__track::after {
+    .ss-switch__track::after,
+    .ss-switch__power {
         transition: none;
     }
 }
@@ -6933,6 +6990,39 @@ a.ss-notification:focus-visible {
 .ss-search__menu-icon {
     width: 1.125rem;
     height: 1.125rem;
+    transition: transform 0.2s ease, color 0.2s ease, filter 0.2s ease;
+}
+
+/* Ikony z akcją: „+” obraca się w krzyżyk przy otwartym menu, błyskawica szybkich akcji (.ss-search__quick) drga
+   pod kursorem i świeci w kolorze ostrzeżenia przy otwartym menu. */
+.ss-search__actions[open] > .ss-search__menu-toggle .ss-search__menu-icon {
+    transform: rotate(45deg);
+}
+
+.ss-search__quick > .ss-search__menu-toggle:hover .ss-search__menu-icon {
+    animation: ss-zap-flicker 0.45s ease;
+}
+
+.ss-search__actions.ss-search__quick[open] > .ss-search__menu-toggle .ss-search__menu-icon {
+    color: var(--ss-color-warning);
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--ss-color-warning) 60%, transparent));
+    transform: none;
+}
+
+@keyframes ss-zap-flicker {
+    0%, 100% { transform: scale(1); }
+    30% { transform: scale(1.18) rotate(-8deg); }
+    60% { transform: scale(0.94) rotate(4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-search__menu-icon {
+        transition: none;
+    }
+
+    .ss-search__quick > .ss-search__menu-toggle:hover .ss-search__menu-icon {
+        animation: none;
+    }
 }
 
 /* Nagłówek menu akcji „+” (admiro::search.actions): oddzielony linią od pierwszej pozycji, bez opływania jak legenda zakresów. */
