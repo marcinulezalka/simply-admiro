@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Zasady logowania strefy na stronie Konto → Bezpieczeństwo: zakres PIN-u i kiedy potrzebny jest kod z e-maila (przy każdym logowaniu albo — w strefie z zaufanymi urządzeniami — na nowym urządzeniu).
+- Wiersze rekordów `.ss-record-rows` / `.ss-record-row` (część główna, fakty w `<dl>`, akcje po prawej, rozwijane szczegóły) w wyglądzie wierszy panelu języków, do list w teczkach `.ss-folder`.
 - Wizytówka organizacji `x-admiro::organization.card` (`.ss-business-card`): monogram, podpis, nazwa i nazwa skrócona, adres, telefon, e-mail i NIP na karcie z motywem w tle (poświata i koncentryczne łuki w kolorze akcentu); z `href` cała karta jest odnośnikiem.
 - Strony ustawień w layoucie Workspace jako jeden obszar jak ustawienia systemu (`.ss-settings-area`): kategorie — grupy menu ustawień — po lewej w kartach jak kroki kreatora, parametry strony po prawej; włącza go menu strefy (`Contracts\ZoneAppLayout::settingsArea()`).
 - Odnośnik nad tytułem strony z własną etykietą i ikoną (`backLabel`, `backIcon` w `x-admiro::zone.layout` / `app.layout` / `app.context`), np. „Przełącz kontekst”; odnośnik do `#ss-context-switch` (`NavigationItem::CONTEXT_SWITCH_ANCHOR`) otwiera menu przełącznika kontekstu.

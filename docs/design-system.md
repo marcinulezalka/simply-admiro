@@ -278,6 +278,10 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   działa jak „Zatwierdź PIN”: poprawny PIN chowa kartę pod pole, a potem formularz idzie dalej; przycisk formularza
   „Zatwierdź” (`sign_in.pin_submit`, ikona Entera `corner-down-left`) przy wysuniętej karcie też najpierw ją chowa.
   Bez animacji przy `prefers-reduced-motion`.
+- **Wiersze rekordów** `.ss-record-rows` / `.ss-record-row` (wygląd wierszy języków w panelu ustawień, np. w teczce
+  `.ss-folder`): część główna (`__main`: ikona w kafelku, `__text` z `__name` i `__sub`), fakty `<dl class="__facts">`
+  (`__fact`: etykieta mono nad wartością), akcje po prawej (`__side`) i rozwijane szczegóły pod spodem (`__details`);
+  `--primary` — ramka akcentu, `--muted` — rekord wyłączony albo pusta lista.
 - **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
   z motywem w tle (poświata akcentu w rogu i koncentryczne łuki), monogram z inicjałów, podpis (`kicker`), nazwa krojem
   nagłówków z nazwą skróconą i pod linią adres, telefon, e-mail i NIP (puste pomijane); z `href` cała karta jest

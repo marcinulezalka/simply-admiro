@@ -5797,6 +5797,111 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * .ss-record-rows — lista rekordów w wierszach jak wiersze języków w panelu ustawień (w teczce .ss-folder albo karcie):
+ * wiersz (.ss-record-row; --primary — wyróżniony ramką akcentu) z częścią główną (__main: ikona albo flaga, __text
+ * z nazwą __name i drugą linią __sub), faktami (__facts — <dl> z __fact: etykieta mono nad wartością) i akcjami
+ * po prawej (__side); --muted — rekord wyłączony.
+ */
+.ss-record-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-record-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-3) var(--ss-space-6);
+    align-items: center;
+    padding: var(--ss-space-3) var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
+.ss-record-row--primary {
+    border-color: color-mix(in srgb, var(--ss-color-accent) 35%, var(--ss-color-border));
+}
+
+.ss-record-row--muted {
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+}
+
+.ss-record-row__main {
+    display: flex;
+    flex: 1 1 12rem;
+    gap: var(--ss-space-3);
+    align-items: center;
+    min-width: 0;
+}
+
+.ss-record-row__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ss-record-row__name {
+    font-weight: 600;
+}
+
+.ss-record-row__sub {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-record-row__facts {
+    display: grid;
+    flex: 3 1 24rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ss-space-3);
+    margin: 0;
+}
+
+.ss-record-row__fact dt {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-record-row__fact dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1) var(--ss-space-2);
+    align-items: center;
+    margin: var(--ss-space-1) 0 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-record-row__side {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin-left: auto;
+}
+
+.ss-record-row__side form {
+    margin: 0;
+}
+
+.ss-record-row__details {
+    flex: 1 0 100%;
+}
+
+@media (max-width: 47.999rem) {
+    .ss-record-row__facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/**
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
  * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu), monogram (__monogram), podpis (__kicker),
  * nazwa krojem nagłówków (__name) z nazwą skróconą (__short) i dane pod linią (__details, __detail z ikoną);
