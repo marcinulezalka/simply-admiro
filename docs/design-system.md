@@ -262,8 +262,7 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   w logowaniu `lock`) i przyciskiem klawiatury ekranowej po prawej (`.ss-input-wrap--keypad`, ikona `keypad`), który otwiera
   modal `.ss-keypad` (natywny `<dialog>` nazwany etykietą pola, `js/pin-keypad.js`) w kolorach karty formularza
   logowania (tło surface-muted, ramka border-strong), o szerokości siatki klawiszy: u góry pole z kropkami wpisanych
-  cyfr, pod nim okrągłe klawisze 64 px — jasne, z cienką ciemną obwódką i grubszą krawędzią u dołu (wciśnięty
-  opada o 2 px), cyfry cienkim krojem w kolorze muted — (1–9, w dolnym rzędzie „C” czyści, „0” na środku, `backspace` w prawym dolnym rogu
+  cyfr, pod nim klawisze — klasyczne przyciski z zaokrąglonymi rogami 64 × 52 px tuż obok siebie (odstęp 4 px, wciśnięty opada o 1 px) — (1–9, w dolnym rzędzie „C” czyści, „0” na środku, `backspace` w prawym dolnym rogu
   usuwa ostatnią cyfrę), a na dole „Zatwierdź PIN” z ikoną Entera (`corner-down-left`) na całą szerokość i pod nim
   „Wstecz” jako link (zamyka okno) — pole, klawisze i stopka mają tę samą szerokość. Enter albo „Zatwierdź PIN” przy
   PIN-ie krótszym niż `minlength` pokazuje komunikat w oknie (`layout.keypad.too_short`); przy poprawnym zamyka okno
@@ -272,12 +271,13 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   `setCustomValidity`, bo przeglądarka nie sprawdza `minlength` wartości wpisanej skryptem — za krótki PIN nie wyśle
   formularza. Kropki pokazują liczbę wpisanych cyfr (liczba także dla czytników ekranu), cyfry trafiają do pola na
   bieżąco (do `maxlength`). Bez skryptu przycisk jest ukryty. Z `keypad-inline` (krok PIN-u logowania) klawiatura
-  nie jest modalem: przycisk w polu rozwija i zwija (`aria-expanded`) panel `.ss-keypad--inline` między polem
-  a przyciskiem formularza, w ich szerokości i bez własnej ramki: okrągłe klawisze (do 72 px) wyśrodkowane w trzech
-  równych kolumnach, nad nimi tylko komunikat za krótkiego
-  PIN-u (bez kropek i stopki); zatwierdza przycisk formularza „Zatwierdź” (`sign_in.pin_submit`) z ikoną Entera
-  (`corner-down-left`) jak „Zatwierdź PIN”; Enter w panelu
-  działa jak „Zatwierdź PIN”, Escape zwija panel.
+  nie jest modalem: przycisk w polu wysuwa spod pola kartę `.ss-keypad__card` (tło surface-muted, ramka, klawisze
+  w trzech równych kolumnach tuż obok siebie, nad nimi tylko komunikat za krótkiego PIN-u, bez kropek i stopki)
+  między polem a przyciskiem formularza: szuflada `.ss-keypad__drawer` rośnie od zera, a karta zsuwa się spod pola
+  (`data-ss-keypad-expanded`, `aria-expanded`); drugie kliknięcie albo Escape chowa ją z powrotem. Enter w karcie
+  działa jak „Zatwierdź PIN”: poprawny PIN chowa kartę pod pole, a potem formularz idzie dalej; przycisk formularza
+  „Zatwierdź” (`sign_in.pin_submit`, ikona Entera `corner-down-left`) przy wysuniętej karcie też najpierw ją chowa.
+  Bez animacji przy `prefers-reduced-motion`.
 - **Pole kodu z e-maila** `x-admiro::code-field` (krok kodu logowania, kod resetu PIN-u): osobne pole na każdą cyfrę
   (`.ss-code`, `.ss-code__cell`, `js/code-field.js`); cyfra przechodzi do następnej komórki, Backspace w pustej wraca,
   strzałki przesuwają, wklejenie i autouzupełnianie rozkładają cały kod. Kod trafia do ukrytego pola `name`; bez skryptu

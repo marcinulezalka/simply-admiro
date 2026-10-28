@@ -15,9 +15,11 @@
  * fokusem do pola. Bez skryptu przycisk zostaje ukryty. Okno z [data-ss-keypad-show] otwiera się od razu po
  * załadowaniu (podgląd w design systemie). Osadzany inline z nonce CSP (x-admiro::scripts).
  *
- * Klawiatura w formularzu ([data-ss-keypad-inline], zwykły element zamiast <dialog>): przycisk w polu rozwija i zwija
- * panel (aria-expanded), bez pola z kropkami i stopki; Enter w panelu działa jak „Zatwierdź PIN” (komunikat albo
- * przejście dalej bez zwijania), Escape zwija panel i wraca fokusem do pola.
+ * Klawiatura w formularzu ([data-ss-keypad-inline], zwykły element zamiast <dialog>): przycisk w polu wysuwa kartę
+ * z klawiszami spod pola (data-ss-keypad-expanded, aria-expanded; przejście CSS) i chowa ją z powrotem, bez pola
+ * z kropkami i stopki. Enter w karcie działa jak „Zatwierdź PIN”: za krótki PIN — komunikat, poprawny — karta wsuwa
+ * się pod pole, a potem formularz idzie dalej; przycisk formularza przy wysuniętej karcie też najpierw ją chowa.
+ * Escape chowa kartę i wraca fokusem do pola; po schowaniu panel dostaje hidden.
  */
 (() => {
     const init = (dialog) => {
@@ -120,28 +122,69 @@
             }
         };
 
+        const isExpanded = () => inline && dialog.hasAttribute('data-ss-keypad-expanded');
+
+        /* Po przejściu CSS panelu (wysuwanie, chowanie) albo od razu, gdy przejścia nie ma (prefers-reduced-motion). */
+        const afterTransition = (callback) => {
+            const duration = Math.max(...getComputedStyle(dialog).transitionDuration.split(',').map((value) => parseFloat(value) * 1000 || 0));
+            let called = false;
+            const onEnd = (event) => {
+                if (event.target === dialog) {
+                    finish();
+                }
+            };
+            const finish = () => {
+                if (!called) {
+                    called = true;
+                    dialog.removeEventListener('transitionend', onEnd);
+                    callback();
+                }
+            };
+
+            if (duration <= 0) {
+                finish();
+
+                return;
+            }
+
+            dialog.addEventListener('transitionend', onEnd);
+            window.setTimeout(finish, duration + 50);
+        };
+
         const open = () => {
             render();
 
-            if (inline) {
-                dialog.hidden = false;
-                opener.setAttribute('aria-expanded', 'true');
-            } else {
+            if (!inline) {
                 dialog.showModal();
+
+                return;
             }
+
+            dialog.hidden = false;
+            void dialog.offsetHeight;
+            dialog.setAttribute('data-ss-keypad-expanded', '');
+            opener.setAttribute('aria-expanded', 'true');
         };
 
-        const close = () => {
+        /* Chowa klawiaturę (w formularzu: karta wsuwa się pod pole, potem hidden) i woła then, domyślnie fokus pola. */
+        const close = (then = () => input.focus()) => {
             if (!inline) {
+                afterClose = then;
                 dialog.close();
 
                 return;
             }
 
-            dialog.hidden = true;
+            dialog.removeAttribute('data-ss-keypad-expanded');
             opener.setAttribute('aria-expanded', 'false');
             showError(false);
-            input.focus();
+            afterTransition(() => {
+                if (!isExpanded()) {
+                    dialog.hidden = true;
+                }
+
+                then();
+            });
         };
 
         const done = () => {
@@ -151,14 +194,7 @@
                 return;
             }
 
-            if (inline) {
-                proceed(true);
-
-                return;
-            }
-
-            afterClose = () => proceed(true);
-            dialog.close();
+            close(() => proceed(true));
         };
 
         input.addEventListener('keydown', (event) => {
@@ -176,7 +212,17 @@
             }
         });
 
-        dialog.querySelector('[data-ss-keypad-close]')?.addEventListener('click', close);
+        dialog.querySelector('[data-ss-keypad-close]')?.addEventListener('click', () => close());
+
+        /* Przycisk formularza przy wysuniętej klawiaturze: najpierw chowa kartę pod pole, potem wysyła. */
+        if (inline && input.form !== null) {
+            input.form.addEventListener('submit', (event) => {
+                if (isExpanded()) {
+                    event.preventDefault();
+                    close(() => input.form?.requestSubmit());
+                }
+            });
+        }
         dialog.querySelector('[data-ss-keypad-done]')?.addEventListener('click', done);
 
         dialog.addEventListener('keydown', (event) => {
@@ -207,7 +253,7 @@
         });
 
         opener.addEventListener('click', () => {
-            if (inline && !dialog.hidden) {
+            if (isExpanded()) {
                 close();
             } else {
                 open();

@@ -5488,16 +5488,15 @@ a.ss-notification:focus-visible {
  * .ss-keypad — modalna klawiatura numeryczna (natywny <dialog>, js/pin-keypad.js) w kolorach karty formularza
  * logowania (.ss-card--tinted: tło surface-muted, ramka border-strong). Szerokość wyznacza siatka klawiszy
  * (3 × --ss-keypad-key-width i dwa odstępy): pole z kropkami wpisanych cyfr (__display, __dot), komunikat za krótkiego
- * PIN-u (__error), klawisze (__key: okrągłe, do --ss-keypad-key-size, jasne z ciemną obwódką i grubszą krawędzią
- * u dołu — --ss-keypad-key-edge, wciskane o 2 px —, cyfry cienkim krojem w kolorze muted; --muted — wyczyść i usuwanie
+ * PIN-u (__error), klawisze (__key: klasyczne przyciski z zaokrąglonymi rogami --ss-keypad-key-width ×
+ * --ss-keypad-key-height, tuż obok siebie — --ss-keypad-gap —, wciskane o 1 px; --muted — wyczyść i usuwanie
  * ostatniej cyfry; __key-icon) i stopka (__footer: „Zatwierdź PIN” na całą szerokość, pod nim „Wstecz” jako link
  * __back) mają tę samą szerokość.
  */
 .ss-keypad {
     --ss-keypad-key-width: 4rem;
-    --ss-keypad-key-size: 4rem;
-    --ss-keypad-key-edge: color-mix(in srgb, var(--ss-color-text) 82%, transparent);
-    --ss-keypad-gap: var(--ss-space-3);
+    --ss-keypad-key-height: 3.25rem;
+    --ss-keypad-gap: var(--ss-space-1);
     width: calc(3 * var(--ss-keypad-key-width) + 2 * var(--ss-keypad-gap) + 2 * var(--ss-space-6) + 2px);
     max-width: calc(100% - 2 * var(--ss-space-4));
     padding: var(--ss-space-6);
@@ -5582,40 +5581,40 @@ a.ss-notification:focus-visible {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    justify-self: center;
-    width: 100%;
-    max-width: var(--ss-keypad-key-size);
-    aspect-ratio: 1;
+    height: var(--ss-keypad-key-height);
     padding: 0;
-    border: 1.5px solid var(--ss-keypad-key-edge);
-    border-radius: 50%;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
     background: var(--ss-color-surface);
-    color: var(--ss-color-muted);
-    box-shadow: 0 2px 0 var(--ss-keypad-key-edge);
+    color: var(--ss-color-text);
+    box-shadow: 0 1px 0 var(--ss-color-border-strong);
     font-family: var(--ss-font-sans);
-    font-size: 1.375rem;
-    font-weight: 300;
+    font-size: 1.25rem;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
     touch-action: manipulation;
-    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    transition: background-color 0.1s ease, transform 0.08s ease;
 }
 
 .ss-keypad__key:hover {
-    color: var(--ss-color-text);
+    background: color-mix(in srgb, var(--ss-color-surface) 70%, var(--ss-color-surface-muted));
 }
 
 .ss-keypad__key:active {
-    box-shadow: 0 0 0 var(--ss-keypad-key-edge);
-    transform: translateY(2px);
+    background: var(--ss-color-surface-muted);
+    box-shadow: none;
+    transform: translateY(1px);
 }
 
 .ss-keypad__key:focus-visible {
+    position: relative;
     outline: 2px solid var(--ss-color-accent);
-    outline-offset: 3px;
+    outline-offset: 1px;
 }
 
 .ss-keypad__key--muted {
+    color: var(--ss-color-muted);
     font-size: 0.9375rem;
 }
 
@@ -5628,12 +5627,12 @@ a.ss-notification:focus-visible {
     width: 100%;
 }
 
-/* .ss-keypad--inline — ta sama klawiatura w formularzu (x-admiro::pin-field keypad-inline): panel między polem
-   a przyciskiem formularza w ich szerokości, bez własnej ramki, tła i cienia okna; okrągłe klawisze (do 72 px)
-   wyśrodkowane w trzech równych kolumnach; rozwijany przyciskiem w polu (hidden). */
+/* .ss-keypad--inline — ta sama klawiatura w formularzu (x-admiro::pin-field keypad-inline): między polem a przyciskiem
+   formularza, w ich szerokości. Szuflada (__drawer) rośnie od zera do wysokości karty (grid-template-rows 0fr → 1fr),
+   a karta (__card: tło surface-muted, ramka, klawisze w trzech kolumnach tuż obok siebie) wysuwa się spod pola
+   (translateY) — data-ss-keypad-expanded otwiera, jego brak chowa ją z powrotem pod pole; potem skrypt dokłada hidden.
+   Bez animacji przy prefers-reduced-motion. */
 .ss-keypad--inline {
-    --ss-keypad-key-size: 4.5rem;
-    --ss-keypad-gap: var(--ss-space-4);
     width: 100%;
     max-width: none;
     padding: 0;
@@ -5643,9 +5642,36 @@ a.ss-notification:focus-visible {
 }
 
 .ss-keypad--inline:not([hidden]) {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+}
+
+.ss-keypad--inline[data-ss-keypad-expanded] {
+    grid-template-rows: 1fr;
+}
+
+.ss-keypad__drawer {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ss-keypad__card {
     display: flex;
     flex-direction: column;
-    gap: var(--ss-space-3);
+    gap: var(--ss-space-2);
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-input);
+    background: var(--ss-color-surface-muted);
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: transform 0.28s ease, opacity 0.2s ease;
+}
+
+.ss-keypad--inline[data-ss-keypad-expanded] .ss-keypad__card {
+    opacity: 1;
+    transform: none;
 }
 
 .ss-keypad--inline .ss-keypad__error {
@@ -5654,6 +5680,13 @@ a.ss-notification:focus-visible {
 
 .ss-keypad--inline .ss-keypad__keys {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-keypad--inline:not([hidden]),
+    .ss-keypad__card {
+        transition: none;
+    }
 }
 
 /**
