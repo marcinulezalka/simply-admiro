@@ -25,7 +25,7 @@ final readonly class SearchResult
      * @param string|null $toggleUrl Adres POST przełącznika stanu w podpowiedzi (js/post-toggle.js), np. włączenie organizacji.
      * @param bool $active Stan przełącznika.
      * @param string|null $badge Plakietka zamiast przełącznika (element domyślny i wymagany, np. „Domyślna”).
-     * @param string|null $badgeIcon Ikona w plakietce (np. `ticket-slash` przy wpisie domyślnym).
+     * @param string|null $badgeIcon Ikona w plakietce (np. `home-dot` przy wpisie domyślnym).
      */
     public function __construct(
         public string $label,

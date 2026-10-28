@@ -119,7 +119,7 @@ final readonly class AdmiroSearch
                 toggleUrl: $canToggle && ! $locked ? $this->route('dictionaries.toggle', ['dictionary' => 'languages', 'code' => $language->code]) : null,
                 active: $language->is_active === true,
                 badge: $language->is_default === true ? text('admiro::dashboard.onboarding_language_default') : ($locked ? text('admiro::dashboard.onboarding_language_interface') : null),
-                badgeIcon: $language->is_default === true ? 'ticket-slash' : null,
+                badgeIcon: $language->is_default === true ? 'home-dot' : null,
             );
         }
 
@@ -142,7 +142,7 @@ final readonly class AdmiroSearch
             toggleUrl: $canToggle && $country->is_default !== true ? $this->route('dictionaries.toggle', ['dictionary' => 'countries', 'code' => $country->alpha_code_2]) : null,
             active: $country->is_active === true,
             badge: $country->is_default === true ? text('admiro::dashboard.onboarding_dictionary_default') : null,
-            badgeIcon: $country->is_default === true ? 'ticket-slash' : null,
+            badgeIcon: $country->is_default === true ? 'home-dot' : null,
         ))->all());
 
         return new SearchResultGroup(text('admiro::search.groups.countries'), $results, $found->count() > $limit ? $list : null);
@@ -164,7 +164,7 @@ final readonly class AdmiroSearch
             toggleUrl: $canToggle && $currency->is_default !== true ? $this->route('dictionaries.toggle', ['dictionary' => 'currencies', 'code' => $currency->alpha_code_3]) : null,
             active: $currency->is_active === true,
             badge: $currency->is_default === true ? text('admiro::dashboard.onboarding_dictionary_default') : null,
-            badgeIcon: $currency->is_default === true ? 'ticket-slash' : null,
+            badgeIcon: $currency->is_default === true ? 'home-dot' : null,
         ))->all());
 
         return new SearchResultGroup(text('admiro::search.groups.currencies'), $results, $found->count() > $limit ? $list : null);
@@ -200,7 +200,7 @@ final readonly class AdmiroSearch
                 toggleUrl: $canEdit && ! $operator ? $this->route('organizations.toggle', ['organization' => $organization->token]) : null,
                 active: $organization->is_active,
                 badge: $operator ? text('admiro::dashboard.onboarding_organization_default') : null,
-                badgeIcon: $operator ? 'ticket-slash' : null,
+                badgeIcon: $operator ? 'home-dot' : null,
             );
         })->all());
 

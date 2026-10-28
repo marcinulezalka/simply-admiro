@@ -1596,25 +1596,65 @@ a.ss-onboarding-organizations__missing:hover {
     gap: var(--ss-space-3);
 }
 
-/* Tło robocze panelu (np. „Język aplikacji”): ledwie widoczna siatka kropek na szarym tle karty i wewnętrzny cień
-   z półprzezroczystym obrysem, przez które obszar wydaje się lekko wklęsły; w motywach kontrastu jednolite tło. */
-.ss-card--muted.ss-onboarding-languages {
-    background-color: var(--ss-color-surface-muted);
-    background-image: radial-gradient(circle, color-mix(in srgb, var(--ss-color-muted) 11%, transparent) 1px, transparent 1.2px);
+/* Tło robocze panelu (np. „Język aplikacji”): tło tylko odrobinę ciemniejsze od karty (--ss-workspace-bg) z ledwie
+   widoczną siatką kropek; w motywach kontrastu jednolite tło. */
+:root {
+    --ss-workspace-bg: color-mix(in srgb, var(--ss-color-surface-muted) 45%, var(--ss-color-surface));
+    --ss-workspace-dots: radial-gradient(circle, color-mix(in srgb, var(--ss-color-muted) 11%, transparent) 1px, transparent 1.2px);
+}
+
+.ss-card--muted.ss-onboarding-languages,
+.ss-folder__body {
+    background-color: var(--ss-workspace-bg);
+    background-image: var(--ss-workspace-dots);
     background-position: calc(var(--ss-space-3) / 2) calc(var(--ss-space-3) / 2);
     background-size: 20px 20px;
-    box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--ss-color-border-strong) 45%, transparent),
-        inset 0 2px 6px color-mix(in srgb, var(--ss-color-text) 7%, transparent),
-        inset 0 -1px 0 color-mix(in srgb, var(--ss-color-surface) 70%, transparent);
 }
 
-:root[data-theme^="contrast"] .ss-card--muted.ss-onboarding-languages {
+:root[data-theme^="contrast"] .ss-card--muted.ss-onboarding-languages,
+:root[data-theme^="contrast"] .ss-folder__body {
     background-image: none;
-    box-shadow: none;
 }
 
-/* Nagłówek panelu: tytuł, a pod nim przełącznik widoku z suwakiem (Aktywne / Ukryte z licznikami) w kontenerze na szerokość przycisków — mniejszy, w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki z napisami mono wersalikami. Wskaźnik
+/*
+ * .ss-folder — obszar roboczy w kształcie teczki: zakładka z lewej u góry (__tab: tytuł i przełącznik widoku) na
+ * szerokość treści, przechodząca łukiem wklęsłym (::after) w górną krawędź treści (__body); zakładka i treść w tym samym
+ * tle (--ss-workspace-bg), kropki tylko na treści.
+ */
+.ss-folder {
+    --ss-folder-radius: var(--ss-radius-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.ss-folder__tab {
+    position: relative;
+    align-self: flex-start;
+    padding: var(--ss-space-3) var(--ss-space-4) var(--ss-space-2);
+    border-radius: var(--ss-folder-radius) var(--ss-folder-radius) 0 0;
+    background: var(--ss-workspace-bg);
+}
+
+.ss-folder__tab::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    width: var(--ss-folder-radius);
+    height: var(--ss-folder-radius);
+    background: radial-gradient(circle at 100% 0, transparent var(--ss-folder-radius), var(--ss-workspace-bg) calc(var(--ss-folder-radius) + 0.5px));
+}
+
+.ss-folder__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    padding: var(--ss-space-4);
+    border-radius: 0 var(--ss-folder-radius) var(--ss-folder-radius) var(--ss-folder-radius);
+}
+
+/* Nagłówek panelu: tytuł, a pod nim przełącznik widoku z suwakiem (ikony Aktywne / Ukryte, nazwy w podpowiedzi) w kontenerze na szerokość przycisków — w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki. Wskaźnik
    stoi pod odnośnikiem z aria-current="true" (bez skryptu i stylów inline), js/view-switch.js przesuwa go od razu. */
 .ss-onboarding-languages__header--views {
     display: flex;
@@ -1627,7 +1667,7 @@ a.ss-onboarding-organizations__missing:hover {
     --ss-tab-count: 2;
     --ss-views-radius: 0.625rem;
     width: fit-content;
-    min-width: 13rem;
+    min-width: 6rem;
     max-width: 100%;
     margin: 0;
     padding: var(--ss-space-1);
@@ -1662,11 +1702,9 @@ a.ss-onboarding-organizations__missing:hover {
     color: var(--ss-color-on-accent);
 }
 
-.ss-tabs.ss-onboarding-languages__views .ss-badge {
-    min-width: 1.25rem;
-    justify-content: center;
-    padding-block: 0;
-    font-size: 0.625rem;
+.ss-tabs.ss-onboarding-languages__views .ss-tabs__icon {
+    width: 1rem;
+    height: 1rem;
 }
 
 /* Ukryte języki: siatka kafelków (flaga, nazwa, pod nią kod, przycisk zasilania), tyle kolumn, ile mieści szerokość. */
@@ -2487,7 +2525,7 @@ a.ss-onboarding-picker__name:hover {
 
 /**
  * .ss-default-mark — znacznik wpisu domyślnego w miejscu przełącznika (x-admiro::default-badge): wypełnione kółko
- * w kolorze akcentu z ikoną ticket-slash w kolorze na akcencie; nazwa w podpowiedzi i dla czytników ekranu.
+ * w kolorze akcentu z ikoną domu home-dot w kolorze na akcencie; nazwa w podpowiedzi i dla czytników ekranu.
  */
 .ss-default-mark {
     display: inline-flex;
