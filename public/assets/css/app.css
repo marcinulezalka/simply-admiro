@@ -1617,16 +1617,20 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 /*
- * .ss-folder — obszar roboczy w kształcie teczki: na zakładce z lewej u góry (__tab) sam tytuł; zakładka kończy się
- * skosem w kształcie litery S (::after, clip-path) schodzącym do górnej krawędzi treści (__body), której prawy górny róg
- * jest zaokrąglony. Zakładka i treść w tym samym tle (--ss-workspace-bg), kropki tylko na treści. Wysokość zakładki
- * i skosu jest stała (44 px), bo ścieżka skosu jest w pikselach.
+ * .ss-folder — obszar roboczy w kształcie teczki, w dwóch warstwach. Tylna, ciemniejsza (--ss-folder-back): zakładka
+ * z lewej u góry z samym tytułem (__tab), zakończona skosem w kształcie litery S (::after, clip-path), i pod nią pas na
+ * przyciski (__toolbar, w __back). Przednia, jaśniejsza (__body, --ss-workspace-bg z kropkami): arkusz z treścią
+ * z własną cienką ramką i zaokrągleniem. Obrys całej teczki (z zakładką i skosem) daje lekki drop-shadow (filter),
+ * bo zwykła ramka nie obejmie skosu. Wysokość zakładki i skosu jest stała (44 px), bo ścieżka skosu jest w pikselach.
  */
 .ss-folder {
     --ss-folder-radius: var(--ss-radius-card);
+    --ss-folder-back: var(--ss-color-surface-muted);
+    --ss-folder-edge: color-mix(in srgb, var(--ss-color-border-strong) 85%, transparent);
     display: flex;
     flex-direction: column;
     gap: 0;
+    filter: drop-shadow(0 0 0.75px var(--ss-folder-edge));
 }
 
 .ss-folder__tab {
@@ -1638,7 +1642,7 @@ a.ss-onboarding-organizations__missing:hover {
     margin-right: 48px;
     padding: 0 var(--ss-space-4);
     border-radius: var(--ss-folder-radius) 0 0 0;
-    background: var(--ss-workspace-bg);
+    background: var(--ss-folder-back);
 }
 
 .ss-folder__tab .ss-card__title {
@@ -1652,8 +1656,24 @@ a.ss-onboarding-organizations__missing:hover {
     left: calc(100% - 1px);
     width: 48px;
     height: 44px;
-    background: var(--ss-workspace-bg);
+    background: var(--ss-folder-back);
     clip-path: path("M0 0 H6 C15 0 18 4 21 11 L27 33 C30 40 33 44 42 44 H48 V44 H0 Z");
+}
+
+.ss-folder__back {
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--ss-space-2) var(--ss-space-2);
+    border-radius: 0 var(--ss-folder-radius) var(--ss-folder-radius) var(--ss-folder-radius);
+    background: var(--ss-folder-back);
+}
+
+.ss-folder__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-2) var(--ss-space-3);
 }
 
 .ss-folder__body {
@@ -1661,16 +1681,22 @@ a.ss-onboarding-organizations__missing:hover {
     flex-direction: column;
     gap: var(--ss-space-3);
     padding: var(--ss-space-4);
-    border-radius: 0 var(--ss-folder-radius) var(--ss-folder-radius) var(--ss-folder-radius);
+    border: 1px solid var(--ss-folder-edge);
+    border-radius: calc(var(--ss-folder-radius) - 4px);
+    box-shadow: 0 -1px 2px color-mix(in srgb, var(--ss-color-text) 5%, transparent);
 }
 
-/* Przełącznik widoku na górze obszaru roboczego teczki: suwak (ikony Aktywne / Ukryte, nazwy w podpowiedzi) w kontenerze na szerokość przycisków — w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki. Wskaźnik
+:root[data-theme^="contrast"] .ss-folder {
+    filter: none;
+}
+
+/* Przełącznik widoku w pasie na przyciski teczki (__toolbar): suwak (ikona i napis Aktywne / Niedostępne, mono wersalikami) w kontenerze na szerokość przycisków — w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki. Wskaźnik
    stoi pod odnośnikiem z aria-current="true" (bez skryptu i stylów inline), js/view-switch.js przesuwa go od razu. */
 .ss-tabs.ss-onboarding-languages__views {
     --ss-tab-count: 2;
     --ss-views-radius: 0.625rem;
     width: fit-content;
-    min-width: 6rem;
+    min-width: 15rem;
     max-width: 100%;
     margin: 0;
     padding: var(--ss-space-1);
@@ -1706,8 +1732,8 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 .ss-tabs.ss-onboarding-languages__views .ss-tabs__icon {
-    width: 1rem;
-    height: 1rem;
+    width: 0.875rem;
+    height: 0.875rem;
 }
 
 /* Ukryte języki: siatka kafelków (flaga, nazwa, pod nią kod, przycisk zasilania), tyle kolumn, ile mieści szerokość. */

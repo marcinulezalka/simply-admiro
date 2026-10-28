@@ -39,7 +39,7 @@ return [
     'onboarding_languages_enabled' => 'Interface language',
     'onboarding_languages_views' => 'Languages view',
     'onboarding_languages_view_active' => 'Active',
-    'onboarding_languages_view_hidden' => 'Hidden',
+    'onboarding_languages_view_hidden' => 'Unavailable',
     'onboarding_languages_hidden_empty' => 'All languages are enabled.',
     'onboarding_language_interface' => 'Interface',
     'onboarding_regional_proposed' => 'Proposal',

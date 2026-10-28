@@ -39,7 +39,7 @@ return [
     'onboarding_languages_enabled' => 'Język interfejsu',
     'onboarding_languages_views' => 'Widok języków',
     'onboarding_languages_view_active' => 'Aktywne',
-    'onboarding_languages_view_hidden' => 'Ukryte',
+    'onboarding_languages_view_hidden' => 'Niedostępne',
     'onboarding_languages_hidden_empty' => 'Wszystkie języki są włączone.',
     'onboarding_language_interface' => 'Interfejs',
     'onboarding_regional_proposed' => 'Propozycja',
