@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Tests\Tools\Console;
 
+use Closure;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Simplysmart\Admiro\Tools\Console\Command;
@@ -44,6 +45,9 @@ final class DeployCommandTest extends TestCase
      * @var list<string>
      */
     private array $unpushed = [];
+
+    /** Kod wyjścia `git push` w atrapie procesów. */
+    private int $pushExitCode = 0;
 
     protected function setUp(): void
     {
@@ -207,6 +211,47 @@ final class DeployCommandTest extends TestCase
     }
 
     #[Test]
+    public function with_push_wypycha_najpierw_paczki_potem_projekt_i_wdraza(): void
+    {
+        $this->unpushed = ["{$this->root}/packages/acme/core", $this->root];
+
+        [$exitCode, $stdout] = $this->runCommand(DeployMode::Deploy, ['--with-push']);
+
+        $this->assertSame(0, $exitCode, $stdout);
+        $pushes = array_values(array_filter(array_map(fn(array $call): array => $call[0], $this->processCalls), fn(array $command): bool => ($command[3] ?? null) === 'push'));
+        $this->assertSame([['git', '-C', "{$this->root}/packages/acme/core", 'push', '--quiet'], ['git', '-C', $this->root, 'push', '--quiet']], $pushes);
+        $this->assertStringContainsString("Wypchnięte: packages/acme/core, ..\n", $stdout);
+        $this->assertSame([['--deploy', "--root={$this->root}"]], $this->lockCalls);
+        $this->assertSame(['ssh', 'user@host', 'bash -s'], $this->lastProcessCall()[0]);
+    }
+
+    #[Test]
+    public function with_push_z_dry_run_tylko_pokazuje_co_wypchnie(): void
+    {
+        $this->unpushed = ["{$this->root}/packages/acme/core"];
+
+        [$exitCode, $stdout] = $this->runCommand(DeployMode::Deploy, ['--with-push', '--dry-run']);
+
+        $this->assertSame(0, $exitCode, $stdout);
+        $this->assertStringContainsString("Do wypchnięcia (--with-push): packages/acme/core.\n", $stdout);
+        $this->assertNotContains('push', array_merge(...array_map(fn(array $call): array => $call[0], $this->processCalls)));
+        $this->assertSame([], $this->lockCalls);
+    }
+
+    #[Test]
+    public function nieudany_push_wstrzymuje_wdrozenie(): void
+    {
+        $this->unpushed = ["{$this->root}/packages/acme/core"];
+        $this->pushExitCode = 128;
+
+        [$exitCode, , $stderr] = $this->runCommand(DeployMode::Deploy, ['--with-push']);
+
+        $this->assertSame(1, $exitCode);
+        $this->assertStringContainsString('Nie udało się wypchnąć packages/acme/core (git push).', $stderr);
+        $this->assertSame([], $this->lockCalls);
+    }
+
+    #[Test]
     public function brak_konfiguracji_to_czytelny_blad(): void
     {
         unlink("{$this->root}/infrastructure/deploy.env");
@@ -244,17 +289,32 @@ final class DeployCommandTest extends TestCase
      */
     private function runCommand(DeployMode $mode, array $arguments): array
     {
-        $processes = new class implements ProcessRunner {
+        $processes = new class ($this->pushExitCode) implements ProcessRunner {
             /**
              * @var list<array{0: list<string>, 1: string|null}>
              */
             public array $calls = [];
 
+            /**
+             * @var list<string>
+             */
+            public array $pushed = [];
+
+            public function __construct(private int $pushExitCode) {}
+
             public function run(array $command, ?string $input = null, ?string $directory = null): int
             {
                 $this->calls[] = [$command, $input];
 
-                return 0;
+                if (($command[3] ?? null) !== 'push') {
+                    return 0;
+                }
+
+                if ($this->pushExitCode === 0) {
+                    $this->pushed[] = $command[2];
+                }
+
+                return $this->pushExitCode;
             }
 
             public function capture(array $command, ?string $directory = null): string
@@ -265,11 +325,13 @@ final class DeployCommandTest extends TestCase
             }
         };
         $unpushed = $this->unpushed;
-        $repositories = new class ($unpushed) implements RepositorySource {
+        $isPushed = fn(string $directory): bool => in_array($directory, $processes->pushed, true);
+        $repositories = new class ($unpushed, $isPushed) implements RepositorySource {
             /**
              * @param  list<string>  $unpushed
+             * @param  Closure(string): bool  $isPushed
              */
-            public function __construct(private array $unpushed) {}
+            public function __construct(private array $unpushed, private Closure $isPushed) {}
 
             public function originUrl(string $directory): ?string
             {
@@ -278,7 +340,7 @@ final class DeployCommandTest extends TestCase
 
             public function hasUnpushedCommits(string $directory): bool
             {
-                return in_array($directory, $this->unpushed, true);
+                return in_array($directory, $this->unpushed, true) && ! ($this->isPushed)($directory);
             }
         };
         $lock = new class ($this->root) implements Command {

@@ -31,11 +31,15 @@ use Simplysmart\Admiro\Tools\Process\ProcessRunner;
  * na serwer (scp) razem z lokalnym `.env.production` (na serwerze staje się `.env`, APP_KEY serwera zostaje, gdy pliku
  * go nie podaje; bez pliku `.env` serwera bez zmian) i uruchamia tam skrypt serwerowy przez ssh; onboarding dopisuje zakładanie kont, a `deploy:fresh`
  * dodatkowo czyści bazę (`migrate:fresh`) i wymaga `--confirm=<DEPLOY_SSH>`. `--dry-run` tylko sprawdza
- * konfigurację i repozytoria oraz pokazuje plan.
+ * konfigurację i repozytoria oraz pokazuje plan. `--with-push` najpierw wypycha repozytoria z niewypchniętymi commitami
+ * (paczki z `packages/*\/*`, także prywatne, potem projekt; RepositoryCheck::push()), a dopiero potem wdraża; z `--dry-run`
+ * tylko pokazuje, co zostałoby wypchnięte.
  */
 final readonly class DeployCommand implements Command
 {
     private const string DRY_RUN = '--dry-run';
+
+    private const string WITH_PUSH = '--with-push';
 
     private const string CONFIG = '--config=';
 
@@ -79,11 +83,14 @@ final readonly class DeployCommand implements Command
         $config = DeployConfig::DEFAULT_FILE;
         $onboarding = OnboardingConfig::DEFAULT_FILE;
         $dryRun = false;
+        $withPush = false;
         $confirmation = null;
 
         foreach ($arguments as $argument) {
             if ($argument === self::DRY_RUN) {
                 $dryRun = true;
+            } elseif ($argument === self::WITH_PUSH) {
+                $withPush = true;
             } elseif (str_starts_with($argument, self::CONFIG)) {
                 $config = substr($argument, strlen(self::CONFIG));
             } elseif ($this->mode->createsAccounts() && str_starts_with($argument, self::ONBOARDING)) {
@@ -109,7 +116,11 @@ final readonly class DeployCommand implements Command
                 $this->assertConfirmed($deploy, $confirmation);
             }
 
-            if (! $this->repositoriesReady($root, $stdout, $stderr)) {
+            if ($withPush && ! $dryRun) {
+                $this->push($root, $stdout);
+            }
+
+            if (! $this->repositoriesReady($root, $stdout, $stderr, $withPush && $dryRun)) {
                 return 1;
             }
 
@@ -219,7 +230,7 @@ final readonly class DeployCommand implements Command
      * @param  resource  $stdout
      * @param  resource  $stderr
      */
-    private function repositoriesReady(string $root, $stdout, $stderr): bool
+    private function repositoriesReady(string $root, $stdout, $stderr, bool $pushPlanned = false): bool
     {
         fwrite($stdout, "==> Sprawdzam, czy wszystko jest wypchnięte\n");
         $report = $this->repositories->check($root);
@@ -232,13 +243,27 @@ final readonly class DeployCommand implements Command
             fwrite($stderr, "Uwaga: {$name} ma niezacommitowane zmiany — nie trafią na serwer.\n");
         }
 
-        if ($report->unpushed !== []) {
-            fwrite($stderr, 'Niewypchnięte commity: ' . implode(', ', $report->unpushed) . ". Zrób git push i uruchom ponownie.\n");
+        if ($report->unpushed !== [] && $pushPlanned) {
+            fwrite($stdout, 'Do wypchnięcia (' . self::WITH_PUSH . '): ' . implode(', ', $report->unpushed) . ".\n");
+        } elseif ($report->unpushed !== []) {
+            fwrite($stderr, 'Niewypchnięte commity: ' . implode(', ', $report->unpushed) . '. Zrób git push (albo uruchom z ' . self::WITH_PUSH . ") i uruchom ponownie.\n");
 
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @param  resource  $stdout
+     *
+     * @throws DeployException|ProcessException
+     */
+    private function push(string $root, $stdout): void
+    {
+        fwrite($stdout, "==> Wypycham repozytoria (paczki, także prywatne, potem projekt)\n");
+        $pushed = $this->repositories->push($root);
+        fwrite($stdout, $pushed === [] ? "Nic do wypchnięcia.\n" : 'Wypchnięte: ' . implode(', ', $pushed) . ".\n");
     }
 
     /**
@@ -273,7 +298,7 @@ final readonly class DeployCommand implements Command
         $onboarding = $this->mode->createsAccounts() ? ' [' . self::ONBOARDING . OnboardingConfig::DEFAULT_FILE . ']' : '';
         $confirm = $this->mode->resetsDatabase() ? ' ' . self::CONFIRM . '<DEPLOY_SSH>' : '';
 
-        return 'Użycie: simplysmart ' . $this->name() . " [" . self::DRY_RUN . ']' . $confirm . ' [' . self::CONFIG . DeployConfig::DEFAULT_FILE . "]{$onboarding} [" . self::ROOT . '<katalog>]';
+        return 'Użycie: simplysmart ' . $this->name() . " [" . self::DRY_RUN . '] [' . self::WITH_PUSH . ']' . $confirm . ' [' . self::CONFIG . DeployConfig::DEFAULT_FILE . "]{$onboarding} [" . self::ROOT . '<katalog>]';
     }
 
     private static function path(string $root, string $file): string

@@ -87,13 +87,16 @@ Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z rep
 
 `vendor/bin/simplysmart deploy` uruchamia się na komputerze deweloperskim, w katalogu projektu:
 
-1. sprawdza, czy projekt i paczki z `packages/*/*` są wypchnięte (niewypchnięte commity zatrzymują wdrożenie,
+1. z `--with-push` najpierw wypycha (`git push`) repozytoria z niewypchniętymi commitami: paczki z `packages/*/*`
+   (także prywatne, każda do swojego `origin`), potem projekt; nieudany push zatrzymuje wdrożenie (z `--dry-run`
+   tylko pokazuje, co zostałoby wypchnięte),
+2. sprawdza, czy projekt i paczki z `packages/*/*` są wypchnięte (niewypchnięte commity zatrzymują wdrożenie,
    niezacommitowane zmiany i nieudany `git fetch` dają ostrzeżenie; katalogi bez `.git` są pomijane),
-2. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
-3. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`), a gdy w katalogu projektu jest
+3. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
+4. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`), a gdy w katalogu projektu jest
    `.env.production` (poza repozytorium), także jego jako `.env.deploy`; bez tego pliku ostrzega, a `.env` serwera
    zostaje bez zmian,
-4. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`
+5. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`
    (wysłany `.env.deploy` zastępuje `.env` z tymi samymi uprawnieniami; gdy nie podaje `APP_KEY`, zostaje klucz
    z dotychczasowego `.env`, bo nowy unieważniłby sesje i zaszyfrowane dane),
    `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje (po `config:clear`, więc czytają
@@ -118,6 +121,7 @@ Konfiguracja: `infrastructure/deploy.env` (dodaj do `.gitignore`; w projekcie wz
 ```bash
 vendor/bin/simplysmart deploy --dry-run                    # konfiguracja, repozytoria i plan; nic nie wysyła
 vendor/bin/simplysmart deploy
+vendor/bin/simplysmart deploy --with-push                  # najpierw git push paczek (także prywatnych) i projektu
 vendor/bin/simplysmart deploy --config=infrastructure/test.env
 ```
 
