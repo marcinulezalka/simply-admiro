@@ -1620,11 +1620,11 @@ a.ss-onboarding-organizations__missing:hover {
  * .ss-folder — obszar roboczy w kształcie teczki, w dwóch warstwach. Tylna, ciemniejsza (--ss-folder-back): zakładka
  * z lewej u góry z samym tytułem (__tab), zakończona skosem w kształcie litery S (::after, clip-path), i pod nią pas na
  * przyciski (__toolbar, w __back). Przednia, jaśniejsza (__body, --ss-workspace-bg z kropkami): arkusz z treścią
- * z własną cienką ramką i zaokrągleniem. Obrys całej teczki (z zakładką i skosem) daje lekki drop-shadow (filter),
+ * z własną cienką ramką i dużym zaokrągleniem (--ss-folder-radius), bez marginesów z boków i od dołu — sięga krawędzi teczki. Obrys całej teczki (z zakładką i skosem) daje lekki drop-shadow (filter),
  * bo zwykła ramka nie obejmie skosu. Wysokość zakładki i skosu jest stała (44 px), bo ścieżka skosu jest w pikselach.
  */
 .ss-folder {
-    --ss-folder-radius: var(--ss-radius-card);
+    --ss-folder-radius: 1.5rem;
     --ss-folder-back: var(--ss-color-surface-muted);
     --ss-folder-edge: color-mix(in srgb, var(--ss-color-border-strong) 85%, transparent);
     display: flex;
@@ -1663,7 +1663,7 @@ a.ss-onboarding-organizations__missing:hover {
 .ss-folder__back {
     display: flex;
     flex-direction: column;
-    padding: 0 var(--ss-space-2) var(--ss-space-2);
+    padding: 0;
     border-radius: 0 var(--ss-folder-radius) var(--ss-folder-radius) var(--ss-folder-radius);
     background: var(--ss-folder-back);
 }
@@ -1673,7 +1673,7 @@ a.ss-onboarding-organizations__missing:hover {
     flex-wrap: wrap;
     gap: var(--ss-space-2);
     align-items: center;
-    padding: var(--ss-space-2) var(--ss-space-2) var(--ss-space-3);
+    padding: var(--ss-space-2) var(--ss-space-4) var(--ss-space-3);
 }
 
 .ss-folder__body {
@@ -1682,7 +1682,7 @@ a.ss-onboarding-organizations__missing:hover {
     gap: var(--ss-space-3);
     padding: var(--ss-space-4);
     border: 1px solid var(--ss-folder-edge);
-    border-radius: calc(var(--ss-folder-radius) - 4px);
+    border-radius: var(--ss-folder-radius);
     box-shadow: 0 -1px 2px color-mix(in srgb, var(--ss-color-text) 5%, transparent);
 }
 
