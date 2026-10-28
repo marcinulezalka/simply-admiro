@@ -1584,7 +1584,7 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 /*
- * .ss-onboarding-languages — panel „Język aplikacji” w zadaniu „Języki” (na tle delikatna siatka kropek): nagłówek (__header), wiersze włączonych
+ * .ss-onboarding-languages — panel „Język interfejsu” w zadaniu „Języki” (na tle delikatna siatka kropek): nagłówek (__header), wiersze włączonych
  * języków (__rows, __row; domyślny — __row--default z ramką akcentu): język z flagą (__main), siatka ustawień
  * regionalnych (__regional: kraj, waluta, VAT, dni wolne; propozycja według języka — --proposed, przyciszona;
  * brakujące w przerywanej ramce __regional-item--missing) i po prawej (__side) plakietki, „Zapisz jako domyślne”
@@ -1596,7 +1596,7 @@ a.ss-onboarding-organizations__missing:hover {
     gap: var(--ss-space-3);
 }
 
-/* Tło robocze panelu (np. „Język aplikacji”): tło tylko odrobinę ciemniejsze od karty (--ss-workspace-bg) z ledwie
+/* Tło robocze panelu (np. „Język interfejsu”): tło tylko odrobinę ciemniejsze od karty (--ss-workspace-bg) z ledwie
    widoczną siatką kropek; w motywach kontrastu jednolite tło. */
 :root {
     --ss-workspace-bg: color-mix(in srgb, var(--ss-color-surface-muted) 45%, var(--ss-color-surface));
@@ -1617,9 +1617,10 @@ a.ss-onboarding-organizations__missing:hover {
 }
 
 /*
- * .ss-folder — obszar roboczy w kształcie teczki: zakładka z lewej u góry (__tab: tytuł i przełącznik widoku) na
- * szerokość treści, przechodząca łukiem wklęsłym (::after) w górną krawędź treści (__body); zakładka i treść w tym samym
- * tle (--ss-workspace-bg), kropki tylko na treści.
+ * .ss-folder — obszar roboczy w kształcie teczki: na zakładce z lewej u góry (__tab) sam tytuł; zakładka kończy się
+ * skosem w kształcie litery S (::after, clip-path) schodzącym do górnej krawędzi treści (__body), której prawy górny róg
+ * jest zaokrąglony. Zakładka i treść w tym samym tle (--ss-workspace-bg), kropki tylko na treści. Wysokość zakładki
+ * i skosu jest stała (44 px), bo ścieżka skosu jest w pikselach.
  */
 .ss-folder {
     --ss-folder-radius: var(--ss-radius-card);
@@ -1630,20 +1631,29 @@ a.ss-onboarding-organizations__missing:hover {
 
 .ss-folder__tab {
     position: relative;
+    display: flex;
     align-self: flex-start;
-    padding: var(--ss-space-3) var(--ss-space-4) var(--ss-space-2);
-    border-radius: var(--ss-folder-radius) var(--ss-folder-radius) 0 0;
+    align-items: center;
+    height: 44px;
+    margin-right: 48px;
+    padding: 0 var(--ss-space-4);
+    border-radius: var(--ss-folder-radius) 0 0 0;
     background: var(--ss-workspace-bg);
+}
+
+.ss-folder__tab .ss-card__title {
+    margin: 0;
 }
 
 .ss-folder__tab::after {
     content: "";
     position: absolute;
-    bottom: 0;
-    left: 100%;
-    width: var(--ss-folder-radius);
-    height: var(--ss-folder-radius);
-    background: radial-gradient(circle at 100% 0, transparent var(--ss-folder-radius), var(--ss-workspace-bg) calc(var(--ss-folder-radius) + 0.5px));
+    top: 0;
+    left: calc(100% - 1px);
+    width: 48px;
+    height: 44px;
+    background: var(--ss-workspace-bg);
+    clip-path: path("M0 0 H6 C15 0 18 4 21 11 L27 33 C30 40 33 44 42 44 H48 V44 H0 Z");
 }
 
 .ss-folder__body {
@@ -1654,15 +1664,8 @@ a.ss-onboarding-organizations__missing:hover {
     border-radius: 0 var(--ss-folder-radius) var(--ss-folder-radius) var(--ss-folder-radius);
 }
 
-/* Nagłówek panelu: tytuł, a pod nim przełącznik widoku z suwakiem (ikony Aktywne / Ukryte, nazwy w podpowiedzi) w kontenerze na szerokość przycisków — w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki. Wskaźnik
+/* Przełącznik widoku na górze obszaru roboczego teczki: suwak (ikony Aktywne / Ukryte, nazwy w podpowiedzi) w kontenerze na szerokość przycisków — w pigułce jak globalna wyszukiwarka, przyciski prawie pigułki. Wskaźnik
    stoi pod odnośnikiem z aria-current="true" (bez skryptu i stylów inline), js/view-switch.js przesuwa go od razu. */
-.ss-onboarding-languages__header--views {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ss-space-2);
-    align-items: flex-start;
-}
-
 .ss-tabs.ss-onboarding-languages__views {
     --ss-tab-count: 2;
     --ss-views-radius: 0.625rem;

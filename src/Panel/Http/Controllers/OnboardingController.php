@@ -67,7 +67,7 @@ final readonly class OnboardingController
      */
     private const int ADMINISTRATORS = 100;
 
-    /** Widok obszaru roboczego „Język aplikacji” z ukrytymi (wyłączonymi) językami (`view=hidden`; domyślnie aktywne). */
+    /** Widok obszaru roboczego „Język interfejsu” z ukrytymi (wyłączonymi) językami (`view=hidden`; domyślnie aktywne). */
     public const string HIDDEN_LANGUAGES = 'hidden';
 
     public function __construct(

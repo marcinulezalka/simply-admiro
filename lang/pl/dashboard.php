@@ -36,7 +36,7 @@ return [
     'onboarding_confirmed' => 'Zadanie „:name” zatwierdzone.',
     'onboarding_complete' => 'Wszystkie zadania konfiguracji są zrobione.',
     'onboarding_review' => 'Przejrzyj zadania',
-    'onboarding_languages_enabled' => 'Język aplikacji',
+    'onboarding_languages_enabled' => 'Język interfejsu',
     'onboarding_languages_views' => 'Widok języków',
     'onboarding_languages_view_active' => 'Aktywne',
     'onboarding_languages_view_hidden' => 'Ukryte',

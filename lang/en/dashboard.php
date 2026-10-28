@@ -36,7 +36,7 @@ return [
     'onboarding_confirmed' => 'Task “:name” confirmed.',
     'onboarding_complete' => 'All setup tasks are done.',
     'onboarding_review' => 'Review the tasks',
-    'onboarding_languages_enabled' => 'Application language',
+    'onboarding_languages_enabled' => 'Interface language',
     'onboarding_languages_views' => 'Languages view',
     'onboarding_languages_view_active' => 'Active',
     'onboarding_languages_view_hidden' => 'Hidden',
