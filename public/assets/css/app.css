@@ -7373,8 +7373,8 @@ a.ss-notification:focus-visible {
 
 .ss-workspace-footer__bar {
     display: grid;
-    grid-template-areas: "account shortcuts search tools";
-    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "account search tools";
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: var(--ss-space-3);
     align-items: center;
 }
@@ -7443,11 +7443,11 @@ a.ss-notification:focus-visible {
     font-weight: 600;
 }
 
-/* Telefon: wyszukiwarka na całą szerokość w pierwszym rzędzie, pod nią konto, skróty i narzędzia. */
+/* Telefon: wyszukiwarka na całą szerokość w pierwszym rzędzie, pod nią konto i ramka narzędzi. */
 @media (max-width: 40rem) {
     .ss-workspace-footer__bar {
-        grid-template-areas: "search search search" "account shortcuts tools";
-        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-areas: "search search" "account tools";
+        grid-template-columns: minmax(0, 1fr) auto;
         row-gap: var(--ss-space-2);
     }
 
@@ -7474,13 +7474,12 @@ a.ss-notification:focus-visible {
 }
 
 /*
- * Skróty strefy w stopce Workspace (Contracts\ZoneShortcuts, np. dashboard, ulubione, pulpit roboczy): ikony-odnośniki
- * między kontem a wyszukiwarką, w stylu narzędzi stopki; bieżąca strona (aria-current) w kolorach odwróconych.
+ * Skróty strefy w stopce Workspace (Contracts\ZoneShortcuts, np. ustawienia, dashboard, ulubione): ikony-odnośniki
+ * w ramce narzędzi, przed dzwonkiem; bieżąca strona (aria-current) w kolorach odwróconych.
  */
 .ss-workspace-footer__shortcuts {
     display: flex;
-    grid-area: shortcuts;
-    gap: var(--ss-space-2);
+    gap: var(--ss-space-1);
     align-items: center;
     margin: 0;
     padding: 0;
@@ -7499,6 +7498,41 @@ a.ss-notification:focus-visible {
 
 .ss-workspace-footer__tools {
     grid-area: tools;
+}
+
+/* Ramka narzędzi: przełącznik kontekstu, skróty, dzwonek i kalendarz w jednej obwódce, oddzielone pionowymi podziałkami;
+   przyciski w środku bez własnych ramek. Każdy element dalej otwiera swój panel (menu nad stopką, panele z prawej). */
+.ss-workspace-footer__tools {
+    gap: 0;
+    padding: 2px;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+}
+
+.ss-workspace-footer__tools > * + * {
+    margin-left: var(--ss-space-1);
+    padding-left: var(--ss-space-1);
+    border-left: 1px solid var(--ss-color-border);
+}
+
+.ss-workspace-footer__tools .ss-workspace-footer__tool,
+.ss-workspace-footer__tools .ss-calendar-panel__toggle {
+    border-color: transparent;
+    background: transparent;
+}
+
+.ss-workspace-footer__tools .ss-workspace-footer__tool:hover,
+.ss-workspace-footer__tools details[open] > .ss-workspace-footer__tool,
+.ss-workspace-footer__tools .ss-calendar-panel__toggle:hover,
+.ss-workspace-footer__tools .ss-calendar-panel[open] .ss-calendar-panel__toggle {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-workspace-footer__tools .ss-workspace-footer__tool[aria-current="page"] {
+    border-color: var(--ss-color-surface-inverse);
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
 }
 
 /* Menu narzędzi stopki (przełącznik kontekstu) otwiera się nad stopką, od prawej krawędzi. */
@@ -7852,10 +7886,24 @@ a.ss-notification:focus-visible {
 }
 
 .ss-calendar-panel__date {
-    font-size: 0.8125rem;
-    font-weight: 600;
+    display: inline-flex;
+    gap: var(--ss-space-2);
+    align-items: baseline;
+    font-family: var(--ss-font-mono);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+}
+
+/* Zegar: duża godzina (HH:MM), za nią mniejsza, przygaszona data w formacie języka strony (dd.mm.rrrr). */
+.ss-calendar-panel__time {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.ss-calendar-panel__day {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
 }
 
 .ss-calendar-panel__drawer {

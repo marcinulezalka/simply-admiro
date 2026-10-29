@@ -427,17 +427,22 @@ wariant layoutu z `app_layout` strefy (`Enums\AppLayout`, prop `variant`): `side
 (`.ss-shell--workspace`: bez menu bocznego i top baru — nawigacja jest tylko w stopce; menu strefy trafia do mapy
 strony (strefa z `Contracts\ZoneSitemap`: `sitemap()` i grupa konta); pod treścią przyklejona do dołu, biała, półprzezroczysta stopka `.ss-workspace-footer`: po lewej konto (awatar, imię i nazwisko,
 `.ss-workspace-footer__account`) z menu nad stopką — konto, ustawienia, mapa aplikacji, profile społecznościowe strefy
-`social_links` i wylogowanie na dole, obok skróty strefy (`Contracts\ZoneShortcuts::shortcuts()`, `.ss-workspace-footer__shortcuts`: ikony-odnośniki z podpowiedzią, bieżący w kolorach odwróconych; w admiro dashboard, ulubione i pulpit roboczy); globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
+`social_links` i wylogowanie na dole — po lewej nic więcej; globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
 `.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions` (partial `admiro::search.actions`: nagłówek „Dodaj” `.ss-search__menu-title` oddzielony linią od pozycji), suwaki zakresów zamiast lupy —
 przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu nad
 polem), mapa strony rozsuwana pod paskiem (odnośniki do `#ss-sitemap`, bez
 przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nimi, kolumny dopasowane do szerokości,
-zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej przełącznik kontekstu
-`x-admiro::app.context-switch` (menu nad stopką), dzwonek powiadomień z panelem z prawej
+zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej jedna wspólna ramka narzędzi
+(`.ss-workspace-footer__tools`: obwódka, pionowe podziałki między elementami, przyciski w środku bez własnych ramek; każdy
+dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-switch` (menu nad stopką; konteksty z
+`Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa „Rodzaj · nazwa” z rolami konta, jedno
+kliknięcie — `account.context.switch` — ustawia organizację i rolę), skróty strefy (`Contracts\ZoneShortcuts::shortcuts()`,
+`.ss-workspace-footer__shortcuts`: ikony-odnośniki z podpowiedzią, bieżący w kolorach odwróconych; np. ustawienia,
+w admiro dashboard, ulubione i pulpit roboczy), dzwonek powiadomień z panelem z prawej
 (`x-admiro::app.notifications right`, `.ss-notifications--right`: karta na wysokość obszaru treści — od góry okna do stopki,
 której nie zakrywa (`--ss-workspace-footer-height`) —, w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik kategorii
 z ikonami i suwakiem `.ss-tabs--slider` (`js/tabs.js`): powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i — gdy strefa
-je daje przez `Contracts\ZoneNotifications` — ostatnie wpisy dziennika zdarzeń z odnośnikiem do dziennika) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: przycisk z ikoną kalendarza i pełną datą z godziną („wtorek, 27 paź 2026, 10:42”, odświeżaną co minutę; na telefonie sama ikona), bez rozsuwania; `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
+je daje przez `Contracts\ZoneNotifications` — ostatnie wpisy dziennika zdarzeń z odnośnikiem do dziennika) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: przycisk z ikoną kalendarza i zegarem krojem mono — duża godzina („10:42”) i za nią mniejsza data w formacie polskim („27.10.2026”), odświeżany co minutę; na telefonie sama ikona, bez rozsuwania; `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
 z `CalendarMonths`): klik otwiera panel z prawej, na wysokość obszaru treści jak powiadomienia, z miesiącem `.ss-mini-calendar` (dziś, dni wolne
 aplikacji z kropką), podglądem wybranego dnia i miejscem na skrzynkę pocztową (integracja w przygotowaniu)); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:

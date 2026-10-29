@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Http;
 
 use Illuminate\Routing\Router;
+use Simplysmart\Admiro\Http\Controllers\Account\ContextSwitchController;
 use Simplysmart\Admiro\Http\Controllers\Account\OrganizationSwitchController;
 use Simplysmart\Admiro\Http\Controllers\Account\PinChangeController;
 use Simplysmart\Admiro\Http\Controllers\Account\RecoveryEmailController;
@@ -53,6 +54,9 @@ final readonly class AccountRoutes
     public const string DEVICES_REVOKE_ALL = 'account.devices.revoke-all';
 
     public const string ORGANIZATION_SWITCH = 'account.organization.switch';
+
+    /** Przełączenie kontekstu jednym kliknięciem: organizacja i rola (Zones\ZoneContexts), w strefie z `teams`. */
+    public const string CONTEXT_SWITCH = 'account.context.switch';
 
     /** Przełączenie aktywnej roli (kontekstu) w strefie z `role_contexts`. */
     public const string ROLE_SWITCH = 'account.role.switch';
@@ -110,6 +114,7 @@ final readonly class AccountRoutes
 
             if ($zone->teams) {
                 $this->router->post('organization', OrganizationSwitchController::class)->middleware($throttle)->name(self::ORGANIZATION_SWITCH);
+                $this->router->post('context', ContextSwitchController::class)->middleware($throttle)->name(self::CONTEXT_SWITCH);
             }
 
             if ($zone->roleContexts) {

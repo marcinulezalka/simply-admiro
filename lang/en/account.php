@@ -15,6 +15,11 @@ return [
 
     'organization' => 'Organization',
     'role' => 'Role',
+    'context_kinds' => [
+        'organization' => 'Organization',
+        'unit' => 'Unit',
+        'department' => 'Department',
+    ],
     'settings_group' => 'Account',
     'appearance_title' => 'Personalization',
     'theme_title' => 'Theme',
