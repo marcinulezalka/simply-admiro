@@ -49,6 +49,8 @@ return [
     'audit_log_all' => 'Cały dziennik zdarzeń',
     'mark_all_read' => 'Oznacz wszystkie jako przeczytane',
     'unread' => 'nieprzeczytane',
+    'confirm_delete' => 'Potwierdź',
+    'confirm_accept' => 'Potwierdzam',
     'close' => 'Zamknij',
     'home' => 'Strona główna',
     'code_digit' => 'Cyfra :position z :length',

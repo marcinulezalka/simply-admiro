@@ -293,6 +293,11 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   `.ss-folder`): część główna (`__main`: ikona w kafelku, `__text` z `__name` i `__sub`), fakty `<dl class="__facts">`
   (`__fact`: etykieta mono nad wartością), akcje po prawej (`__side`) i rozwijane szczegóły pod spodem (`__details`);
   `--primary` — ramka akcentu, `--muted` — rekord wyłączony albo pusta lista.
+- **Potwierdzanie akcji** (`js/confirm-action.js`, `.ss-confirm`, w każdej stronie przez `x-admiro::page`): usuwanie
+  (formularz `DELETE`) i przyciski `data-ss-confirm` (`accept` dla akceptacji) wymagają drugiego kliknięcia — pierwszy
+  przycisk wciska się jak przełącznik (kolory odwrócone), pod nim „Potwierdź” (kolor błędu) albo „Potwierdzam” (akcent)
+  z paskiem odliczania; po 4 s bez reakcji wraca stan wyjściowy. `data-ss-confirm="off"` wyłącza; bez skryptu formularz
+  wysyła się od razu.
 - **Lista zadań** `x-admiro::checklist.progress` i `x-admiro::checklist.steps` (pozycje `View\Checklist\ChecklistItem`:
   numer, nazwa, opis, ikona, odnośnik, zrobione, etykieta nad nazwą, stan z tonem plakietki; klasy `.ss-onboarding*`):
   zakładka postępu do slotu `actions` nagłówka (klasa slotu `ss-context__actions--progress`; etykieta „Zrobione X z Y”,

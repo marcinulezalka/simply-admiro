@@ -5948,6 +5948,70 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * .ss-confirm — potwierdzanie akcji (js/confirm-action.js): pierwszy przycisk wciśnięty jak przełącznik
+ * ([data-ss-confirm-armed]: kolory odwrócone), pod nim przycisk potwierdzenia (__submit; --delete w kolorze błędu,
+ * --accept w akcencie) z paskiem odliczającym czas do powrotu (--ss-confirm-delay).
+ */
+.ss-confirm {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    align-items: stretch;
+    vertical-align: top;
+}
+
+[data-ss-confirm-armed] {
+    border-color: var(--ss-color-surface-inverse) !important;
+    background: var(--ss-color-surface-inverse) !important;
+    color: var(--ss-color-on-inverse) !important;
+}
+
+.ss-confirm__submit {
+    position: relative;
+    overflow: hidden;
+    justify-content: center;
+    color: var(--ss-color-on-accent);
+}
+
+.ss-confirm__submit--delete {
+    border-color: var(--ss-color-danger);
+    background: var(--ss-color-danger);
+}
+
+.ss-confirm__submit--accept {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+}
+
+.ss-confirm__submit::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: color-mix(in srgb, var(--ss-color-on-accent) 70%, transparent);
+    transform-origin: left;
+    animation: ss-confirm-countdown var(--ss-confirm-delay, 4s) linear forwards;
+}
+
+@keyframes ss-confirm-countdown {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-confirm__submit::after {
+        animation: none;
+    }
+}
+
+/**
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
  * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, nazwa
  * u góry podpis krojem mono (__kicker) w rzędzie z ikoną linku (__top), pod nim nazwa krojem nagłówków (__name)

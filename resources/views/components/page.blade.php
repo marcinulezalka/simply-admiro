@@ -1,4 +1,4 @@
-{{-- Szablon bazowy każdej strony (skrypty i style inline tylko z nonce CSP): <head> z meta i treść w slocie. Layouty (auth, zone) składają się z niego. keywords: lista albo tekst; tags: lista (np. json_tags rekordu) jako meta article:tag; robots: np. "noindex, nofollow"; slot head: dodatki do <head> (np. x-admiro::styles); palettes: list<Enums\Palette> kolorystyk strony i paletteScope: zakres ich zapamiętania (np. nazwa strefy) — meta ss-palettes dla js/theme.js, przed nim, więc wybrana kolorystyka obowiązuje bez błysku; fontStyles: list<Zones\ZoneFontStyle> krojów strefy — meta ss-fonts (ten sam zakres), tak samo bez błysku; favicons: list<array{rel: string, href: string, type: ?string, sizes: ?string}>, domyślnie ikony strefy żądania ($zoneFavicons z ZonesServiceProvider, `favicon` strefy); fontFaces: reguły @font-face (styl z nonce CSP), domyślnie fonty strefy żądania ($zoneFontFaces, `fonts` strefy). Na końcu <body> zgoda na cookies (x-admiro::cookie-consent), gdy jest potrzebna. --}}
+{{-- Szablon bazowy każdej strony (skrypty i style inline tylko z nonce CSP): <head> z meta i treść w slocie. Layouty (auth, zone) składają się z niego. keywords: lista albo tekst; tags: lista (np. json_tags rekordu) jako meta article:tag; robots: np. "noindex, nofollow"; slot head: dodatki do <head> (np. x-admiro::styles); palettes: list<Enums\Palette> kolorystyk strony i paletteScope: zakres ich zapamiętania (np. nazwa strefy) — meta ss-palettes dla js/theme.js, przed nim, więc wybrana kolorystyka obowiązuje bez błysku; fontStyles: list<Zones\ZoneFontStyle> krojów strefy — meta ss-fonts (ten sam zakres), tak samo bez błysku; favicons: list<array{rel: string, href: string, type: ?string, sizes: ?string}>, domyślnie ikony strefy żądania ($zoneFavicons z ZonesServiceProvider, `favicon` strefy); fontFaces: reguły @font-face (styl z nonce CSP), domyślnie fonty strefy żądania ($zoneFontFaces, `fonts` strefy). Na końcu <body> zgoda na cookies (x-admiro::cookie-consent), gdy jest potrzebna, i potwierdzanie akcji (js/confirm-action.js: usuwanie — formularze DELETE — i przyciski [data-ss-confirm] wymagają drugiego kliknięcia „Potwierdź”/„Potwierdzam”, teksty w data-ss-confirm-* na <body>). --}}
 @props(['title', 'description' => null, 'keywords' => null, 'tags' => null, 'robots' => null, 'palettes' => [], 'paletteScope' => '', 'fontStyles' => [], 'favicons' => null, 'fontFaces' => null])
 @php
     $keywordsContent = is_array($keywords) ? implode(', ', array_filter($keywords, is_string(...))) : $keywords;
@@ -40,8 +40,9 @@
     @endforeach
     {{ $head ?? '' }}
 </head>
-<body>
+<body data-ss-confirm-delete="{{ text('layout.confirm_delete') }}" data-ss-confirm-accept="{{ text('layout.confirm_accept') }}">
     {{ $slot }}
     <x-admiro::cookie-consent />
+    <x-admiro::scripts :files="['js/confirm-action.js']" />
 </body>
 </html>

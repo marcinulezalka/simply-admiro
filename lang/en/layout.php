@@ -49,6 +49,8 @@ return [
     'audit_log_all' => 'Full event log',
     'mark_all_read' => 'Mark all as read',
     'unread' => 'unread',
+    'confirm_delete' => 'Confirm',
+    'confirm_accept' => 'I confirm',
     'close' => 'Close',
     'home' => 'Home page',
     'code_digit' => 'Digit :position of :length',
