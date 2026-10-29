@@ -7687,6 +7687,22 @@ a.ss-notification:focus-visible {
     left: auto;
 }
 
+/* Nazwa konta w przycisku stopki z identyfikatorem pod nią (np. numer kadrowy) — mały, przygaszony, krojem mono. */
+.ss-workspace-footer__account-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.ss-workspace-footer__account-id {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.02em;
+}
+
 .ss-workspace-footer__account-toggle {
     display: flex;
     gap: var(--ss-space-2);

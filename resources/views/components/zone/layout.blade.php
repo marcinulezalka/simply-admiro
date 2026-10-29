@@ -54,6 +54,7 @@
         :search="$navigation?->search()"
         :account="[
             'name' => $account->displayName(),
+            'identifier' => $account instanceof \Simplysmart\Admiro\Models\ZoneAccount ? $account->accountIdentifier() : null,
             'subtitle' => $navigation?->subtitle() ?? $currentOrganizationName,
             'color' => $account->avatarColor(),
             'label' => text('sign_in.signed_in_as', ['name' => $account->displayName()]),

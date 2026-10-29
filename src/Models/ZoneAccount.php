@@ -34,4 +34,12 @@ abstract class ZoneAccount extends MainAuthenticatable implements CodeAndPinAcco
     use HasOrganizations;
     use HasZonePermissions;
     use SignsInWithCodeAndPin;
+    /**
+     * Identyfikator konta pokazywany pod nazwą w przycisku konta (np. numer kadrowy pracownika); strefa nadpisuje,
+     * domyślnie brak.
+     */
+    public function accountIdentifier(): ?string
+    {
+        return null;
+    }
 }
