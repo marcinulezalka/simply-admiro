@@ -200,6 +200,8 @@
     /* Grubość kreski ikon liniowych (x-admiro::icon); strefa może dać grubszą, bardziej miękką kreskę */
     --ss-icon-stroke: 1.75;
     --ss-content-page-width: 72rem;
+    /* Najwyższa szerokość treści layoutu aplikacji przy wyborze „Wyśrodkowana” (data-layout-width="centered") */
+    --ss-centered-width: 80rem;
     --ss-sidebar-width: 16rem;
     --ss-sidebar-collapsed-width: 4.5rem;
 }

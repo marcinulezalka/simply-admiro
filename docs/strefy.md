@@ -36,6 +36,10 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     z menu, skróty, wyszukiwarka, przełącznik kontekstu, powiadomienia, kalendarz i mapa strony; z Contracts\ZoneSitemap
        //     mapa pokazuje sitemap(), z Contracts\ZoneShortcuts obok konta są skróty shortcuts(); domyślnie `sidebar`;
        //     menu strefy z Contracts\ZoneAppLayout wybiera wariant dla bieżącego żądania, np. Workspace w kontekście jednej roli),
+       // 'font_styles' => ['serif' => '<paczka>::appearance.fonts.serif'] (kroje do wyboru na stronie „Wygląd” obok kroju
+       //     bazowego strefy: klucz kroju — małe litery, cyfry i myślniki — → klucz tekstu z nazwą; arkusz strefy przestawia
+       //     tokeny --ss-font-* dla :root[data-font="serif"] i daje rodzinę próbce [data-ss-font-sample="serif"]; fonty
+       //     z `fonts`; zły klucz albo nazwa zatrzymuje start),
        // 'backdrop' => 'zone-logo' (Enums\AppBackdrop: tło płótna po zalogowaniu — logo strefy `logo` wtopione w tło przy
        //     dolnej krawędzi okna i lekko przycięte od dołu zamiast logotypu simplysmart na środku; wymaga logo strefy;
        //     domyślnie `brand`),

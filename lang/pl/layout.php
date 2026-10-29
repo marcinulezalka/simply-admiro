@@ -106,6 +106,23 @@ return [
         'see_also' => 'Zobacz także',
         'back' => 'Wstecz',
     ],
+    'preferences' => [
+        'text-size' => 'Rozmiar tekstu',
+        'layout-width' => 'Szerokość treści',
+        'font' => 'Krój pisma',
+    ],
+    'text_sizes' => [
+        'normal' => 'Normalny',
+        'large' => 'Duży',
+        'larger' => 'Bardzo duży',
+    ],
+    'layout_widths' => [
+        'full' => 'Pełna szerokość',
+        'centered' => 'Wyśrodkowana',
+    ],
+    'font_styles' => [
+        'default' => 'Domyślny',
+    ],
     'palette' => 'Kolorystyka',
     'palettes' => [
         'default' => 'Domyślna',

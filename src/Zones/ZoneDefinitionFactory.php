@@ -42,7 +42,8 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
  * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)), app_layout (wariant
  * layoutu aplikacji: Enums\AppLayout), backdrop (tło płótna: Enums\AppBackdrop; `zone-logo` wymaga logo strefy),
- * social_links (profile w serwisach społecznościowych: Enums\SocialNetwork → adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
+ * social_links (profile w serwisach społecznościowych: Enums\SocialNetwork → adres http(s)), font_styles (kroje do
+ * wyboru na stronie wyglądu: klucz kroju → klucz tekstu z jego nazwą, Zones\ZoneFontStyle) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
  * z `teams`).
  */
 final readonly class ZoneDefinitionFactory
@@ -50,6 +51,9 @@ final readonly class ZoneDefinitionFactory
     private const string NAME_PATTERN = '/^[a-z][a-z0-9_]*$/';
 
     private const string MAIL_VIEWS_PATTERN = '/^[a-z][a-z0-9_-]*::[a-z0-9_.-]+$/';
+
+    /** Klucz kroju strefy (`font_styles`): wartość `data-font` i część nazwy klucza zapamiętania w przeglądarce. */
+    private const string FONT_STYLE_KEY = '/^[a-z][a-z0-9-]*$/';
 
     public function __construct(
         private Repository $config,
@@ -106,6 +110,7 @@ final readonly class ZoneDefinitionFactory
             appLayout: $this->option($name, 'app_layout', $config['app_layout'] ?? null, AppLayout::class, AppLayout::Sidebar),
             socialLinks: $this->socialLinks($name, Arr::array($config, 'social_links', [])),
             backdrop: $this->backdrop($name, $config['backdrop'] ?? null, $logo),
+            fontStyles: $this->fontStyles($name, Arr::array($config, 'font_styles', [])),
         );
     }
 
@@ -156,6 +161,30 @@ final readonly class ZoneDefinitionFactory
         $backdrop = $this->option($zone, 'backdrop', $value, AppBackdrop::class, AppBackdrop::Brand);
 
         return $backdrop === AppBackdrop::ZoneLogo && $logo === null ? throw new InvalidArgumentException("Zone [{$zone}] backdrop zone-logo needs the zone logo.") : $backdrop;
+    }
+
+    /**
+     * Kroje strefy z `font_styles` (klucz kroju → klucz tekstu z jego nazwą), w kolejności z configu.
+     *
+     * @param array<array-key, mixed> $styles
+     *
+     * @return list<ZoneFontStyle>
+     *
+     * @throws InvalidArgumentException Gdy klucz nie jest kluczem kroju albo nazwa nie jest kluczem tekstu.
+     */
+    private function fontStyles(string $zone, array $styles): array
+    {
+        $result = [];
+
+        foreach ($styles as $key => $label) {
+            if (! is_string($key) || preg_match(self::FONT_STYLE_KEY, $key) !== 1 || ! is_string($label) || $label === '') {
+                throw new InvalidArgumentException("Zone [{$zone}] font_styles must map font keys (lowercase letters, digits, dashes) to text keys.");
+            }
+
+            $result[] = new ZoneFontStyle($key, $label);
+        }
+
+        return $result;
     }
 
     /**

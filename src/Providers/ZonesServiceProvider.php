@@ -143,7 +143,7 @@ final class ZonesServiceProvider extends ServiceProvider
     /**
      * Layout logowania dostaje układ strefy żądania (`auth.layout`), adresy jej banera (`auth.brand`, wersja
      * w adresie) i treść jej logo SVG (`auth.logo`); poza strefą z logowaniem (np. fałszywe logowanie pułapki,
-     * podgląd w design systemie) układ domyślny i logo. Do tego arkusze (`stylesheets`), kolorystyki (`palettes`) i odnośniki prawne (`legal_links`, adresy i etykiety)
+     * podgląd w design systemie) układ domyślny i logo. Do tego arkusze (`stylesheets`), kolorystyki (`palettes`), kroje (`font_styles`) i odnośniki prawne (`legal_links`, adresy i etykiety)
      * strefy żądania, a także jej tytuł karty przeglądarki (tekst `page_title`, pusty = nagłówek ekranu). Prop `layout` komponentu wygrywa.
      */
     private function shareAuthLayout(View $view): void
@@ -157,6 +157,7 @@ final class ZonesServiceProvider extends ServiceProvider
             ->with('zoneStylesheets', $zone->has() ? $zone->get()->stylesheets : [])
             ->with('zonePalettes', $zone->has() ? $zone->get()->palettes : [])
             ->with('zonePaletteScope', $zone->has() ? $zone->get()->name : '')
+            ->with('zoneFontStyles', $zone->has() ? $zone->get()->fontStyles : [])
             ->with('zoneAuthPageTitle', $settings === null ? '' : $zone->get()->signInText('page_title'))
             ->with('zoneLegalLinks', $settings === null ? [] : array_map(
                 static function (array $link) use ($zone): array {

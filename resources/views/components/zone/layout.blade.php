@@ -74,6 +74,7 @@
         :zone-stylesheets="$zone->stylesheets"
         :palettes="$zone->palettes"
         :palette-scope="$zone->name"
+        :font-styles="$zone->fontStyles"
     >
         @isset($actions)
             <x-slot:actions :class="$actions->attributes->get('class')">{{ $actions }}</x-slot:actions>
@@ -82,7 +83,7 @@
         {{ $slot }}
     </x-admiro::app.layout>
 @else
-    <x-admiro::page :title="$title" :description="$description" :keywords="$keywords" :tags="$tags" :robots="$zone->requiresLogin() ? 'noindex, nofollow' : null" :palettes="$zone->palettes" :palette-scope="$zone->name">
+    <x-admiro::page :title="$title" :description="$description" :keywords="$keywords" :tags="$tags" :robots="$zone->requiresLogin() ? 'noindex, nofollow' : null" :palettes="$zone->palettes" :palette-scope="$zone->name" :font-styles="$zone->fontStyles">
         <x-slot:head>
             <x-admiro::styles />
             <x-admiro::zone-styles :paths="$zone->stylesheets" />

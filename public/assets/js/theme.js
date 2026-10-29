@@ -9,6 +9,12 @@
  * zapamiętania, np. strefa); zapisany wybór z tej listy ustawia data-palette na <html>, przyciski
  * [data-ss-palette] w [data-ss-palette-switch] (x-admiro::palette-switch) go zmieniają (pusta wartość = kolory
  * bazowe). Bez meta strona nie ma kolorystyk i nie dostaje data-palette.
+ *
+ * Wybory wyglądu (Enums\AppearancePreference): rozmiar tekstu (data-text-size, Enums\TextSize), szerokość treści
+ * (data-layout-width, Enums\LayoutWidth) i krój strefy (data-font; kroje z meta ss-fonts, zapamiętane w zakresie
+ * data-scope jak kolorystyka). Zapisany wybór ustawia atrybut na <html> w <head>, wartość domyślna (fallback) go
+ * usuwa; przyciski [data-ss-preference-value] w [data-ss-preference] (x-admiro::preference-toggle) go zmieniają.
+ * Listy wartości muszą być takie same jak przypadki enumów.
  */
 (() => {
     const STORAGE_KEY = 'ss-theme';
@@ -74,6 +80,42 @@
         applyPalette(readPalette());
     }
 
+    const fontMeta = document.querySelector('meta[name="ss-fonts"]');
+    const preferences = {
+        'text-size': { key: 'ss-text-size', fallback: 'normal', values: ['normal', 'large', 'larger'] },
+        'layout-width': { key: 'ss-layout-width', fallback: 'full', values: ['full', 'centered'] },
+    };
+
+    if (fontMeta !== null) {
+        preferences.font = {
+            key: `ss-font:${fontMeta.dataset.scope ?? ''}`,
+            fallback: '',
+            values: ['', ...fontMeta.content.split(' ').filter((name) => name !== '')],
+        };
+    }
+
+    const readPreference = (preference) => {
+        try {
+            const value = window.localStorage.getItem(preference.key) ?? preference.fallback;
+
+            return preference.values.includes(value) ? value : preference.fallback;
+        } catch {
+            return preference.fallback;
+        }
+    };
+
+    const applyPreference = (name, value) => {
+        if (value === preferences[name].fallback) {
+            root.removeAttribute(`data-${name}`);
+        } else {
+            root.setAttribute(`data-${name}`, value);
+        }
+    };
+
+    const currentPreference = (name) => root.getAttribute(`data-${name}`) ?? preferences[name].fallback;
+
+    Object.entries(preferences).forEach(([name, preference]) => applyPreference(name, readPreference(preference)));
+
     const current = () => root.dataset.theme ?? (system.matches ? 'dark' : 'light');
 
     const sync = () => {
@@ -82,6 +124,13 @@
         });
         document.querySelectorAll('[data-ss-palette]').forEach((button) => {
             button.setAttribute('aria-pressed', String(button.dataset.ssPalette === (root.dataset.palette ?? '')));
+        });
+        document.querySelectorAll('[data-ss-preference]').forEach((group) => {
+            const name = group.dataset.ssPreference;
+
+            group.querySelectorAll('[data-ss-preference-value]').forEach((button) => {
+                button.setAttribute('aria-pressed', String(name in preferences && button.dataset.ssPreferenceValue === currentPreference(name)));
+            });
         });
     };
 
@@ -111,6 +160,26 @@
                     write(paletteKey, value);
                     sync();
                     menu.open = false;
+                });
+            });
+        });
+
+        document.querySelectorAll('[data-ss-preference]').forEach((group) => {
+            const name = group.dataset.ssPreference;
+            const preference = preferences[name];
+
+            group.hidden = preference === undefined;
+            group.querySelectorAll('[data-ss-preference-value]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const value = button.dataset.ssPreferenceValue;
+
+                    if (preference === undefined || !preference.values.includes(value)) {
+                        return;
+                    }
+
+                    applyPreference(name, value);
+                    write(preference.key, value === preference.fallback ? '' : value);
+                    sync();
                 });
             });
         });

@@ -68,6 +68,8 @@ final readonly class ZoneDefinition
      * @param list<array{network: SocialNetwork, url: string}> $socialLinks Profile strefy w serwisach społecznościowych
      *                                                                   (`social_links`), np. ikony na karcie konta.
      * @param AppBackdrop $backdrop Tło płótna layoutu aplikacji (`backdrop`): logotyp simplysmart albo logo strefy na dole.
+     * @param list<ZoneFontStyle> $fontStyles Kroje do wyboru na stronie wyglądu obok kroju bazowego strefy (`font_styles`);
+     *                                       pusta lista = bez wyboru kroju.
      * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
      *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
      *                           są zawężone do niej; false = uprawnienia z sumy ról.
@@ -100,6 +102,7 @@ final readonly class ZoneDefinition
         public AppLayout $appLayout = AppLayout::Sidebar,
         public array $socialLinks = [],
         public AppBackdrop $backdrop = AppBackdrop::Brand,
+        public array $fontStyles = [],
     ) {}
 
     /**

@@ -6441,6 +6441,45 @@ a.ss-notification:focus-visible {
     height: 1.125rem;
 }
 
+/**
+ * .ss-preference-toggle — przełącznik wyboru wyglądu (x-admiro::preference-toggle) na wzór .ss-theme-toggle: segmenty
+ * ze znakiem (A / AA / AAA, próbka kroju „Aa” w kroju z [data-ss-font-sample]) albo ikoną; __option--labelled
+ * z widoczną etykietą obok znaku.
+ */
+.ss-preference-toggle__option {
+    width: auto;
+    min-width: 2rem;
+    padding: 0 var(--ss-space-2);
+}
+
+.ss-preference-toggle__option--labelled {
+    gap: var(--ss-space-2);
+    padding: 0 var(--ss-space-3);
+    font-size: 0.875rem;
+}
+
+.ss-preference-toggle__glyph {
+    font-family: var(--ss-font-display);
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* Rozmiar tekstu (data-text-size, Enums\TextSize): cała strona skaluje się jak powiększenie przeglądarki (WCAG 1.4.4). */
+:root[data-text-size="large"] {
+    zoom: 1.125;
+}
+
+:root[data-text-size="larger"] {
+    zoom: 1.25;
+}
+
+/* Szerokość treści (data-layout-width, Enums\LayoutWidth): wyśrodkowana kolumna treści layoutu aplikacji. */
+:root[data-layout-width="centered"] .ss-main {
+    width: 100%;
+    max-width: var(--ss-centered-width);
+    margin-inline: auto;
+}
+
 .ss-auth__card {
     position: relative;
 }

@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Strona „Wygląd” w ustawieniach konta ma rozmiar tekstu (A / AA / AAA — cała strona powiększona jak w przeglądarce), szerokość treści (pełna albo wyśrodkowana kolumna) i — w strefie z kluczem `font_styles` — wybór kroju pisma spośród krojów strefy; wybory zapamiętuje przeglądarka, tak jak motyw i kolorystykę (`x-admiro::preference-toggle`, `Enums\TextSize`, `Enums\LayoutWidth`, `Zones\ZoneFontStyle`).
 - Zasady logowania strefy na stronie Konto → Bezpieczeństwo: zakres PIN-u i kiedy potrzebny jest kod z e-maila (przy każdym logowaniu albo — w strefie z zaufanymi urządzeniami — na nowym urządzeniu).
 - Wiersze rekordów `.ss-record-rows` / `.ss-record-row` (część główna, fakty w `<dl>`, akcje po prawej, rozwijane szczegóły) w wyglądzie wierszy panelu języków, do list w teczkach `.ss-folder`.
 - Wizytówka organizacji `x-admiro::organization.card` (`.ss-business-card`): monogram, podpis, nazwa i nazwa skrócona, adres, telefon, e-mail i NIP na karcie z motywem w tle (poświata i koncentryczne łuki w kolorze akcentu); z `href` cała karta jest odnośnikiem.

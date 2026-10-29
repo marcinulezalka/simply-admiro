@@ -106,6 +106,23 @@ return [
         'see_also' => 'See also',
         'back' => 'Back',
     ],
+    'preferences' => [
+        'text-size' => 'Text size',
+        'layout-width' => 'Content width',
+        'font' => 'Typeface',
+    ],
+    'text_sizes' => [
+        'normal' => 'Normal',
+        'large' => 'Large',
+        'larger' => 'Larger',
+    ],
+    'layout_widths' => [
+        'full' => 'Full width',
+        'centered' => 'Centred',
+    ],
+    'font_styles' => [
+        'default' => 'Default',
+    ],
     'palette' => 'Color scheme',
     'palettes' => [
         'default' => 'Default',

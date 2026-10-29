@@ -128,6 +128,16 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   „Kolorystyki” design systemu, a każda strona stosuje zapisany wybór. `x-admiro::page` dostaje te same `palettes` i `paletteScope`
   (meta `ss-palettes` przed `js/theme.js`), więc wybór — zapamiętany w przeglądarce osobno dla każdej strefy — działa
   bez błysku; kolorystyka spoza listy strefy jest pomijana. Bez skryptu przełącznik jest ukryty.
+- **Rozmiar tekstu, szerokość treści i krój (`Enums\AppearancePreference`):** strona „Wygląd” ma też przełączniki
+  `x-admiro::preference-toggle` (opcje z `View\AppearanceChoices`, segmenty jak przełącznik motywu, wybrany
+  z `aria-pressed="true"`): rozmiar tekstu A / AA / AAA (`Enums\TextSize`, `:root[data-text-size]` — cała strona
+  skalowana `zoom` 1,125 / 1,25 jak powiększenie przeglądarki, WCAG 1.4.4), szerokość treści (`Enums\LayoutWidth`:
+  pełna albo wyśrodkowana kolumna `.ss-main` do `--ss-centered-width`, `:root[data-layout-width="centered"]`) i —
+  gdy strefa je ma (`font_styles`, `Zones\ZoneFontStyle`) — krój: „Domyślny” (krój bazowy strefy) i kroje strefy
+  z próbką „Aa”. Krój to `data-font` na `<html>`: arkusz strefy przestawia dla `:root[data-font="<klucz>"]` tokeny
+  `--ss-font-*` i daje próbce `[data-ss-font-sample="<klucz>"]` jej rodzinę. Wszystko zapamiętuje przeglądarka
+  (`js/theme.js` w `<head>`, bez błysku; krój — jak kolorystyka — osobno dla strefy, z meta `ss-fonts`), wartość
+  domyślna usuwa atrybut. Bez skryptu przełączniki są ukryte.
 
 ## 4. Powierzchnie
 
