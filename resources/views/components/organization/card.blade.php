@@ -1,4 +1,4 @@
-{{-- Wizytówka organizacji (karta jak papierowa wizytówka): nazwa skrócona (bez niej pełna), zaraz pod nią podpis (kicker, np. „Organizacja”) i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), niżej adres z krajem, telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu strzałka; tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
+{{-- Wizytówka organizacji (karta jak papierowa wizytówka): nazwa skrócona (bez niej pełna), zaraz pod nią podpis (kicker, np. „Organizacja”) i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), niżej adres z krajem, telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
 @props(['organization', 'href' => null, 'kicker' => null])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
@@ -20,7 +20,7 @@
 <{{ $tag }} {{ $attributes->class(['ss-business-card', 'ss-business-card--link' => $href !== null]) }} @if ($href !== null) href="{{ $href }}" @endif>
     @if ($href !== null)
         <span class="ss-business-card__top">
-            <x-admiro::icon name="arrow-right" class="ss-business-card__arrow" />
+            <x-admiro::icon name="link" class="ss-business-card__arrow" />
         </span>
     @endif
     <span class="ss-business-card__identity">

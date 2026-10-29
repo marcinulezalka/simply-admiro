@@ -5941,8 +5941,8 @@ a.ss-notification:focus-visible {
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
  * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, nazwa
  * krojem nagłówków (__name), pod nią podpis (__kicker) i numery rejestrowe (__registry, krój mono), niżej dane bez linii
- * oddzielającej (__details, __detail z ikoną); --link: cała karta jest odnośnikiem, strzałka
- * (__arrow) i lekkie uniesienie pod kursorem. Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
+ * oddzielającej (__details, __detail z ikoną); --link: cała karta jest odnośnikiem — karta stoi w miejscu, pod kursorem
+ * przesuwa się tylko ikona linku w rogu (__arrow). Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
  * jako ::before z z-index: -1 nad tłem, a pod treścią (np. ikona przycięta krawędzią karty).
  */
 .ss-business-card {
@@ -5967,15 +5967,6 @@ a.ss-notification:focus-visible {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-}
-
-.ss-business-card--link {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.ss-business-card--link:hover {
-    border-color: var(--ss-color-border-strong);
-    transform: translateY(-2px);
 }
 
 .ss-business-card--link:focus-visible {
@@ -6054,7 +6045,6 @@ a.ss-notification:focus-visible {
 
 
 @media (prefers-reduced-motion: reduce) {
-    .ss-business-card--link,
     .ss-business-card__arrow {
         transition: none;
     }
