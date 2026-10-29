@@ -27,7 +27,7 @@ use Simplysmart\Admiro\View\Navigation\NavigationGroup;
 /**
  * Konteksty konta w przełączniku layoutu strefy: wszystkie organizacje, w których konto jest członkiem (strefa
  * z `teams`; organizacja, jednostka podrzędna — np. placówka — albo departament — np. poradnia), każda jako grupa
- * „Rodzaj · nazwa” z rolami konta w niej (strefa z `role_contexts`), a bez ról kontekstowych — jako pozycja listy
+ * z nazwą i ikoną rodzaju (KIND_ICONS; nazwa rodzaju w podpowiedzi) z rolami konta w niej (strefa z `role_contexts`), a bez ról kontekstowych — jako pozycja listy
  * organizacji. Pozycja to formularz POST na `account.context.switch` z polem FIELD = `<token organizacji>:<rola>`,
  * więc jedno kliknięcie ustawia organizację i rolę z jej uprawnieniami. Nazwy rodzajów: `account.context_kinds.*`
  * (strefa nadpisuje je w swoich tekstach, ZoneDefinition::textKey()). Przełącznik jest widoczny już przy jednym kontekście
@@ -38,6 +38,13 @@ final readonly class ZoneContexts
     public const string FIELD = 'context';
 
     public const string SEPARATOR = ':';
+
+    /**
+     * Ikona rodzaju organizacji przed jej nazwą w przełączniku (nazwa rodzaju tylko w podpowiedzi i dla czytników).
+     *
+     * @var array<string, string>
+     */
+    private const array KIND_ICONS = ['organization' => 'building', 'unit' => 'map-pin', 'department' => 'grid'];
 
     public function __construct(
         private ActiveMemberships $memberships,
@@ -82,9 +89,12 @@ final readonly class ZoneContexts
             }
 
             $active = $isCurrent ? ($this->role->of($account, $organization->id) ?? (count($roles) === 1 ? $roles[0] : null)) : null;
+            $kind = self::kind($organization);
             $groups[] = new NavigationGroup(
-                text($zone->textKey('account.context_kinds.' . self::kind($organization))) . ' · ' . $organization->contextName(),
+                $organization->contextName(),
                 array_map(static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, self::FIELD, self::value($organization, $role), 'user', $role === $active), $roles),
+                self::KIND_ICONS[$kind],
+                text($zone->textKey('account.context_kinds.' . $kind)),
             );
             $count += count($roles);
         }

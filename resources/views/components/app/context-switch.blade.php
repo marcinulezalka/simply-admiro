@@ -9,7 +9,7 @@
         <p class="ss-context-switch__title"><x-admiro::icon name="context" class="ss-context-switch__title-icon" />{{ text('layout.switch_context') }}</p>
         @foreach ($contexts as $group)
             @if (filled($group->label))
-                <p class="ss-context-switch__group">{{ $group->label }}</p>
+                <p class="ss-context-switch__group">@if ($group->icon !== null)<span class="ss-context-switch__kind" @if (filled($group->iconLabel)) title="{{ $group->iconLabel }}" @endif><x-admiro::icon :name="$group->icon" class="ss-context-switch__kind-icon" />@if (filled($group->iconLabel))<span class="ss-sr-only">{{ $group->iconLabel }}: </span>@endif</span>@endif{{ $group->label }}</p>
             @endif
             <ul class="ss-account-menu__list">
                 @foreach ($group->items as $item)

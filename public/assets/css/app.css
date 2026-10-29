@@ -6103,7 +6103,20 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-muted);
 }
 
+.ss-context-switch__kind {
+    display: inline-flex;
+    flex: none;
+}
+
+.ss-context-switch__kind-icon {
+    width: 0.9375rem;
+    height: 0.9375rem;
+}
+
 .ss-context-switch__group {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
     margin: var(--ss-space-2) 0 0;
     padding: 0 var(--ss-space-3);
     color: var(--ss-color-muted);

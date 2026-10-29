@@ -20,9 +20,13 @@ final readonly class NavigationGroup
 {
     /**
      * @param list<NavigationItem|NavigationForm> $items Pozycje: linki albo formularze POST (np. przełączenie organizacji).
+     * @param ?string $icon Ikona przed nazwą grupy (np. rodzaj organizacji w przełączniku kontekstu).
+     * @param ?string $iconLabel Znaczenie ikony dla czytników ekranu i w podpowiedzi (np. „Departament”).
      */
     public function __construct(
         public ?string $label,
         public array $items,
+        public ?string $icon = null,
+        public ?string $iconLabel = null,
     ) {}
 }

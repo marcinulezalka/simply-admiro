@@ -435,7 +435,7 @@ przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nim
 zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej jedna wspólna ramka narzędzi
 (`.ss-workspace-footer__tools`: obwódka bez podziałek, przyciski w środku bez własnych ramek; każdy
 dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-switch` (menu nad stopką; konteksty z
-`Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa „Rodzaj · nazwa” z rolami konta, jedno
+`Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa z nazwą i ikoną rodzaju (organizacja `building`, jednostka `map-pin`, departament `grid`; nazwa rodzaju w podpowiedzi) z rolami konta, jedno
 kliknięcie — `account.context.switch` — ustawia organizację i rolę), szybkie ustawienia (`x-admiro::app.quick-settings`, `.ss-quick-settings`: ikona suwaków otwiera nad stopką, od prawej, menu
 w stylu menu konta (lista z ikonami, bieżąca strona wyróżniona): skróty strefy
 `Contracts\ZoneShortcuts::shortcuts()` (np. ustawienia globalne; w admiro dashboard, ulubione i pulpit roboczy), dashboard
