@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Konta administratorów (z obowiązkową rolą wsparcia `support`) są ukryte w strefach: `OrganizationMembers::inZone()` / `find()` ich nie zwracają (listy personelu, dzienniki i strony stref); panel administratorów widzi wszystkich (`all()`).
 - Panel boczny stopki Workspace: zegar otwiera z prawej powiadomienia (z nową zakładką komunikatów systemowych — toastów strony, `x-admiro::app.notification-tabs`) i kalendarz jako sekcje jedna pod drugą, rozsuwane razem i zwijane osobno, a na dole ikony wyglądu: tryb jasny/ciemny, kontrast WCAG, A / AA, powiększenie i koło zębate do ustawień. Dzwonek i szybkie ustawienia (suwaki) znikają ze stopki; licznik nieprzeczytanych jest na zegarze. Przycisk szukania ze strzałką Entera zamiast rakiety.
 - Wyszukiwarka w stopce Workspace: gdy strefa daje szybkie akcje (`SearchBox::$actions`), „+” z ich menu zastępuje lupę.
 - Identyfikator konta pod nazwą w przycisku konta stopki Workspace, krojem mono (`ZoneAccount::accountIdentifier()`, domyślnie brak; strefa nadpisuje, np. numerem kadrowym).

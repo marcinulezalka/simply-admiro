@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Queries\Organizations;
 
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
+use Simplysmart\Admiro\Permissions\RequiredRole;
 use Simplysmart\Admiro\Contracts\ZoneRegistry;
 use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Models\Organization;
@@ -29,6 +31,7 @@ final readonly class OrganizationMembers
 {
     public function __construct(
         private ZoneRegistry $zones,
+        private ZoneRoleNames $roles,
     ) {}
 
     /**
@@ -39,7 +42,7 @@ final readonly class OrganizationMembers
         $members = [];
 
         foreach ($this->zones->all() as $zone) {
-            foreach ($this->inZone($organization, $zone) as $account) {
+            foreach ($this->inZone($organization, $zone, withHidden: true) as $account) {
                 $members[] = ['zone' => $zone, 'account' => $account];
             }
         }
@@ -48,9 +51,13 @@ final readonly class OrganizationMembers
     }
 
     /**
+     * Członkowie organizacji w strefie. Konta administratorów — z obowiązkową rolą wsparcia (RequiredRole::Support)
+     * w tej organizacji — są ukryte (listy personelu, dzienniki i strony stref); widzi je tylko panel administratorów
+     * (all(), $withHidden).
+     *
      * @return list<ZoneAccount>
      */
-    public function inZone(Organization $organization, ZoneDefinition $zone): array
+    public function inZone(Organization $organization, ZoneDefinition $zone, bool $withHidden = false): array
     {
         if (! $zone->requiresLogin()) {
             return [];
@@ -67,7 +74,12 @@ final readonly class OrganizationMembers
         $query->whereIn(ColumnNames::ID, $ids);
         $query->orderBy(ColumnNames::NAME);
 
-        return array_values(array_filter($query->get()->all(), static fn(mixed $account): bool => $account instanceof ZoneAccount));
+        $accounts = array_values(array_filter($query->get()->all(), static fn(mixed $account): bool => $account instanceof ZoneAccount));
+
+        return $withHidden ? $accounts : array_values(array_filter(
+            $accounts,
+            fn(ZoneAccount $account): bool => ! in_array(RequiredRole::Support->value, $this->roles->of($account, $organization->id), true),
+        ));
     }
 
     public function find(Organization $organization, ZoneDefinition $zone, string $token): ?ZoneAccount
