@@ -293,6 +293,12 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   `.ss-folder`): część główna (`__main`: ikona w kafelku, `__text` z `__name` i `__sub`), fakty `<dl class="__facts">`
   (`__fact`: etykieta mono nad wartością), akcje po prawej (`__side`) i rozwijane szczegóły pod spodem (`__details`);
   `--primary` — ramka akcentu, `--muted` — rekord wyłączony albo pusta lista.
+- **Lista zadań** `x-admiro::checklist.progress` i `x-admiro::checklist.steps` (pozycje `View\Checklist\ChecklistItem`:
+  numer, nazwa, opis, ikona, odnośnik, zrobione, etykieta nad nazwą, stan z tonem plakietki; klasy `.ss-onboarding*`):
+  zakładka postępu do slotu `actions` nagłówka (klasa slotu `ss-context__actions--progress`; etykieta „Zrobione X z Y”,
+  pasek, rozwijana lista zadań z plakietkami stanu i przełącznik ukrywania zrobionych — `js/hide-done.js`, wybór
+  zapamiętany pod `storage-key`) oraz numerowane karty-odnośniki zadań na tle strony (`id` listy = `list-id`
+  przełącznika; zrobione wyszarzone). Teksty podaje strona. Używa ich przegląd onboardingu panelu i listy zadań stref.
 - **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
   z motywem w tle (poświata akcentu w rogu i koncentryczne łuki) i miękkim, płytkim cieniem; nazwa skrócona krojem
   nagłówków, zaraz pod nią podpis (`kicker`) i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są;

@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Lista zadań jako komponenty Core: `x-admiro::checklist.progress` (zakładka postępu „Zrobione X z Y” z listą zadań i ukrywaniem zrobionych) i `x-admiro::checklist.steps` (numerowane karty zadań) z pozycjami `View\Checklist\ChecklistItem`; przegląd onboardingu panelu korzysta z nich bez zmiany wyglądu, a strefy mogą budować na nich własne listy zadań.
 - Strona „Personalizacja” w ustawieniach konta ma rozmiar tekstu (A / AA / AAA — cała strona powiększona jak w przeglądarce), szerokość treści (pełna albo wyśrodkowana kolumna) i — w strefie z kluczem `font_styles` — wybór kroju pisma spośród krojów strefy; wybory zapamiętuje przeglądarka, tak jak motyw i kolorystykę (`x-admiro::preference-toggle`, `Enums\TextSize`, `Enums\LayoutWidth`, `Zones\ZoneFontStyle`); opis pamięci przeglądarki w polityce cookies wymienia nowe wybory.
 - Zasady logowania strefy na stronie Konto → Bezpieczeństwo: zakres PIN-u i kiedy potrzebny jest kod z e-maila (przy każdym logowaniu albo — w strefie z zaufanymi urządzeniami — na nowym urządzeniu).
 - Wiersze rekordów `.ss-record-rows` / `.ss-record-row` (część główna, fakty w `<dl>`, akcje po prawej, rozwijane szczegóły) w wyglądzie wierszy panelu języków, do list w teczkach `.ss-folder`.
