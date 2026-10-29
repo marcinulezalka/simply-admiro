@@ -41,7 +41,7 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     tokeny --ss-font-* dla :root[data-font="serif"] i daje rodzinę próbce [data-ss-font-sample="serif"]; fonty
        //     z `fonts`; zły klucz albo nazwa zatrzymuje start),
        // 'backdrop' => 'zone-logo' (Enums\AppBackdrop: tło płótna po zalogowaniu — logo strefy `logo` wtopione w tło przy
-       //     dolnej krawędzi okna i lekko przycięte od dołu zamiast logotypu simplysmart na środku; wymaga logo strefy;
+       //     dolnej krawędzi okna (przycięte stopką na dole) zamiast logotypu simplysmart na środku; wymaga logo strefy;
        //     domyślnie `brand`),
        // 'auth' => ['brand' => ['light' => __DIR__.'/../public/images/banner.jpg', 'dark' => ..., 'alt' => '<paczka>::...']]
        //     (baner w karcie marki zamiast logo; Core serwuje pliki trasą <strefa>.auth.brand z publicznym cache),

@@ -3898,13 +3898,13 @@ textarea.ss-input {
     transform: translate(-50%, -40%);
 }
 
-/* Logo strefy w tle (.ss-backdrop--bottom, zone `backdrop` = zone-logo): szerzej, przy dolnej krawędzi okna,
-   przycięte od dołu o mniej więcej piątą część wysokości napisu. */
+/* Logo strefy w tle (.ss-backdrop--bottom, zone `backdrop` = zone-logo): szerzej, dolną krawędzią napisu równo
+   z dolną krawędzią okna — przycina go dopiero stopka na dole (w layoucie Workspace .ss-workspace-footer), nie okno. */
 .ss-backdrop--bottom {
     top: auto;
     bottom: 0;
     width: min(88rem, 94vw);
-    transform: translate(-50%, 22%);
+    transform: translateX(-50%);
 }
 
 .ss-backdrop__defs {
@@ -5918,9 +5918,11 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
- * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu), monogram (__monogram), podpis (__kicker),
- * nazwa krojem nagłówków (__name) z nazwą skróconą (__short) i dane pod linią (__details, __detail z ikoną);
- * --link: cała karta jest odnośnikiem, strzałka (__arrow) i lekkie uniesienie pod kursorem.
+ * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, podpis
+ * (__kicker) u góry, nazwa krojem nagłówków (__name) z numerami rejestrowymi (__registry, krój mono) i dane pod linią
+ * (__details, __detail z ikoną i opcjonalną etykietą __detail-label); --link: cała karta jest odnośnikiem, strzałka
+ * (__arrow) i lekkie uniesienie pod kursorem. Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
+ * jako ::before z z-index: -1 nad tłem, a pod treścią (np. ikona przycięta krawędzią karty).
  */
 .ss-business-card {
     display: flex;
@@ -5936,9 +5938,14 @@ a.ss-notification:focus-visible {
         radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--ss-color-accent) 16%, transparent) 0, transparent 50%),
         repeating-radial-gradient(circle at 115% 125%, transparent 0 18px, color-mix(in srgb, var(--ss-color-accent) 10%, transparent) 18px 19px),
         linear-gradient(145deg, var(--ss-color-surface) 40%, color-mix(in srgb, var(--ss-color-surface) 88%, var(--ss-color-accent)));
-    box-shadow: var(--ss-shadow-elevated);
+    box-shadow:
+        0 1px 2px light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.4)),
+        0 16px 32px -20px light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.6));
     color: var(--ss-color-text);
     text-decoration: none;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
 }
 
 .ss-business-card--link {
@@ -5961,20 +5968,8 @@ a.ss-notification:focus-visible {
     justify-content: space-between;
 }
 
-.ss-business-card__monogram {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-accent);
-    color: var(--ss-color-on-accent);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-}
-
 .ss-business-card__arrow {
+    margin-left: auto;
     width: 1.25rem;
     height: 1.25rem;
     color: var(--ss-color-muted);
@@ -6008,9 +6003,11 @@ a.ss-notification:focus-visible {
     line-height: 1.2;
 }
 
-.ss-business-card__short {
+.ss-business-card__registry {
     color: var(--ss-color-muted);
-    font-size: 0.875rem;
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
 }
 
 .ss-business-card__details {
@@ -6034,6 +6031,11 @@ a.ss-notification:focus-visible {
     width: 1rem;
     height: 1rem;
     color: var(--ss-color-muted);
+}
+
+.ss-business-card__detail-label {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -193,7 +193,7 @@ Strona składa się z poziomych warstw, od ogólnej do szczegółowej:
 | **Nawigacja modułowa** | ikona + etykieta (`text_*`); aktywna pozycja = pigułka `surface-muted` i tekst `text`, pozostałe `muted` | przewijanie poziome, bez łamania wiersza |
 | **Nagłówek kontekstowy** | link powrotu, metadane (`text-xs`, `muted`, np. numer, data przez `local_date`), duży tytuł, akcje po prawej (np. eksport PDF: etykieta `text_file` / `text_action`); najwyżej jedna akcja główna w kolorze akcentu | akcje pod tytułem |
 | **Stepper** | etapy procesu z ikonami połączone cienką linią; stany: zakończony (akcent), bieżący (akcent, wyróżniony), przyszły (`border-strong`). Etapy to przypadki enuma `status` rekordu (zob. [baza-danych.md](baza-danych.md)), etykiety z jego tłumaczeń | pionowo albo tylko bieżący etap z licznikiem „3 z 5” |
-| **Tło płótna** | pod wszystkimi warstwami layoutu aplikacji duży logotyp simplysmart na środku okna (`x-admiro::app.backdrop`, `.ss-backdrop`), wtopiony w płótno: kolor marki `--ss-color-brand` (czerń albo biel) z kryciem 3,5%, proporcje logo bez zmian; strefa z `backdrop` = `zone-logo` (`Enums\AppBackdrop`, `View\ZoneLogos::backdrop()`) ma zamiast niego swoje logo przy dolnej krawędzi okna, lekko przycięte od dołu (`.ss-backdrop--bottom`); czysta dekoracja (`aria-hidden`), bez motywów wysokiego kontrastu i wydruku | logotyp na prawie całą szerokość |
+| **Tło płótna** | pod wszystkimi warstwami layoutu aplikacji duży logotyp simplysmart na środku okna (`x-admiro::app.backdrop`, `.ss-backdrop`), wtopiony w płótno: kolor marki `--ss-color-brand` (czerń albo biel) z kryciem 3,5%, proporcje logo bez zmian; strefa z `backdrop` = `zone-logo` (`Enums\AppBackdrop`, `View\ZoneLogos::backdrop()`) ma zamiast niego swoje logo przy dolnej krawędzi okna, dolną krawędzią napisu równo z dołem okna — przycina go stopka na dole (`.ss-backdrop--bottom`); czysta dekoracja (`aria-hidden`), bez motywów wysokiego kontrastu i wydruku | logotyp na prawie całą szerokość |
 | **Siatka kart** | niezależne karty; w karcie pary etykieta (`muted`, lewa) → wartość (`text`, prawa). Etykieta z `text_data($model, $kolumna)`, wartość sformatowana `local_*` | jedna kolumna; para etykieta nad wartością |
 
 ## 6. Kolor i dostępność
@@ -294,9 +294,11 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   (`__fact`: etykieta mono nad wartością), akcje po prawej (`__side`) i rozwijane szczegóły pod spodem (`__details`);
   `--primary` — ramka akcentu, `--muted` — rekord wyłączony albo pusta lista.
 - **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
-  z motywem w tle (poświata akcentu w rogu i koncentryczne łuki), monogram z inicjałów, podpis (`kicker`), nazwa krojem
-  nagłówków z nazwą skróconą i pod linią adres, telefon, e-mail i NIP (puste pomijane); z `href` cała karta jest
-  odnośnikiem ze strzałką i lekkim uniesieniem pod kursorem.
+  z motywem w tle (poświata akcentu w rogu i koncentryczne łuki) i miękkim, płytkim cieniem; u góry podpis (`kicker`),
+  nazwa krojem nagłówków z numerami rejestrowymi pod nią (NIP · REGON · KRS, krój mono) i pod linią adres, telefon,
+  e-mail i e-mail do rozliczeń z etykietą (puste pomijane); z `href` cała karta jest odnośnikiem ze strzałką i lekkim
+  uniesieniem pod kursorem. Karta izoluje warstwy, więc strefa może podmienić motyw tła własnym `::before`
+  (`z-index: -1`, przycięty krawędzią karty).
 - **Obszar ustawień** (`.ss-settings-area`, layout Workspace z `Contracts\ZoneAppLayout::settingsArea()`): strony
   ustawień tworzą jeden obszar jak ustawienia systemu — po lewej grupy menu ustawień jako lista kategorii (karty-odnośniki
   z ikoną w kafelku, bieżąca w ramce akcentu, jak kroki kreatora; od 64rem przyklejona), po prawej parametry strony.
