@@ -5940,8 +5940,9 @@ a.ss-notification:focus-visible {
 /**
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
  * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, nazwa
- * krojem nagłówków (__name), pod nią podpis (__kicker) i numery rejestrowe (__registry, krój mono), niżej dane bez linii
- * oddzielającej (__details, __detail z ikoną); --link: cała karta jest odnośnikiem — karta stoi w miejscu, pod kursorem
+ * u góry podpis krojem mono (__kicker) w rzędzie z ikoną linku (__top), pod nim nazwa krojem nagłówków (__name)
+ * i numery rejestrowe (__registry, krój mono), dane dosunięte do dołu karty bez linii oddzielającej (__details, __detail
+ * z ikoną); --link: cała karta jest odnośnikiem — karta stoi w miejscu, pod kursorem
  * przesuwa się tylko ikona linku w rogu (__arrow). Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
  * jako ::before z z-index: -1 nad tłem, a pod treścią (np. ikona przycięta krawędzią karty).
  */
@@ -5976,8 +5977,10 @@ a.ss-notification:focus-visible {
 
 .ss-business-card__top {
     display: flex;
-    align-items: flex-start;
+    gap: var(--ss-space-3);
+    align-items: center;
     justify-content: space-between;
+    margin-bottom: var(--ss-space-1);
 }
 
 .ss-business-card__arrow {
@@ -5997,11 +6000,11 @@ a.ss-notification:focus-visible {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-1);
-    margin-top: auto;
 }
 
 .ss-business-card__kicker {
     color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -6025,6 +6028,7 @@ a.ss-notification:focus-visible {
 .ss-business-card__details {
     display: grid;
     gap: var(--ss-space-1);
+    margin-top: auto;
     font-size: 0.875rem;
 }
 
