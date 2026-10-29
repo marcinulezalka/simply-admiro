@@ -3498,6 +3498,16 @@ textarea.ss-input {
     height: 1rem;
 }
 
+/* Mały prefiks nad tytułem strony (np. „Twój dzień”). */
+.ss-context__eyebrow {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
 .ss-context__title {
     margin: 0;
     font-size: 1.75rem;
@@ -6076,6 +6086,23 @@ a.ss-notification:focus-visible {
     display: none;
 }
 
+.ss-context-switch__title {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+    padding: var(--ss-space-1) var(--ss-space-3) var(--ss-space-2);
+    border-bottom: 1px solid var(--ss-color-border);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-context-switch__title-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--ss-color-muted);
+}
+
 .ss-context-switch__group {
     margin: var(--ss-space-2) 0 0;
     padding: 0 var(--ss-space-3);
@@ -7550,11 +7577,19 @@ a.ss-notification:focus-visible {
     background: transparent;
 }
 
+/* Zegar w ramce: stale w kolorach stanu hover (przygaszone tło), pod kursorem i po otwarciu jeszcze ciemniejszy. */
+.ss-workspace-footer__tools .ss-calendar-panel__toggle {
+    background: var(--ss-color-surface-muted);
+}
+
 .ss-workspace-footer__tools .ss-workspace-footer__tool:hover,
-.ss-workspace-footer__tools details[open] > .ss-workspace-footer__tool,
+.ss-workspace-footer__tools details[open] > .ss-workspace-footer__tool {
+    background: var(--ss-color-surface-muted);
+}
+
 .ss-workspace-footer__tools .ss-calendar-panel__toggle:hover,
 .ss-workspace-footer__tools .ss-calendar-panel[open] .ss-calendar-panel__toggle {
-    background: var(--ss-color-surface-muted);
+    background: color-mix(in srgb, var(--ss-color-surface-muted) 80%, var(--ss-color-text));
 }
 
 .ss-workspace-footer__tools .ss-workspace-footer__tool[aria-current="page"] {
