@@ -104,7 +104,7 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
 - **Przełącznik** `x-admiro::theme-toggle`: przełącznik segmentowy z czterema motywami (`Enums\Theme`) — jasny,
   ciemny, kontrast WCAG (`contrast`: czerń na bieli) i duży kontrast WCAG (`contrast-yellow`: żółty na czarnym); wybrany
   segment ma `aria-pressed="true"`, etykiety w `title` i dla czytników ekranu. Stoi w ustawieniach konta (strona
-  „Wygląd”, `account.appearance`; menu boczne aplikacji i strony logowania go nie mają), na stronach treści i na stronie design systemu. Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony
+  „Personalizacja”, `account.appearance`; menu boczne aplikacji i strony logowania go nie mają), na stronach treści i na stronie design systemu. Wybór zapisuje przeglądarka (`localStorage`), a `js/theme.js` w `<head>` każdej strony
   (`x-admiro::page`) stosuje go przed narysowaniem (bez błysku). Bez skryptu przełącznik jest ukryty i obowiązuje
   motyw systemu.
 - **Motywy wysokiego kontrastu (WCAG 2.2 AAA):** bloki `:root[data-theme="contrast"]` i `[data-theme="contrast-yellow"]`
@@ -124,11 +124,11 @@ jaśniejsze, ramki zamiast bieli, akcent odwrócony (jasny przycisk z ciemnym te
   `<html>` (`:root[data-palette=…]`, wygrywa z `:root` arkusza strefy) podmienia akcent, informację i kartę odwróconą
   w obu motywach; powierzchnie zostają ze strefy. Strefa wybiera oferowane kolorystyki w configu (`palettes`);
   `x-admiro::palette-switch` pokazuje „Domyślna” (kolory bazowe) i listę z próbkami; layouty (aplikacja, logowanie)
-  go nie wyświetlają — przełącznik jest na stronie „Wygląd” w ustawieniach konta (strefa z `palettes`) i w sekcji
+  go nie wyświetlają — przełącznik jest na stronie „Personalizacja” w ustawieniach konta (strefa z `palettes`) i w sekcji
   „Kolorystyki” design systemu, a każda strona stosuje zapisany wybór. `x-admiro::page` dostaje te same `palettes` i `paletteScope`
   (meta `ss-palettes` przed `js/theme.js`), więc wybór — zapamiętany w przeglądarce osobno dla każdej strefy — działa
   bez błysku; kolorystyka spoza listy strefy jest pomijana. Bez skryptu przełącznik jest ukryty.
-- **Rozmiar tekstu, szerokość treści i krój (`Enums\AppearancePreference`):** strona „Wygląd” ma też przełączniki
+- **Rozmiar tekstu, szerokość treści i krój (`Enums\AppearancePreference`):** strona „Personalizacja” ma też przełączniki
   `x-admiro::preference-toggle` (opcje z `View\AppearanceChoices`, segmenty jak przełącznik motywu, wybrany
   z `aria-pressed="true"`): rozmiar tekstu A / AA / AAA (`Enums\TextSize`, `:root[data-text-size]` — cała strona
   skalowana `zoom` 1,125 / 1,25 jak powiększenie przeglądarki, WCAG 1.4.4), szerokość treści (`Enums\LayoutWidth`:

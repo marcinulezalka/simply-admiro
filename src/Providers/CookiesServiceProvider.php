@@ -72,7 +72,7 @@ final class CookiesServiceProvider extends ServiceProvider
             new CookieDescription('*_session', CookieCategory::Necessary, 'cookies.core.session', 'cookies.lifetimes.session'),
             new CookieDescription('*_device', CookieCategory::Necessary, 'cookies.core.device', 'cookies.lifetimes.device'),
             new CookieDescription($config->string('admiro.cookies.cookie_name'), CookieCategory::Necessary, 'cookies.core.consent', 'cookies.lifetimes.consent'),
-            new CookieDescription('ss-theme, ss-palette, ss-sidebar-collapsed', CookieCategory::Necessary, 'cookies.core.appearance', 'cookies.lifetimes.storage'),
+            new CookieDescription('ss-theme, ss-palette, ss-text-size, ss-layout-width, ss-font, ss-sidebar-collapsed', CookieCategory::Necessary, 'cookies.core.appearance', 'cookies.lifetimes.storage'),
         ];
     }
 }

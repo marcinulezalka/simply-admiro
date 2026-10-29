@@ -16,7 +16,7 @@ return [
     'organization' => 'Organizacja',
     'role' => 'Rola',
     'settings_group' => 'Konto',
-    'appearance_title' => 'Wygląd',
+    'appearance_title' => 'Personalizacja',
     'theme_title' => 'Motyw',
     'theme_hint' => 'Jasny, ciemny albo wysoki kontrast. Wybór zapamiętuje ta przeglądarka.',
     'palette_hint' => 'Kolor akcentu aplikacji. Wybór zapamiętuje ta przeglądarka.',

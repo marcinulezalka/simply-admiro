@@ -49,7 +49,7 @@ return [
         'session' => 'Sesja strefy aplikacji (logowanie, ochrona formularzy).',
         'device' => 'Zaufane urządzenie: krótsze logowanie bez kodu z e-maila, gdy je wybierzesz.',
         'consent' => 'Zapamiętanie Twojej decyzji w sprawie cookies.',
-        'appearance' => 'Motyw, kolorystyka i zwinięte menu, które sam wybierasz (pamięć przeglądarki).',
+        'appearance' => 'Motyw, kolorystyka, rozmiar tekstu, szerokość treści, krój pisma i zwinięte menu, które sam wybierasz (pamięć przeglądarki).',
     ],
     'lifetimes' => [
         'session' => 'do zamknięcia przeglądarki albo wylogowania',

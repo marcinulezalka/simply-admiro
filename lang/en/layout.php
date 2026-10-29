@@ -118,7 +118,7 @@ return [
     ],
     'layout_widths' => [
         'full' => 'Full width',
-        'centered' => 'Centred',
+        'centered' => 'Centered',
     ],
     'font_styles' => [
         'default' => 'Default',

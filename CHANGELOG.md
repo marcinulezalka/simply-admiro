@@ -6,7 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Strona „Wygląd” w ustawieniach konta ma rozmiar tekstu (A / AA / AAA — cała strona powiększona jak w przeglądarce), szerokość treści (pełna albo wyśrodkowana kolumna) i — w strefie z kluczem `font_styles` — wybór kroju pisma spośród krojów strefy; wybory zapamiętuje przeglądarka, tak jak motyw i kolorystykę (`x-admiro::preference-toggle`, `Enums\TextSize`, `Enums\LayoutWidth`, `Zones\ZoneFontStyle`).
+- Strona „Personalizacja” w ustawieniach konta ma rozmiar tekstu (A / AA / AAA — cała strona powiększona jak w przeglądarce), szerokość treści (pełna albo wyśrodkowana kolumna) i — w strefie z kluczem `font_styles` — wybór kroju pisma spośród krojów strefy; wybory zapamiętuje przeglądarka, tak jak motyw i kolorystykę (`x-admiro::preference-toggle`, `Enums\TextSize`, `Enums\LayoutWidth`, `Zones\ZoneFontStyle`); opis pamięci przeglądarki w polityce cookies wymienia nowe wybory.
 - Zasady logowania strefy na stronie Konto → Bezpieczeństwo: zakres PIN-u i kiedy potrzebny jest kod z e-maila (przy każdym logowaniu albo — w strefie z zaufanymi urządzeniami — na nowym urządzeniu).
 - Wiersze rekordów `.ss-record-rows` / `.ss-record-row` (część główna, fakty w `<dl>`, akcje po prawej, rozwijane szczegóły) w wyglądzie wierszy panelu języków, do list w teczkach `.ss-folder`.
 - Wizytówka organizacji `x-admiro::organization.card` (`.ss-business-card`): monogram, podpis, nazwa i nazwa skrócona, adres, telefon, e-mail i NIP na karcie z motywem w tle (poświata i koncentryczne łuki w kolorze akcentu); z `href` cała karta jest odnośnikiem.
@@ -73,6 +73,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Strona ustawień konta „Wygląd” nazywa się teraz „Personalizacja” (menu konta, mapa strony, menu ustawień); adres `account/appearance` bez zmian.
 - Klawiatura ekranowa PIN-u: klasyczne klawisze z zaokrąglonymi rogami tuż obok siebie (w formularzu i w oknie); w kroku PIN-u logowania karta z klawiszami wysuwa się spod pola PIN i po zatwierdzeniu (Enter albo „Zatwierdź”) chowa się z powrotem pod pole, zanim formularz zostanie wysłany.
 - Krok PIN-u logowania: klawiatura ekranowa w formularzu zamiast okna — przycisk w polu rozwija klawisze między polem PIN a przyciskiem, w szerokości pola (`x-admiro::pin-field keypad-inline`, `.ss-keypad--inline`; Escape zwija); przycisk „Zatwierdź” (dawniej „Dalej”, tekst `sign_in.pin_submit`) z ikoną Entera jak „Zatwierdź PIN” w klawiaturze.
 - `ZoneDefinitionFactory`: wspólne czytanie mapy plików `favicon` i `brand` (`paths()`); opis `ZoneDefinition::requiresLogin()` wrócił nad tę metodę.

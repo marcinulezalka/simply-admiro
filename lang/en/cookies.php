@@ -49,7 +49,7 @@ return [
         'session' => 'Application zone session (sign-in, form protection).',
         'device' => 'Trusted device: shorter sign-in without the e-mailed code when you choose it.',
         'consent' => 'Remembering your cookie decision.',
-        'appearance' => 'Theme, colour scheme and collapsed menu you choose (browser storage).',
+        'appearance' => 'Theme, colour scheme, text size, content width, typeface and collapsed menu you choose (browser storage).',
     ],
     'lifetimes' => [
         'session' => 'until the browser is closed or you sign out',
