@@ -14,12 +14,13 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\View;
 
 use Simplysmart\Admiro\Contracts\ZoneRegistry;
+use Simplysmart\Admiro\Enums\AppBackdrop;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Logo zarejestrowanych stref (`logo` strefy, domyślnie `auth.logo`) do osadzenia inline, np. na stronie startowej:
  * każdy plik raz (kilka stref jednej paczki dzieli zwykle to samo logo), w kolejności nazw stref, z adresem strony WWW
- * strefy (`website`; przy wspólnym logo pierwszy podany).
+ * strefy (`website`; przy wspólnym logo pierwszy podany), oraz logo w tle płótna strefy z `backdrop` = zone-logo.
  */
 final readonly class ZoneLogos
 {
@@ -28,13 +29,14 @@ final readonly class ZoneLogos
     ) {}
 
     /**
-     * Treść pliku SVG logo strefy (fill="currentColor") albo null, gdy strefa nie ma logo.
+     * Treść pliku SVG logo strefy (fill="currentColor") do tła płótna layoutu aplikacji albo null, gdy tło strefy
+     * to logotyp simplysmart (Enums\AppBackdrop).
      */
-    public function svg(ZoneDefinition $zone): ?string
+    public function backdrop(ZoneDefinition $zone): ?string
     {
-        $path = $zone->logo === null ? false : realpath($zone->logo);
+        $path = $zone->backdrop === AppBackdrop::ZoneLogo ? $this->path($zone) : null;
 
-        return $path === false ? null : (string) file_get_contents($path);
+        return $path === null ? null : (string) file_get_contents($path);
     }
 
     /**
@@ -46,9 +48,9 @@ final readonly class ZoneLogos
         $logos = [];
 
         foreach ($this->zones->all() as $zone) {
-            $path = $zone->logo === null ? false : realpath($zone->logo);
+            $path = $this->path($zone);
 
-            if ($path === false) {
+            if ($path === null) {
                 continue;
             }
 
@@ -57,5 +59,15 @@ final readonly class ZoneLogos
         }
 
         return array_values($logos);
+    }
+
+    /**
+     * Rzeczywista ścieżka pliku logo strefy albo null, gdy strefa nie ma logo.
+     */
+    private function path(ZoneDefinition $zone): ?string
+    {
+        $path = $zone->logo === null ? false : realpath($zone->logo);
+
+        return $path === false ? null : $path;
     }
 }

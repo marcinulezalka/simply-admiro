@@ -12,7 +12,8 @@
                 $roles,
             )),
         ]));
-        $variant = ($navigation instanceof \Simplysmart\Admiro\Contracts\ZoneAppLayout ? $navigation->appLayout() : null) ?? $zone->appLayout;
+        $zoneAppLayout = $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneAppLayout ? $navigation : null;
+        $variant = $zoneAppLayout?->appLayout() ?? $zone->appLayout;
         $workspace = $variant === \Simplysmart\Admiro\Enums\AppLayout::Workspace;
         $hasSitemap = $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneSitemap;
         $settingsMode = $workspace && ($settingsMenu?->active ?? false);
@@ -46,8 +47,8 @@
         :back-label="$backLabel"
         :back-icon="$backIcon"
         :variant="$variant"
-        :settings-area="$workspace && $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneAppLayout && $navigation->settingsArea()"
-        :backdrop-logo="$zone->backdrop === \Simplysmart\Admiro\Enums\AppBackdrop::ZoneLogo ? app(\Simplysmart\Admiro\View\ZoneLogos::class)->svg($zone) : null"
+        :settings-area="$workspace && ($zoneAppLayout?->settingsArea() ?? false)"
+        :backdrop-logo="app(\Simplysmart\Admiro\View\ZoneLogos::class)->backdrop($zone)"
         :navigation="$menu"
         :sitemap="$sitemap"
         :shortcuts="$workspace && $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneShortcuts ? $navigation->shortcuts() : []"

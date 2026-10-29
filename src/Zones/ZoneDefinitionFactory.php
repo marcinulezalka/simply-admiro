@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Zones;
 
+use BackedEnum;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
@@ -40,8 +41,8 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * pliki PNG/JPG marki strefy, m.in. do e-maili), mail.views (prefiks widoków e-maili strefy: `<prefiks>.layout`,
  * `<prefiks>.<szablon>`) i mail.palette (kolory hex e-maili: `bg`, `surface`, `border`, `text`, `muted`, `accent`,
  * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)), app_layout (wariant
- * layoutu aplikacji: Enums\AppLayout), backdrop (tło płótna: Enums\AppBackdrop; `zone-logo` wymaga logo strefy), social_links (profile w serwisach społecznościowych: Enums\SocialNetwork →
- * adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
+ * layoutu aplikacji: Enums\AppLayout), backdrop (tło płótna: Enums\AppBackdrop; `zone-logo` wymaga logo strefy),
+ * social_links (profile w serwisach społecznościowych: Enums\SocialNetwork → adres http(s)) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
  * z `teams`).
  */
 final readonly class ZoneDefinitionFactory
@@ -102,7 +103,7 @@ final readonly class ZoneDefinitionFactory
             roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
             logo: $logo,
             website: $this->website($name, $config['website'] ?? null),
-            appLayout: $this->appLayout($name, $config['app_layout'] ?? null),
+            appLayout: $this->option($name, 'app_layout', $config['app_layout'] ?? null, AppLayout::class, AppLayout::Sidebar),
             socialLinks: $this->socialLinks($name, Arr::array($config, 'social_links', [])),
             backdrop: $this->backdrop($name, $config['backdrop'] ?? null, $logo),
         );
@@ -150,35 +151,34 @@ final readonly class ZoneDefinitionFactory
      *
      * @throws InvalidArgumentException Gdy wartość nie jest tłem albo logo strefy w tle nie ma logo strefy.
      */
-    private function backdrop(string $zone, mixed $backdrop, ?string $logo): AppBackdrop
+    private function backdrop(string $zone, mixed $value, ?string $logo): AppBackdrop
     {
-        if ($backdrop === null) {
-            return AppBackdrop::Brand;
-        }
+        $backdrop = $this->option($zone, 'backdrop', $value, AppBackdrop::class, AppBackdrop::Brand);
 
-        $variant = is_string($backdrop) ? AppBackdrop::tryFrom($backdrop) : null;
-
-        if ($variant === null) {
-            throw new InvalidArgumentException("Zone [{$zone}] backdrop must be one of: " . implode(', ', array_column(AppBackdrop::cases(), 'value')) . '.');
-        }
-
-        return $variant === AppBackdrop::ZoneLogo && $logo === null ? throw new InvalidArgumentException("Zone [{$zone}] backdrop zone-logo needs the zone logo.") : $variant;
+        return $backdrop === AppBackdrop::ZoneLogo && $logo === null ? throw new InvalidArgumentException("Zone [{$zone}] backdrop zone-logo needs the zone logo.") : $backdrop;
     }
 
     /**
-     * Wariant layoutu aplikacji z klucza `app_layout` (wartość Enums\AppLayout); brak klucza — Sidebar.
+     * Przypadek enuma z wartości klucza configu strefy (np. `app_layout`, `backdrop`); brak klucza — $default.
      *
-     * @throws InvalidArgumentException Gdy wartość nie jest wariantem layoutu.
+     * @template TEnum of BackedEnum
+     *
+     * @param class-string<TEnum> $enum
+     * @param TEnum $default
+     *
+     * @return TEnum
+     *
+     * @throws InvalidArgumentException Gdy wartość nie jest wartością przypadku enuma.
      */
-    private function appLayout(string $zone, mixed $layout): AppLayout
+    private function option(string $zone, string $key, mixed $value, string $enum, BackedEnum $default): BackedEnum
     {
-        if ($layout === null) {
-            return AppLayout::Sidebar;
+        if ($value === null) {
+            return $default;
         }
 
-        $variant = is_string($layout) ? AppLayout::tryFrom($layout) : null;
+        $case = is_string($value) ? $enum::tryFrom($value) : null;
 
-        return $variant ?? throw new InvalidArgumentException("Zone [{$zone}] app_layout must be one of: " . implode(', ', array_column(AppLayout::cases(), 'value')) . '.');
+        return $case ?? throw new InvalidArgumentException("Zone [{$zone}] {$key} must be one of: " . implode(', ', array_column($enum::cases(), 'value')) . '.');
     }
 
     /**
