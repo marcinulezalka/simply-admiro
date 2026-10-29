@@ -62,7 +62,9 @@ final readonly class ZoneRedirects
      * Adres „Wstecz” w nagłówku strony: najbliższa strona nadrzędna w hierarchii adresów (jak w okruszkach) — adres
      * bez ostatnich segmentów ścieżki, pod którym jest strona GET tej strefy (np. `/onboarding/languages` →
      * `/onboarding`, `/organizations/{token}/edit` → `/organizations`), a bez takiej — dashboard strefy; null na samym
-     * dashboardzie (strona zerowego poziomu) i poza strefą. Nie zależy od poprzedniej strony, więc się nie zapętla.
+     * dashboardzie (strona zerowego poziomu) i poza strefą. Strona nadrzędna nie jest płytsza niż dashboard (np. przy
+     * dashboardzie `/<slug>/panel` strona publiczna `/<slug>` nie jest rodzicem `/<slug>/account/profile`). Nie zależy
+     * od poprzedniej strony, więc się nie zapętla.
      */
     public function backUrl(): ?string
     {
@@ -80,15 +82,26 @@ final readonly class ZoneRedirects
         }
 
         $root = rtrim($this->url->to('/'), '/');
+        $homeDepth = self::depth($homeUrl);
         $candidate = $current;
 
-        while (($slash = strrpos($candidate, '/')) !== false && strlen($candidate = substr($candidate, 0, $slash)) > strlen($root)) {
+        while (($slash = strrpos($candidate, '/')) !== false && strlen($candidate = substr($candidate, 0, $slash)) > strlen($root) && self::depth($candidate) >= $homeDepth) {
             if ($candidate === rtrim($homeUrl, '/') || $this->isZonePage($candidate)) {
                 return $candidate;
             }
         }
 
         return $homeUrl;
+    }
+
+    /**
+     * Liczba segmentów ścieżki adresu (`/shop/panel` → 2).
+     */
+    private static function depth(string $url): int
+    {
+        $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+
+        return $path === '' ? 0 : substr_count($path, '/') + 1;
     }
 
     /**
