@@ -7604,40 +7604,6 @@ a.ss-notification:focus-visible {
     grid-area: tools;
 }
 
-/*
- * .ss-quick-settings — szybkie ustawienia w ramce narzędzi stopki Workspace (x-admiro::app.quick-settings): menu nad
- * stopką, od prawej, w stylu menu konta po lewej (.ss-account-menu__list z ikonami); tryb ciemny pod linią
- * (__theme, jak wylogowanie), z haczykiem (__check), gdy włączony (aria-pressed).
- */
-.ss-quick-settings {
-    position: relative;
-}
-
-.ss-quick-settings__panel {
-    top: auto;
-    right: 0;
-    bottom: calc(100% + var(--ss-space-2));
-    left: auto;
-    min-width: 15rem;
-}
-
-.ss-quick-settings__theme {
-    margin: var(--ss-space-1) 0 0;
-    padding-top: var(--ss-space-1);
-    border-top: 1px solid var(--ss-color-border);
-}
-
-.ss-quick-settings__check {
-    width: 1rem;
-    height: 1rem;
-    margin-left: auto;
-    visibility: hidden;
-}
-
-.ss-quick-settings__flip[aria-pressed="true"] .ss-quick-settings__check {
-    visibility: visible;
-}
-
 /* Ramka narzędzi: przełącznik kontekstu, szybkie ustawienia, dzwonek i kalendarz w jednej obwódce, bez podziałek;
    przyciski w środku bez własnych ramek. Każdy element dalej otwiera swój panel (menu nad stopką, panele z prawej). */
 .ss-workspace-footer__tools {
@@ -8087,6 +8053,129 @@ a.ss-notification:focus-visible {
         opacity: 0;
         transform: translateX(1rem);
     }
+}
+
+/*
+ * .ss-side-panel — panel boczny stopki Workspace (x-admiro::app.calendar z powiadomieniami): sekcje jedna pod drugą
+ * (__section, <details open> — rozsuwane razem z panelem, zwijane osobno nagłówkiem __summary z chevronem), zakładki
+ * powiadomień z komunikatami systemowymi i kalendarz; na dole pasek ikon wyglądu (__tools: tryb ciemny, kontrast WCAG,
+ * rozmiar tekstu A / AA, powiększenie, ustawienia; włączone — aria-pressed — w kolorach akcentu).
+ */
+.ss-side-panel {
+    gap: var(--ss-space-3);
+    padding: var(--ss-space-3);
+}
+
+.ss-side-panel__close {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ss-side-panel__close:has(> [hidden]) {
+    display: none;
+}
+
+.ss-side-panel__section {
+    flex: none;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
+.ss-side-panel__summary {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    font-size: 0.875rem;
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-side-panel__summary::-webkit-details-marker {
+    display: none;
+}
+
+.ss-side-panel__summary-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-side-panel__summary-title {
+    flex: 1;
+}
+
+.ss-side-panel__chevron {
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+    transform: rotate(-90deg);
+    transition: transform 0.15s ease;
+}
+
+.ss-side-panel__section[open] .ss-side-panel__chevron {
+    transform: none;
+}
+
+.ss-side-panel__section > :not(summary) {
+    margin: 0 var(--ss-space-3) var(--ss-space-3);
+}
+
+.ss-side-panel__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+}
+
+.ss-notifications__tabs-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+.ss-notifications__system {
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border-left: 3px solid var(--ss-color-accent);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-notifications__system--danger {
+    border-left-color: var(--ss-color-danger);
+}
+
+.ss-side-panel__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border);
+}
+
+.ss-side-panel__tool-group {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+}
+
+.ss-side-panel__tool-group[hidden] {
+    display: none;
+}
+
+.ss-side-panel__tool--text {
+    font-weight: 700;
+    font-size: 0.8125rem;
+}
+
+.ss-side-panel__tool[aria-pressed="true"] {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
 }
 
 .ss-calendar-panel__header {

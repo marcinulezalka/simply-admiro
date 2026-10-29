@@ -434,24 +434,22 @@ strony (strefa z `Contracts\ZoneSitemap`: `sitemap()` i grupa konta); pod treśc
 `.ss-workspace-footer__account`) z menu nad stopką — konto, ustawienia, mapa aplikacji, profile społecznościowe strefy
 `social_links` i wylogowanie na dole — po lewej nic więcej; globalna wyszukiwarka na środku w stylu okna czatu (`x-admiro::app.search compose`,
 `.ss-search--compose`: szare tło, „+” z akcjami dodawania `SearchBox::$actions` (partial `admiro::search.actions`: nagłówek „Dodaj” `.ss-search__menu-title` oddzielony linią od pozycji), suwaki zakresów zamiast lupy —
-przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu nad
+przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukania ze strzałką Entera zamiast skrótu „/”; podpowiedzi i menu nad
 polem), mapa strony rozsuwana pod paskiem (odnośniki do `#ss-sitemap`, bez
 przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nimi, kolumny dopasowane do szerokości,
 zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej jedna wspólna ramka narzędzi
 (`.ss-workspace-footer__tools`: obwódka bez podziałek, przyciski w środku bez własnych ramek; każdy
 dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-switch` (menu nad stopką; konteksty z
 `Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa z nazwą i ikoną rodzaju (organizacja `building`, jednostka `map-pin`, departament `grid`; nazwa rodzaju w podpowiedzi) z rolami konta, jedno
-kliknięcie — `account.context.switch` — ustawia organizację i rolę), szybkie ustawienia (`x-admiro::app.quick-settings`, `.ss-quick-settings`: ikona suwaków otwiera nad stopką, od prawej, menu
-w stylu menu konta (lista z ikonami, bieżąca strona wyróżniona): skróty strefy
-`Contracts\ZoneShortcuts::shortcuts()` (np. ustawienia globalne; w admiro dashboard, ulubione i pulpit roboczy), dashboard
-strefy (`homeUrl`, pomijany, gdy skrót ma ten sam adres), mapa aplikacji, a pod linią tryb ciemny — `[data-ss-theme-flip]` w `js/theme.js`
-przełącza jasny ↔ ciemny, haczyk przy włączonym), dzwonek powiadomień z panelem z prawej
-(`x-admiro::app.notifications right`, `.ss-notifications--right`: karta na wysokość obszaru treści — od góry okna do stopki,
-której nie zakrywa (`--ss-workspace-footer-height`) —, w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik kategorii
-z ikonami i suwakiem `.ss-tabs--slider` (`js/tabs.js`): powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i — gdy strefa
-je daje przez `Contracts\ZoneNotifications` — ostatnie wpisy dziennika zdarzeń z odnośnikiem do dziennika) oraz na prawym końcu kalendarz (`x-admiro::app.calendar`: przycisk z ikoną kalendarza i zegarem krojem mono — duża godzina („10:42”) i za nią mniejsza data w formacie polskim („27.10.2026”), odświeżany co minutę; na telefonie sama ikona, bez rozsuwania; `js/calendar-panel.js`, `View\Calendar\CalendarMonth`
-z `CalendarMonths`): klik otwiera panel z prawej, na wysokość obszaru treści jak powiadomienia, z miesiącem `.ss-mini-calendar` (dziś, dni wolne
-aplikacji z kropką), podglądem wybranego dnia i miejscem na skrzynkę pocztową (integracja w przygotowaniu)); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
+kliknięcie — `account.context.switch` — ustawia organizację i rolę), zegar (`x-admiro::app.calendar`: ikona kalendarza, duża godzina krojem mono i mniejsza data „27.10.2026”, odświeżane
+co minutę, z licznikiem nieprzeczytanych powiadomień; `js/calendar-panel.js`, `View\Calendar\CalendarMonth` z `CalendarMonths`),
+który otwiera z prawej, na wysokość obszaru treści, panel boczny `.ss-side-panel` z sekcjami jedna pod drugą — rozsuwanymi
+razem, zwijanymi osobno (`<details open>` z chevronem): powiadomienia (`x-admiro::app.notification-tabs`: przełącznik kategorii
+`.ss-tabs--slider` — powiadomienia, komunikaty systemowe — toasty bieżącej strony —, skrzynka e-mail i, gdy strefa je daje przez
+`Contracts\ZoneNotifications`, ostatnie wpisy dziennika zdarzeń) i kalendarz (miesiąc `.ss-mini-calendar`, dni wolne z kropką,
+podgląd wybranego dnia); na dole pasek ikon wyglądu `.ss-side-panel__tools` (`js/theme.js`): tryb jasny/ciemny, motywy
+wysokiego kontrastu WCAG, rozmiar tekstu A / AA, powiększenie (bardzo duży tekst) i koło zębate do ustawień (pierwszy skrót
+strefy z ikoną `settings`, np. ustawienia globalne; bez niego ustawienia konta). Dzwonka i szybkich ustawień w stopce nie ma); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
 fragment HTML z widoku `admiro::search.suggestions` z grupami `SearchResultGroup` i wynikami `SearchResult` z flagami
 albo ikoną, lista `role="listbox"` obsługiwana strzałkami, Enter i Esc, `js/global-search.js`); formularze
