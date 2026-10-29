@@ -5943,7 +5943,7 @@ a.ss-notification:focus-visible {
  * u góry podpis krojem mono (__kicker) w rzędzie z ikoną linku (__top), pod nim nazwa krojem nagłówków (__name)
  * i numery rejestrowe (__registry, krój mono), dane dosunięte do dołu karty bez linii oddzielającej (__details, __detail
  * z ikoną); --link: cała karta jest odnośnikiem — karta stoi w miejscu, pod kursorem
- * przesuwa się tylko ikona linku w rogu (__arrow). Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
+ * wysuwa się tylko strzałka ikony odnośnika w rogu (__arrow, external-link). Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
  * jako ::before z z-index: -1 nad tłem, a pod treścią (np. ikona przycięta krawędzią karty).
  */
 .ss-business-card {
@@ -5983,17 +5983,26 @@ a.ss-notification:focus-visible {
     margin-bottom: var(--ss-space-1);
 }
 
+/* Ikona odnośnika (external-link): pod kursorem albo przy fokusie karty strzałka (pierwsza ścieżka) wysuwa się
+   po skosie z ramki, a ramka stoi w miejscu. */
 .ss-business-card__arrow {
     margin-left: auto;
     width: 1.25rem;
     height: 1.25rem;
     color: var(--ss-color-muted);
-    transition: transform 0.2s ease;
+    transition: color 0.2s ease;
 }
 
-.ss-business-card--link:hover .ss-business-card__arrow {
+.ss-business-card__arrow path:first-child {
+    transition: transform 0.25s ease;
+}
+
+.ss-business-card--link:is(:hover, :focus-visible) .ss-business-card__arrow {
     color: var(--ss-color-text);
-    transform: translateX(3px);
+}
+
+.ss-business-card--link:is(:hover, :focus-visible) .ss-business-card__arrow path:first-child {
+    transform: translate(2px, -2px);
 }
 
 .ss-business-card__identity {
@@ -6049,7 +6058,8 @@ a.ss-notification:focus-visible {
 
 
 @media (prefers-reduced-motion: reduce) {
-    .ss-business-card__arrow {
+    .ss-business-card__arrow,
+    .ss-business-card__arrow path:first-child {
         transition: none;
     }
 }

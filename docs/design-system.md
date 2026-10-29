@@ -301,10 +301,10 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   przełącznika; zrobione wyszarzone). Teksty podaje strona. Używa ich przegląd onboardingu panelu i listy zadań stref.
 - **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
   z motywem w tle (poświata akcentu w rogu i koncentryczne łuki) i miękkim, płytkim cieniem; u góry podpis (`kicker`) krojem mono
-  w rzędzie z ikoną linku, pod nim nazwa skrócona krojem nagłówków i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są;
+  w rzędzie z ikoną odnośnika, pod nim nazwa skrócona krojem nagłówków i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są;
   krój mono), dosunięte do dołu karty, bez linii oddzielającej, adres z krajem, telefon stacjonarny (`phone`), komórkowy (`smartphone`),
   e-mail i e-mail do rozliczeń (ikona paragonu `receipt`; nazwy pól w `title`; puste pomijane); z `href` cała karta jest
-  odnośnikiem z ikoną linku (`link`) w rogu — pod kursorem przesuwa się tylko ona, karta stoi w miejscu. **Telefon z prefiksem kraju** (`.ss-phone`): wąska lista
+  odnośnikiem z ikoną `external-link` w rogu — pod kursorem i przy fokusie jej strzałka wysuwa się po skosie z ramki, karta stoi w miejscu. **Telefon z prefiksem kraju** (`.ss-phone`): wąska lista
   prefiksów (`PL +48`) obok pola numeru. Karta izoluje warstwy, więc strefa może podmienić motyw tła własnym `::before`
   (`z-index: -1`, przycięty krawędzią karty).
 - **Obszar ustawień** (`.ss-settings-area`, layout Workspace z `Contracts\ZoneAppLayout::settingsArea()`): strony

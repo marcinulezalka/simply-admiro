@@ -1,4 +1,4 @@
-{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną linku, pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty adres z krajem, telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
+{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty adres z krajem, telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
 @props(['organization', 'href' => null, 'kicker' => null])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
@@ -25,7 +25,7 @@
                     <span class="ss-business-card__kicker">{{ $kicker }}</span>
                 @endif
                 @if ($href !== null)
-                    <x-admiro::icon name="link" class="ss-business-card__arrow" />
+                    <x-admiro::icon name="external-link" class="ss-business-card__arrow" />
                 @endif
             </span>
         @endif
