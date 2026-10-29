@@ -2805,6 +2805,21 @@ a.ss-onboarding-picker__name:hover {
 }
 
 /**
+ * .ss-auth__submit — przycisk wysłania formularza logowania z linkiem pomocniczym wyśrodkowanym tuż pod nim
+ * (np. „Nie pamiętam PIN-u” na kroku PIN).
+ */
+.ss-auth__submit {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    align-items: center;
+}
+
+.ss-auth__submit .ss-button--block {
+    align-self: stretch;
+}
+
+/**
  * .ss-auth__home — powrót na stronę startową aplikacji pod formularzem logowania: przycisk z ikoną domu,
  * jak akcje stron błędów (.ss-error__actions).
  */

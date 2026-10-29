@@ -73,6 +73,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Krok PIN logowania: „Nie pamiętam PIN-u” jest linkiem wyśrodkowanym tuż pod przyciskiem „Zatwierdź” (`.ss-auth__submit`) zamiast przycisku z ikoną w akcjach pod formularzem.
 - Strona ustawień konta „Wygląd” nazywa się teraz „Personalizacja” (menu konta, mapa strony, menu ustawień); adres `account/appearance` bez zmian.
 - Klawiatura ekranowa PIN-u: klasyczne klawisze z zaokrąglonymi rogami tuż obok siebie (w formularzu i w oknie); w kroku PIN-u logowania karta z klawiszami wysuwa się spod pola PIN i po zatwierdzeniu (Enter albo „Zatwierdź”) chowa się z powrotem pod pole, zanim formularz zostanie wysłany.
 - Krok PIN-u logowania: klawiatura ekranowa w formularzu zamiast okna — przycisk w polu rozwija klawisze między polem PIN a przyciskiem, w szerokości pola (`x-admiro::pin-field keypad-inline`, `.ss-keypad--inline`; Escape zwija); przycisk „Zatwierdź” (dawniej „Dalej”, tekst `sign_in.pin_submit`) z ikoną Entera jak „Zatwierdź PIN” w klawiaturze.

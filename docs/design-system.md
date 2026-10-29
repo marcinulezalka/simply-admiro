@@ -287,7 +287,8 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   (`data-ss-keypad-expanded`, `aria-expanded`); drugie kliknięcie albo Escape chowa ją z powrotem. Enter w karcie
   działa jak „Zatwierdź PIN”: poprawny PIN chowa kartę pod pole, a potem formularz idzie dalej; przycisk formularza
   „Zatwierdź” (`sign_in.pin_submit`, ikona Entera `corner-down-left`) przy wysuniętej karcie też najpierw ją chowa.
-  Bez animacji przy `prefers-reduced-motion`.
+  Bez animacji przy `prefers-reduced-motion`. „Nie pamiętam PIN-u” jest linkiem wyśrodkowanym tuż pod przyciskiem
+  „Zatwierdź” (`.ss-auth__submit`: przycisk na całą szerokość, link pod nim).
 - **Wiersze rekordów** `.ss-record-rows` / `.ss-record-row` (wygląd wierszy języków w panelu ustawień, np. w teczce
   `.ss-folder`): część główna (`__main`: ikona w kafelku, `__text` z `__name` i `__sub`), fakty `<dl class="__facts">`
   (`__fact`: etykieta mono nad wartością), akcje po prawej (`__side`) i rozwijane szczegóły pod spodem (`__details`);
