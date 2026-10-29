@@ -1,4 +1,4 @@
-{{-- Globalna wyszukiwarka layoutu aplikacji (View\Navigation\SearchBox): formularz GET z polem (skrót „/”), opcjonalnie menu zakresów „Szukaj w” (przełączniki z ikonami, pola `<scopeName>[]`) i lista podpowiedzi (suggestUrl, js/global-search.js). compose: pole w stylu okna czatu (wariant Workspace, środek stopki treści): szare tło, po lewej „+” z menu akcji (search->actions, np. dodaj organizację; admiro::search.actions) i suwaki zakresów zamiast lupy, po prawej zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu otwierają się nad polem. Bez compose — lupa, pole, skrót „/” i suwaki po prawej (top bar). search: SearchBox. --}}
+{{-- Globalna wyszukiwarka layoutu aplikacji (View\Navigation\SearchBox): formularz GET z polem (skrót „/”), opcjonalnie menu zakresów „Szukaj w” (przełączniki z ikonami, pola `<scopeName>[]`) i lista podpowiedzi (suggestUrl, js/global-search.js). compose: pole w stylu okna czatu (wariant Workspace, środek stopki treści): szare tło, po lewej „+” z menu szybkich akcji (search->actions, np. dodaj organizację; admiro::search.actions) zamiast lupy i suwaki zakresów, po prawej zaokrąglony przycisk szukania z rakietą zamiast skrótu „/”; podpowiedzi i menu otwierają się nad polem. Bez compose — lupa, pole, skrót „/” i suwaki po prawej (top bar). search: SearchBox. --}}
 @props(['search', 'compose' => false])
 <form @class(['ss-search', 'ss-search--compose' => $compose]) role="search" method="GET" action="{{ $search->action }}"@if ($search->suggestUrl !== null) data-ss-search-suggest="{{ $search->suggestUrl }}"@endif>
     <label class="ss-sr-only" for="ss-global-search">{{ text('layout.search') }}</label>
@@ -7,7 +7,7 @@
     @endif
     @if ($compose && $search->scopes !== [])
         @include('admiro::search.scopes', ['search' => $search])
-    @else
+    @elseif (! $compose || $search->actions === [])
         <x-admiro::icon name="search" class="ss-search__icon" />
     @endif
     <input class="ss-search__input" id="ss-global-search" name="{{ $search->name }}" type="search" value="{{ $search->value }}" placeholder="{{ $search->placeholder }}" autocomplete="off" aria-describedby="ss-global-search-hint" @if ($search->suggestUrl !== null) role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ss-search-suggestions" @endif data-ss-search>

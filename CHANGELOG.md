@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Wyszukiwarka w stopce Workspace: gdy strefa daje szybkie akcje (`SearchBox::$actions`), „+” z ich menu zastępuje lupę.
 - Identyfikator konta pod nazwą w przycisku konta stopki Workspace, krojem mono (`ZoneAccount::accountIdentifier()`, domyślnie brak; strefa nadpisuje, np. numerem kadrowym).
 - Potwierdzanie akcji w całym systemie (`js/confirm-action.js` w szablonie bazowym): przycisk usuwania (formularz z `_method` = DELETE) i przycisk z `data-ss-confirm` (`accept` — akceptacja) przy pierwszym kliknięciu wciskają się jak przełącznik i pokazują pod sobą „Potwierdź” / „Potwierdzam”, które dopiero wysyła formularz; bez reakcji po 4 s wszystko wraca (pasek odliczania). `data-ss-confirm="off"` wyłącza potwierdzenie.
 - Nagłówek strony: mały prefiks nad tytułem (`eyebrow` w `x-admiro::zone.layout` / `app.layout` / `app.context`, `.ss-context__eyebrow`) i osobny tytuł karty przeglądarki (`pageTitle`). Przełącznik kontekstu z tytułem „Przełącz kontekst” w menu i nową ikoną `context` (dwie nakładające się karty ze strzałkami); zegar w ramce narzędzi stopki stale na przygaszonym tle, ciemniejszy pod kursorem.
