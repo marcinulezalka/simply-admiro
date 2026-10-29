@@ -15,7 +15,7 @@ Jeśli panel wymusza stały katalog (np. `public_html/`), wyślij do niego **tyl
 | `brand/` | źródła marki; serwis używa kopii z `public/` |
 | `docs/` | dokumentacja |
 | `.claude/`, `.git/` | skille AI i historia repozytorium |
-| `.env*` | dane środowiska. Na serwerze `.env` pochodzi z lokalnego `.env.production`, który wysyła `vendor/bin/simplysmart deploy` (bez niego `.env` serwera zostaje bez zmian) |
+| `.env*` | dane środowiska. Na serwerze `.env` jest kopią `.env.production` leżącego na serwerze w katalogu aplikacji (kopiuje go skrypt serwerowy przy każdym `vendor/bin/simplysmart deploy`; bez niego `.env` serwera zostaje bez zmian). Lokalny `.env.production` nie jest wysyłany |
 | `packages/` | paczki pobiera na serwerze Composer z ich repozytoriów git (zob. niżej) |
 | `node_modules/`, `resources/css/`, `resources/js/` | źródła i narzędzia builda; serwer dostaje tylko wynik (zob. niżej) |
 
@@ -36,9 +36,9 @@ php84 ~/bin/composer config -g github-oauth.github.com <token>
 
 Wdrożenie jednym poleceniem z komputera deweloperskiego robi `vendor/bin/simplysmart deploy` z pakietu
 `simplysmart/admiro` (narzędzia deweloperskie, `docs/narzedzia.md` tam; konfiguracja w `infrastructure/deploy.env`:
-konto SSH, katalog, PHP, jednorazowo token). Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go razem
-z lokalnym `.env.production` (na serwerze staje się `.env`; `APP_KEY` serwera zostaje, gdy plik go nie podaje) i uruchamia
-na serwerze skrypt serwerowy z admiro
+konto SSH, katalog, PHP, jednorazowo token). Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go na serwer i uruchamia
+tam skrypt serwerowy z admiro, który najpierw kopiuje `.env.production` serwera (w katalogu aplikacji, utrzymywany ręcznie
+na serwerze) jako `.env` (`APP_KEY` serwera zostaje, gdy plik go nie podaje)
 (Composer, `git pull`, instalacja, `APP_KEY`, migracje, role, słowniki, cache). Pierwszą instalację robi
 `vendor/bin/simplysmart deploy:onboarding`: to samo wdrożenie plus konta z `infrastructure/deploy.onboarding.env`
 (`<strefa>:account:create --skip-existing`, więc można je powtarzać). `vendor/bin/simplysmart deploy:fresh

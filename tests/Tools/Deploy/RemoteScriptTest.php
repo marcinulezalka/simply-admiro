@@ -118,10 +118,10 @@ final class RemoteScriptTest extends TestCase
     }
 
     #[Test]
-    public function skrypt_serwerowy_przejmuje_env_production_i_czysci_config_przed_migracjami(): void
+    public function skrypt_serwerowy_kopiuje_env_production_serwera_i_czysci_config_przed_migracjami(): void
     {
         $script = RemoteScript::fromPackage()->build(new DeployConfig('host', '~/app'));
-        $adopt = strpos($script, 'if [[ -f .env.deploy ]]; then');
+        $adopt = strpos($script, 'if [[ -f .env.production ]]; then');
         $required = strpos($script, '[[ -f .env ]] || fail');
         $migrate = strpos($script, '"$php_bin" artisan migrate --force');
         $configClear = strrpos(substr($script, 0, (int) $migrate), '"$php_bin" artisan config:clear');
@@ -130,6 +130,8 @@ final class RemoteScriptTest extends TestCase
         $this->assertIsInt($required);
         $this->assertLessThan($required, $adopt);
         $this->assertStringContainsString("grep -E '^APP_KEY=.+' .env | tail -n1 >> \"\$env_new\"", $script);
+        $this->assertStringContainsString('cat .env.production > "$env_new"', $script);
+        $this->assertStringNotContainsString('rm -f .env.production', $script);
         $this->assertIsInt($migrate);
         $this->assertIsInt($configClear);
         $this->assertGreaterThan($adopt, $configClear);

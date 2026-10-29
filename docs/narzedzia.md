@@ -93,12 +93,12 @@ Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z rep
 2. sprawdza, czy projekt i paczki z `packages/*/*` są wypchnięte (niewypchnięte commity zatrzymują wdrożenie,
    niezacommitowane zmiany i nieudany `git fetch` dają ostrzeżenie; katalogi bez `.git` są pomijane),
 3. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
-4. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`), a gdy w katalogu projektu jest
-   `.env.production` (poza repozytorium), także jego jako `.env.deploy`; bez tego pliku ostrzega, a `.env` serwera
-   zostaje bez zmian,
+4. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`); środowiska nie wysyła — lokalny
+   `.env.production` zostaje na komputerze deweloperskim,
 5. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`
-   (wysłany `.env.deploy` zastępuje `.env` z tymi samymi uprawnieniami; gdy nie podaje `APP_KEY`, zostaje klucz
-   z dotychczasowego `.env`, bo nowy unieważniłby sesje i zaszyfrowane dane),
+   (`.env.production` leżący na serwerze w katalogu aplikacji jest kopiowany jako `.env` z tymi samymi uprawnieniami
+   i zostaje na miejscu; gdy nie podaje `APP_KEY`, zostaje klucz z dotychczasowego `.env`, bo nowy unieważniłby sesje
+   i zaszyfrowane dane; bez `.env.production` `.env` zostaje bez zmian; stary `.env.deploy` jest usuwany),
    `git pull --ff-only`, token GitHub, `composer install --no-dev`, `APP_KEY`, migracje (po `config:clear`, więc czytają
    bieżący `.env`), role, słowniki, cache
    i skrypt crona `storage/app/cron.sh` (`admiro:cron:script --php=<DEPLOY_PHP>`, gdy Core ma tę komendę; w panelu
