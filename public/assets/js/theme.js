@@ -5,7 +5,8 @@
  * aria-pressed="true". Bez wyboru obowiązuje motyw systemu (jasny albo ciemny, a przy prefers-contrast: more kontrast
  * czarno-biały); bez skryptu przełącznik zostaje ukryty. Kafelek [data-ss-theme-flip] (szybkie ustawienia stopki,
  * x-admiro::app.quick-settings, w [data-ss-theme-flip-control] odsłanianym skryptem) przełącza jasny ↔ ciemny
- * i ma aria-pressed="true" przy ciemnym.
+ * i ma aria-pressed="true" przy ciemnym. Przyciski [data-ss-preference-step] (-1 / 1) w grupie [data-ss-preference]
+ * przesuwają wybór o jeden stopień (np. pomniejsz / powiększ rozmiar tekstu), na końcu zakresu wyłączone.
  *
  * Kolorystyka: meta ss-palettes (x-admiro::page; content: kolorystyki strony po spacji, data-scope: zakres
  * zapamiętania, np. strefa); zapisany wybór z tej listy ustawia data-palette na <html>, przyciski
@@ -136,6 +137,13 @@
             group.querySelectorAll('[data-ss-preference-value]').forEach((button) => {
                 button.setAttribute('aria-pressed', String(name in preferences && button.dataset.ssPreferenceValue === currentPreference(name)));
             });
+            group.querySelectorAll('[data-ss-preference-step]').forEach((button) => {
+                const values = preferences[name]?.values ?? [];
+                const index = values.indexOf(currentPreference(name));
+                const step = Number(button.dataset.ssPreferenceStep);
+
+                button.disabled = values.length === 0 || (step < 0 ? index <= 0 : index >= values.length - 1);
+            });
         });
     };
 
@@ -197,6 +205,20 @@
 
                     applyPreference(name, value);
                     write(preference.key, value === preference.fallback ? '' : value);
+                    sync();
+                });
+            });
+            group.querySelectorAll('[data-ss-preference-step]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (preference === undefined) {
+                        return;
+                    }
+
+                    const index = preference.values.indexOf(currentPreference(name));
+                    const next = preference.values[Math.min(preference.values.length - 1, Math.max(0, index + Number(button.dataset.ssPreferenceStep)))];
+
+                    applyPreference(name, next);
+                    write(preference.key, next === preference.fallback ? '' : next);
                     sync();
                 });
             });

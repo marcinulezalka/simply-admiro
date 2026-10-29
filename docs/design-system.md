@@ -444,12 +444,13 @@ dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-sw
 `Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa z nazwą i ikoną rodzaju (organizacja `building`, jednostka `map-pin`, departament `grid`; nazwa rodzaju w podpowiedzi) z rolami konta, jedno
 kliknięcie — `account.context.switch` — ustawia organizację i rolę), zegar (`x-admiro::app.calendar`: ikona kalendarza, duża godzina krojem mono i mniejsza data „27.10.2026”, odświeżane
 co minutę, z licznikiem nieprzeczytanych powiadomień; `js/calendar-panel.js`, `View\Calendar\CalendarMonth` z `CalendarMonths`),
-który otwiera z prawej, na wysokość obszaru treści, panel boczny `.ss-side-panel` z sekcjami jedna pod drugą — rozsuwanymi
-razem, zwijanymi osobno (`<details open>` z chevronem): powiadomienia (`x-admiro::app.notification-tabs`: przełącznik kategorii
+który otwiera z prawej, na wysokość obszaru treści, panel boczny `.ss-side-panel` z sekcjami obok siebie w dwóch kolumnach (na wąskim ekranie jedna pod drugą) —
+rozsuwanymi razem, zwijanymi osobno (`<details open>` z chevronem): powiadomienia (`x-admiro::app.notification-tabs`: przełącznik kategorii
 `.ss-tabs--slider` — powiadomienia, komunikaty systemowe — toasty bieżącej strony —, skrzynka e-mail i, gdy strefa je daje przez
 `Contracts\ZoneNotifications`, ostatnie wpisy dziennika zdarzeń) i kalendarz (miesiąc `.ss-mini-calendar`, dni wolne z kropką,
-podgląd wybranego dnia); na dole pasek ikon wyglądu `.ss-side-panel__tools` (`js/theme.js`): tryb jasny/ciemny, motywy
-wysokiego kontrastu WCAG, rozmiar tekstu A / AA, powiększenie (bardzo duży tekst) i koło zębate do ustawień (pierwszy skrót
+podgląd wybranego dnia); na dole trzy podpisane wiersze `.ss-side-panel__tools` (`js/theme.js`): ustawienia (koło zębate),
+tryby kolorów (jasny/ciemny, motywy wysokiego kontrastu WCAG) oraz rozmiar i powiększenie (A, AA, pomniejsz −, powiększ + —
+`[data-ss-preference-step]` o jeden stopień rozmiaru tekstu); koło zębate prowadzi do ustawień (pierwszy skrót
 strefy z ikoną `settings`, np. ustawienia globalne; bez niego ustawienia konta). Dzwonka i szybkich ustawień w stopce nie ma); globalna wyszukiwarka `View\Navigation\SearchBox` na środku top baru (formularz GET, skrót „/”; opcjonalnie zakresy
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
 fragment HTML z widoku `admiro::search.suggestions` z grupami `SearchResultGroup` i wynikami `SearchResult` z flagami

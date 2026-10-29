@@ -8171,13 +8171,43 @@ a.ss-notification:focus-visible {
 
 .ss-side-panel__tools {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: var(--ss-space-2);
-    align-items: center;
-    justify-content: space-between;
     margin-top: auto;
     padding-top: var(--ss-space-3);
     border-top: 1px solid var(--ss-color-border);
+}
+
+.ss-side-panel__row {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ss-side-panel__row-label {
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Powiadomienia i kalendarz obok siebie w szerszym panelu; na wąskim ekranie jedna pod drugą. */
+.ss-side-panel__columns {
+    display: grid;
+    gap: var(--ss-space-3);
+    align-items: start;
+}
+
+.ss-side-panel:has(.ss-side-panel__columns--two) {
+    width: min(46rem, calc(100vw - 2 * var(--ss-space-4)));
+}
+
+@media (min-width: 48rem) {
+    .ss-side-panel__columns--two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 .ss-side-panel__tool-group {
