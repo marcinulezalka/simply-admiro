@@ -7500,6 +7500,88 @@ a.ss-notification:focus-visible {
     grid-area: tools;
 }
 
+/*
+ * .ss-quick-settings — szybkie ustawienia w ramce narzędzi stopki Workspace (x-admiro::app.quick-settings): panel nad
+ * stopką, od prawej, z tytułem i siatką kafelków jak w Windows czy Ubuntu (__tile: ikona nad etykietą, zaokrąglony
+ * kafelek na tle surface-muted; bieżąca strona — aria-current — i włączony tryb ciemny — aria-pressed — w kolorach akcentu).
+ */
+.ss-quick-settings {
+    position: relative;
+}
+
+.ss-quick-settings__panel {
+    top: auto;
+    right: 0;
+    bottom: calc(100% + var(--ss-space-2));
+    left: auto;
+    width: min(20rem, calc(100vw - 2 * var(--ss-space-4)));
+    padding: var(--ss-space-3);
+}
+
+.ss-quick-settings__title {
+    margin: 0 0 var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-quick-settings__tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-quick-settings__tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 4.75rem;
+    padding: var(--ss-space-2);
+    border: 1px solid transparent;
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-text);
+    font: inherit;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.ss-quick-settings__tile:hover {
+    border-color: var(--ss-color-border-strong);
+}
+
+.ss-quick-settings__tile:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-quick-settings__tile[aria-current="page"],
+.ss-quick-settings__tile[aria-pressed="true"] {
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-quick-settings__icon {
+    width: 1.375rem;
+    height: 1.375rem;
+}
+
+.ss-quick-settings__label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
 /* Ramka narzędzi: przełącznik kontekstu, skróty, dzwonek i kalendarz w jednej obwódce, oddzielone pionowymi podziałkami;
    przyciski w środku bez własnych ramek. Każdy element dalej otwiera swój panel (menu nad stopką, panele z prawej). */
 .ss-workspace-footer__tools {

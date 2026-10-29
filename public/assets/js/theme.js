@@ -3,7 +3,9 @@
  * (localStorage) ustawia data-theme na <html> od razu, w <head>, zanim strona się narysuje (bez błysku); przyciski
  * [data-ss-theme] w przełączniku [data-ss-theme-toggle] (x-admiro::theme-toggle) ustawiają motyw, a wybrany ma
  * aria-pressed="true". Bez wyboru obowiązuje motyw systemu (jasny albo ciemny, a przy prefers-contrast: more kontrast
- * czarno-biały); bez skryptu przełącznik zostaje ukryty.
+ * czarno-biały); bez skryptu przełącznik zostaje ukryty. Kafelek [data-ss-theme-flip] (szybkie ustawienia stopki,
+ * x-admiro::app.quick-settings, w [data-ss-theme-flip-control] odsłanianym skryptem) przełącza jasny ↔ ciemny
+ * i ma aria-pressed="true" przy ciemnym.
  *
  * Kolorystyka: meta ss-palettes (x-admiro::page; content: kolorystyki strony po spacji, data-scope: zakres
  * zapamiętania, np. strefa); zapisany wybór z tej listy ustawia data-palette na <html>, przyciski
@@ -122,6 +124,9 @@
         document.querySelectorAll('[data-ss-theme]').forEach((button) => {
             button.setAttribute('aria-pressed', String(button.dataset.ssTheme === current()));
         });
+        document.querySelectorAll('[data-ss-theme-flip]').forEach((button) => {
+            button.setAttribute('aria-pressed', String(current() === 'dark'));
+        });
         document.querySelectorAll('[data-ss-palette]').forEach((button) => {
             button.setAttribute('aria-pressed', String(button.dataset.ssPalette === (root.dataset.palette ?? '')));
         });
@@ -147,6 +152,19 @@
                     write(STORAGE_KEY, button.dataset.ssTheme);
                     sync();
                 });
+            });
+        });
+
+        document.querySelectorAll('[data-ss-theme-flip-control]').forEach((control) => {
+            control.hidden = false;
+        });
+        document.querySelectorAll('[data-ss-theme-flip]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const next = current() === 'dark' ? 'light' : 'dark';
+
+                root.dataset.theme = next;
+                write(STORAGE_KEY, next);
+                sync();
             });
         });
 

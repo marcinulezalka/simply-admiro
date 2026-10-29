@@ -44,6 +44,7 @@
         :navigation="$menu"
         :sitemap="$sitemap"
         :shortcuts="$workspace && $navigation instanceof \Simplysmart\Admiro\Contracts\ZoneShortcuts ? $navigation->shortcuts() : []"
+        :home-url="\Illuminate\Support\Facades\Route::has($zone->routeName(\Simplysmart\Admiro\Zones\ZoneRedirects::HOME_ROUTE)) ? route($zone->routeName(\Simplysmart\Admiro\Zones\ZoneRedirects::HOME_ROUTE)) : null"
         :calendar="$workspace ? app(\Simplysmart\Admiro\View\Calendar\CalendarMonths::class)->current() : null"
         :settings="$workspace && ! $settingsMode ? null : $settingsMenu"
         :settings-url="$settingsMenu?->url"

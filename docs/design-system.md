@@ -436,9 +436,11 @@ zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), p
 (`.ss-workspace-footer__tools`: obwódka, pionowe podziałki między elementami, przyciski w środku bez własnych ramek; każdy
 dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-switch` (menu nad stopką; konteksty z
 `Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa „Rodzaj · nazwa” z rolami konta, jedno
-kliknięcie — `account.context.switch` — ustawia organizację i rolę), skróty strefy (`Contracts\ZoneShortcuts::shortcuts()`,
-`.ss-workspace-footer__shortcuts`: ikony-odnośniki z podpowiedzią, bieżący w kolorach odwróconych; np. ustawienia,
-w admiro dashboard, ulubione i pulpit roboczy), dzwonek powiadomień z panelem z prawej
+kliknięcie — `account.context.switch` — ustawia organizację i rolę), szybkie ustawienia (`x-admiro::app.quick-settings`, `.ss-quick-settings`: ikona suwaków otwiera nad stopką, od prawej, panel
+kafelków jak w Windows czy Ubuntu — ikona nad etykietą, bieżąca strona i włączony tryb w kolorach akcentu: skróty strefy
+`Contracts\ZoneShortcuts::shortcuts()` (np. ustawienia globalne; w admiro dashboard, ulubione i pulpit roboczy), dashboard
+strefy (`homeUrl`, pomijany, gdy skrót ma ten sam adres), mapa aplikacji i tryb ciemny — `[data-ss-theme-flip]` w `js/theme.js`
+przełącza jasny ↔ ciemny), dzwonek powiadomień z panelem z prawej
 (`x-admiro::app.notifications right`, `.ss-notifications--right`: karta na wysokość obszaru treści — od góry okna do stopki,
 której nie zakrywa (`--ss-workspace-footer-height`) —, w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik kategorii
 z ikonami i suwakiem `.ss-tabs--slider` (`js/tabs.js`): powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i — gdy strefa
