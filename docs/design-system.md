@@ -294,10 +294,12 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   (`__fact`: etykieta mono nad wartością), akcje po prawej (`__side`) i rozwijane szczegóły pod spodem (`__details`);
   `--primary` — ramka akcentu, `--muted` — rekord wyłączony albo pusta lista.
 - **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
-  z motywem w tle (poświata akcentu w rogu i koncentryczne łuki) i miękkim, płytkim cieniem; u góry podpis (`kicker`),
-  nazwa krojem nagłówków z numerami rejestrowymi pod nią (NIP · REGON · KRS, krój mono) i pod linią adres, telefon,
-  e-mail i e-mail do rozliczeń z etykietą (puste pomijane); z `href` cała karta jest odnośnikiem ze strzałką i lekkim
-  uniesieniem pod kursorem. Karta izoluje warstwy, więc strefa może podmienić motyw tła własnym `::before`
+  z motywem w tle (poświata akcentu w rogu i koncentryczne łuki) i miękkim, płytkim cieniem; nazwa skrócona krojem
+  nagłówków, zaraz pod nią podpis (`kicker`) i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są;
+  krój mono), niżej bez linii oddzielającej adres z krajem, telefon stacjonarny (`phone`), komórkowy (`smartphone`),
+  e-mail i e-mail do rozliczeń (ikona paragonu `receipt`; nazwy pól w `title`; puste pomijane); z `href` cała karta jest
+  odnośnikiem ze strzałką i lekkim uniesieniem pod kursorem. **Telefon z prefiksem kraju** (`.ss-phone`): wąska lista
+  prefiksów (`PL +48`) obok pola numeru. Karta izoluje warstwy, więc strefa może podmienić motyw tła własnym `::before`
   (`z-index: -1`, przycięty krawędzią karty).
 - **Obszar ustawień** (`.ss-settings-area`, layout Workspace z `Contracts\ZoneAppLayout::settingsArea()`): strony
   ustawień tworzą jeden obszar jak ustawienia systemu — po lewej grupy menu ustawień jako lista kategorii (karty-odnośniki

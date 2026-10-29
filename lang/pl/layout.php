@@ -139,6 +139,7 @@ return [
         'address' => 'Dane adresowe',
         'short_name_hint' => 'Krótka nazwa pod imieniem i nazwiskiem w menu aplikacji. Bez niej wyświetlana jest pełna nazwa.',
         'billing_email_hint' => 'Na ten adres trafiają faktury i rozliczenia. Pusty przy zakładaniu — użyjemy adresu e-mail organizacji.',
+        'phone_prefix' => 'Prefiks kraju',
     ],
 
 ];

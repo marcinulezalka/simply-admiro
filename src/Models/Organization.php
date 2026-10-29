@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Models;
 
+use Simplysmart\Admiro\Models\Dictionaries\Country;
 use Simplysmart\Admiro\Models\Relations\BelongsToParentOrganization;
+use Simplysmart\Admiro\Models\Relations\LocatedInCountry;
 
 /**
  * Organizacja: firma korzystająca z aplikacji (drzewo przez `parent_id`, np. firma → oddział), wspólna dla stref.
@@ -22,7 +24,8 @@ use Simplysmart\Admiro\Models\Relations\BelongsToParentOrganization;
  * Organizacja operatora aplikacji (OPERATOR_ID, seeder Core) jest zakresem stref bez firm klientów; strefa ustawia
  * ją jawnie jako bieżącą organizację spatie (domyślnej nie ma). Dane firmy są opcjonalne: nazwa skrócona (druga linia
  * pod imieniem i nazwiskiem w menu, shortName()), NIP (10 cyfr, Rules\Nip; oddział może mieć NIP firmy), REGON, KRS,
- * adres, telefon, e-mail i e-mail do rozliczeń (przy zakładaniu bez niego — e-mail organizacji).
+ * adres z krajem (`country_code`, kod alpha-2 słownika krajów, relacja country()), telefon stacjonarny i komórkowy (z prefiksem
+ * kraju, np. `+48 22 100 20 30`), e-mail i e-mail do rozliczeń (przy zakładaniu bez niego — e-mail organizacji).
  *
  * Departament (`is_department`, isDepartment()) to wewnętrzna agregacja: dział jednostki nadrzędnej (organizacji bez
  * flagi), z własnymi członkami i rolami, ale bez własnych danych — dane trzyma jego jednostka
@@ -37,13 +40,17 @@ use Simplysmart\Admiro\Models\Relations\BelongsToParentOrganization;
  * @property ?string $street
  * @property ?string $postal_code
  * @property ?string $city
+ * @property ?string $country_code
+ * @property-read Country|null $country
  * @property ?string $phone
+ * @property ?string $mobile_phone
  * @property ?string $email
  * @property ?string $billing_email
  */
 final class Organization extends DataModel
 {
     use BelongsToParentOrganization;
+    use LocatedInCountry;
 
     public const string TABLE = 'organizations';
 
@@ -68,7 +75,11 @@ final class Organization extends DataModel
 
     public const string CITY = 'city';
 
+    public const string COUNTRY_CODE = 'country_code';
+
     public const string PHONE = 'phone';
+
+    public const string MOBILE_PHONE = 'mobile_phone';
 
     public const string EMAIL = 'email';
 
@@ -84,12 +95,21 @@ final class Organization extends DataModel
         self::REGON => 14,
         self::KRS => 10,
         self::PHONE => 32,
+        self::MOBILE_PHONE => 32,
         self::EMAIL => 255,
         self::BILLING_EMAIL => 255,
         self::STREET => 255,
         self::POSTAL_CODE => 10,
         self::CITY => 100,
+        self::COUNTRY_CODE => 2,
     ];
+
+    /**
+     * Kolumny telefonów (zapisywane z prefiksem kraju, Organizations\ContactCountries).
+     *
+     * @var list<string>
+     */
+    public const array PHONES = [self::PHONE, self::MOBILE_PHONE];
 
     protected $table = self::TABLE;
 

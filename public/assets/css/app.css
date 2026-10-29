@@ -5917,10 +5917,31 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * .ss-phone — telefon z prefiksem kraju (x-admiro::organization.fields): wąska lista prefiksów (__prefix) przy dolnej
+ * krawędzi pola numeru (__number), które wypełnia resztę wiersza.
+ */
+.ss-phone {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: flex-end;
+    min-width: 0;
+}
+
+.ss-phone__prefix {
+    flex: none;
+    width: auto;
+}
+
+.ss-phone__number {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/**
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
- * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, podpis
- * (__kicker) u góry, nazwa krojem nagłówków (__name) z numerami rejestrowymi (__registry, krój mono) i dane pod linią
- * (__details, __detail z ikoną i opcjonalną etykietą __detail-label); --link: cała karta jest odnośnikiem, strzałka
+ * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, nazwa
+ * krojem nagłówków (__name), pod nią podpis (__kicker) i numery rejestrowe (__registry, krój mono), niżej dane bez linii
+ * oddzielającej (__details, __detail z ikoną); --link: cała karta jest odnośnikiem, strzałka
  * (__arrow) i lekkie uniesienie pod kursorem. Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
  * jako ::before z z-index: -1 nad tłem, a pod treścią (np. ikona przycięta krawędzią karty).
  */
@@ -6013,8 +6034,6 @@ a.ss-notification:focus-visible {
 .ss-business-card__details {
     display: grid;
     gap: var(--ss-space-1);
-    padding-top: var(--ss-space-3);
-    border-top: 1px solid var(--ss-color-border);
     font-size: 0.875rem;
 }
 
@@ -6033,10 +6052,6 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-muted);
 }
 
-.ss-business-card__detail-label {
-    color: var(--ss-color-muted);
-    font-size: 0.75rem;
-}
 
 @media (prefers-reduced-motion: reduce) {
     .ss-business-card--link,

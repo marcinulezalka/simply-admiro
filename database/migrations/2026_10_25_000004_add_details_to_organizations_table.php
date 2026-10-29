@@ -18,17 +18,33 @@ use Simplysmart\Admiro\Database\History;
 use Simplysmart\Admiro\Models\Organization;
 
 /**
- * Dane firmy organizacji (wszystkie opcjonalne): NIP, REGON, KRS, telefon, e-mail, e-mail do rozliczeń i adres
- * (długości z Organization::DETAIL_LENGTHS). NIP nie jest unikalny — oddział może mieć NIP firmy. Triggery historii
- * są przebudowywane, więc historia zapisuje nowe kolumny.
+ * Dane firmy organizacji (wszystkie opcjonalne): NIP, REGON, KRS, telefon, e-mail, e-mail do rozliczeń i adres.
+ * Lista kolumn z długościami jest zamrożona w COLUMNS (stan z tej migracji): kolejne kolumny danych firmy dodają
+ * kolejne migracje, choć Organization::DETAIL_LENGTHS rośnie. NIP nie jest unikalny — oddział może mieć NIP firmy.
+ * Triggery historii są przebudowywane, więc historia zapisuje nowe kolumny.
  */
 return new class extends Migration {
+    /**
+     * @var array<string, int>
+     */
+    private const array COLUMNS = [
+        Organization::NIP => 10,
+        Organization::REGON => 14,
+        Organization::KRS => 10,
+        Organization::PHONE => 32,
+        Organization::EMAIL => 255,
+        Organization::BILLING_EMAIL => 255,
+        Organization::STREET => 255,
+        Organization::POSTAL_CODE => 10,
+        Organization::CITY => 100,
+    ];
+
     public function up(): void
     {
         Schema::table(Organization::TABLE, static function (Blueprint $table): void {
             $after = Organization::SHORT_NAME;
 
-            foreach (Organization::DETAIL_LENGTHS as $column => $length) {
+            foreach (self::COLUMNS as $column => $length) {
                 $table->string($column, $length)->nullable()->after($after);
                 $after = $column;
             }
@@ -43,7 +59,7 @@ return new class extends Migration {
     {
         Schema::table(Organization::TABLE, static function (Blueprint $table): void {
             $table->dropIndex([Organization::NIP]);
-            $table->dropColumn(array_keys(Organization::DETAIL_LENGTHS));
+            $table->dropColumn(array_keys(self::COLUMNS));
         });
 
         app(History::class)->sync(Organization::TABLE);

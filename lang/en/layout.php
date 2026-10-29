@@ -139,6 +139,7 @@ return [
         'address' => 'Address',
         'short_name_hint' => 'A short name shown under the person’s name in the application menu. Without it the full name is shown.',
         'billing_email_hint' => 'Invoices and billing go to this address. Left empty when creating — the organization e-mail is used.',
+        'phone_prefix' => 'Country code',
     ],
 
 ];

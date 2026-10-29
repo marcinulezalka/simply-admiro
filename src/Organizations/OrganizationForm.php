@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Organizations;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Simplysmart\Admiro\Models\Organization;
 use Simplysmart\Admiro\Rules\Nip;
@@ -21,11 +22,19 @@ use Simplysmart\Admiro\Rules\Nip;
 /**
  * Walidacja formularza danych organizacji (widok `admiro::organizations.fields`), wspólna dla paneli stref:
  * nazwa, nazwa skrócona, NIP z sumą kontrolną, REGON (9 albo 14 cyfr), KRS (10 cyfr), kod pocztowy 00-000, adresy
- * e-mail i długości kolumn z Organization::DETAIL_LENGTHS. Puste pola znaczą brak wartości.
+ * e-mail, kraj adresu i kraje prefiksów telefonów spośród aktywnych krajów (ContactCountries), telefony z cyfr i spacji
+ * (zapisywane z prefiksem kraju) i długości kolumn z Organization::DETAIL_LENGTHS. Puste pola znaczą brak wartości.
  */
 final readonly class OrganizationForm
 {
     private const int NAME_MAX_LENGTH = 255;
+
+    /** Najdłuższy numer bez prefiksu (kolumna mieści prefiks, spację i numer). */
+    private const int PHONE_NUMBER_MAX_LENGTH = 24;
+
+    public function __construct(
+        private ContactCountries $countries,
+    ) {}
 
     /**
      * @throws ValidationException
@@ -48,7 +57,11 @@ final readonly class OrganizationForm
             $value = self::filled($validated[$column] ?? null);
 
             if ($value !== null) {
-                $details[$column] = $column === Organization::NIP ? Nip::normalize($value) : $value;
+                $details[$column] = match (true) {
+                    $column === Organization::NIP => Nip::normalize($value),
+                    in_array($column, Organization::PHONES, true) => $this->countries->compose(self::filled($validated[ContactCountries::prefixField($column)] ?? null), $value),
+                    default => $value,
+                };
             }
         }
 
@@ -65,6 +78,12 @@ final readonly class OrganizationForm
             Organization::SHORT_NAME => ['nullable', 'string', 'max:' . Organization::SHORT_NAME_MAX_LENGTH],
         ];
 
+        $codes = $this->countries->codes();
+
+        foreach (Organization::PHONES as $phone) {
+            $rules[ContactCountries::prefixField($phone)] = ['nullable', 'string', Rule::in($codes)];
+        }
+
         foreach (Organization::DETAIL_LENGTHS as $column => $length) {
             $rules[$column] = ['nullable', 'string', ...match ($column) {
                 Organization::NIP => ['max:20', new Nip()],
@@ -72,6 +91,8 @@ final readonly class OrganizationForm
                 Organization::KRS => ['regex:/^\d{10}$/'],
                 Organization::POSTAL_CODE => ['regex:/^\d{2}-\d{3}$/'],
                 Organization::EMAIL, Organization::BILLING_EMAIL => ['email:rfc', 'max:' . $length],
+                Organization::PHONE, Organization::MOBILE_PHONE => ['regex:/^\+?[0-9][0-9 ()-]*$/', 'max:' . self::PHONE_NUMBER_MAX_LENGTH],
+                Organization::COUNTRY_CODE => [Rule::in($codes)],
                 default => ['max:' . $length],
             }];
         }

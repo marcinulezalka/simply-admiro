@@ -402,10 +402,14 @@ i kolumn są w `Permissions\PermissionTables`.
 - **Nazwa skrócona** (`short_name`, opcjonalna, do `Organization::SHORT_NAME_MAX_LENGTH` znaków): druga linia
   pod imieniem i nazwiskiem w menu aplikacji; `Organization::shortName()` daje ją, a bez niej pełną nazwę.
 - **Dane firmy** (opcjonalne, długości w `Organization::DETAIL_LENGTHS`): `nip` (10 cyfr, `Rules\Nip`, nieunikalny —
-  oddział może mieć NIP firmy), `regon`, `krs`, `phone`, `email`, `billing_email` (e-mail do rozliczeń; nowa
-  organizacja bez niego dostaje `email`), `street`, `postal_code`, `city` (`Organization::address()`). Formularz
-  w panelach: walidacja `Organizations\OrganizationForm` → `OrganizationData`, widok
-  `x-admiro::organization.fields` (karty: dane organizacji, kontaktowe, adresowe).
+  oddział może mieć NIP firmy), `regon`, `krs`, `phone` (telefon stacjonarny) i `mobile_phone` (komórkowy) — oba
+  zapisywane z prefiksem kraju (`+48 22 100 20 30`; `Organization::PHONES`), `email`, `billing_email` (e-mail do
+  rozliczeń; nowa organizacja bez niego dostaje `email`), `street`, `postal_code`, `city` (`Organization::address()`)
+  i `country_code` (kraj adresu, kod alpha-2 słownika krajów, relacja `country()` — `Relations\LocatedInCountry`).
+  Formularz w panelach: walidacja `Organizations\OrganizationForm` → `OrganizationData`, widok
+  `x-admiro::organization.fields` (karty: dane organizacji, kontaktowe, adresowe); kraje i prefiksy telefonów daje
+  `Organizations\ContactCountries` (aktywne kraje, `dial_code`; w nowym wpisie kraj domyślny aplikacji). Kolumny
+  dodane później dochodzą własną migracją — starsza migracja ma swoją listę kolumn zamrożoną, nie `DETAIL_LENGTHS`.
 - **Departamenty** (`is_department`, `Organization::isDepartment()`): wewnętrzna agregacja, czyli dział
   jednostki — organizacji bez flagi. Departament zakłada `OrganizationManagement::createDepartment($dane, $jednostka)`;
   leży zawsze bezpośrednio pod jednostką, nie ma pod sobą żadnej organizacji i nie staje się korzeniem drzewa (każde
