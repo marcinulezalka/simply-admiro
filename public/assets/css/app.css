@@ -7641,7 +7641,8 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-on-inverse);
 }
 
-/* Menu narzędzi stopki (przełącznik kontekstu) otwiera się nad stopką, od prawej krawędzi. */
+/* Menu narzędzi stopki (przełącznik kontekstu) otwiera się nad stopką, od prawej krawędzi, dwa razy szersze od menu
+   konta (30rem; na wąskim ekranie szerokość okna bez marginesów). */
 .ss-workspace-footer__tools .ss-context-switch {
     position: relative;
 }
@@ -7651,6 +7652,8 @@ a.ss-notification:focus-visible {
     right: 0;
     bottom: calc(100% + var(--ss-space-2));
     left: auto;
+    width: min(30rem, calc(100vw - 2 * var(--ss-space-4)));
+    min-width: 0;
 }
 
 /* Nazwa konta w przycisku stopki z identyfikatorem pod nią (np. numer kadrowy) — mały, przygaszony, krojem mono. */
