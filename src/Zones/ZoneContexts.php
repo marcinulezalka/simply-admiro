@@ -30,7 +30,8 @@ use Simplysmart\Admiro\View\Navigation\NavigationGroup;
  * „Rodzaj · nazwa” z rolami konta w niej (strefa z `role_contexts`), a bez ról kontekstowych — jako pozycja listy
  * organizacji. Pozycja to formularz POST na `account.context.switch` z polem FIELD = `<token organizacji>:<rola>`,
  * więc jedno kliknięcie ustawia organizację i rolę z jej uprawnieniami. Nazwy rodzajów: `account.context_kinds.*`
- * (strefa nadpisuje je w swoich tekstach, ZoneDefinition::textKey()). Mniej niż dwa konteksty — brak przełącznika.
+ * (strefa nadpisuje je w swoich tekstach, ZoneDefinition::textKey()). Przełącznik jest widoczny już przy jednym kontekście
+ * (pokazuje bieżący); bez kontekstów — brak przełącznika.
  */
 final readonly class ZoneContexts
 {
@@ -92,7 +93,7 @@ final readonly class ZoneContexts
             $groups[] = new NavigationGroup(text($zone->textKey('account.organization')), $plain);
         }
 
-        return $count > 1 ? $groups : [];
+        return $count > 0 ? $groups : [];
     }
 
     /**
@@ -104,7 +105,7 @@ final readonly class ZoneContexts
     {
         $roles = $zone->roleContexts && $organizationId !== null ? $this->roles->of($account, $organizationId) : [];
 
-        if (count($roles) < 2) {
+        if ($roles === []) {
             return [];
         }
 
