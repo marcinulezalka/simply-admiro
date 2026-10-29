@@ -433,14 +433,14 @@ przełączniki z ikonami `SearchScope::$icon` — i zaokrąglony przycisk szukan
 polem), mapa strony rozsuwana pod paskiem (odnośniki do `#ss-sitemap`, bez
 przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nimi, kolumny dopasowane do szerokości,
 zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej jedna wspólna ramka narzędzi
-(`.ss-workspace-footer__tools`: obwódka, pionowe podziałki między elementami, przyciski w środku bez własnych ramek; każdy
+(`.ss-workspace-footer__tools`: obwódka bez podziałek, przyciski w środku bez własnych ramek; każdy
 dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-switch` (menu nad stopką; konteksty z
 `Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa „Rodzaj · nazwa” z rolami konta, jedno
-kliknięcie — `account.context.switch` — ustawia organizację i rolę), szybkie ustawienia (`x-admiro::app.quick-settings`, `.ss-quick-settings`: ikona suwaków otwiera nad stopką, od prawej, panel
-kafelków jak w Windows czy Ubuntu — ikona nad etykietą, bieżąca strona i włączony tryb w kolorach akcentu: skróty strefy
+kliknięcie — `account.context.switch` — ustawia organizację i rolę), szybkie ustawienia (`x-admiro::app.quick-settings`, `.ss-quick-settings`: ikona suwaków otwiera nad stopką, od prawej, menu
+w stylu menu konta (lista z ikonami, bieżąca strona wyróżniona): skróty strefy
 `Contracts\ZoneShortcuts::shortcuts()` (np. ustawienia globalne; w admiro dashboard, ulubione i pulpit roboczy), dashboard
-strefy (`homeUrl`, pomijany, gdy skrót ma ten sam adres), mapa aplikacji i tryb ciemny — `[data-ss-theme-flip]` w `js/theme.js`
-przełącza jasny ↔ ciemny), dzwonek powiadomień z panelem z prawej
+strefy (`homeUrl`, pomijany, gdy skrót ma ten sam adres), mapa aplikacji, a pod linią tryb ciemny — `[data-ss-theme-flip]` w `js/theme.js`
+przełącza jasny ↔ ciemny, haczyk przy włączonym), dzwonek powiadomień z panelem z prawej
 (`x-admiro::app.notifications right`, `.ss-notifications--right`: karta na wysokość obszaru treści — od góry okna do stopki,
 której nie zakrywa (`--ss-workspace-footer-height`) —, w nagłówku ikona dzwonka, tytuł i zamknięcie, pod nim przełącznik kategorii
 z ikonami i suwakiem `.ss-tabs--slider` (`js/tabs.js`): powiadomienia, skrzynka e-mail (integracja w przygotowaniu) i — gdy strefa

@@ -1,4 +1,4 @@
-{{-- Szybkie ustawienia w ramce narzędzi stopki Workspace (jak w Windows czy Ubuntu): przycisk z ikoną suwaków `settings` otwiera nad stopką, od prawej, panel kafelków (<details data-ss-dropdown>) — skróty strefy (items: list<View\Navigation\NavigationItem> z Contracts\ZoneShortcuts, np. ustawienia globalne), dashboard (homeUrl, pomijany, gdy skrót ma ten sam adres), mapa aplikacji (#ss-sitemap) i tryb ciemny (przycisk [data-ss-theme-flip] w js/theme.js przełącza jasny ↔ ciemny, aria-pressed przy ciemnym; bez skryptu ukryty). Kafelek: ikona nad krótką etykietą, bieżąca strona i włączony tryb w kolorach akcentu. --}}
+{{-- Szybkie ustawienia w ramce narzędzi stopki Workspace: przycisk z ikoną suwaków `settings` otwiera nad stopką, od prawej, menu w stylu menu konta po lewej (details z data-ss-dropdown, lista .ss-account-menu__list z ikonami) — skróty strefy (items: list<View\Navigation\NavigationItem> z Contracts\ZoneShortcuts, np. ustawienia globalne), dashboard (homeUrl, pomijany, gdy skrót ma ten sam adres) i mapa aplikacji (#ss-sitemap); pod linią tryb ciemny (przycisk [data-ss-theme-flip] w js/theme.js przełącza jasny ↔ ciemny, haczyk przy włączonym — aria-pressed; bez skryptu ukryty). Bieżąca strona wyróżniona jak w menu konta. --}}
 @props(['items' => [], 'homeUrl' => null, 'toggleClass' => 'ss-icon-button'])
 @php
     $tiles = $items;
@@ -15,22 +15,15 @@
         <span class="ss-sr-only">{{ text('layout.quick_settings') }}</span>
     </summary>
     <div class="ss-account-menu__panel ss-quick-settings__panel">
-        <p class="ss-quick-settings__title">{{ text('layout.quick_settings') }}</p>
-        <ul class="ss-quick-settings__tiles">
+        <ul class="ss-account-menu__list" aria-label="{{ text('layout.quick_settings') }}">
             @foreach ($tiles as $tile)
-                <li>
-                    <a class="ss-quick-settings__tile" href="{{ $tile->url }}" @if ($tile->current) aria-current="page" @endif>
-                        <x-admiro::icon :name="$tile->icon" class="ss-quick-settings__icon" />
-                        <span class="ss-quick-settings__label">{{ $tile->label }}</span>
-                    </a>
-                </li>
+                <li><a class="ss-account-menu__link" href="{{ $tile->url }}" @if ($tile->current) aria-current="page" @endif><x-admiro::icon :name="$tile->icon" class="ss-account-menu__icon" />{{ $tile->label }}</a></li>
             @endforeach
-            <li data-ss-theme-flip-control hidden>
-                <button class="ss-quick-settings__tile" type="button" aria-pressed="false" data-ss-theme-flip>
-                    <x-admiro::icon name="moon" class="ss-quick-settings__icon" />
-                    <span class="ss-quick-settings__label">{{ text('layout.theme_dark') }}</span>
-                </button>
-            </li>
         </ul>
+        <div class="ss-quick-settings__theme" data-ss-theme-flip-control hidden>
+            <button class="ss-account-menu__link ss-quick-settings__flip" type="button" aria-pressed="false" data-ss-theme-flip>
+                <x-admiro::icon name="moon" class="ss-account-menu__icon" />{{ text('layout.theme_dark') }}<x-admiro::icon name="check" class="ss-quick-settings__check" />
+            </button>
+        </div>
     </div>
 </details>
