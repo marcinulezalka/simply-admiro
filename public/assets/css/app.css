@@ -5948,65 +5948,84 @@ a.ss-notification:focus-visible {
 }
 
 /**
- * .ss-confirm — potwierdzanie akcji (js/confirm-action.js): pierwszy przycisk wciśnięty jak przełącznik
- * ([data-ss-confirm-armed]: kolory odwrócone), pod nim przycisk potwierdzenia (__submit; --delete w kolorze błędu,
- * --accept w akcencie) z paskiem odliczającym czas do powrotu (--ss-confirm-delay).
+ * .ss-confirm — potwierdzanie akcji (js/confirm-action.js): pierwszy przycisk i przycisk potwierdzenia (__submit, te same
+ * klasy) leżą w jednej komórce siatki jeden na drugim, więc mają identyczny rozmiar, a wiersz ma jeden przycisk;
+ * potwierdzenie na wierzchu (--delete tekst w kolorze błędu, --accept w akcencie). Wokół obwódki odliczanie jak wskazówka
+ * zegara: pierścień conic-gradient (--ss-confirm-angle od 360° do 0° w --ss-confirm-delay), maska wycina środek.
  */
-.ss-confirm {
-    display: inline-flex;
-    flex-direction: column;
-    gap: var(--ss-space-1);
-    align-items: stretch;
-    vertical-align: top;
+@property --ss-confirm-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 360deg;
 }
 
-[data-ss-confirm-armed] {
-    border-color: var(--ss-color-surface-inverse) !important;
-    background: var(--ss-color-surface-inverse) !important;
-    color: var(--ss-color-on-inverse) !important;
+.ss-confirm {
+    --ss-confirm-ring: var(--ss-color-danger);
+    position: relative;
+    display: inline-grid;
+    vertical-align: middle;
+    border-radius: var(--ss-radius-button);
+}
+
+.ss-confirm[data-ss-confirm-kind="accept"] {
+    --ss-confirm-ring: var(--ss-color-accent);
+}
+
+.ss-confirm > * {
+    grid-area: 1 / 1;
+    min-width: 0;
 }
 
 .ss-confirm__submit {
     position: relative;
-    overflow: hidden;
+    z-index: 1;
     justify-content: center;
-    color: var(--ss-color-on-accent);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    animation: ss-confirm-in 0.12s ease-out;
 }
 
 .ss-confirm__submit--delete {
-    border-color: var(--ss-color-danger);
-    background: var(--ss-color-danger);
+    color: var(--ss-color-danger);
 }
 
 .ss-confirm__submit--accept {
-    border-color: var(--ss-color-accent);
-    background: var(--ss-color-accent);
+    color: var(--ss-color-accent);
 }
 
-.ss-confirm__submit::after {
+.ss-confirm[data-ss-confirm-armed]::after {
     content: "";
     position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    background: color-mix(in srgb, var(--ss-color-on-accent) 70%, transparent);
-    transform-origin: left;
-    animation: ss-confirm-countdown var(--ss-confirm-delay, 4s) linear forwards;
+    inset: -3px;
+    z-index: 2;
+    padding: 2px;
+    border-radius: calc(var(--ss-radius-button) + 3px);
+    background: conic-gradient(var(--ss-confirm-ring) var(--ss-confirm-angle), transparent 0);
+    pointer-events: none;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    animation: ss-confirm-clock var(--ss-confirm-delay, 4s) linear forwards;
 }
 
-@keyframes ss-confirm-countdown {
+@keyframes ss-confirm-clock {
     from {
-        transform: scaleX(1);
+        --ss-confirm-angle: 360deg;
     }
 
     to {
-        transform: scaleX(0);
+        --ss-confirm-angle: 0deg;
+    }
+}
+
+@keyframes ss-confirm-in {
+    from {
+        opacity: 0;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .ss-confirm__submit::after {
+    .ss-confirm__submit,
+    .ss-confirm[data-ss-confirm-armed]::after {
         animation: none;
     }
 }
