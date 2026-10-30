@@ -208,6 +208,8 @@ Strefy (poza strefą administratorów, która zostaje na Workspace) po zalogowan
 | **Stopka — środek** | wyszukiwarka: „+” (szybkie dodawanie, `SearchBox::$actions`, akcja główna na górze z separatorem — `$primaryAction`), błyskawica (szybkie akcje bez dodawania, `SearchBox::$findActions`; `[]` = pusty dropdown), pole, suwaki z multiwyborem zakresów (`SearchBox::$scopes`), Enter |
 | **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`), przycisk „Zablokuj ekran” (ikona lock-screen, Qlementine; jak Win+L: konto zostaje zalogowane, powrót PIN-em — Auth\ScreenLock) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole, bez tła pod spodem i bez kreski, kafelki po dwa w rzędzie jak szybkie ustawienia systemu — ikona i podpis na przygaszonym tle przycisku, delikatna ramka: ustawienia, a tryb kolorów, rozmiar tekstu i powiększenie jako kafelki rozwijane z listą trybów, każdy z ikoną i nazwą), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy; każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
 
+Karta obracana `x-admiro::flip-card` (np. wizytówka i karta postępu na pulpicie strefy): przycisk w prawym górnym rogu obraca kartę na odwrót z dodatkową treścią (np. konteksty konta `x-admiro::app.context-list`), zjechanie kursorem, Esc albo „Wróć” — z powrotem.
+
 Bez mapy strony i bez menu bocznego: nawigacja to pulpit, wyszukiwarka i odnośniki na stronach.
 
 ## 6. Kolor i dostępność

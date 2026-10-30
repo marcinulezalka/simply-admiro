@@ -85,6 +85,8 @@ return [
     'mask_format' => 'Format: :format',
     'switch_context' => 'Switch context',
     'account_units' => 'Your units',
+    'flip_card' => 'Flip the card',
+    'next_steps' => 'Next steps',
     'lock_screen' => 'Lock screen',
     'change_context' => 'Change context',
     'in_progress' => 'TEMP',
