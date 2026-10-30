@@ -168,6 +168,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Pierwsze logowanie (kod z e-maila i ustawienie PIN-u) kończy się na dashboardzie strefy (pulpit roli konta), a nie na stronie otwartej przed logowaniem; taka strona, np. ustawienia organizacji, mogła być niedostępna dla nowego konta. Kolejne logowania nadal wracają na zamierzoną stronę.
 - „Wstecz” na stronach konta (profil, bezpieczeństwo, personalizacja) w strefie z dashboardem pod `/<slug>/panel` prowadzi do dashboardu, a nie na publiczną stronę strefy `/<slug>`, która przekierowywała na dashboard; strona nadrzędna nie jest płytsza niż dashboard strefy.
 - `x-admiro::zone.layout` znów przyjmuje `meta` i pokazuje go pod tytułem strony (od zmiany „Wstecz” w nagłówku layout po cichu go pomijał, więc strony stref traciły opis, np. godziny przyjęć czy okres grafiku); bez `meta` nagłówek jest jak dotąd.
 - Przełącznik w podpowiedziach wyszukiwarki nie pobiera już przekierowania odpowiedzi, więc komunikat zapisu albo odmowy pokazuje się po przeładowaniu.

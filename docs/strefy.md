@@ -135,7 +135,7 @@ Core rejestruje w każdej strefie z logowaniem trasy `Http\SignInRoutes` (pod `s
 | --- | --- |
 | `<strefa>.auth.login` | formularz adresu e-mail |
 | `<strefa>.auth.code` | kod z e-maila; `auth.code.resend` wysyła nowy |
-| `<strefa>.auth.pin-setup` | ustawienie PIN-u przy pierwszym logowaniu |
+| `<strefa>.auth.pin-setup` | ustawienie PIN-u przy pierwszym logowaniu; potem zawsze `<strefa>.dashboard`, bez powrotu na stronę zamierzoną sprzed logowania (`CompleteSignIn`) |
 | `<strefa>.auth.pin` | PIN |
 | `<strefa>.auth.logout` | wylogowanie (POST, poziom `Authenticated`) |
 
