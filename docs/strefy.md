@@ -82,7 +82,10 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        // 'mail' => ['views' => '<paczka>::mail.<strefa>', 'palette' => ['accent' => '#112a46', ...]]
        //     (e-maile strefy, patrz „E-maile strefy”; zły prefiks albo kolor spoza #rrggbb zatrzymuje start),
        // 'teams' => true (konta działają w organizacjach klientów; domyślnie organizacja operatora),
-       // 'role_contexts' => true (tylko z `teams`: role konta w organizacji są kontekstami — patrz „Uprawnienia”),
+       // 'role_contexts' => true (role konta w organizacji są kontekstami — w strefie bez `teams` role w organizacji
+       //     operatora; patrz „Uprawnienia”),
+       // 'context_in_url' => true (tylko z `role_contexts`: kontekst — organizacja i rola — w adresie jako nieprzezroczysty
+       //     klucz `/<slug>/<klucz>/...`, Zones\ContextKeys; patrz „Uprawnienia”),
        // 'security' => ['mask_errors' => true, 'block_ai_agents' => false] (domyślnie: maskowanie
        // jak admiro.security.mask_errors, agenci AI blokowani w strefach z logowaniem)
    ],
@@ -329,7 +332,7 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
   najstarszym), zapamiętanym w sesji, więc zaraz po zalogowaniu konto działa w kontekście z rolą. Bez członkostwa nie ma organizacji, więc nie ma uprawnień. Po odpowiedzi organizacja jest czyszczona.
   Layout strefy pokazuje przełącznik organizacji, gdy konto należy do więcej niż jednej (`$organizations`,
   `$currentOrganizationId` daje Core).
-- **Role jako konteksty** (`role_contexts` w configu strefy z `teams`; kontrakt `Contracts\CurrentRole`,
+- **Role jako konteksty** (`role_contexts` w configu strefy; bez `teams` — role w organizacji operatora; kontrakt `Contracts\CurrentRole`,
   `Permissions\RoleSelector`): konto z kilkoma rolami w organizacji działa w jednej aktywnej roli — wybranej
   (`account.role.switch`, sesja strefy osobno dla każdej organizacji) albo domyślnej — najszerszej, z największą liczbą
   uprawnień (np. właściciel przed lekarzem) — zapamiętanej w sesji, więc rola
@@ -338,6 +341,17 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
   wygrywają); inne konta i inne organizacje nie są zawężane. Menu, pulpit i trasy strefy wynikają więc z aktywnej roli
   (np. właściciel, kierownik, sprzedawca). Przełącznik w layoucie: grupa „Rola” (`$roles`, `$currentRole`), gdy konto ma
   co najmniej dwie role.
+- **Kontekst w adresie** (`context_in_url`, tylko z `role_contexts`; `Zones\ContextKeys`): trasy dla zalogowanych
+  z plików strefy mają przed ścieżką klucz kontekstu (`/<slug>/<klucz>/board`; trasy logowania i konta Core — bez
+  klucza). Klucz to 10 znaków szesnastkowych HMAC strefy, konta, organizacji i roli z klucza pochodnego `APP_KEY`
+  (etykieta `zone-context`): w adresie nie ma nazw organizacji ani ról, a ten sam kontekst ma u każdego konta inny
+  klucz. `UseCurrentTeam` rozpoznaje klucz (organizacja i rola trafiają też do sesji, więc strony konta znają ostatni
+  kontekst), usuwa parametr przed kontrolerem i ustawia `URL::defaults()` — `route('<strefa>.…')` działa bez zmian
+  i dokłada klucz bieżącego kontekstu. Cudzy albo nieznany klucz przekierowuje na pulpit bieżącego kontekstu, klucz
+  z `APP_PREVIOUS_KEYS` — na ten sam adres z nowym kluczem; zmiana `APP_KEY` zmienia wszystkie klucze. Przełącznik
+  kontekstu to odnośniki z kluczami (każda karta przeglądarki może pracować w innym kontekście), a po zalogowaniu
+  i przełączeniu formularzem pulpit daje `ZoneRedirects::homeFor()`. Testy stref (`Tests\Feature\Zones\ZoneTestCase`)
+  wstawiają klucz bieżącego kontekstu w adresy bez klucza; do porównań z treścią służy `zoneUrl()`.
 - **Trasa z uprawnieniem:** `ZonePermission::middleware(Permission::ReportsView)` daje middleware
   `zone.permission:<uprawnienie>`, który sprawdza konto z guardu strefy przez `ZonePermissionChecker`
   (z odmowami); brak uprawnienia to 403. W kodzie: `ZonePermissionChecker::allows($zone, $account, $permission)`.

@@ -45,8 +45,9 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * layoutu aplikacji: Enums\AppLayout), backdrop (tło płótna: Enums\AppBackdrop; `zone-logo` wymaga logo strefy),
  * social_links (profile w serwisach społecznościowych: Enums\SocialNetwork → adres http(s)), font_styles (kroje do
  * wyboru na stronie wyglądu: klucz kroju → klucz tekstu z jego nazwą, Zones\ZoneFontStyle), appearance (`account` —
- * wybory wyglądu zapisuje konto, `defaults` — domyślny wygląd aplikacji; Zones\ZoneAppearance, tylko strefa z modelem) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
- * z `teams`).
+ * wybory wyglądu zapisuje konto, `defaults` — domyślny wygląd aplikacji; Zones\ZoneAppearance, tylko strefa z modelem) role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami; w strefie bez `teams` role
+ * w organizacji operatora) oraz context_in_url (kontekst konta w adresie jako nieprzezroczysty klucz, Zones\ContextKeys; tylko
+ * z `role_contexts`).
  */
 final readonly class ZoneDefinitionFactory
 {
@@ -82,6 +83,7 @@ final readonly class ZoneDefinitionFactory
         $logo = $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo;
         $palettes = $this->palettes($name, Arr::array($config, 'palettes', []));
         $fontStyles = $this->fontStyles($name, Arr::array($config, 'font_styles', []));
+        $roleContexts = $model !== null && Arr::boolean($config, 'role_contexts', false);
 
         return new ZoneDefinition(
             name: $name,
@@ -108,7 +110,7 @@ final readonly class ZoneDefinitionFactory
             brand: $this->brand($name, Arr::array($config, 'brand', [])),
             mailViews: $this->mailViews($name, Arr::array($config, 'mail', [])),
             mailPalette: $this->mailPalette($name, Arr::array(Arr::array($config, 'mail', []), 'palette', [])),
-            roleContexts: $model !== null && Arr::boolean($config, 'teams', false) && Arr::boolean($config, 'role_contexts', false),
+            roleContexts: $roleContexts,
             logo: $logo,
             website: $this->website($name, $config['website'] ?? null),
             appLayout: $this->option($name, 'app_layout', $config['app_layout'] ?? null, AppLayout::class, AppLayout::Sidebar),
@@ -116,6 +118,7 @@ final readonly class ZoneDefinitionFactory
             backdrop: $this->backdrop($name, $config['backdrop'] ?? null, $logo),
             fontStyles: $fontStyles,
             appearance: $model !== null ? $this->appearance($name, Arr::array($config, 'appearance', []), $palettes, $fontStyles) : new ZoneAppearance(),
+            contextInUrl: $this->contextInUrl($name, $config, $roleContexts),
         );
     }
 
@@ -221,6 +224,24 @@ final readonly class ZoneDefinitionFactory
         }
 
         return $result;
+    }
+
+    /**
+     * Kontekst konta w adresie (`context_in_url`); wymaga ról jako kontekstów, bo klucz to organizacja i rola.
+     *
+     * @param array<array-key, mixed> $config
+     *
+     * @throws InvalidArgumentException Gdy strefa bez `role_contexts` włącza kontekst w adresie.
+     */
+    private function contextInUrl(string $zone, array $config, bool $roleContexts): bool
+    {
+        $enabled = Arr::boolean($config, 'context_in_url', false);
+
+        if ($enabled && ! $roleContexts) {
+            throw new InvalidArgumentException("Zone [{$zone}] context_in_url requires role_contexts.");
+        }
+
+        return $enabled;
     }
 
     /**

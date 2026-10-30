@@ -80,6 +80,15 @@ final readonly class OrganizationSelector
     }
 
     /**
+     * Zapamiętuje w sesji strefy organizację rozpoznaną z klucza kontekstu w adresie (Zones\ContextKeys sprawdził już
+     * członkostwo konta).
+     */
+    public function remember(int $organizationId, Session $session): void
+    {
+        $session->put(self::SESSION_KEY, $organizationId);
+    }
+
+    /**
      * Najstarsze członkostwo, w którym konto strefy ma rolę; null bez takiego (albo dla konta bez ról strefy).
      *
      * @param list<int> $memberships

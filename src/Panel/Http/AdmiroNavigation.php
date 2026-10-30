@@ -19,6 +19,7 @@ use Simplysmart\Admiro\Panel\Http\Controllers\OnboardingController;
 use Simplysmart\Admiro\Queries\Dictionaries\DefaultEntries;
 use Simplysmart\Admiro\Panel\Enums\Permission;
 use Simplysmart\Admiro\Panel\Enums\SearchScope;
+use Simplysmart\Admiro\Contracts\CurrentRole;
 use Simplysmart\Admiro\Contracts\ZoneNavigation;
 use Simplysmart\Admiro\Contracts\ZoneNotifications;
 use Simplysmart\Admiro\Contracts\ZoneRegistry;
@@ -61,6 +62,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
         private AuditLog $audit,
         private ZoneRegistry $zones,
         private DefaultEntries $defaults,
+        private CurrentRole $role,
     ) {}
 
     /**
@@ -214,7 +216,8 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
 
     public function subtitle(): ?string
     {
-        $roles = array_map($this->context->zone()->roleLabel(...), $this->roles->of($this->context->admin(), Organization::OPERATOR_ID));
+        $active = $this->role->of($this->context->admin(), Organization::OPERATOR_ID);
+        $roles = array_map($this->context->zone()->roleLabel(...), $active !== null ? [$active] : $this->roles->of($this->context->admin(), Organization::OPERATOR_ID));
 
         return $roles === [] ? null : implode(' · ', $roles);
     }

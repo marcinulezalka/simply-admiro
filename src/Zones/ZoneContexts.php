@@ -24,6 +24,7 @@ use Simplysmart\Admiro\Queries\Organizations\ActiveMemberships;
 use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Admiro\View\Navigation\NavigationForm;
 use Simplysmart\Admiro\View\Navigation\NavigationGroup;
+use Simplysmart\Admiro\View\Navigation\NavigationItem;
 
 /**
  * Konteksty konta w przełączniku layoutu strefy: organizacje, w których konto jest członkiem (strefa z `teams`;
@@ -35,7 +36,9 @@ use Simplysmart\Admiro\View\Navigation\NavigationGroup;
  * organizacje są pozycjami listy organizacji. Pozycja to formularz POST na `account.context.switch` z polem FIELD = `<token organizacji>:<rola>`,
  * więc jedno kliknięcie ustawia organizację i rolę z jej uprawnieniami. Nazwy rodzajów: `account.context_kinds.*`
  * (strefa nadpisuje je w swoich tekstach, ZoneDefinition::textKey()). Przełącznik jest widoczny już przy jednym kontekście
- * (pokazuje bieżący); bez kontekstów — brak przełącznika.
+ * (pokazuje bieżący); bez kontekstów — brak przełącznika. W strefie z `context_in_url` pozycja to odnośnik na pulpit
+ * z kluczem kontekstu (Zones\ContextKeys) zamiast formularza, więc każda karta przeglądarki może pracować w innym
+ * kontekście.
  */
 final readonly class ZoneContexts
 {
@@ -60,6 +63,7 @@ final readonly class ZoneContexts
         private ZoneRoleNames $roles,
         private CurrentOrganization $organization,
         private CurrentRole $role,
+        private ContextKeys $keys,
     ) {}
 
     /**
@@ -96,7 +100,7 @@ final readonly class ZoneContexts
             }
 
             if ($roles === []) {
-                $plain[] = new NavigationForm($organization->contextName(), $action, self::FIELD, self::value($organization, null), self::KIND_ICONS['organization'], $isCurrent);
+                $plain[] = $this->item($zone, $account, $organization->contextName(), $action, self::FIELD, self::value($organization, null), self::KIND_ICONS['organization'], $isCurrent, $organization->id, null);
                 $count++;
 
                 continue;
@@ -106,7 +110,7 @@ final readonly class ZoneContexts
             $kind = self::kind($organization);
             $groups[] = new NavigationGroup(
                 $organization->contextName(),
-                array_map(static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, self::FIELD, self::value($organization, $role), $roleIcon($role), $role === $active), $roles),
+                array_map(fn(string $role): NavigationForm|NavigationItem => $this->item($zone, $account, $zone->roleLabel($role), $action, self::FIELD, self::value($organization, $role), $roleIcon($role), $role === $active, $organization->id, $role), $roles),
                 self::KIND_ICONS[$kind],
                 text($zone->textKey('account.context_kinds.' . $kind)),
             );
@@ -138,9 +142,21 @@ final readonly class ZoneContexts
         $roleIcon = $this->roleIcon($zone);
 
         return [new NavigationGroup(text($zone->textKey('account.role')), array_map(
-            static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, RoleSwitchController::FIELD, $role, $roleIcon($role), $role === $active),
+            fn(string $role): NavigationForm|NavigationItem => $this->item($zone, $account, $zone->roleLabel($role), $action, RoleSwitchController::FIELD, $role, $roleIcon($role), $role === $active, $organizationId, $role),
             $roles,
         ))];
+    }
+
+    /**
+     * Pozycja kontekstu: formularz POST przełączenia albo — w strefie z `context_in_url` — odnośnik na pulpit z kluczem.
+     */
+    private function item(ZoneDefinition $zone, ZoneAccount $account, string $label, string $action, string $field, string $value, string $icon, bool $current, int $organizationId, ?string $role): NavigationForm|NavigationItem
+    {
+        if (! $zone->contextInUrl) {
+            return new NavigationForm($label, $action, $field, $value, $icon, $current);
+        }
+
+        return new NavigationItem($label, route($zone->routeName(ZoneRedirects::HOME_ROUTE), [ContextKeys::PARAMETER => $this->keys->key($zone, $account, $organizationId, $role)]), $icon, $current);
     }
 
     /**

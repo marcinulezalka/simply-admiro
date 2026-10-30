@@ -53,6 +53,7 @@ final readonly class CompleteSignIn
         private Redirector $redirect,
         private RegisterTrustedDevice $devices,
         private AccountLocale $locale,
+        private ZoneRedirects $redirects,
     ) {}
 
     public function handle(PendingSignIn $signIn, Request $request): RedirectResponse
@@ -81,7 +82,7 @@ final readonly class CompleteSignIn
 
         $locale = $this->locale->of($account);
 
-        $home = $this->redirect->getUrlGenerator()->route($zone->routeName(ZoneRedirects::HOME_ROUTE), $locale !== null ? [LocaleRouting::PARAMETER => $locale] : []);
+        $home = $this->redirects->homeFor($zone, $account, $request->session(), $locale !== null ? [LocaleRouting::PARAMETER => $locale] : []);
 
         if ($signIn->hasCompleted(PinSetupStep::KEY)) {
             $request->session()->forget(self::INTENDED_SESSION_KEY);

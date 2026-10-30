@@ -15,7 +15,6 @@ namespace Simplysmart\Admiro\Http\Controllers\Account;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Contracts\CurrentZone;
 use Simplysmart\Admiro\Models\Organization;
@@ -36,7 +35,7 @@ final readonly class ContextSwitchController
 {
     private const int MAX_LENGTH = 512;
 
-    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, OrganizationSelector $organizations, RoleSelector $roles, ActiveOrganizations $active, Redirector $redirect): RedirectResponse
+    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, OrganizationSelector $organizations, RoleSelector $roles, ActiveOrganizations $active, ZoneRedirects $redirects): RedirectResponse
     {
         $validated = $request->validate([ZoneContexts::FIELD => ['required', 'string', 'max:' . self::MAX_LENGTH]]);
         $value = $validated[ZoneContexts::FIELD];
@@ -55,6 +54,6 @@ final readonly class ContextSwitchController
 
         $request->session()->regenerate();
 
-        return $redirect->route($definition->routeName(ZoneRedirects::HOME_ROUTE));
+        return new RedirectResponse($redirects->homeFor($definition, $account, $request->session()));
     }
 }

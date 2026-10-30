@@ -17,7 +17,6 @@ use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Contracts\CurrentZone;
 use Simplysmart\Admiro\Models\Organization;
 use Simplysmart\Admiro\Permissions\OrganizationSelector;
@@ -32,7 +31,7 @@ final readonly class OrganizationSwitchController
 {
     public const string FIELD = 'organization';
 
-    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, OrganizationSelector $selector, ActiveOrganizations $organizations, Redirector $redirect): RedirectResponse
+    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, OrganizationSelector $selector, ActiveOrganizations $organizations, ZoneRedirects $redirects): RedirectResponse
     {
         $validated = $request->validate([self::FIELD => ['required', 'string', 'max:' . Organization::TOKEN_LENGTH]]);
         $account = $current->get();
@@ -44,6 +43,6 @@ final readonly class OrganizationSwitchController
 
         $request->session()->regenerate();
 
-        return $redirect->route($zone->get()->routeName(ZoneRedirects::HOME_ROUTE));
+        return new RedirectResponse($redirects->homeFor($zone->get(), $account, $request->session()));
     }
 }

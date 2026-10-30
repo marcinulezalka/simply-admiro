@@ -71,9 +71,12 @@ final readonly class ZoneDefinition
      * @param list<ZoneFontStyle> $fontStyles Kroje do wyboru na stronie wyglądu obok kroju bazowego strefy (`font_styles`);
      *                                       pusta lista = bez wyboru kroju.
      * @param ZoneAppearance $appearance Wygląd strefy (`appearance`): zapis wyborów w koncie i domyślny wygląd aplikacji.
-     * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
-     *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
-     *                           są zawężone do niej; false = uprawnienia z sumy ról.
+     * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`; w strefie bez `teams` — role
+     *                           w organizacji operatora): konto z kilkoma rolami działa w jednej wybranej
+     *                           (Permissions\RoleSelector), a jego uprawnienia są zawężone do niej; false = uprawnienia
+     *                           z sumy ról.
+     * @param bool $contextInUrl Kontekst konta (organizacja i rola) w adresie stron strefy jako nieprzezroczysty klucz
+     *                           (`context_in_url`, tylko z `role_contexts`; Zones\ContextKeys): `/<slug>/<klucz>/...`.
      */
     public function __construct(
         public string $name,
@@ -105,6 +108,7 @@ final readonly class ZoneDefinition
         public AppBackdrop $backdrop = AppBackdrop::Brand,
         public array $fontStyles = [],
         public ZoneAppearance $appearance = new ZoneAppearance(),
+        public bool $contextInUrl = false,
     ) {}
 
     /**

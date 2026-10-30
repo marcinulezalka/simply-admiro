@@ -14,9 +14,12 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Zones;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Simplysmart\Admiro\Contracts\CurrentZone;
+use Simplysmart\Admiro\Models\ZoneAccount;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -34,7 +37,23 @@ final readonly class ZoneRedirects
         private CurrentZone $zone,
         private Router $router,
         private UrlGenerator $url,
+        private ContextKeys $keys,
     ) {}
+
+    /**
+     * Pulpit strefy dla konta w kontekście zapamiętanym w sesji — po zalogowaniu i przełączeniu kontekstu, gdy adresy
+     * żądania mają jeszcze klucz poprzedniego kontekstu (strefa z `context_in_url`, Zones\ContextKeys).
+     *
+     * @param array<string, mixed> $parameters Dodatkowe parametry trasy (np. język).
+     */
+    public function homeFor(ZoneDefinition $zone, Model $account, Session $session, array $parameters = []): string
+    {
+        if ($zone->contextInUrl && $account instanceof ZoneAccount) {
+            $parameters[ContextKeys::PARAMETER] = $this->keys->current($zone, $account, $session);
+        }
+
+        return $this->url->route($zone->routeName(self::HOME_ROUTE), $parameters);
+    }
 
     /**
      * Logowanie strefy dla niezalogowanego; bez niego 404 (nie zdradza istnienia trasy).

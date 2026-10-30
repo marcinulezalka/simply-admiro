@@ -449,6 +449,10 @@ return [
         ],
         'website' => $envString('ADMIRO_WEBSITE', 'https://admiro.simplysmart.pl'),
         'app_layout' => 'workspace',
+        // Role administratora (support, owner, hero) jako konteksty: praca w jednej roli naraz, przełączana w stopce,
+        // a kontekst w adresie jako nieprzezroczysty klucz (/<slug>/<klucz>/..., Zones\ContextKeys).
+        'role_contexts' => true,
+        'context_in_url' => true,
         'social_links' => [
             'linkedin' => $envString('ADMIRO_SOCIAL_LINKEDIN', ''),
             'facebook' => $envString('ADMIRO_SOCIAL_FACEBOOK', ''),

@@ -6,10 +6,14 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Kontekst konta w adresie: strefa z `context_in_url` (wymaga `role_contexts`) ma strony dla zalogowanych pod `/<slug>/<klucz>/...` — klucz to nieprzezroczysty skrót HMAC organizacji i roli konta (`Zones\ContextKeys`, klucz pochodny `APP_KEY`), bez ich nazw w adresie i inny dla każdego konta. Każda karta przeglądarki może pracować w innym kontekście, przełącznik kontekstu to odnośniki, cudzy klucz prowadzi na własny pulpit, a po zmianie `APP_KEY` stare adresy z kluczami z `APP_PREVIOUS_KEYS` przekierowują na nowe. `route()` dokłada klucz sam.
+- `role_contexts` działa też w strefie bez organizacji (`teams`): role w organizacji operatora są kontekstami.
+
 - Bazowy layout stref oddzielony od layoutu strefy administratorów: nowy wariant `app_layout` = `zone` (`Enums\AppLayout::Zone`, `x-admiro::app.zone-layout`). Nad tytułem zawsze odnośnik ze strzałką ← — na podstronie „Wstecz”, na stronie startowej (`home` w `x-admiro::zone.layout`) „Zmień kontekst” przy kilku kontekstach konta, a inaczej „Wyloguj”. W stopce menu konta tylko z „Mój profil” i „Wyloguj”, wyszukiwarka z „+”, błyskawicą szybkich akcji (`SearchBox::$findActions`, pusty dropdown dopuszczalny), polem, suwakami zakresów i Enterem, przełącznik kontekstu z rolami wciętymi pod organizacją oraz data otwierająca dwa panele jak harmonijka: kalendarz przy krawędzi okna (ustawienia, kolory i rozmiary jako siatka ikon bez podpisów) i z jego krawędzi powiadomienia; każdy panel zamyka się osobno. Bez mapy strony. Strefa może oznaczać widoki w przygotowaniu (`Contracts\ZonePageProgress`) — dostają na środku napis „TEMP”. Layout Workspace strefy administratorów bez zmian.
 
 ### Changed
 
+- Strefa administratorów: administrator pracuje w jednej roli naraz (`role_contexts`, domyślnie najszersza), przełącza ją w stopce, a adresy panelu mają klucz kontekstu (`/admiro/<klucz>/...`); pod nazwą konta jest aktywna rola.
 - Brak pliku ikony (`x-admiro::icon`) nie przerywa już strony błędem 500: ikona zostaje pusta, a błąd trafia do logu (`View\CoreAssets::icon()`). Chroni m.in. okno wdrożenia, gdy działający jeszcze stary kod odwołuje się do ikony usuniętej w nowej wersji.
 - Przełącznik kontekstu w strefie z rolami jako kontekstami pokazuje tylko organizacje, jednostki i departamenty, w których konto ma rolę — członkostwo bez roli (np. departament grupujący gabinety) nie jest kontekstem. Organizacja i jednostka mają ikonę budynku, rola administracyjna (delegująca inne role, `ZoneRoleNames::administrative()`) wypełnionego ludzika (nowa ikona `user-filled`), pozostałe role ludzika z konturem; ikona `context-organization` usunięta.
 

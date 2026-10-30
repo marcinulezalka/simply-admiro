@@ -15,7 +15,6 @@ namespace Simplysmart\Admiro\Http\Controllers\Account;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Contracts\CurrentOrganization;
 use Simplysmart\Admiro\Contracts\CurrentZone;
@@ -34,7 +33,7 @@ final readonly class RoleSwitchController
 
     private const int ROLE_NAME_MAX_LENGTH = 255;
 
-    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, CurrentOrganization $organization, RoleSelector $selector, Redirector $redirect): RedirectResponse
+    public function __invoke(Request $request, CurrentZone $zone, CurrentAccount $current, CurrentOrganization $organization, RoleSelector $selector, ZoneRedirects $redirects): RedirectResponse
     {
         $validated = $request->validate([self::FIELD => ['required', 'string', 'max:' . self::ROLE_NAME_MAX_LENGTH]]);
         $account = $current->get();
@@ -47,6 +46,6 @@ final readonly class RoleSwitchController
 
         $request->session()->regenerate();
 
-        return $redirect->route($zone->get()->routeName(ZoneRedirects::HOME_ROUTE));
+        return new RedirectResponse($redirects->homeFor($zone->get(), $account, $request->session()));
     }
 }

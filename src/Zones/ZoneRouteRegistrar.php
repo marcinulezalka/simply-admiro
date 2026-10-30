@@ -31,6 +31,8 @@ use Simplysmart\Admiro\Localization\LocaleRouting;
  * Strefa z `favicon` dostaje trasę jej plików (`<strefa>.favicon`, dla każdego poziomu dostępu), strefa z `fonts`
  * trasę plików fontów (`<strefa>.font`).
  * Strefa z logowaniem dostaje też trasy logowania (Http\SignInRoutes) i konta (Http\AccountRoutes) z Core.
+ * W strefie z `context_in_url` trasy dla zalogowanych z plików strefy mają przed ścieżką klucz kontekstu
+ * (`{context}`, Zones\ContextKeys); trasy logowania i konta Core są bez klucza.
  */
 final readonly class ZoneRouteRegistrar
 {
@@ -103,6 +105,13 @@ final readonly class ZoneRouteRegistrar
             throw new LogicException("Zone [{$zone->name}] has no sign-in, so it cannot have [{$path}].");
         }
 
-        $this->router->middleware($tier->middleware($zone))->group($path);
+        $attributes = ['middleware' => $tier->middleware($zone)];
+
+        if ($zone->contextInUrl && $tier->requiresLogin()) {
+            $attributes['prefix'] = '{' . ContextKeys::PARAMETER . '}';
+            $attributes['where'] = [ContextKeys::PARAMETER => ContextKeys::PATTERN];
+        }
+
+        $this->router->group($attributes, $path);
     }
 }

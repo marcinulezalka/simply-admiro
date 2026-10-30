@@ -86,6 +86,15 @@ final readonly class RoleSelector
     }
 
     /**
+     * Zapamiętuje w sesji strefy rolę rozpoznaną z klucza kontekstu w adresie (Zones\ContextKeys sprawdził już, że
+     * konto ma ją w tej organizacji).
+     */
+    public function remember(int $organizationId, string $role, Session $session): void
+    {
+        $session->put($this->key($organizationId), $role);
+    }
+
+    /**
      * Rola z największą liczbą uprawnień (przy remisie pierwsza); null przy pustej liście.
      *
      * @param list<string> $roles
