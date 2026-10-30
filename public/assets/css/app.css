@@ -9730,6 +9730,41 @@ body:has(#lock:target) .ss-security-lock {
     color: var(--ss-color-text);
 }
 
+/* Zapis komendy w tle (js/command-box.js, .ss-command[aria-busy="true"]): w miejscu strzałki Entera kręci się loader. */
+.ss-command__loader {
+    display: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ss-command-spin 0.7s linear infinite;
+}
+
+.ss-command[aria-busy="true"] .ss-command__send-icon {
+    display: none;
+}
+
+.ss-command[aria-busy="true"] .ss-command__loader {
+    display: block;
+}
+
+.ss-command[aria-busy="true"] .ss-command__send {
+    cursor: progress;
+}
+
+@keyframes ss-command-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-command__loader {
+        animation-duration: 1.6s;
+    }
+}
+
 /* Panel powiadomień z zadaniami TODO (x-admiro::app.side-panels z tasks): podział w pionie — powiadomienia ok. 60%,
    lista zadań ok. 40% wysokości, każda część przewija się osobno. */
 .ss-side-panels__split {

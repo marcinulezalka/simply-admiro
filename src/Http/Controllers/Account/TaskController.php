@@ -13,20 +13,25 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Http\Controllers\Account;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
+use Illuminate\View\Compilers\BladeCompiler;
 use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Contracts\CurrentZone;
 use Simplysmart\Admiro\Enums\QuickCommand;
 use Simplysmart\Admiro\Queries\Tasks\AccountTaskList;
+use Simplysmart\Admiro\Tasks\AccountTaskPanel;
 use Simplysmart\Admiro\Tasks\AccountTasks;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Komendy z pola komend menu błyskawicy (`todo:` zapisuje zadanie o wpisanej nazwie) i przełączenie wykonania
- * zadania z listy TODO w panelu powiadomień; po każdej zmianie powrót na poprzednią stronę z komunikatem.
+ * zadania z listy TODO w panelu powiadomień; po każdej zmianie powrót na poprzednią stronę z komunikatem. Komenda
+ * wysłana skryptem (js/command-box.js, `Accept: application/json`) dostaje zamiast przekierowania JSON z komunikatem
+ * i odświeżoną listą zadań (x-admiro::app.tasks), więc pole zostaje otwarte na kolejne zadanie.
  */
 final readonly class TaskController
 {
@@ -35,10 +40,11 @@ final readonly class TaskController
         private CurrentAccount $current,
         private AccountTasks $tasks,
         private AccountTaskList $list,
+        private AccountTaskPanel $panel,
         private Redirector $redirect,
     ) {}
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'command' => ['required', 'string', Rule::enum(QuickCommand::class)],
@@ -46,9 +52,19 @@ final readonly class TaskController
         ]);
         $text = is_string($validated['text']) ? trim($validated['text']) : '';
 
+        $zone = $this->zone->get();
+        $account = $this->current->require();
+
         match (QuickCommand::from(is_string($validated['command']) ? $validated['command'] : '')) {
-            QuickCommand::Todo => $this->tasks->add($this->zone->get(), $this->current->require(), $text),
+            QuickCommand::Todo => $this->tasks->add($zone, $account, $text),
         };
+
+        if ($request->expectsJson()) {
+            return new JsonResponse([
+                'message' => text('account.task_added'),
+                'tasks' => BladeCompiler::render('<x-admiro::app.tasks :tasks="$tasks" />', ['tasks' => $this->panel->for($zone, $account)]),
+            ]);
+        }
 
         return $this->redirect->back()->with('status', text('account.task_added'));
     }

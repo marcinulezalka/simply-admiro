@@ -1,4 +1,4 @@
-{{-- Pole komend systemu w dolnej sekcji menu błyskawicy (admiro::search.folder z $commandUrl): subtelne pole na jasnym tle z delikatną szarą obwódką, w nim po lewej przycisk „/” z wybraną komendą (domyślnie Enums\QuickCommand::default() — `todo:`), który rozwija listę komend dostępnych w systemie (radio), pole na treść komendy (przy `todo:` — nazwa zadania) i wyciszony przycisk Enter wewnątrz pola. Menu leży w formularzu wyszukiwarki, więc pola należą do osobnego formularza POST #ss-command-form (atrybut form, x-admiro::app.search); wybór komendy podmienia prefiks i podpowiedź pola (js/command-box.js). $commandUrl: string. --}}
+{{-- Pole komend systemu w dolnej sekcji menu błyskawicy (admiro::search.folder z $commandUrl): subtelne pole na jasnym tle z delikatną szarą obwódką, w nim po lewej przycisk „/” z wybraną komendą (domyślnie Enums\QuickCommand::default() — `todo:`), który rozwija listę komend dostępnych w systemie (radio), pole na treść komendy (przy `todo:` — nazwa zadania) i wyciszony przycisk Enter wewnątrz pola. Menu leży w formularzu wyszukiwarki, więc pola należą do osobnego formularza POST #ss-command-form (atrybut form, x-admiro::app.search); wybór komendy podmienia prefiks i podpowiedź pola, a skrypt wysyła komendę w tle (js/command-box.js): na czas zapisu strzałka Entera zmienia się w loader (aria-busy), po zapisie pole jest puste i gotowe na kolejne zadanie, lista TODO się odświeża, a komunikat trafia do czytnika ekranu (role="status"). $commandUrl: string. --}}
 @php($default = \Simplysmart\Admiro\Enums\QuickCommand::default())
 <div class="ss-command" data-ss-command>
     <details class="ss-command__picker">
@@ -21,8 +21,10 @@
     </details>
     <label class="ss-sr-only" for="ss-command-text">{{ text('layout.command_text') }}</label>
     <input class="ss-command__input" id="ss-command-text" name="text" type="text" form="ss-command-form" maxlength="255" required autocomplete="off" placeholder="{{ $default->placeholder() }}" data-ss-command-input>
-    <button class="ss-search__send ss-command__send" type="submit" form="ss-command-form">
-        <x-admiro::icon name="corner-down-left" class="ss-search__send-icon" />
+    <button class="ss-search__send ss-command__send" type="submit" form="ss-command-form" data-ss-command-send>
+        <x-admiro::icon name="corner-down-left" class="ss-search__send-icon ss-command__send-icon" />
+        <span class="ss-command__loader" aria-hidden="true"></span>
         <span class="ss-sr-only">{{ text('layout.command_submit') }}</span>
     </button>
+    <span class="ss-sr-only" role="status" data-ss-command-status></span>
 </div>
