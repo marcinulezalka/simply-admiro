@@ -6197,12 +6197,15 @@ a.ss-notification:focus-visible {
     display: grid;
     gap: var(--ss-space-1);
     margin-top: auto;
-    padding: var(--ss-space-3);
-    border: 1px solid color-mix(in srgb, var(--ss-color-border) 70%, transparent);
-    border-radius: var(--ss-radius-control);
-    background: color-mix(in srgb, var(--ss-color-surface) 8%, transparent);
-    backdrop-filter: blur(10px);
     font-size: 0.875rem;
+}
+
+/* Każda dana (adres, telefony, e-maile) w osobnym panelu: delikatne tło karty, cienka obwódka, czytelna na motywie tła. */
+.ss-business-card__details .ss-business-card__detail {
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: color-mix(in srgb, var(--ss-color-surface) 88%, transparent);
 }
 
 .ss-business-card__detail {
