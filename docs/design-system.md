@@ -206,7 +206,7 @@ Strefy (poza strefą administratorów, która zostaje na Workspace) po zalogowan
 | **Treść** | slot strony na tle płótna (logo strefy); widok w przygotowaniu (`Contracts\ZonePageProgress::pageInProgress()`) dostaje na środku napis „TEMP” (`.ss-temp-mark`) |
 | **Stopka — lewo** | awatar, nazwa i identyfikator konta; menu tylko z „Mój profil” (`ZoneSettingsMenu::profileItem()`) i „Wyloguj” |
 | **Stopka — środek** | wyszukiwarka: „+” (szybkie dodawanie, `SearchBox::$actions`), błyskawica (szybkie akcje bez dodawania, `SearchBox::$findActions`; `[]` = pusty dropdown), pole, suwaki z multiwyborem zakresów (`SearchBox::$scopes`), Enter |
-| **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole ikony ustawień, kolorów i rozmiarów w siatce bez podpisów), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy; każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
+| **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole karta z tłem jak podgląd dnia, bez kreski, a w niej grupy-pigułki: ustawienia, tryby kolorów — ciemny/jasny i kontrast WCAG —, rozmiar tekstu A / AA i powiększenie − / +), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy; każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
 
 Bez mapy strony i bez menu bocznego: nawigacja to pulpit, wyszukiwarka i odnośniki na stronach.
 
