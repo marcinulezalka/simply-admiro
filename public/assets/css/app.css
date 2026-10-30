@@ -8361,13 +8361,21 @@ a.ss-notification:focus-visible {
 
 /*
  * .ss-shell--zone — bazowy layout stref (Enums\AppLayout::Zone, x-admiro::app.zone-layout) na klasach stopki Workspace:
- * odnośnik „Wyloguj” nad tytułem jako przycisk formularza (.ss-context__back-form), błyskawica szybkich akcji przy polu
+ * odnośnik nad tytułem krojem mono wersalikami, „Wyloguj” jako przycisk formularza (.ss-context__back-form), błyskawica szybkich akcji przy polu
  * wyszukiwania (.ss-search__find), role wcięte pod organizacją w przełączniku kontekstu (.ss-context-switch--tree),
  * dwa panele boczne jak harmonijka (.ss-side-panels), narzędzia wyglądu w siatce bez podpisów
  * (.ss-side-panel__tools--grid) i napis „TEMP” nad treścią widoku w przygotowaniu (.ss-temp-mark).
  */
 .ss-context__back-form {
     margin: 0;
+}
+
+/* Odnośnik nad tytułem w layoucie stref („Wstecz”, „Zmień kontekst”, „Wyloguj”): krój mono, wersaliki. */
+.ss-shell--zone .ss-context__back {
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 button.ss-context__back {
