@@ -1,4 +1,4 @@
-{{-- Panel menu wyszukiwarki jak teczka (menu błyskawicy admiro::search.find i „+” admiro::search.actions w layoucie stref; details z klasą .ss-search__menu--folder): u góry zakładka z ikoną i tytułem (falisty skos jak zakładki teczek Core), pod nią tło w kolorze tylnej warstwy teczek z odnośnikami w zwykłym stylu menu — ikona i tekst — (akcja główna na górze, pod nią separator), pod nimi arkusz z siatką kropek (bez akcji — komunikat empty, gdy jest; z $commandUrl na dole arkusza pole komend systemu admiro::search.commands), a tło schodzi w dół wypustką z tą samą falą i obejmuje przycisk menu. $icon: string; $title: string; $actions: list<View\Navigation\NavigationItem>; $primary: ?View\Navigation\NavigationItem; $empty: ?string; $commandUrl: ?string. --}}
+{{-- Panel menu wyszukiwarki jak teczka (menu błyskawicy admiro::search.find i „+” admiro::search.actions w layoucie stref; details z klasą .ss-search__menu--folder): u góry zakładka z ikoną i tytułem (falisty skos jak zakładki teczek Core), pod nią tło w kolorze tylnej warstwy teczek z odnośnikami w zwykłym stylu menu — ikona i tekst — (akcja główna na górze, pod nią separator), pod nimi arkusz z siatką kropek (bez akcji — komunikat empty, gdy jest), z $commandUrl pod arkuszem dolna sekcja — jasny pasek od lewej do prawej krawędzi teczki — z polem komend systemu admiro::search.commands, a tło schodzi w dół wypustką z tą samą falą i obejmuje przycisk menu. $icon: string; $title: string; $actions: list<View\Navigation\NavigationItem>; $primary: ?View\Navigation\NavigationItem; $empty: ?string; $commandUrl: ?string. --}}
 @php($primary ??= null)
 @php($empty ??= null)
 @php($commandUrl ??= null)
@@ -24,10 +24,12 @@
             @if ($empty !== null && $actions === [] && $primary === null)
                 <p class="ss-search__menu-empty">{{ $empty }}</p>
             @endif
-            @if ($commandUrl !== null)
-                @include('admiro::search.commands')
-            @endif
         </div>
+        @if ($commandUrl !== null)
+            <div class="ss-search__folder-foot">
+                @include('admiro::search.commands')
+            </div>
+        @endif
     </div>
     <span class="ss-search__folder-tab" aria-hidden="true"></span>
 </div>

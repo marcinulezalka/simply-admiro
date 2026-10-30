@@ -9269,6 +9269,16 @@ a.ss-org-item:focus-visible {
     background-image: none;
 }
 
+/* Dolna sekcja teczki z polem komend (admiro::search.commands): jasny pasek od lewej do prawej krawędzi tła teczki
+   (bez wcięcia __body), za cienką linią; lewy dolny róg prosty, bo tam tło schodzi wypustką do przycisku. */
+.ss-search__folder-foot {
+    margin: var(--ss-space-1) calc(-1 * var(--ss-space-3)) calc(-1 * var(--ss-space-3));
+    padding: var(--ss-space-3);
+    border-top: 1px solid var(--ss-folder-edge, var(--ss-color-border));
+    border-radius: 0 0 var(--ss-folder-radius, 1.5rem) 0;
+    background: var(--ss-color-surface);
+}
+
 /* Karta obracana (x-admiro::flip-card): przód i tył w jednej komórce siatki (wysokość większej), obrót w 3D wokół osi
    pionowej, przyciski odwrotów w prawym górnym rogu nad przodem, „Wróć” na dole odwrotu; bez animacji przy prefers-reduced-motion. */
 .ss-flip {
@@ -9569,22 +9579,23 @@ body:has(#lock:target) .ss-security-lock {
     display: none;
 }
 
-/* Pole komend na dole menu błyskawicy (admiro::search.commands) na wzór wyszukiwarki compose: szare pole z obwódką,
-   po lewej „/” z prefiksem wybranej komendy krojem mono (lista komend rozwija się nad polem), pole i przycisk Enter. */
+/* Pole komend w dolnej sekcji menu błyskawicy (admiro::search.commands): subtelne pole na jasnym tle z delikatną szarą
+   obwódką (przy fokusie odrobinę ciemniejszą), po lewej „/” z prefiksem wybranej komendy krojem mono (lista komend
+   rozwija się nad polem), pole i wyciszony przycisk Enter wewnątrz pola. */
 .ss-command {
     position: relative;
     display: flex;
     gap: var(--ss-space-1);
     align-items: center;
-    margin-top: var(--ss-space-3);
-    padding: var(--ss-space-1);
+    padding: 0.1875rem;
     border: 1px solid var(--ss-color-border);
     border-radius: var(--ss-radius-pill);
-    background: var(--ss-color-surface-muted);
+    background: var(--ss-color-surface);
+    transition: border-color 0.15s ease;
 }
 
 .ss-command:focus-within {
-    border-color: var(--ss-color-accent);
+    border-color: var(--ss-color-border-strong);
 }
 
 .ss-command__picker {
@@ -9595,10 +9606,10 @@ body:has(#lock:target) .ss-security-lock {
     display: inline-flex;
     gap: var(--ss-space-1);
     align-items: center;
-    height: 2rem;
+    height: 1.75rem;
     padding: 0 var(--ss-space-2);
     border-radius: var(--ss-radius-pill);
-    background: var(--ss-color-surface);
+    background: var(--ss-color-surface-muted);
     color: var(--ss-color-text);
     font-family: var(--ss-font-mono);
     font-size: 0.8125rem;
@@ -9688,7 +9699,7 @@ body:has(#lock:target) .ss-security-lock {
 .ss-command__input {
     flex: 1;
     min-width: 0;
-    height: 2rem;
+    height: 1.75rem;
     padding: 0 var(--ss-space-2);
     border: 0;
     background: transparent;
@@ -9696,12 +9707,27 @@ body:has(#lock:target) .ss-security-lock {
     font: inherit;
 }
 
+.ss-command__input::placeholder {
+    color: var(--ss-color-muted);
+}
+
 .ss-command__input:focus {
     outline: none;
 }
 
 .ss-command__send {
+    width: 1.75rem;
+    height: 1.75rem;
     border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.ss-command__send:hover,
+.ss-command:focus-within .ss-command__send {
+    background: var(--ss-color-border);
+    color: var(--ss-color-text);
 }
 
 /* Panel powiadomień z zadaniami TODO (x-admiro::app.side-panels z tasks): podział w pionie — powiadomienia ok. 60%,
