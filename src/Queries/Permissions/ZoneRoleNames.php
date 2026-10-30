@@ -20,10 +20,12 @@ use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Models\Permissions\Role;
 use Simplysmart\Admiro\Models\ZoneAccount;
 use Simplysmart\Admiro\Permissions\PermissionTables;
+use Simplysmart\Admiro\Permissions\RoleDelegation;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
- * Nazwy ról: globalne role strefy (do formularzy nadawania), liczba uprawnień każdej z nich i role konta w organizacji.
+ * Nazwy ról: globalne role strefy (do formularzy nadawania), role administracyjne (delegujące inne role), liczba
+ * uprawnień każdej z nich i role konta w organizacji.
  */
 final readonly class ZoneRoleNames
 {
@@ -43,6 +45,25 @@ final readonly class ZoneRoleNames
         $query->orderBy(ColumnNames::ID);
 
         return array_values(array_filter($query->pluck(ColumnNames::NAME)->all(), is_string(...)));
+    }
+
+    /**
+     * Role administracyjne strefy: globalne role, które w pliku ról delegują inne role (`assigns`,
+     * Permissions\RoleDelegation), np. właściciel organizacji nadający role personelowi.
+     *
+     * @return list<string>
+     */
+    public function administrative(ZoneDefinition $zone): array
+    {
+        $query = Role::query();
+        $query->where(PermissionTables::GUARD_NAME, $zone->guard);
+        $query->whereNull(PermissionTables::TEAM_FOREIGN_KEY);
+        $query->orderBy(ColumnNames::ID);
+
+        return array_values(array_map(
+            static fn(Role $role): string => $role->name,
+            array_filter($query->get()->all(), static fn(Role $role): bool => $role->defaultSetting(RoleDelegation::SETTING, []) !== []),
+        ));
     }
 
     /**

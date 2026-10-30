@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Zones;
 
+use Closure;
 use Simplysmart\Admiro\Contracts\CurrentOrganization;
 use Simplysmart\Admiro\Contracts\CurrentRole;
 use Simplysmart\Admiro\Http\AccountRoutes;
@@ -25,10 +26,13 @@ use Simplysmart\Admiro\View\Navigation\NavigationForm;
 use Simplysmart\Admiro\View\Navigation\NavigationGroup;
 
 /**
- * Konteksty konta w przełączniku layoutu strefy: wszystkie organizacje, w których konto jest członkiem (strefa
- * z `teams`; organizacja, jednostka podrzędna — np. placówka — albo departament — np. poradnia), każda jako grupa
- * z nazwą i ikoną rodzaju (KIND_ICONS; nazwa rodzaju w podpowiedzi) z rolami konta w niej (strefa z `role_contexts`), a bez ról kontekstowych — jako pozycja listy
- * organizacji. Pozycja to formularz POST na `account.context.switch` z polem FIELD = `<token organizacji>:<rola>`,
+ * Konteksty konta w przełączniku layoutu strefy: organizacje, w których konto jest członkiem (strefa z `teams`;
+ * organizacja, jednostka podrzędna — np. placówka — albo departament — np. poradnia). W strefie z `role_contexts`
+ * kontekstem jest tylko organizacja, w której konto ma rolę: grupa z nazwą i ikoną rodzaju (KIND_ICONS — budynek przy
+ * organizacji i jednostce; nazwa rodzaju w podpowiedzi) z rolami konta w niej (rola administracyjna — delegująca inne
+ * role, ZoneRoleNames::administrative() — z wypełnionym ludzikiem ADMIN_ROLE_ICON, pozostałe z konturem ROLE_ICON);
+ * członkostwo bez ról (np. poradnia grupująca gabinety) nie jest kontekstem. W strefie bez ról kontekstowych
+ * organizacje są pozycjami listy organizacji. Pozycja to formularz POST na `account.context.switch` z polem FIELD = `<token organizacji>:<rola>`,
  * więc jedno kliknięcie ustawia organizację i rolę z jej uprawnieniami. Nazwy rodzajów: `account.context_kinds.*`
  * (strefa nadpisuje je w swoich tekstach, ZoneDefinition::textKey()). Przełącznik jest widoczny już przy jednym kontekście
  * (pokazuje bieżący); bez kontekstów — brak przełącznika.
@@ -44,7 +48,12 @@ final readonly class ZoneContexts
      *
      * @var array<string, string>
      */
-    private const array KIND_ICONS = ['organization' => 'context-organization', 'unit' => 'map-pin', 'department' => 'grid'];
+    private const array KIND_ICONS = ['organization' => 'building', 'unit' => 'building', 'department' => 'grid'];
+
+    /** Ikona roli w przełączniku: zwykła rola (kontur ludzika) i rola administracyjna (wypełniony ludzik). */
+    private const string ROLE_ICON = 'user';
+
+    private const string ADMIN_ROLE_ICON = 'user-filled';
 
     public function __construct(
         private ActiveMemberships $memberships,
@@ -73,6 +82,7 @@ final readonly class ZoneContexts
         }
 
         $action = route($zone->routeName(AccountRoutes::CONTEXT_SWITCH));
+        $roleIcon = $this->roleIcon($zone);
         $groups = [];
         $plain = [];
         $count = 0;
@@ -80,6 +90,10 @@ final readonly class ZoneContexts
         foreach ($this->memberships->organizations($account)->sortBy(static fn(Organization $organization): string => $organization->contextName()) as $organization) {
             $isCurrent = $organization->id === $currentId;
             $roles = $zone->roleContexts ? $this->roles->of($account, $organization->id) : [];
+
+            if ($roles === [] && $zone->roleContexts) {
+                continue;
+            }
 
             if ($roles === []) {
                 $plain[] = new NavigationForm($organization->contextName(), $action, self::FIELD, self::value($organization, null), self::KIND_ICONS['organization'], $isCurrent);
@@ -92,7 +106,7 @@ final readonly class ZoneContexts
             $kind = self::kind($organization);
             $groups[] = new NavigationGroup(
                 $organization->contextName(),
-                array_map(static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, self::FIELD, self::value($organization, $role), 'user', $role === $active), $roles),
+                array_map(static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, self::FIELD, self::value($organization, $role), $roleIcon($role), $role === $active), $roles),
                 self::KIND_ICONS[$kind],
                 text($zone->textKey('account.context_kinds.' . $kind)),
             );
@@ -121,11 +135,24 @@ final readonly class ZoneContexts
 
         $active = $this->role->of($account, $organizationId);
         $action = route($zone->routeName(AccountRoutes::ROLE_SWITCH));
+        $roleIcon = $this->roleIcon($zone);
 
         return [new NavigationGroup(text($zone->textKey('account.role')), array_map(
-            static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, RoleSwitchController::FIELD, $role, 'user', $role === $active),
+            static fn(string $role): NavigationForm => new NavigationForm($zone->roleLabel($role), $action, RoleSwitchController::FIELD, $role, $roleIcon($role), $role === $active),
             $roles,
         ))];
+    }
+
+    /**
+     * Ikona roli: wypełniony ludzik dla ról administracyjnych strefy, kontur dla pozostałych.
+     *
+     * @return Closure(string): string
+     */
+    private function roleIcon(ZoneDefinition $zone): Closure
+    {
+        $administrative = $this->roles->administrative($zone);
+
+        return static fn(string $role): string => in_array($role, $administrative, true) ? self::ADMIN_ROLE_ICON : self::ROLE_ICON;
     }
 
     /**

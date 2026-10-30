@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Przełącznik kontekstu w strefie z rolami jako kontekstami pokazuje tylko organizacje, jednostki i departamenty, w których konto ma rolę — członkostwo bez roli (np. departament grupujący gabinety) nie jest kontekstem. Organizacja i jednostka mają ikonę budynku, rola administracyjna (delegująca inne role, `ZoneRoleNames::administrative()`) wypełnionego ludzika (nowa ikona `user-filled`), pozostałe role ludzika z konturem; ikona `context-organization` usunięta.
+
 ### Fixed
 
 - Domyślna rola po zalogowaniu w strefie z rolami jako kontekstami to najszersza rola konta w organizacji (najwięcej uprawnień, np. właściciel przed lekarzem), a nie pierwsza nadana.
