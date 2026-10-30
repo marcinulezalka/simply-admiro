@@ -441,7 +441,7 @@ przycisku w stopce; grupy stron w siatce komórek z cienkimi liniami między nim
 zwarte odstępy; otwarta stopka przestaje być przyklejona i rośnie w dół), po prawej jedna wspólna ramka narzędzi
 (`.ss-workspace-footer__tools`: obwódka bez podziałek, przyciski w środku bez własnych ramek; każdy
 dalej otwiera swój panel) — przełącznik kontekstu `x-admiro::app.context-switch` (menu nad stopką; konteksty z
-`Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa z nazwą i ikoną rodzaju (organizacja `building`, jednostka `map-pin`, departament `grid`; nazwa rodzaju w podpowiedzi) z rolami konta, jedno
+`Zones\ZoneContexts`: każda organizacja, jednostka i departament konta jako grupa z nazwą i ikoną rodzaju (organizacja `context-organization` — także organizacje bez ról, jednostka `map-pin`, departament `grid`; nazwa rodzaju w podpowiedzi) z rolami konta, jedno
 kliknięcie — `account.context.switch` — ustawia organizację i rolę), zegar (`x-admiro::app.calendar`: ikona kalendarza, duża godzina krojem mono i mniejsza data „27.10.2026”, odświeżane
 co minutę, z licznikiem nieprzeczytanych powiadomień; `js/calendar-panel.js`, `View\Calendar\CalendarMonth` z `CalendarMonths`),
 który otwiera z prawej, na wysokość obszaru treści, panel boczny `.ss-side-panel` z sekcjami obok siebie w dwóch kolumnach (na wąskim ekranie jedna pod drugą) —

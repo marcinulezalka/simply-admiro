@@ -44,7 +44,7 @@ final readonly class ZoneContexts
      *
      * @var array<string, string>
      */
-    private const array KIND_ICONS = ['organization' => 'building', 'unit' => 'map-pin', 'department' => 'grid'];
+    private const array KIND_ICONS = ['organization' => 'context-organization', 'unit' => 'map-pin', 'department' => 'grid'];
 
     public function __construct(
         private ActiveMemberships $memberships,
@@ -82,7 +82,7 @@ final readonly class ZoneContexts
             $roles = $zone->roleContexts ? $this->roles->of($account, $organization->id) : [];
 
             if ($roles === []) {
-                $plain[] = new NavigationForm($organization->contextName(), $action, self::FIELD, self::value($organization, null), 'building', $isCurrent);
+                $plain[] = new NavigationForm($organization->contextName(), $action, self::FIELD, self::value($organization, null), self::KIND_ICONS['organization'], $isCurrent);
                 $count++;
 
                 continue;

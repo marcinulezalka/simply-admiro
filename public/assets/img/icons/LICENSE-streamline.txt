@@ -1,0 +1,9 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Icons: context.svg (streamline-plump:change-background-transparent),
+context-organization.svg (streamline-plump:change-background-transparent-solid)
+from "Plump free icons" by Streamline — https://www.streamlinehq.com
+Source: https://github.com/webalys-hq/streamline-vectors (via Iconify, api.iconify.design)
+Changes: Core SVG header added (aria-hidden, focusable, 24px size); drawing unchanged.
+
+License text: https://creativecommons.org/licenses/by/4.0/legalcode
