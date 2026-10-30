@@ -6080,7 +6080,8 @@ a.ss-notification:focus-visible {
 /**
  * .ss-business-card — wizytówka organizacji (x-admiro::organization.card): karta w proporcjach wizytówki z motywem
  * w tle (poświata akcentu w rogu i koncentryczne łuki od prawego dolnego rogu) i miękkim, płytkim cieniem, nazwa
- * u góry podpis krojem mono (__kicker) w rzędzie z ikoną linku (__top), pod nim nazwa krojem nagłówków (__name)
+ * u góry opcjonalna ikona w kafelku (__icon), obok niej w kolumnie (__titles) podpis krojem mono (__kicker) w rzędzie
+ * z ikoną linku (__top) i nazwa krojem nagłówków (__name), pod nimi
  * i numery rejestrowe (__registry, krój mono), dane dosunięte do dołu karty bez linii oddzielającej (__details, __detail
  * z ikoną); --link: cała karta jest odnośnikiem — karta stoi w miejscu, pod kursorem
  * wysuwa się tylko strzałka ikony odnośnika w rogu (__arrow, external-link). Karta izoluje warstwy (isolation), więc strefa może dołożyć własny motyw
@@ -6129,11 +6130,19 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-on-inverse);
 }
 
-/* Nazwa z ikoną w kafelku przed nią. */
+/* Ikona w kafelku po lewej, obok niej podpis i nazwa w kolumnie (__titles) — oba wyrównane do jednej krawędzi. */
 .ss-business-card__heading {
     display: flex;
     gap: var(--ss-space-3);
     align-items: center;
+    min-width: 0;
+}
+
+.ss-business-card__titles {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-1);
     min-width: 0;
 }
 
@@ -6142,7 +6151,6 @@ a.ss-notification:focus-visible {
     gap: var(--ss-space-3);
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--ss-space-1);
 }
 
 /* Ikona odnośnika (external-link): pod kursorem albo przy fokusie karty strzałka (pierwsza ścieżka) wysuwa się

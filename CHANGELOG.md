@@ -25,6 +25,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Wizytówka organizacji: ikona w kafelku po lewej, a podpis i nazwa w kolumnie obok niej, wyrównane do jednej krawędzi.
 - Karta obracana `x-admiro::flip-card` może mieć drugi odwrót (slot `alternate`) z własnym przyciskiem obok obracania (domyślnie ikona flagi); dane kontaktowe organizacji jako osobny komponent `x-admiro::organization.contact`, a wizytówka może je pominąć (`contact`).
 - Menu błyskawicy wyszukiwarki w layoucie stref jak teczka: u góry zakładka z błyskawicą i tytułem „Szybkie akcje” (falisty skos jak zakładki teczek), pod nią na wspólnym tle szybkie akcje krojem mono i kartka w kropki, a tło schodzi w dół wypustką z tą samą falą i obejmuje przycisk błyskawicy.
 
