@@ -218,7 +218,7 @@ Wariant layoutu stref (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`, 
 
 | Element | Zawartość |
 | --- | --- |
-| **Lewe menu** | pudełko na wysokość okna, przyklejone pod jego górną krawędzią, z własnym przewijaniem — także palcem na ekranie dotykowym, bez przewijania strony pod spodem (`overscroll-behavior: contain`); treść ze slotu `left` w `x-admiro::zone.layout`, a bez niego na stronie ustawień kategorie ustawień (`x-admiro::app.settings-nav`); bez obu kolumny nie ma. Węziej niż 64rem stoi nad treścią, do połowy wysokości okna |
+| **Lewe menu** | pudełko na wysokość okna, przyklejone pod jego górną krawędzią, z własnym przewijaniem — także palcem na ekranie dotykowym, bez przewijania strony pod spodem (`overscroll-behavior: contain`); treść ze slotu `left` w `x-admiro::zone.layout` (pusty slot — pusty kontener), a bez niego na stronie ustawień kategorie ustawień (`x-admiro::app.settings-nav`); bez obu kolumny nie ma. Węziej niż 64rem stoi nad treścią, do połowy wysokości okna |
 | **Treść** | zwykła treść strony (slot) |
 | **Sidebar wiki** | prawy panel wiki i podpowiedzi (`x-admiro::app.sidebar-wiki`, `js/sidebar-wiki.js`): pinezka przypina go jako stałą kolumnę na wysokość okna z własnym przewijaniem (stan w przeglądarce, od 64rem); nieprzypięty chowa się za wąską pionową zakładką przy prawej krawędzi i wysuwa nad treść (×, Esc, klik obok chowają); bez skryptu stoi przypięty |
 
