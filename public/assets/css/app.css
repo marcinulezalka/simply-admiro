@@ -488,6 +488,62 @@
     transition: transform 0.15s ease;
 }
 
+/* Wskaźnik procentu w kółku po prawej od etykiety i paska (ring). */
+.ss-onboarding-card__progress--ring {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--ss-space-4);
+    align-items: center;
+}
+
+.ss-onboarding-card__progress--ring .ss-onboarding-card__progress-label,
+.ss-onboarding-card__progress--ring .ss-progress {
+    grid-column: 1;
+}
+
+.ss-onboarding-card__ring {
+    position: relative;
+    display: inline-flex;
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-onboarding-card__ring svg {
+    position: absolute;
+    inset: 0.25rem;
+    width: calc(100% - 0.5rem);
+    height: calc(100% - 0.5rem);
+}
+
+.ss-onboarding-card__ring-track,
+.ss-onboarding-card__ring-value {
+    fill: none;
+    stroke-width: 3;
+}
+
+.ss-onboarding-card__ring-track {
+    stroke: var(--ss-color-border);
+}
+
+.ss-onboarding-card__ring-value {
+    stroke: var(--ss-color-text);
+    stroke-linecap: round;
+}
+
+.ss-onboarding-card__ring-label {
+    position: relative;
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
 .ss-onboarding-card:hover .ss-onboarding-card__arrow {
     transform: translateX(0.25rem);
 }

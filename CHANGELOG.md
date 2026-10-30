@@ -6,7 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Karta postępu `x-admiro::checklist.card` przyjmuje warstwę dekoracji (slot) i klasę strefy; ikona `portrait-lock` (Streamline Flex, CC BY 4.0 — licencja w `public/assets/img/icons/LICENSE-streamline.txt`).
+- Karta postępu `x-admiro::checklist.card` przyjmuje warstwę dekoracji (slot), klasę strefy i okrągły wskaźnik procentu (`ring`); ikona `portrait-lock` (Streamline Flex, CC BY 4.0 — licencja w `public/assets/img/icons/LICENSE-streamline.txt`).
 - Blokada ekranu jak Win+L (`account.lock` / `account.unlock`, `Auth\ScreenLock`): przycisk „Zablokuj ekran” w stopce layoutu stref (nowa ikona `lock-screen` z Qlementine Icons, MIT — licencja w `public/assets/img/icons/`) zostawia konto zalogowane, a każda strona prowadzi na ekran PIN-u; poprawny PIN wraca na stronę sprzed blokady, błędne liczą się jak przy logowaniu (po limicie blokada konta i wylogowanie), wylogowanie działa zawsze.
 - Wizytówka organizacji: opcjonalna ikona przed podpisem (`icon`, ciemny kafelek jak na karcie postępu), numery rejestrowe (NIP, REGON, KRS) każdy w osobnej linii, adres i kontakty w szklanym boksie czytelnym na motywie tła.
 - Jednostki w menu konta layoutu stref to odnośniki — strefa wskazuje dane jednostki (`Contracts\ZoneUnitLinks`), domyślnie pulpit jednostki w jej kontekście; `RoleSelector::broadest()` publiczne.
