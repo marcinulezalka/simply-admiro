@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Zones;
 
 use Simplysmart\Admiro\Http\Middleware\EnsureAccountCanSignIn;
+use Simplysmart\Admiro\Http\Middleware\EnsureScreenUnlocked;
 
 /**
  * Poziomy dostępu do tras strefy; każdy wyższy zawiera niższe (public ⊂ authenticated ⊂ uprawnienie).
@@ -29,7 +30,7 @@ enum AccessTier
     /** Tylko niezalogowani w tej strefie (logowanie); zalogowany trafia na dashboard. */
     case GuestOnly;
 
-    /** Każde konto strefy, także z rolą bez uprawnień; sesja konta nieaktywnego lub unieważnionego jest wylogowywana. */
+    /** Każde konto strefy, także z rolą bez uprawnień; sesja konta nieaktywnego lub unieważnionego jest wylogowywana, a przy zablokowanym ekranie (Auth\ScreenLock) strony prowadzą na ekran PIN-u. */
     case Authenticated;
 
     /**
@@ -42,7 +43,7 @@ enum AccessTier
         return match ($this) {
             self::Public => [],
             self::GuestOnly => ['guest:' . $zone->guard],
-            self::Authenticated => ['auth:' . $zone->guard, EnsureAccountCanSignIn::class],
+            self::Authenticated => ['auth:' . $zone->guard, EnsureAccountCanSignIn::class, EnsureScreenUnlocked::class],
         };
     }
 

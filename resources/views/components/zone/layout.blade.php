@@ -61,6 +61,7 @@
             'units' => $account instanceof \Simplysmart\Admiro\Models\ZoneAccount ? app(\Simplysmart\Admiro\Zones\ZoneContexts::class)->units($zone, $account) : [],
         ]"
         :sign-out="route($zone->routeName('auth.logout'))"
+        :lock-url="route($zone->routeName(\Simplysmart\Admiro\Http\AccountRoutes::LOCK))"
         :contexts="$contexts === [] ? null : $contexts"
         :notifications="$navigation instanceof \Simplysmart\Admiro\Contracts\ZoneNotifications ? $navigation->notifications() : new \Simplysmart\Admiro\View\Notifications\NotificationPanel([])"
         :toasts="$toasts"

@@ -19,6 +19,7 @@ use Simplysmart\Admiro\Http\Controllers\Account\ContextSwitchController;
 use Simplysmart\Admiro\Http\Controllers\Account\OrganizationSwitchController;
 use Simplysmart\Admiro\Http\Controllers\Account\PinChangeController;
 use Simplysmart\Admiro\Http\Controllers\Account\RecoveryEmailController;
+use Simplysmart\Admiro\Http\Controllers\Account\ScreenLockController;
 use Simplysmart\Admiro\Http\Controllers\Account\SecurityController;
 use Simplysmart\Admiro\Http\Controllers\Account\TrustedDeviceController;
 use Simplysmart\Admiro\Http\Controllers\Account\ProfileController;
@@ -81,6 +82,13 @@ final readonly class AccountRoutes
     /** Strona bezpieczeństwa: PIN, zaufane urządzenia, historia konta, wylogowanie wszędzie. */
     public const string SECURITY = 'account.security';
 
+    /** Blokada ekranu (POST), ekran PIN-u i odblokowanie (Http\Controllers\Account\ScreenLockController). */
+    public const string LOCK = 'account.lock';
+
+    public const string UNLOCK = 'account.unlock';
+
+    public const string UNLOCK_STORE = 'account.unlock.store';
+
     public const string SIGN_OUT_EVERYWHERE = 'account.security.sign-out-everywhere';
 
     /** Kotwice sekcji strony bezpieczeństwa (`#pin`, `#devices`, `#recovery`, `#lock` — karty blokowania dostępu). */
@@ -107,6 +115,9 @@ final readonly class AccountRoutes
             $this->router->get('profile', [ProfileController::class, 'show'])->name(self::PROFILE);
             $this->router->put('profile', [ProfileController::class, 'update'])->middleware($throttle)->name(self::PROFILE_UPDATE);
             $this->router->get('security', [SecurityController::class, 'show'])->name(self::SECURITY);
+            $this->router->post('lock', [ScreenLockController::class, 'lock'])->name(self::LOCK);
+            $this->router->get('unlock', [ScreenLockController::class, 'show'])->name(self::UNLOCK);
+            $this->router->post('unlock', [ScreenLockController::class, 'unlock'])->middleware($throttle)->name(self::UNLOCK_STORE);
             $this->router->view('appearance', self::APPEARANCE_VIEW)->name(self::APPEARANCE);
             $this->router->delete('security/sessions', [SecurityController::class, 'signOutEverywhere'])->middleware($throttle)->name(self::SIGN_OUT_EVERYWHERE);
             $this->router->get('pin', [SecurityController::class, 'section'])->defaults('section', self::SECTION_PIN)->name(self::PIN);

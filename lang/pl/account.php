@@ -113,4 +113,14 @@ return [
         'pink' => 'Różowy',
     ],
 
+    'screen_lock' => [
+        'title' => 'Ekran zablokowany',
+        'lead' => ':name, wpisz PIN, żeby wrócić do pracy.',
+        'pin' => 'PIN',
+        'submit' => 'Odblokuj',
+        'invalid' => 'Nieprawidłowy PIN.',
+        'locked_out' => 'Za dużo błędnych prób PIN-u — konto zostało zablokowane i wylogowane.',
+        'sign_out' => 'Wyloguj się',
+    ],
+
 ];

@@ -1,5 +1,5 @@
-{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty adres w dwóch liniach (ulica, pod nią kod, miasto i kraj), telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
-@props(['organization', 'href' => null, 'kicker' => null])
+{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty adres w dwóch liniach (ulica, pod nią kod, miasto i kraj), telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji); icon: ikona w kafelku przed podpisem (np. building). organization: Models\Organization; href: ?string; kicker: ?string. --}}
+@props(['organization', 'href' => null, 'kicker' => null, 'icon' => null])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
     $locality = trim(implode(' ', array_filter([$organization->postal_code, $organization->city])));
@@ -19,8 +19,11 @@
 @endphp
 <{{ $tag }} {{ $attributes->class(['ss-business-card', 'ss-business-card--link' => $href !== null]) }} @if ($href !== null) href="{{ $href }}" @endif>
     <span class="ss-business-card__identity">
-        @if (filled($kicker) || $href !== null)
+        @if (filled($kicker) || $href !== null || filled($icon))
             <span class="ss-business-card__top">
+                @if (filled($icon))
+                    <x-admiro::icon :name="$icon" class="ss-business-card__icon" />
+                @endif
                 @if (filled($kicker))
                     <span class="ss-business-card__kicker">{{ $kicker }}</span>
                 @endif

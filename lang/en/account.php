@@ -113,4 +113,14 @@ return [
         'pink' => 'Pink',
     ],
 
+    'screen_lock' => [
+        'title' => 'Screen locked',
+        'lead' => ':name, enter your PIN to get back to work.',
+        'pin' => 'PIN',
+        'submit' => 'Unlock',
+        'invalid' => 'Incorrect PIN.',
+        'locked_out' => 'Too many wrong PIN attempts — the account was locked and signed out.',
+        'sign_out' => 'Sign out',
+    ],
+
 ];
