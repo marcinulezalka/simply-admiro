@@ -6,7 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Karta obracana `x-admiro::flip-card` (js/flip-card.js): przycisk w prawym górnym rogu obraca kartę w 3D na odwrót, zjechanie kursorem, Esc albo „Wróć” obracają ją z powrotem; lista kontekstów konta jako osobny komponent `x-admiro::app.context-list` (także w przełączniku kontekstu).
+- Karta obracana `x-admiro::flip-card` (js/flip-card.js): przycisk w prawym górnym rogu obraca kartę w 3D na odwrót, zjechanie kursorem, Esc albo „Wróć” obracają ją z powrotem (zakryta strona znika w połowie obrotu, więc teksty obu stron nie nachodzą na siebie); lista kontekstów konta jako osobny komponent `x-admiro::app.context-list` (także w przełączniku kontekstu).
 - Karta postępu `x-admiro::checklist.card` przyjmuje warstwę dekoracji (slot), klasę strefy i okrągły wskaźnik procentu (`ring`); ikona `portrait-lock` (Streamline Flex, CC BY 4.0 — licencja w `public/assets/img/icons/LICENSE-streamline.txt`).
 - Blokada ekranu jak Win+L (`account.lock` / `account.unlock`, `Auth\ScreenLock`): przycisk „Zablokuj ekran” w stopce layoutu stref (nowa ikona `lock-screen` z Qlementine Icons, MIT — licencja w `public/assets/img/icons/`) zostawia konto zalogowane, a każda strona prowadzi na ekran PIN-u; poprawny PIN wraca na stronę sprzed blokady, błędne liczą się jak przy logowaniu (po limicie blokada konta i wylogowanie), wylogowanie działa zawsze.
 - Wizytówka organizacji: opcjonalna ikona przed podpisem (`icon`, ciemny kafelek jak na karcie postępu), numery rejestrowe (NIP, REGON, KRS) każdy w osobnej linii, adres i kontakty w szklanym boksie (tło 8% krycia z rozmyciem) czytelnym na motywie tła.

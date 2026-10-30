@@ -8977,6 +8977,17 @@ a.ss-org-item:focus-visible {
     transform: rotateY(180deg);
 }
 
+/* Zakryta strona znika w połowie obrotu (visibility), bo elementy z maską, filtrem albo cieniem potrafią przebić
+   backface-visibility i teksty obu stron nachodzą na siebie. */
+.ss-flip__face {
+    transition: visibility 0s linear 0.3s;
+}
+
+.ss-flip--flipped .ss-flip__face--front,
+.ss-flip:not(.ss-flip--flipped) .ss-flip__face--back {
+    visibility: hidden;
+}
+
 .ss-flip__face {
     display: flex;
     grid-area: 1 / 1;
@@ -9039,7 +9050,8 @@ a.ss-org-item:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .ss-flip__inner {
+    .ss-flip__inner,
+    .ss-flip__face {
         transition: none;
     }
 }
