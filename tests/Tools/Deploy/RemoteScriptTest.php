@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Simplysmart\Admiro\Tools\Deploy\DeployConfig;
 use Simplysmart\Admiro\Tools\Deploy\OnboardingAccount;
+use Simplysmart\Admiro\Tools\Deploy\ProjectConfig;
 use Simplysmart\Admiro\Tools\Deploy\RemoteScript;
 use Simplysmart\Admiro\Tools\Deploy\ShellArgument;
 
@@ -65,6 +66,22 @@ final class RemoteScriptTest extends TestCase
             $output,
         );
         $this->assertFileDoesNotExist('/tmp/simplysmart-pwned');
+    }
+
+    #[Test]
+    public function skrypt_przed_produkcji_zostawia_env_i_nie_eksportuje_tokenu(): void
+    {
+        $directory = sys_get_temp_dir() . '/remote-script-' . bin2hex(random_bytes(4));
+        mkdir($directory);
+        $config = new ProjectConfig('shop', new DeployConfig('host', '~/app', githubToken: 'sekret'), $directory, 'php85', '/opt/composer.phar');
+        $server = <<<'BASH'
+            printf '%s\0' "$DEPLOY_PHP" "$DEPLOY_KEEP_ENV" "$COMPOSER_BIN" "${GITHUB_TOKEN-brak}" "$PWD"
+            BASH;
+
+        $output = $this->bash((new RemoteScript($server))->buildPreproduction($config));
+        rmdir($directory);
+
+        $this->assertSame(['php85', '1', '/opt/composer.phar', 'brak', $directory], $output);
     }
 
     #[Test]

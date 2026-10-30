@@ -92,7 +92,7 @@ Paczka z niewypchniętymi commitami dostaje ostrzeżenie (lock wskaże kod z rep
    tylko pokazuje, co zostałoby wypchnięte),
 2. sprawdza, czy projekt i paczki z `packages/*/*` są wypchnięte (niewypchnięte commity zatrzymują wdrożenie,
    niezacommitowane zmiany i nieudany `git fetch` dają ostrzeżenie; katalogi bez `.git` są pomijane),
-3. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock),
+3. tworzy manifest wdrożeniowy (jak `deploy:lock`; bez repozytoriów `path` zostaje istniejący lock — dlatego projekty bez lokalnych paczek wdraża się z projektu bazowego: `deploy <projekt>`, niżej),
 4. wysyła `composer.deploy.json` i `composer.deploy.lock` na serwer (`scp`); środowiska nie wysyła — lokalny
    `.env.production` zostaje na komputerze deweloperskim,
 5. uruchamia na serwerze skrypt `resources/deploy/remote.sh` przez `ssh … 'bash -s'`: Composer 2.8+, `.env`
@@ -124,6 +124,44 @@ vendor/bin/simplysmart deploy
 vendor/bin/simplysmart deploy --with-push                  # najpierw git push paczek (także prywatnych) i projektu
 vendor/bin/simplysmart deploy --config=infrastructure/test.env
 ```
+
+### Wdrożenie projektu: przed-produkcja, potem produkcja
+
+W projekcie bazowym z paczkami w `packages/*/*` (np. skeleton) wdrożenie projektu klienta uruchamia się z jego nazwą:
+`vendor/bin/simplysmart deploy <projekt>`. Konfiguracja jest w `infrastructure/deploy-vendors/<projekt>.env`
+(katalog w `.gitignore`, wzór `infrastructure/deploy-vendor.env.example`, `Tools\Deploy\ProjectConfig`). To klucze
+produkcji z tabeli wyżej oraz klucze przed-produkcji, czyli katalogu projektu na tym komputerze (klonu repozytorium
+projektu z własnym `.env`):
+
+| Klucz | Znaczenie |
+| --- | --- |
+| `PREPRODUCTION_PATH` | katalog przed-produkcji (ścieżka bezwzględna, z `artisan` i `.git`), wymagane |
+| `PREPRODUCTION_PHP` | polecenie PHP 8.4+ na tym komputerze (domyślnie `php`) |
+| `PREPRODUCTION_COMPOSER` | plik Composera (phar) dla skryptu; pusty = `composer` z `PATH` |
+
+Kroki:
+1. jak wyżej: `--with-push`, a potem sprawdzenie, że poprawki są wypchnięte w projekcie bazowym i jego paczkach, także prywatnych;
+2. świeży manifest wdrożeniowy (stary `composer.deploy.*` jest usuwany, więc nie da się wdrożyć nieaktualnego; bez paczek z repozytoriów `path` to błąd);
+3. **przed-produkcja**: manifest kopiowany do jej katalogu i ten sam `resources/deploy/remote.sh` uruchomiony lokalnie (`bash -s` w tym katalogu) z `DEPLOY_KEEP_ENV=1`:
+   - `.env` przed-produkcji zostaje bez zmian, bo jej `.env.production` nie jest kopiowany;
+   - bez `COMPOSER_BIN` skrypt bierze `composer` z `PATH`;
+   - token GitHub nie jest eksportowany, więc nie trafia do globalnej konfiguracji Composera dewelopera;
+   - dalej jak na serwerze: `git pull --ff-only`, `composer install --no-dev` z manifestu, migracje, seedy, słowniki, cache;
+   - błąd zatrzymuje wdrożenie;
+4. pytanie „Wdrożyć też na produkcję …? [t/N]”. `--production` oznacza „tak” bez pytania, a `--no-production` tylko przed-produkcję. Bez terminala (CI, potok) odpowiedź to „nie”;
+5. **produkcja**: ten sam manifest przez `scp` i skrypt serwerowy przez `ssh`.
+
+```bash
+vendor/bin/simplysmart deploy shop --dry-run          # plan obu środowisk; nic nie uruchamia
+vendor/bin/simplysmart deploy shop --with-push        # push, przed-produkcja, pytanie o produkcję
+vendor/bin/simplysmart deploy shop --no-production    # tylko przed-produkcja
+```
+
+Onboarding i wdrożenie od zera działają tak samo z nazwą projektu:
+- `deploy:onboarding <projekt>` bierze konta z `deploy-vendors/<projekt>.onboarding.env` i zakłada je w obu środowiskach;
+- `deploy:fresh <projekt> --confirm=<DEPLOY_SSH>` czyści bazę przed-produkcji i produkcji.
+
+Bez nazwy projektu i bez `infrastructure/deploy.env` polecenie wymienia projekty z `deploy-vendors/`.
 
 ### Onboarding
 

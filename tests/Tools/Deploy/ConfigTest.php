@@ -19,9 +19,11 @@ use Simplysmart\Admiro\Tools\Deploy\DeployConfig;
 use Simplysmart\Admiro\Tools\Deploy\DeployConfigException;
 use Simplysmart\Admiro\Tools\Deploy\MissingConfigException;
 use Simplysmart\Admiro\Tools\Deploy\OnboardingConfig;
+use Simplysmart\Admiro\Tools\Deploy\ProjectConfig;
 
 /**
- * Konfiguracja wdrożenia (deploy.env) i onboardingu (deploy.onboarding.env) z wartości pliku.
+ * Konfiguracja wdrożenia (deploy.env), projektu (deploy-vendors/<projekt>.env) i onboardingu (deploy.onboarding.env)
+ * z wartości pliku.
  */
 final class ConfigTest extends TestCase
 {
@@ -36,6 +38,10 @@ final class ConfigTest extends TestCase
     {
         if (is_file($this->file)) {
             unlink($this->file);
+        }
+
+        if (is_dir($this->file)) {
+            exec('rm -rf ' . escapeshellarg($this->file));
         }
     }
 
@@ -59,6 +65,38 @@ final class ConfigTest extends TestCase
         $this->expectExceptionMessage('Brak wymaganych wartości w deploy.env: DEPLOY_SSH, DEPLOY_PATH. Wzór: deploy.env.example.');
 
         $this->deployConfig("DEPLOY_SSH=\nDEPLOY_PHP=php84\n");
+    }
+
+    #[Test]
+    public function czyta_konfiguracje_projektu_z_przed_produkcja_i_produkcja(): void
+    {
+        $root = $this->projectRoot(['shop.env' => "PREPRODUCTION_PATH=/var/www/shop-staging/\nDEPLOY_SSH=shop@prod\nDEPLOY_PATH=~/shop.pl\nDEPLOY_PHP=php84\n", 'shop.onboarding.env' => '', 'blog.env' => '']);
+
+        $config = ProjectConfig::load($root, 'shop');
+
+        $this->assertSame('/var/www/shop-staging', $config->preproductionPath);
+        $this->assertSame('php', $config->preproductionPhp);
+        $this->assertNull($config->preproductionComposer);
+        $this->assertSame('shop@prod', $config->production->ssh);
+        $this->assertSame('~/shop.pl', $config->production->path);
+        $this->assertSame('infrastructure/deploy-vendors/shop.onboarding.env', $config->onboardingFile());
+        $this->assertSame(['blog', 'shop'], ProjectConfig::available($root));
+    }
+
+    #[Test]
+    public function projekt_bez_przed_produkcji_albo_ze_sciezka_wzgledna_to_blad(): void
+    {
+        $root = $this->projectRoot(['shop.env' => "DEPLOY_SSH=shop@prod\nDEPLOY_PATH=~/shop.pl\n", 'blog.env' => "PREPRODUCTION_PATH=blog\nDEPLOY_SSH=a\nDEPLOY_PATH=b\n"]);
+
+        try {
+            ProjectConfig::load($root, 'shop');
+            $this->fail('Brak PREPRODUCTION_PATH powinien być błędem.');
+        } catch (MissingConfigException $exception) {
+            $this->assertSame('Brak wymaganych wartości w infrastructure/deploy-vendors/shop.env: PREPRODUCTION_PATH. Wzór: infrastructure/deploy-vendor.env.example.', $exception->getMessage());
+        }
+
+        $this->expectExceptionMessage('infrastructure/deploy-vendors/blog.env: PREPRODUCTION_PATH musi być ścieżką bezwzględną.');
+        ProjectConfig::load($root, 'blog');
     }
 
     #[Test]
@@ -121,6 +159,22 @@ final class ConfigTest extends TestCase
         $this->expectExceptionMessage('brak kont');
 
         OnboardingConfig::fromValues([], 'onboarding.env');
+    }
+
+    /**
+     * Katalog projektu bazowego z plikami w `infrastructure/deploy-vendors/` (usuwany w tearDown razem z $this->file).
+     *
+     * @param  array<string, string>  $files
+     */
+    private function projectRoot(array $files): string
+    {
+        mkdir($this->file . '/' . ProjectConfig::DIRECTORY, recursive: true);
+
+        foreach ($files as $name => $contents) {
+            file_put_contents($this->file . '/' . ProjectConfig::DIRECTORY . "/{$name}", $contents);
+        }
+
+        return $this->file;
     }
 
     private function deployConfig(string $contents): DeployConfig

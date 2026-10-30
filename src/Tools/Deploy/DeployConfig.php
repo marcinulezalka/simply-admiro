@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Tools\Deploy;
 
 /**
- * Konfiguracja wdrożenia z `infrastructure/deploy.env`: serwer SSH, katalog aplikacji, PHP i Composer
- * na serwerze, Composer lokalny i token GitHub.
+ * Konfiguracja wdrożenia z `infrastructure/deploy.env` (albo produkcja z pliku projektu, ProjectConfig): serwer SSH,
+ * katalog aplikacji, PHP i Composer na serwerze, Composer lokalny i token GitHub.
  */
 final readonly class DeployConfig
 {
@@ -60,11 +60,21 @@ final readonly class DeployConfig
             throw MissingConfigException::keys($name, $missing);
         }
 
+        return self::fromValues($values);
+    }
+
+    /**
+     * Konfiguracja z wartości już wczytanych i sprawdzonych (SSH i PATH niepuste), np. z pliku projektu (ProjectConfig).
+     *
+     * @param  array<string, string>  $values
+     */
+    public static function fromValues(array $values): self
+    {
         $local = preg_split('/\s+/', $values[self::LOCAL_COMPOSER] ?? '', -1, PREG_SPLIT_NO_EMPTY) ?: [];
 
         return new self(
-            ssh: $values[self::SSH],
-            path: $values[self::PATH],
+            ssh: $values[self::SSH] ?? '',
+            path: $values[self::PATH] ?? '',
             php: self::optional($values, self::PHP) ?? self::DEFAULT_PHP,
             remoteComposer: self::optional($values, self::REMOTE_COMPOSER),
             localComposer: $local === [] ? null : $local,

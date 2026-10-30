@@ -8,6 +8,9 @@
 #   3. token GitHub dla Composera (GITHUB_TOKEN, jeśli podany),
 #   4. paczki z manifestu wdrożeniowego (COMPOSER=composer.deploy.json, --no-dev),
 #   5. APP_KEY, migracje (z DEPLOY_FRESH=1: migrate:fresh — usuwa wszystkie tabele i dane), słowniki, organizacja operatora, role, słowniki paczek (*:dictionaries:sync), cache.
+# Z DEPLOY_KEEP_ENV=1 (przed-produkcja projektu na komputerze deweloperskim, `simplysmart deploy <projekt>`) .env
+# zostaje bez zmian (bez kopii .env.production), a bez COMPOSER_BIN i ~/bin/composer skrypt bierze composer z PATH
+# zamiast go instalować.
 # Zatrzymuje się przy pierwszym błędzie.
 #
 # Użycie na serwerze:
@@ -18,6 +21,7 @@ set -euo pipefail
 php_bin="${DEPLOY_PHP:-php84}"
 # Plik Composera na serwerze: COMPOSER_BIN (np. composer.phar w katalogu aplikacji), domyślnie ~/bin/composer.
 composer_bin="${COMPOSER_BIN:-$HOME/bin/composer}"
+keep_env="${DEPLOY_KEEP_ENV:-}"
 
 fail() { echo "BŁĄD: $*" >&2; exit 1; }
 step() { echo "--> $*"; }
@@ -26,6 +30,9 @@ command -v "$php_bin" >/dev/null || fail "Brak $php_bin. Ustaw DEPLOY_PHP na pol
 "$php_bin" -r 'exit(PHP_VERSION_ID >= 80400 ? 0 : 1);' || fail "$php_bin to nie PHP 8.4 ($("$php_bin" -r 'echo PHP_VERSION;'))."
 [[ -f artisan && -f composer.json ]] || fail "Uruchom w katalogu aplikacji (brak artisan / composer.json w $(pwd))."
 
+if [[ ! -f "$composer_bin" && "$keep_env" == 1 && -z "${COMPOSER_BIN:-}" ]] && command -v composer >/dev/null; then
+    composer_bin="$(command -v composer)"
+fi
 if [[ ! -f "$composer_bin" ]]; then
     step "Instaluję Composera w $composer_bin"
     mkdir -p "$(dirname "$composer_bin")"
@@ -45,7 +52,9 @@ fi
 step "$("${composer[@]}" --version --no-ansi 2>/dev/null | head -n1)"
 
 rm -f .env.deploy
-if [[ -f .env.production ]]; then
+if [[ "$keep_env" == 1 ]]; then
+    step "Przed-produkcja: .env zostaje bez zmian"
+elif [[ -f .env.production ]]; then
     step "Kopiuję .env.production serwera jako .env"
     # Plik bez APP_KEY dostaje klucz z obecnego .env: nowy klucz unieważniłby sesje i zaszyfrowane dane.
     env_new="$(mktemp .env.XXXXXX)"

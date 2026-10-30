@@ -35,14 +35,26 @@ $privatePackages = new PrivatePackagesCommand(new ProcessComposerRunner());
 $repositories = new RepositoryCheck($processes, new GitRepositorySource($processes));
 $script = RemoteScript::fromPackage();
 $lockCommand = static fn(?array $composer): Command => new PrivatePackagesCommand(new ProcessComposerRunner($composer));
+// Pytanie o produkcję (deploy <projekt>): odpowiedź z terminala; bez terminala (CI, potok) zawsze „nie”.
+$confirm = static function (string $question): bool {
+    if (! stream_isatty(STDIN)) {
+        fwrite(STDOUT, $question . "nie (brak terminala; użyj --production)\n");
+
+        return false;
+    }
+
+    fwrite(STDOUT, $question);
+
+    return in_array(mb_strtolower(trim((string) fgets(STDIN))), ['t', 'tak', 'y', 'yes'], true);
+};
 
 $application = new Application([
     new VersionReleaseCommand(new VersionRelease(new ReleasePlanner(), ReleaseClock::fromEnvironment())),
     $privatePackages,
     new PresetCommand('deploy:lock', 'Manifest wdrożeniowy composer.deploy.json/.lock z paczkami z repozytoriów git', $privatePackages, [PrivatePackagesCommand::DEPLOY]),
-    new DeployCommand(DeployMode::Deploy, $processes, $repositories, $script, $lockCommand),
-    new DeployCommand(DeployMode::Onboarding, $processes, $repositories, $script, $lockCommand),
-    new DeployCommand(DeployMode::Fresh, $processes, $repositories, $script, $lockCommand),
+    new DeployCommand(DeployMode::Deploy, $processes, $repositories, $script, $lockCommand, $confirm),
+    new DeployCommand(DeployMode::Onboarding, $processes, $repositories, $script, $lockCommand, $confirm),
+    new DeployCommand(DeployMode::Fresh, $processes, $repositories, $script, $lockCommand, $confirm),
 ]);
 
 exit($application->run(array_slice($_SERVER['argv'], 1), (string) getcwd(), STDOUT, STDERR));

@@ -36,7 +36,9 @@ php84 ~/bin/composer config -g github-oauth.github.com <token>
 
 Wdrożenie jednym poleceniem z komputera deweloperskiego robi `vendor/bin/simplysmart deploy` z pakietu
 `simplysmart/admiro` (narzędzia deweloperskie, `docs/narzedzia.md` tam; konfiguracja w `infrastructure/deploy.env`:
-konto SSH, katalog, PHP, jednorazowo token). Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go na serwer i uruchamia
+konto SSH, katalog, PHP, jednorazowo token). Projekt klienta bez lokalnych paczek wdraża się z projektu bazowego
+poleceniem `vendor/bin/simplysmart deploy <projekt>` (konfiguracja `infrastructure/deploy-vendors/<projekt>.env`):
+najpierw przed-produkcja na komputerze deweloperskim, potem — po potwierdzeniu — produkcja, z tego samego manifestu. Sprawdza wypchnięcie repozytoriów, tworzy lock, wysyła go na serwer i uruchamia
 tam skrypt serwerowy z admiro, który najpierw kopiuje `.env.production` serwera (w katalogu aplikacji, utrzymywany ręcznie
 na serwerze) jako `.env` (`APP_KEY` serwera zostaje, gdy plik go nie podaje)
 (Composer, `git pull`, instalacja, `APP_KEY`, migracje, role, słowniki, cache). Pierwszą instalację robi

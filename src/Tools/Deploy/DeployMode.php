@@ -35,9 +35,9 @@ enum DeployMode
     public function description(): string
     {
         return match ($this) {
-            self::Deploy => 'Wdrożenie na serwer: sprawdzenie repozytoriów, manifest wdrożeniowy, scp i skrypt serwerowy przez ssh',
-            self::Onboarding => 'Wdrożenie i pierwsza instalacja: konta z infrastructure/deploy.onboarding.env (istniejące są pomijane)',
-            self::Fresh => 'Wdrożenie od zera: migrate:fresh (usuwa wszystkie dane na serwerze), seedery i konta onboardingu',
+            self::Deploy => 'Wdrożenie: z <projekt> przed-produkcja, pytanie i produkcja (deploy-vendors); bez — serwer z deploy.env',
+            self::Onboarding => 'Wdrożenie i pierwsza instalacja: konta z pliku onboardingu (istniejące są pomijane)',
+            self::Fresh => 'Wdrożenie od zera: migrate:fresh (usuwa wszystkie dane, z <projekt> także przed-produkcji), seedery i konta',
         };
     }
 
