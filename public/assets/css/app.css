@@ -8830,6 +8830,34 @@ a.ss-org-item:focus-visible {
     margin-bottom: 0;
 }
 
+/* Menu „+” i błyskawicy wyszukiwarki w stopce layoutu stref w kolorach odwróconych: jasny tekst na ciemnym tle
+   (w ciemnym motywie odwrotnie). */
+.ss-shell--zone .ss-search__menu-panel {
+    border-color: transparent;
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
+}
+
+.ss-shell--zone .ss-search__menu-panel .ss-search__menu-title,
+.ss-shell--zone .ss-search__menu-panel .ss-search__menu-empty,
+.ss-shell--zone .ss-search__menu-panel .ss-account-menu__icon {
+    color: var(--ss-color-muted-inverse);
+}
+
+.ss-shell--zone .ss-search__menu-panel .ss-account-menu__link {
+    color: var(--ss-color-on-inverse);
+}
+
+.ss-shell--zone .ss-search__menu-panel .ss-account-menu__link:hover,
+.ss-shell--zone .ss-search__menu-panel .ss-account-menu__link:focus-visible {
+    background: color-mix(in srgb, var(--ss-color-on-inverse) 12%, transparent);
+}
+
+.ss-shell--zone .ss-search__menu-panel .ss-search__menu-separator,
+.ss-shell--zone .ss-search__menu-panel .ss-search__menu-title {
+    border-color: color-mix(in srgb, var(--ss-color-on-inverse) 18%, transparent);
+}
+
 /* Kafelki narzędzi wyglądu: podpisy i tryby krojem mono. */
 .ss-quick-tile__label,
 .ss-quick-tile__option {

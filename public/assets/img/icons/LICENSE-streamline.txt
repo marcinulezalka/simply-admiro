@@ -6,3 +6,8 @@ Source: https://github.com/webalys-hq/streamline-vectors (via Iconify, api.iconi
 Changes: Core SVG header added (aria-hidden, focusable, 24px size); drawing unchanged.
 
 License text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Icon: portrait-lock.svg (streamline-flex:portrait-lock)
+from "Flex free icons" by Streamline — https://www.streamlinehq.com
+Source: https://github.com/webalys-hq/streamline-vectors (via Iconify, api.iconify.design)
+Changes: Core SVG header added (aria-hidden, focusable, 24px size, stroke on the root); drawing unchanged.

@@ -1,9 +1,10 @@
-{{-- Karta-odnośnik postępu listy zadań (.ss-onboarding-card, wyróżniona .ss-card--feature: delikatne tło i cień) — np. onboarding na dashboardzie admiro albo konfiguracja organizacji na pulpicie strefy: duża, nieruchoma ikona w tle (icon, dekoracyjna), nagłówek z ikoną (po wszystkich zadaniach haczyk) i małą etykietą mono (eyebrow) nad tytułem (title, po wszystkich zadaniach completeTitle), opis (lead / completeLead), postęp (progressLabel z :done i :total, procent i pasek) i wezwanie do działania ze strzałką — następne niezrobione zadanie (nextLabel z :name), a po wszystkich reviewLabel. href: adres listy zadań; done, total: int (total > 0); next: ?string (nazwa następnego zadania, null po wszystkich). --}}
+{{-- Karta-odnośnik postępu listy zadań (.ss-onboarding-card, wyróżniona .ss-card--feature: delikatne tło i cień) — np. onboarding na dashboardzie admiro albo konfiguracja organizacji na pulpicie strefy: duża, nieruchoma ikona w tle (icon, dekoracyjna), nagłówek z ikoną (po wszystkich zadaniach haczyk) i małą etykietą mono (eyebrow) nad tytułem (title, po wszystkich zadaniach completeTitle), opis (lead / completeLead), postęp (progressLabel z :done i :total, procent i pasek) i wezwanie do działania ze strzałką — następne niezrobione zadanie (nextLabel z :name), a po wszystkich reviewLabel. href: adres listy zadań; done, total: int (total > 0); next: ?string (nazwa następnego zadania, null po wszystkich); slot: warstwa dekoracji pod treścią (np. ilustracja strefy, aria-hidden), klasa z atrybutów trafia na kartę (np. motyw strefy). --}}
 @props(['href', 'icon' => 'rocket', 'eyebrow', 'title', 'completeTitle', 'lead', 'completeLead', 'progressLabel', 'nextLabel', 'reviewLabel', 'done', 'total', 'next' => null])
 @php($complete = $total > 0 && $done === $total)
 @php($labelId = 'ss-checklist-card-' . md5($href))
-<a @class(['ss-card', 'ss-card--feature', 'ss-onboarding-card', 'ss-onboarding-card--complete' => $complete]) href="{{ $href }}">
+<a {{ $attributes->class(['ss-card', 'ss-card--feature', 'ss-onboarding-card', 'ss-onboarding-card--complete' => $complete]) }} href="{{ $href }}">
     <x-admiro::icon :name="$icon" class="ss-onboarding-card__watermark" />
+    {{ $slot }}
     <span class="ss-onboarding-card__head">
         <x-admiro::icon :name="$complete ? 'check-circle' : $icon" class="ss-onboarding-card__icon" />
         <span class="ss-onboarding-card__heading">
