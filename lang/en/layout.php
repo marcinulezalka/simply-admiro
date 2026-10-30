@@ -56,6 +56,7 @@ return [
     'appearance_tools' => 'Appearance',
     'color_modes' => 'Color modes',
     'resize_zoom' => 'Size and zoom',
+    'zoom' => 'Zoom',
     'zoom_out' => 'Zoom out',
     'zoom_in' => 'Zoom in',
     'close' => 'Close',

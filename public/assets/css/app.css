@@ -8504,22 +8504,51 @@ button.ss-context__back {
     display: none;
 }
 
-/* Narzędzia wyglądu w jednej siatce dopasowanej do szerokości panelu: wiersze i grupy nie tworzą własnych pudełek,
-   podpisy zostają tylko dla czytników ekranu. */
+/* Narzędzia wyglądu w panelu kalendarza layoutu stref: karta z tłem jak podgląd dnia (bez kreski nad nią), w niej grupy
+   jako pigułki (.ss-side-panel__segment) z przyciskami bez własnych ramek — jak przełącznik zakładek powiadomień;
+   włączony przycisk w kolorach akcentu. */
 .ss-side-panel__tools--grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(2.5rem, 1fr));
-    gap: var(--ss-space-1);
-    justify-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    padding: var(--ss-space-3);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface-muted);
 }
 
-.ss-side-panel__tools--grid .ss-side-panel__row,
-.ss-side-panel__tools--grid .ss-side-panel__tool-group {
-    display: contents;
+.ss-side-panel__segment {
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+    padding: 2px;
+    border: 1px solid var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
 }
 
-.ss-side-panel__tools--grid .ss-side-panel__tool-group[hidden] {
+.ss-side-panel__segment[hidden] {
     display: none;
+}
+
+.ss-side-panel__segment .ss-side-panel__tool-group {
+    gap: 2px;
+}
+
+.ss-side-panel__segment .ss-side-panel__tool {
+    border-color: transparent;
+    border-radius: var(--ss-radius-pill);
+    background: transparent;
+}
+
+.ss-side-panel__segment .ss-side-panel__tool:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-side-panel__segment .ss-side-panel__tool[aria-pressed="true"] {
+    border-color: var(--ss-color-accent);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
 }
 
 /* „TEMP” na środku okna nad treścią widoku w przygotowaniu: duży, przechylony, półprzezroczysty, nie łapie kliknięć. */

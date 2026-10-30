@@ -56,6 +56,7 @@ return [
     'appearance_tools' => 'Wygląd',
     'color_modes' => 'Tryby kolorów',
     'resize_zoom' => 'Rozmiar i powiększenie',
+    'zoom' => 'Powiększenie',
     'zoom_out' => 'Pomniejsz',
     'zoom_in' => 'Powiększ',
     'close' => 'Zamknij',
