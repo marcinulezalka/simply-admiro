@@ -24,7 +24,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
-- Panel boczny layoutu stref: podpisy kafelków narzędzi krojem mono; lista powiadomień wypełnia panel do dołu. Menu „+” i błyskawicy wyszukiwarki w layoucie stref w kolorach odwróconych (jasny tekst na ciemnym tle).
+- Panel boczny layoutu stref: podpisy kafelków narzędzi krojem mono; lista powiadomień wypełnia panel do dołu. Menu „+” i błyskawicy wyszukiwarki w layoucie stref w kolorach odwróconych (jasny tekst na ciemnym tle); menu błyskawicy z delikatną strukturą w tle (ukośne pasy, ziarno, dwie kreski) i dużą, lekko wypukłą błyskawicą w tonie tła.
 - Karty z wyróżnieniem (`.ss-card--feature`, np. karta onboardingu i postępu) nie unoszą się i nie rosną im cienie po najechaniu — zmienia się tylko obwódka.
 - Strefa administratorów: administrator pracuje w jednej roli naraz (`role_contexts`, domyślnie najszersza), przełącza ją w stopce, a adresy panelu mają klucz kontekstu (`/admiro/<klucz>/...`); pod nazwą konta jest aktywna rola.
 - Brak pliku ikony (`x-admiro::icon`) nie przerywa już strony błędem 500: ikona zostaje pusta, a błąd trafia do logu (`View\CoreAssets::icon()`). Chroni m.in. okno wdrożenia, gdy działający jeszcze stary kod odwołuje się do ikony usuniętej w nowej wersji.

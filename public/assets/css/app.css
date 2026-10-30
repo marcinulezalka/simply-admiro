@@ -8858,6 +8858,52 @@ a.ss-org-item:focus-visible {
     border-color: color-mix(in srgb, var(--ss-color-on-inverse) 18%, transparent);
 }
 
+/* Menu błyskawicy (szybkie akcje): delikatna struktura w tle — ukośne pasy jaśniejszego i ciemniejszego tonu, drobne
+   ziarno, dwie zaokrąglone kreski wzdłuż pasa i duża błyskawica w tonie tła, lekko wypukła (miękki cień), w prawym
+   dolnym rogu; treść menu nad dekoracją. */
+.ss-search__find .ss-search__menu-panel {
+    overflow: hidden;
+    min-width: 17rem;
+    min-height: 11rem;
+}
+
+.ss-shell--zone .ss-search__find .ss-search__menu-panel {
+    background:
+        repeating-radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--ss-color-on-inverse) 3%, transparent) 0 1px, transparent 1px 3px),
+        linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--ss-color-on-inverse) 5%, transparent) 48% 66%, color-mix(in srgb, black 12%, transparent) 66%),
+        var(--ss-color-surface-inverse);
+}
+
+.ss-search__find-art {
+    position: absolute;
+    right: -1.5rem;
+    bottom: -1.5rem;
+    z-index: 0;
+    width: 10rem;
+    height: 10rem;
+    pointer-events: none;
+}
+
+.ss-search__find .ss-search__menu-panel > :not(.ss-search__find-art) {
+    position: relative;
+    z-index: 1;
+}
+
+.ss-search__find-stroke {
+    stroke: color-mix(in srgb, var(--ss-color-on-inverse) 20%, transparent);
+    stroke-width: 5;
+    stroke-linecap: round;
+}
+
+.ss-search__find-bolt {
+    fill: color-mix(in srgb, var(--ss-color-surface-inverse) 90%, var(--ss-color-on-inverse));
+    filter: drop-shadow(0 6px 8px color-mix(in srgb, black 35%, transparent)) drop-shadow(0 -1px 0 color-mix(in srgb, var(--ss-color-on-inverse) 10%, transparent));
+}
+
+:root[data-theme^="contrast"] .ss-search__find-art {
+    display: none;
+}
+
 /* Kafelki narzędzi wyglądu: podpisy i tryby krojem mono. */
 .ss-quick-tile__label,
 .ss-quick-tile__option {
