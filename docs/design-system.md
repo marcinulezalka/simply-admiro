@@ -208,7 +208,7 @@ Strefy (poza strefą administratorów, która zostaje na Workspace) po zalogowan
 | **Stopka — środek** | wyszukiwarka: „+” (szybkie dodawanie, `SearchBox::$actions`, akcja główna na górze z separatorem — `$primaryAction`), błyskawica (szybkie akcje bez dodawania, `SearchBox::$findActions`; `[]` = pusty dropdown; menu jak teczka — wspólne tło obejmuje od dołu przycisk, akcje krojem mono na tle, pod nimi kartka w kropki), pole, suwaki z multiwyborem zakresów (`SearchBox::$scopes`), Enter |
 | **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`), przycisk „Zablokuj ekran” (ikona lock-screen, Qlementine; jak Win+L: konto zostaje zalogowane, powrót PIN-em — Auth\ScreenLock) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole, bez tła pod spodem i bez kreski, kafelki po dwa w rzędzie jak szybkie ustawienia systemu — ikona i podpis na przygaszonym tle przycisku, delikatna ramka: ustawienia, a tryb kolorów, rozmiar tekstu i powiększenie jako kafelki rozwijane z listą trybów, każdy z ikoną i nazwą), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy; każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
 
-Karta obracana `x-admiro::flip-card` (np. wizytówka i karta postępu na pulpicie strefy): przycisk w prawym górnym rogu obraca kartę na odwrót z dodatkową treścią (np. konteksty konta `x-admiro::app.context-list`), zjechanie kursorem, Esc albo „Wróć” — z powrotem.
+Karta obracana `x-admiro::flip-card` (np. wizytówka i karta postępu na pulpicie strefy): przycisk w prawym górnym rogu obraca kartę na odwrót z dodatkową treścią (np. konteksty konta `x-admiro::app.context-list`), a opcjonalny drugi odwrót (slot `alternate`, przycisk z ikoną flagi obok — np. dane kontaktowe `x-admiro::organization.contact`) ma własny przycisk, zjechanie kursorem, Esc albo „Wróć” — z powrotem.
 
 Bez mapy strony i bez menu bocznego: nawigacja to pulpit, wyszukiwarka i odnośniki na stronach.
 
@@ -321,7 +321,7 @@ logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól 
   pasek, rozwijana lista zadań z plakietkami stanu i przełącznik ukrywania zrobionych — `js/hide-done.js`, wybór
   zapamiętany pod `storage-key`) oraz numerowane karty-odnośniki zadań na tle strony (`id` listy = `list-id`
   przełącznika; zrobione wyszarzone). Teksty podaje strona. Używa ich przegląd onboardingu panelu i listy zadań stref.
-- **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki
+- **Wizytówka organizacji** `x-admiro::organization.card` (`.ss-business-card`): karta w proporcjach wizytówki Dane kontaktowe to osobny komponent `x-admiro::organization.contact`; `:contact="false"` pokazuje wizytówkę bez nich (np. gdy są na odwrocie karty obracanej).
   z motywem w tle (poświata akcentu w rogu i koncentryczne łuki) i miękkim, płytkim cieniem; u góry podpis (`kicker`) krojem mono
   w rzędzie z ikoną odnośnika, pod nim nazwa skrócona krojem nagłówków i numery rejestrowe (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są;
   krój mono), dosunięte do dołu karty, bez linii oddzielającej, adres z krajem, telefon stacjonarny (`phone`), komórkowy (`smartphone`),

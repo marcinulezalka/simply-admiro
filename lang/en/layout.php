@@ -87,6 +87,7 @@ return [
     'account_units' => 'Your units',
     'flip_card' => 'Flip the card',
     'next_steps' => 'Next steps',
+    'contact_details' => 'Contact details',
     'lock_screen' => 'Lock screen',
     'change_context' => 'Change context',
     'in_progress' => 'TEMP',

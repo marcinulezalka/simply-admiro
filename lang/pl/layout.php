@@ -87,6 +87,7 @@ return [
     'account_units' => 'Twoje jednostki',
     'flip_card' => 'Odwróć kartę',
     'next_steps' => 'Kolejne kroki',
+    'contact_details' => 'Dane kontaktowe',
     'lock_screen' => 'Zablokuj ekran',
     'change_context' => 'Zmień kontekst',
     'in_progress' => 'TEMP',

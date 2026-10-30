@@ -9045,7 +9045,7 @@ a.ss-org-item:focus-visible {
 }
 
 /* Karta obracana (x-admiro::flip-card): przód i tył w jednej komórce siatki (wysokość większej), obrót w 3D wokół osi
-   pionowej, przycisk w prawym górnym rogu nad przodem, „Wróć” na dole odwrotu; bez animacji przy prefers-reduced-motion. */
+   pionowej, przyciski odwrotów w prawym górnym rogu nad przodem, „Wróć” na dole odwrotu; bez animacji przy prefers-reduced-motion. */
 .ss-flip {
     position: relative;
     perspective: 1600px;
@@ -9120,16 +9120,33 @@ a.ss-org-item:focus-visible {
     height: 1rem;
 }
 
-.ss-flip__toggle {
+/* Odwrót główny i drugi (np. dane kontaktowe) w jednej stronie; widoczny ten, którego przycisk obrócił kartę. */
+.ss-flip__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+.ss-flip__side[hidden] {
+    display: none;
+}
+
+.ss-flip__toggles {
     position: absolute;
     top: var(--ss-space-3);
     right: var(--ss-space-3);
     z-index: 2;
+    display: flex;
+    gap: var(--ss-space-1);
+    transition: opacity 0.2s ease;
+}
+
+.ss-flip__toggle {
     border-color: transparent;
     background: transparent;
     color: color-mix(in srgb, var(--ss-color-muted) 70%, transparent);
     box-shadow: none;
-    transition: opacity 0.2s ease, color 0.15s ease, background-color 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 /* Przycisk obracania wtopiony w kartę: bez tła i obwódki, przygaszona ikona; po najechaniu delikatne tło. */
@@ -9139,7 +9156,7 @@ a.ss-org-item:focus-visible {
     color: var(--ss-color-text);
 }
 
-.ss-flip--flipped .ss-flip__toggle {
+.ss-flip--flipped .ss-flip__toggles {
     opacity: 0;
     pointer-events: none;
 }

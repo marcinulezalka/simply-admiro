@@ -25,6 +25,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Karta obracana `x-admiro::flip-card` może mieć drugi odwrót (slot `alternate`) z własnym przyciskiem obok obracania (domyślnie ikona flagi); dane kontaktowe organizacji jako osobny komponent `x-admiro::organization.contact`, a wizytówka może je pominąć (`contact`).
 - Menu błyskawicy wyszukiwarki w layoucie stref jak teczka: wspólne tło obejmuje od dołu przycisk błyskawicy (zakładka), tytuł i szybkie akcje krojem mono leżą na tym tle, a pod nimi kartka w kropki.
 
 - Panel boczny layoutu stref: podpisy kafelków narzędzi krojem mono; lista powiadomień wypełnia panel do dołu. Menu „+” i błyskawicy wyszukiwarki w layoucie stref w kolorach odwróconych (jasny tekst na ciemnym tle); menu błyskawicy jako teczka (zakładka „Szybkie akcje” nad arkuszem z siatką kropek); przycisk obracania karty wtopiony w kartę (bez tła i obwódki).
