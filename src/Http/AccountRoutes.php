@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Simplysmart\Admiro\Http;
 
 use Illuminate\Routing\Router;
+use Simplysmart\Admiro\Http\Controllers\Account\AppearanceController;
 use Simplysmart\Admiro\Http\Controllers\Account\ContextSwitchController;
 use Simplysmart\Admiro\Http\Controllers\Account\OrganizationSwitchController;
 use Simplysmart\Admiro\Http\Controllers\Account\PinChangeController;
@@ -28,8 +29,9 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
 /**
  * Trasy konta zalogowanego w strefie (poziom Authenticated, pod `account/`): profil (imię i nazwisko, język, kolor
  * awatara), strona bezpieczeństwa (zmiana PIN-u, zapasowy adres e-mail, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
- * przekierowują do jej sekcji), wygląd (motyw i kolorystyka), w strefie z zaufanymi urządzeniami ich odwołanie, w strefie
- * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli. Każda zmiana ma limit
+ * przekierowują do jej sekcji), wygląd (motyw i kolorystyka; w strefie z `appearance.account` także zapis w koncie
+ * i przywrócenie domyślnego), w strefie z zaufanymi urządzeniami ich odwołanie, w strefie
+ * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli. Każda zmiana (poza wyglądem — wiele kliknięć przełączników) ma limit
  * `admiro.sign-in`.
  */
 final readonly class AccountRoutes
@@ -63,6 +65,11 @@ final readonly class AccountRoutes
 
     /** Wygląd: motyw i kolorystyka (ustawienia konta). */
     public const string APPEARANCE = 'account.appearance';
+
+    /** Zapis wyglądu w koncie (strefa z `appearance.account`): PUT z ustawieniami, DELETE przywraca domyślny wygląd. */
+    public const string APPEARANCE_UPDATE = 'account.appearance.update';
+
+    public const string APPEARANCE_RESET = 'account.appearance.reset';
 
     /** Widok strony wyglądu. */
     public const string APPEARANCE_VIEW = 'admiro::account.appearance';
@@ -110,6 +117,11 @@ final readonly class AccountRoutes
                 $this->router->get('devices', [SecurityController::class, 'section'])->defaults('section', self::SECTION_DEVICES)->name(self::DEVICES);
                 $this->router->delete('devices', [TrustedDeviceController::class, 'destroyAll'])->middleware($throttle)->name(self::DEVICES_REVOKE_ALL);
                 $this->router->delete('devices/{device}', [TrustedDeviceController::class, 'destroy'])->middleware($throttle)->name(self::DEVICES_REVOKE);
+            }
+
+            if ($zone->appearance->account) {
+                $this->router->put('appearance', [AppearanceController::class, 'update'])->name(self::APPEARANCE_UPDATE);
+                $this->router->delete('appearance', [AppearanceController::class, 'destroy'])->name(self::APPEARANCE_RESET);
             }
 
             if ($zone->teams) {

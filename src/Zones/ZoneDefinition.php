@@ -70,6 +70,7 @@ final readonly class ZoneDefinition
      * @param AppBackdrop $backdrop Tło płótna layoutu aplikacji (`backdrop`): logotyp simplysmart albo logo strefy na dole.
      * @param list<ZoneFontStyle> $fontStyles Kroje do wyboru na stronie wyglądu obok kroju bazowego strefy (`font_styles`);
      *                                       pusta lista = bez wyboru kroju.
+     * @param ZoneAppearance $appearance Wygląd strefy (`appearance`): zapis wyborów w koncie i domyślny wygląd aplikacji.
      * @param bool $roleContexts Role konta w organizacji są kontekstami (`role_contexts`, tylko strefa z `teams`): konto
      *                           z kilkoma rolami działa w jednej wybranej (Permissions\RoleSelector), a jego uprawnienia
      *                           są zawężone do niej; false = uprawnienia z sumy ról.
@@ -103,6 +104,7 @@ final readonly class ZoneDefinition
         public array $socialLinks = [],
         public AppBackdrop $backdrop = AppBackdrop::Brand,
         public array $fontStyles = [],
+        public ZoneAppearance $appearance = new ZoneAppearance(),
     ) {}
 
     /**

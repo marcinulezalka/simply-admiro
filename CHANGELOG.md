@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Wygląd zapisany w koncie: strefa z kluczem `appearance` (`'account' => true`) zapisuje wybory ze strony „Personalizacja” i panelu bocznego (motyw, kolorystyka, rozmiar tekstu, szerokość treści, krój) w koncie zamiast w przeglądarce, więc obowiązują na każdym urządzeniu i rysują się od razu, bez błysku. Domyślny wygląd ma aplikacja (`appearance.defaults`), konto go nadpisuje, a „Przywróć domyślny wygląd” usuwa wybory konta. Strona „Personalizacja” ma sekcje w kolejności: szerokość treści, motyw, kolorystyka, krój pisma, rozmiar tekstu, i mówi pod tytułem, gdzie trafiają wybory. Strefy bez klucza działają jak dotąd.
+
 - Konta administratorów (z obowiązkową rolą wsparcia `support`) są ukryte w strefach: `OrganizationMembers::inZone()` / `find()` ich nie zwracają (listy personelu, dzienniki i strony stref); panel administratorów widzi wszystkich (`all()`).
 - Panel boczny stopki Workspace: zegar otwiera z prawej powiadomienia (z nową zakładką komunikatów systemowych — toastów strony, `x-admiro::app.notification-tabs`) i kalendarz jako sekcje obok siebie w dwóch kolumnach (na wąskim ekranie jedna pod drugą), rozsuwane razem i zwijane osobno, a na dole trzy podpisane wiersze: ustawienia (koło zębate), tryby kolorów (jasny/ciemny, kontrast WCAG) oraz rozmiar i powiększenie (A, AA, pomniejsz −, powiększ + — `data-ss-preference-step` w `js/theme.js`). Dzwonek i szybkie ustawienia (suwaki) znikają ze stopki; licznik nieprzeczytanych jest na zegarze. Przycisk szukania ze strzałką Entera zamiast rakiety.
 - Wyszukiwarka w stopce Workspace: gdy strefa daje szybkie akcje (`SearchBox::$actions`), „+” z ich menu zastępuje lupę.

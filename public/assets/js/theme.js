@@ -18,6 +18,11 @@
  * data-scope jak kolorystyka). Zapisany wybór ustawia atrybut na <html> w <head>, wartość domyślna (fallback) go
  * usuwa; przyciski [data-ss-preference-value] w [data-ss-preference] (x-admiro::preference-toggle) go zmieniają.
  * Listy wartości muszą być takie same jak przypadki enumów.
+ *
+ * Wygląd w koncie: z meta ss-appearance (x-admiro::page; content: adres zapisu, strefa z `appearance.account`) wybory
+ * rysuje serwer na <html> (domyślny wygląd aplikacji nadpisany wyborami konta, Profile\AccountAppearance), więc skrypt
+ * nie czyta i nie zapisuje localStorage, tylko wysyła każdą zmianę do konta (PUT JSON z tokenem CSRF; nazwy pól jak
+ * Enums\AppearanceSetting: theme, palette, text-size, layout-width, font). Nieudany zapis obowiązuje do przeładowania.
  */
 (() => {
     const STORAGE_KEY = 'ss-theme';
@@ -25,6 +30,8 @@
     const THEMES = ['light', 'dark', 'contrast', 'contrast-yellow'];
     const root = document.documentElement;
     const system = window.matchMedia('(prefers-color-scheme: dark)');
+    const accountUrl = document.querySelector('meta[name="ss-appearance"]')?.content ?? null;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 
     const read = () => {
         try {
@@ -48,7 +55,28 @@
         }
     };
 
-    const stored = read();
+    const saveToAccount = (setting, value) => {
+        window.fetch(accountUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: JSON.stringify({ [setting]: value }),
+            credentials: 'same-origin',
+            keepalive: true,
+        }).catch(() => {
+            // Bez połączenia wybór obowiązuje tylko do przeładowania.
+        });
+    };
+
+    // Zapamiętanie wyboru: w koncie (setting — nazwa pola) albo w przeglądarce (key).
+    const remember = (setting, key, value) => {
+        if (accountUrl !== null) {
+            saveToAccount(setting, value);
+        } else {
+            write(key, value);
+        }
+    };
+
+    const stored = accountUrl !== null ? (THEMES.includes(root.dataset.theme) ? root.dataset.theme : null) : read();
 
     if (stored !== null) {
         root.dataset.theme = stored;
@@ -79,7 +107,7 @@
         }
     };
 
-    if (palettes.length > 0) {
+    if (palettes.length > 0 && accountUrl === null) {
         applyPalette(readPalette());
     }
 
@@ -117,7 +145,9 @@
 
     const currentPreference = (name) => root.getAttribute(`data-${name}`) ?? preferences[name].fallback;
 
-    Object.entries(preferences).forEach(([name, preference]) => applyPreference(name, readPreference(preference)));
+    if (accountUrl === null) {
+        Object.entries(preferences).forEach(([name, preference]) => applyPreference(name, readPreference(preference)));
+    }
 
     const current = () => root.dataset.theme ?? (system.matches ? 'dark' : 'light');
 
@@ -157,7 +187,7 @@
                     }
 
                     root.dataset.theme = button.dataset.ssTheme;
-                    write(STORAGE_KEY, button.dataset.ssTheme);
+                    remember('theme', STORAGE_KEY, button.dataset.ssTheme);
                     sync();
                 });
             });
@@ -171,7 +201,7 @@
                 const next = current() === 'dark' ? 'light' : 'dark';
 
                 root.dataset.theme = next;
-                write(STORAGE_KEY, next);
+                remember('theme', STORAGE_KEY, next);
                 sync();
             });
         });
@@ -183,7 +213,7 @@
                     const value = palettes.includes(button.dataset.ssPalette) ? button.dataset.ssPalette : '';
 
                     applyPalette(value);
-                    write(paletteKey, value);
+                    remember('palette', paletteKey, value);
                     sync();
                     menu.open = false;
                 });
@@ -204,7 +234,7 @@
                     }
 
                     applyPreference(name, value);
-                    write(preference.key, value === preference.fallback ? '' : value);
+                    remember(name, preference.key, value === preference.fallback ? '' : value);
                     sync();
                 });
             });
@@ -218,7 +248,7 @@
                     const next = preference.values[Math.min(preference.values.length - 1, Math.max(0, index + Number(button.dataset.ssPreferenceStep)))];
 
                     applyPreference(name, next);
-                    write(preference.key, next === preference.fallback ? '' : next);
+                    remember(name, preference.key, next === preference.fallback ? '' : next);
                     sync();
                 });
             });

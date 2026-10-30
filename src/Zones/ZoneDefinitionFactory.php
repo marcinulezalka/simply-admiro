@@ -20,6 +20,7 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Simplysmart\Admiro\Auth\ZoneAuthSettingsFactory;
 use Simplysmart\Admiro\Enums\AppBackdrop;
+use Simplysmart\Admiro\Enums\AppearanceSetting;
 use Simplysmart\Admiro\Enums\AppLayout;
 use Simplysmart\Admiro\Enums\LegalDocumentType;
 use Simplysmart\Admiro\Enums\Palette;
@@ -43,7 +44,8 @@ use Simplysmart\Admiro\Mail\MailPalette;
  * `on_accent`), logo (SVG strefy osadzany inline), website (strona WWW strefy: adres http(s)), app_layout (wariant
  * layoutu aplikacji: Enums\AppLayout), backdrop (tło płótna: Enums\AppBackdrop; `zone-logo` wymaga logo strefy),
  * social_links (profile w serwisach społecznościowych: Enums\SocialNetwork → adres http(s)), font_styles (kroje do
- * wyboru na stronie wyglądu: klucz kroju → klucz tekstu z jego nazwą, Zones\ZoneFontStyle) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
+ * wyboru na stronie wyglądu: klucz kroju → klucz tekstu z jego nazwą, Zones\ZoneFontStyle), appearance (`account` —
+ * wybory wyglądu zapisuje konto, `defaults` — domyślny wygląd aplikacji; Zones\ZoneAppearance, tylko strefa z modelem) oraz role_contexts (role konta w organizacji jako konteksty z zawężonymi uprawnieniami, tylko strefa
  * z `teams`).
  */
 final readonly class ZoneDefinitionFactory
@@ -78,6 +80,8 @@ final readonly class ZoneDefinitionFactory
         $model = $this->model($config['model'] ?? null, $name);
         $authSettings = $model !== null ? $this->authSettings->make(Arr::array($config, 'auth', [])) : null;
         $logo = $this->logo($name, $config['logo'] ?? null) ?? $authSettings?->logo;
+        $palettes = $this->palettes($name, Arr::array($config, 'palettes', []));
+        $fontStyles = $this->fontStyles($name, Arr::array($config, 'font_styles', []));
 
         return new ZoneDefinition(
             name: $name,
@@ -95,7 +99,7 @@ final readonly class ZoneDefinitionFactory
                 blockAiAgents: Arr::boolean(Arr::array($config, 'security', []), 'block_ai_agents', $model !== null),
             ),
             stylesheets: $this->stylesheets($name, Arr::array($config, 'stylesheets', [])),
-            palettes: $this->palettes($name, Arr::array($config, 'palettes', [])),
+            palettes: $palettes,
             favicon: $this->favicon($name, Arr::array($config, 'favicon', [])),
             textNamespace: $this->nullableString($config, 'texts', null),
             fonts: $this->fonts($name, Arr::array($config, 'fonts', [])),
@@ -110,8 +114,40 @@ final readonly class ZoneDefinitionFactory
             appLayout: $this->option($name, 'app_layout', $config['app_layout'] ?? null, AppLayout::class, AppLayout::Sidebar),
             socialLinks: $this->socialLinks($name, Arr::array($config, 'social_links', [])),
             backdrop: $this->backdrop($name, $config['backdrop'] ?? null, $logo),
-            fontStyles: $this->fontStyles($name, Arr::array($config, 'font_styles', [])),
+            fontStyles: $fontStyles,
+            appearance: $model !== null ? $this->appearance($name, Arr::array($config, 'appearance', []), $palettes, $fontStyles) : new ZoneAppearance(),
         );
+    }
+
+    /**
+     * Wygląd strefy z `appearance` (`account`: zapis wyborów w koncie, `defaults`: ustawienie Enums\AppearanceSetting →
+     * wartość do wyboru w strefie; puste wartości, np. niewypełnione zmienne `.env`, są pomijane); tylko strefa z modelem.
+     *
+     * @param array<array-key, mixed> $appearance
+     * @param list<Palette> $palettes
+     * @param list<ZoneFontStyle> $fontStyles
+     *
+     * @throws InvalidArgumentException Gdy ustawienie jest nieznane albo wartości nie ma do wyboru w strefie.
+     */
+    private function appearance(string $zone, array $appearance, array $palettes, array $fontStyles): ZoneAppearance
+    {
+        $defaults = [];
+
+        foreach (Arr::array($appearance, 'defaults', []) as $key => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            $setting = is_string($key) ? AppearanceSetting::tryFrom($key) : null;
+
+            if ($setting === null || ! is_string($value) || ! in_array($value, $setting->choices($palettes, $fontStyles), true)) {
+                throw new InvalidArgumentException("Zone [{$zone}] appearance.defaults must map " . AppearanceSetting::class . ' values to values offered in the zone.');
+            }
+
+            $defaults[$setting->value] = $value;
+        }
+
+        return new ZoneAppearance(Arr::boolean($appearance, 'account', false), $defaults);
     }
 
     /**
