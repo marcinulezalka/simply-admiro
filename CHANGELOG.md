@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Komponent `x-admiro::checklist.card`: karta postępu listy zadań z następnym zadaniem (jak karta onboardingu na dashboardzie admiro, który z niej korzysta) do użycia w strefach; klasa siatki `.ss-grid--2` (dwie kolumny od 40rem).
 - Kontekst konta w adresie: strefa z `context_in_url` (wymaga `role_contexts`) ma strony dla zalogowanych pod `/<slug>/<klucz>/...` — klucz to nieprzezroczysty skrót HMAC organizacji i roli konta (`Zones\ContextKeys`, klucz pochodny `APP_KEY`), bez ich nazw w adresie i inny dla każdego konta. Każda karta przeglądarki może pracować w innym kontekście, przełącznik kontekstu to odnośniki, cudzy klucz prowadzi na własny pulpit, a po zmianie `APP_KEY` stare adresy z kluczami z `APP_PREVIOUS_KEYS` przekierowują na nowe. `route()` dokłada klucz sam.
 - `role_contexts` działa też w strefie bez organizacji (`teams`): role w organizacji operatora są kontekstami.
 

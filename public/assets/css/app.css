@@ -3850,7 +3850,8 @@ textarea.ss-input {
 }
 
 @media (min-width: 40rem) {
-    .ss-grid--4 {
+    .ss-grid--4,
+    .ss-grid--2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
