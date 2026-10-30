@@ -58,4 +58,20 @@ final class CoreAssets
 
         return $contents;
     }
+
+    /**
+     * Rysunek ikony z `img/icons/<name>.svg` (x-admiro::icon). Brak pliku — np. ikona usunięta w nowej wersji, gdy
+     * stary kod jeszcze działa w trakcie wdrożenia — jest zgłaszany do logu, a ikona zostaje pusta, więc strona się
+     * renderuje zamiast błędu 500.
+     */
+    public static function icon(string $name): string
+    {
+        try {
+            return self::contents('img/icons/' . $name . '.svg');
+        } catch (RuntimeException $exception) {
+            report($exception);
+
+            return '';
+        }
+    }
 }

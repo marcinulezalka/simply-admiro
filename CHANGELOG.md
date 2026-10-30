@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Brak pliku ikony (`x-admiro::icon`) nie przerywa już strony błędem 500: ikona zostaje pusta, a błąd trafia do logu (`View\CoreAssets::icon()`). Chroni m.in. okno wdrożenia, gdy działający jeszcze stary kod odwołuje się do ikony usuniętej w nowej wersji.
 - Przełącznik kontekstu w strefie z rolami jako kontekstami pokazuje tylko organizacje, jednostki i departamenty, w których konto ma rolę — członkostwo bez roli (np. departament grupujący gabinety) nie jest kontekstem. Organizacja i jednostka mają ikonę budynku, rola administracyjna (delegująca inne role, `ZoneRoleNames::administrative()`) wypełnionego ludzika (nowa ikona `user-filled`), pozostałe role ludzika z konturem; ikona `context-organization` usunięta.
 
 ### Fixed
