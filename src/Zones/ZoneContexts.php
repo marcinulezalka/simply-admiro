@@ -126,10 +126,10 @@ final readonly class ZoneContexts
 
     /**
      * Jednostki konta, które są jego kontekstami (organizacje, jednostki i departamenty z rolą konta — w strefie
-     * z `role_contexts`; inaczej każde członkostwo), z nazwą rodzaju i znacznikiem bieżącej — np. małe wizytówki
-     * w menu konta layoutu stref; strefa bez `teams` — lista pusta.
+     * z `role_contexts`; inaczej każde członkostwo), z nazwą i ikoną rodzaju i znacznikiem bieżącej — np. lista
+     * jednostek w menu konta layoutu stref; strefa bez `teams` — lista pusta.
      *
-     * @return list<array{organization: Organization, kind: string, current: bool}>
+     * @return list<array{organization: Organization, kind: string, icon: string, current: bool}>
      */
     public function units(ZoneDefinition $zone, ZoneAccount $account): array
     {
@@ -144,9 +144,11 @@ final readonly class ZoneContexts
                 continue;
             }
 
+            $kind = self::kind($organization);
             $units[] = [
                 'organization' => $organization,
-                'kind' => text($zone->textKey('account.context_kinds.' . self::kind($organization))),
+                'kind' => text($zone->textKey('account.context_kinds.' . $kind)),
+                'icon' => self::KIND_ICONS[$kind],
                 'current' => $organization->id === $this->organization->id(),
             ];
         }

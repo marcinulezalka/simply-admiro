@@ -8655,9 +8655,9 @@ a.ss-quick-tile:focus-visible,
     color: var(--ss-color-accent);
 }
 
-/* Menu konta w stopce layoutu stref z jednostkami konta: po lewej profil i wylogowanie, po prawej małe wizytówki
-   jednostek (organizacja, placówka, poradnia) — bez adresu i kontaktów, bieżąca z obwódką akcentu; na telefonie pod
-   menu. */
+/* Menu konta w stopce layoutu stref z jednostkami konta: po lewej profil i wylogowanie, po prawej na przygaszonym tle
+   lista jednostek (x-admiro::organization.item: organizacja, placówka, poradnia), bieżąca z obwódką akcentu; na
+   telefonie pod menu. */
 .ss-zone-account {
     display: grid;
     grid-template-columns: minmax(12rem, auto) minmax(14rem, 18rem);
@@ -8673,8 +8673,9 @@ a.ss-quick-tile:focus-visible,
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-2);
-    padding-left: var(--ss-space-3);
-    border-left: 1px solid var(--ss-color-border);
+    padding: var(--ss-space-3);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface-muted);
 }
 
 .ss-zone-account__title {
@@ -8692,30 +8693,103 @@ a.ss-quick-tile:focus-visible,
         width: auto;
     }
 
-    .ss-zone-account__units {
-        padding: var(--ss-space-3) 0 0;
-        border-top: 1px solid var(--ss-color-border);
-        border-left: 0;
-    }
 }
 
-.ss-business-card--compact {
-    gap: var(--ss-space-2);
-    min-height: 0;
-    padding: var(--ss-space-3);
-    box-shadow: none;
+/* Jednostka konta jako wiersz listy (x-admiro::organization.item): biała karta z miękkim, szerokim cieniem, kafelek
+   z ikoną w kolorze akcentu, nazwa i pod nią rodzaj z NIP-em krojem mono; bieżąca z obwódką akcentu. */
+.ss-org-item {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    min-width: 0;
+    padding: var(--ss-space-2) var(--ss-space-3) var(--ss-space-2) var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--ss-color-text) 6%, transparent), 0 10px 24px -8px color-mix(in srgb, var(--ss-color-text) 18%, transparent);
+    color: var(--ss-color-text);
+    text-decoration: none;
 }
 
-.ss-business-card--compact .ss-business-card__name {
-    font-size: 1rem;
+.ss-org-item--current {
+    border-color: var(--ss-color-accent);
 }
 
-.ss-business-card--compact .ss-business-card__registry {
+.ss-org-item__tile {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid color-mix(in srgb, var(--ss-color-accent) 70%, var(--ss-color-text));
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-accent);
+    color: var(--ss-color-on-accent);
+}
+
+.ss-org-item__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-org-item__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ss-org-item__name {
+    overflow: hidden;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-org-item__sub {
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
     font-size: 0.6875rem;
 }
 
-.ss-business-card--current {
-    border-color: var(--ss-color-accent);
+/* Stos kart (.ss-card-stack, np. wizytówka na pulpicie): za kartą wychylają się u góry dwie węższe, coraz jaśniejsze
+   warstwy — efekt kolejnych kart pod spodem. */
+.ss-card-stack {
+    position: relative;
+    isolation: isolate;
+    margin-top: var(--ss-space-4);
+}
+
+.ss-card-stack::before,
+.ss-card-stack::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    bottom: var(--ss-space-4);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: color-mix(in srgb, var(--ss-color-accent) 10%, var(--ss-color-surface));
+}
+
+.ss-card-stack::before {
+    top: calc(-1 * var(--ss-space-2));
+    right: var(--ss-space-4);
+    left: var(--ss-space-4);
+    opacity: 0.85;
+}
+
+.ss-card-stack::after {
+    z-index: -2;
+    top: calc(-1 * var(--ss-space-4));
+    right: var(--ss-space-8, 2rem);
+    left: var(--ss-space-8, 2rem);
+    opacity: 0.55;
+}
+
+.ss-card-stack > * {
+    max-width: none;
 }
 
 /* Nagłówek layoutu stref: odnośnik nad tytułem tuż przy tytule (bez odstępu kolumny). */
