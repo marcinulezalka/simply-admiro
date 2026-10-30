@@ -84,6 +84,7 @@ return [
     ],
     'mask_format' => 'Format: :format',
     'switch_context' => 'Przełącz kontekst',
+    'account_units' => 'Twoje jednostki',
     'lock_screen' => 'Zablokuj ekran',
     'change_context' => 'Zmień kontekst',
     'in_progress' => 'TEMP',

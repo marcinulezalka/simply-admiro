@@ -125,6 +125,36 @@ final readonly class ZoneContexts
     }
 
     /**
+     * Jednostki konta, które są jego kontekstami (organizacje, jednostki i departamenty z rolą konta — w strefie
+     * z `role_contexts`; inaczej każde członkostwo), z nazwą rodzaju i znacznikiem bieżącej — np. małe wizytówki
+     * w menu konta layoutu stref; strefa bez `teams` — lista pusta.
+     *
+     * @return list<array{organization: Organization, kind: string, current: bool}>
+     */
+    public function units(ZoneDefinition $zone, ZoneAccount $account): array
+    {
+        if (! $zone->teams) {
+            return [];
+        }
+
+        $units = [];
+
+        foreach ($this->memberships->organizations($account)->sortBy(static fn(Organization $organization): string => $organization->contextName()) as $organization) {
+            if ($zone->roleContexts && $this->roles->of($account, $organization->id) === []) {
+                continue;
+            }
+
+            $units[] = [
+                'organization' => $organization,
+                'kind' => text($zone->textKey('account.context_kinds.' . self::kind($organization))),
+                'current' => $organization->id === $this->organization->id(),
+            ];
+        }
+
+        return $units;
+    }
+
+    /**
      * Strefa bez `teams`, ale z `role_contexts`: same role konta w bieżącej organizacji (account.role.switch).
      *
      * @return list<NavigationGroup>

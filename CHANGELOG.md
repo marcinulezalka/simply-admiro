@@ -8,7 +8,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 - Layout stref: odnośnik nad tytułem („Wstecz”, „Zmień kontekst”, „Wyloguj”) krojem mono wersalikami; narzędzia wyglądu w panelu kalendarza w karcie z tłem jak podgląd dnia (bez kreski) jako kafelki po dwa w rzędzie z podpisami — tryb kolorów (jasny, ciemny, kontrast WCAG, duży kontrast), rozmiar tekstu (A, AA) i powiększenie rozwijają listę trybów z ikonami i nazwami; kłódka „Zablokuj ekran” w stopce obok przełącznika kontekstu (jak Win+L: kończy sesję na tym urządzeniu).
 - Strona bezpieczeństwa konta: kotwica `#lock` (`AccountRoutes::SECTION_LOCK`) podświetla karty blokowania dostępu — zaufane urządzenia i „Wyloguj wszędzie”.
-- Wizytówka organizacji: adres w dwóch liniach — ulica, pod nią kod pocztowy, miasto i kraj.
+- Wizytówka organizacji: adres w dwóch liniach — ulica, pod nią kod pocztowy, miasto i kraj; mała wizytówka bez adresu i kontaktów (`compact`) i wyróżnienie bieżącej (`current`).
+- Layout stref: w menu konta druga kolumna „Twoje jednostki” z małymi wizytówkami jednostek konta (`ZoneContexts::units()`), bieżąca wyróżniona; odnośnik nad tytułem tuż przy tytule.
+- Wyszukiwarka: akcja główna menu „+” na górze, pod nią separator (`SearchBox::$primaryAction`).
 - Komponent `x-admiro::checklist.card`: karta postępu listy zadań z następnym zadaniem (jak karta onboardingu na dashboardzie admiro, który z niej korzysta) do użycia w strefach; klasa siatki `.ss-grid--2` (dwie kolumny od 40rem).
 - Kontekst konta w adresie: strefa z `context_in_url` (wymaga `role_contexts`) ma strony dla zalogowanych pod `/<slug>/<klucz>/...` — klucz to nieprzezroczysty skrót HMAC organizacji i roli konta (`Zones\ContextKeys`, klucz pochodny `APP_KEY`), bez ich nazw w adresie i inny dla każdego konta. Każda karta przeglądarki może pracować w innym kontekście, przełącznik kontekstu to odnośniki, cudzy klucz prowadzi na własny pulpit, a po zmianie `APP_KEY` stare adresy z kluczami z `APP_PREVIOUS_KEYS` przekierowują na nowe. `route()` dokłada klucz sam.
 - `role_contexts` działa też w strefie bez organizacji (`teams`): role w organizacji operatora są kontekstami.

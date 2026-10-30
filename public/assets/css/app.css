@@ -8411,6 +8411,12 @@ button.ss-context__back {
     }
 }
 
+.ss-search__menu-separator {
+    margin: var(--ss-space-1) 0;
+    border: 0;
+    border-top: 1px solid var(--ss-color-border);
+}
+
 .ss-search__menu-empty {
     margin: 0;
     padding: var(--ss-space-2) var(--ss-space-3);
@@ -8647,6 +8653,78 @@ a.ss-quick-tile:focus-visible,
 
 .ss-quick-tile__option[aria-pressed="true"] .ss-quick-tile__option-icon {
     color: var(--ss-color-accent);
+}
+
+/* Menu konta w stopce layoutu stref z jednostkami konta: po lewej profil i wylogowanie, po prawej małe wizytówki
+   jednostek (organizacja, placówka, poradnia) — bez adresu i kontaktów, bieżąca z obwódką akcentu; na telefonie pod
+   menu. */
+.ss-zone-account {
+    display: grid;
+    grid-template-columns: minmax(12rem, auto) minmax(14rem, 18rem);
+    gap: var(--ss-space-3);
+    align-items: start;
+    width: max-content;
+    max-width: calc(100vw - 2 * var(--ss-space-4));
+    max-height: min(32rem, 70vh);
+    overflow-y: auto;
+}
+
+.ss-zone-account__units {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    padding-left: var(--ss-space-3);
+    border-left: 1px solid var(--ss-color-border);
+}
+
+.ss-zone-account__title {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 40rem) {
+    .ss-zone-account {
+        grid-template-columns: minmax(0, 1fr);
+        width: auto;
+    }
+
+    .ss-zone-account__units {
+        padding: var(--ss-space-3) 0 0;
+        border-top: 1px solid var(--ss-color-border);
+        border-left: 0;
+    }
+}
+
+.ss-business-card--compact {
+    gap: var(--ss-space-2);
+    min-height: 0;
+    padding: var(--ss-space-3);
+    box-shadow: none;
+}
+
+.ss-business-card--compact .ss-business-card__name {
+    font-size: 1rem;
+}
+
+.ss-business-card--compact .ss-business-card__registry {
+    font-size: 0.6875rem;
+}
+
+.ss-business-card--current {
+    border-color: var(--ss-color-accent);
+}
+
+/* Nagłówek layoutu stref: odnośnik nad tytułem tuż przy tytule (bez odstępu kolumny). */
+.ss-shell--zone .ss-context__text > :is(.ss-context__back, .ss-context__back-form):first-child {
+    margin-bottom: calc(-1 * var(--ss-space-1));
+}
+
+.ss-shell--zone .ss-context__back-form .ss-context__back {
+    margin-bottom: 0;
 }
 
 /* Strona bezpieczeństwa otwarta na #lock (np. „Zablokuj konto” z szybkich akcji): karty blokowania dostępu — zaufane

@@ -2,15 +2,15 @@
 @props(['search', 'compose' => false, 'trailingScopes' => false])
 <form @class(['ss-search', 'ss-search--compose' => $compose]) role="search" method="GET" action="{{ $search->action }}"@if ($search->suggestUrl !== null) data-ss-search-suggest="{{ $search->suggestUrl }}"@endif>
     <label class="ss-sr-only" for="ss-global-search">{{ text('layout.search') }}</label>
-    @if ($compose && $search->actions !== [])
-        @include('admiro::search.actions', ['actions' => $search->actions])
+    @if ($compose && $search->hasActions())
+        @include('admiro::search.actions', ['actions' => $search->actions, 'primary' => $search->primaryAction])
     @endif
     @if ($compose && $search->findActions !== null)
         @include('admiro::search.find', ['actions' => $search->findActions])
     @endif
     @if ($compose && ! $trailingScopes && $search->scopes !== [])
         @include('admiro::search.scopes', ['search' => $search])
-    @elseif (! $compose || ($search->actions === [] && $search->findActions === null))
+    @elseif (! $compose || (! $search->hasActions() && $search->findActions === null))
         <x-admiro::icon name="search" class="ss-search__icon" />
     @endif
     <input class="ss-search__input" id="ss-global-search" name="{{ $search->name }}" type="search" value="{{ $search->value }}" placeholder="{{ $search->placeholder }}" autocomplete="off" aria-describedby="ss-global-search-hint" @if ($search->suggestUrl !== null) role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ss-search-suggestions" @endif data-ss-search>
