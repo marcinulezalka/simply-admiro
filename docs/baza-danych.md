@@ -376,6 +376,18 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   (`Database\Seeders\LegalDocumentsSeeder`, treść z `database/seeders/legal/<język>/<dokument>.md`, administrator danych
   z `LEGAL_CONTROLLER_NAME` i `LEGAL_CONTROLLER_EMAIL`); idempotentnie — dokument z wersją albo szkicem zostaje.
 
+## 14c. Zadania TODO kont
+
+| Tabela | Model | Kolumny |
+| --- | --- | --- |
+| `account_tasks` | `AccountTask` | standardowe (`name` — nazwa zadania, `status` — stan dziedzinowy `Enums\TaskStatus`: `open`, `in_progress`, `done`); `zone` i `account_id` (konto w tabeli kont strefy, bez klucza obcego), `issue` (kolejny numer zgłoszenia konta, unikalny z kontem, nie powtarza się po usunięciu), `title`, `description`, `due_on` (termin), `delay_days` (opóźnienie w dniach), `project`, `customer`, `completed_at` |
+
+- Zadania zapisuje tylko `Tasks\AccountTasks` (`add()` z komendy `todo:`, `toggleDone()` z listy zadań), czyta
+  `Queries\Tasks\AccountTaskList` — zawsze w obrębie strefy i konta (zadanie innego konta → 404).
+- W layoucie stref komenda `todo:` w polu „/” na dole menu błyskawicy (`account.tasks.store`) zapisuje zadanie, a lista
+  pod powiadomieniami w panelu bocznym (`Tasks\AccountTaskPanel`, `x-admiro::app.tasks`) przełącza wykonanie
+  (`account.tasks.toggle`): otwarte od najstarszego numeru, pod nimi 5 ostatnio wykonanych.
+
 ## 15. Organizacje i uprawnienia
 
 Uprawnienia stref działają na `spatie/laravel-permission` z włączonymi zespołami. Zespołem jest

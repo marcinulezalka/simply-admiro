@@ -23,6 +23,19 @@ return [
         'youtube' => 'YouTube',
     ],
 
+    'task_status' => [
+        'open' => 'Otwarte',
+        'in_progress' => 'W toku',
+        'done' => 'Wykonane',
+    ],
+
+    'quick_command' => [
+        'todo' => [
+            'label' => 'Nowe zadanie',
+            'placeholder' => 'Nazwa zadania',
+        ],
+    ],
+
     'record_status' => [
         'draft' => 'Szkic',
         'pending' => 'Oczekuje',

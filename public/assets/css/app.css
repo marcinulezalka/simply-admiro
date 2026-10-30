@@ -9348,3 +9348,300 @@ body:has(#lock:target) .ss-security-lock {
 .ss-folder__toolbar .ss-onboarding-translations__submit[hidden] {
     display: none;
 }
+
+/* Pole komend na dole menu błyskawicy (admiro::search.commands) na wzór wyszukiwarki compose: szare pole z obwódką,
+   po lewej „/” z prefiksem wybranej komendy krojem mono (lista komend rozwija się nad polem), pole i przycisk Enter. */
+.ss-command {
+    position: relative;
+    display: flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    margin-top: var(--ss-space-3);
+    padding: var(--ss-space-1);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-command:focus-within {
+    border-color: var(--ss-color-accent);
+}
+
+.ss-command__picker {
+    flex: none;
+}
+
+.ss-command__toggle {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    height: 2rem;
+    padding: 0 var(--ss-space-2);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-command__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-command__toggle:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-command__slash {
+    color: var(--ss-color-muted);
+    font-weight: 700;
+}
+
+.ss-command__current {
+    font-weight: 600;
+}
+
+.ss-command__list {
+    position: absolute;
+    bottom: calc(100% + var(--ss-space-2));
+    left: 0;
+    z-index: 47;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    min-width: 15rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+}
+
+.ss-command__title {
+    margin: 0;
+    padding: var(--ss-space-1) var(--ss-space-2);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-command__option {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    cursor: pointer;
+}
+
+.ss-command__option:hover,
+.ss-command__option:has(:checked) {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-command__radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ss-command__option:has(:focus-visible) {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -2px;
+}
+
+.ss-command__prefix {
+    font-family: var(--ss-font-mono);
+    font-weight: 600;
+}
+
+.ss-command__label {
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-command__input {
+    flex: 1;
+    min-width: 0;
+    height: 2rem;
+    padding: 0 var(--ss-space-2);
+    border: 0;
+    background: transparent;
+    color: var(--ss-color-text);
+    font: inherit;
+}
+
+.ss-command__input:focus {
+    outline: none;
+}
+
+.ss-command__send {
+    border-radius: var(--ss-radius-pill);
+}
+
+/* Panel powiadomień z zadaniami TODO (x-admiro::app.side-panels z tasks): podział w pionie — powiadomienia ok. 60%,
+   lista zadań ok. 40% wysokości, każda część przewija się osobno. */
+.ss-side-panels__split {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    min-height: 0;
+}
+
+.ss-side-panels__split-top {
+    display: flex;
+    flex: 3 1 0;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.ss-side-panels__split-bottom {
+    display: flex;
+    flex: 2 1 0;
+    flex-direction: column;
+    min-height: 0;
+    padding-top: var(--ss-space-3);
+    border-top: 1px solid var(--ss-color-border);
+}
+
+/* Lista zadań TODO (x-admiro::app.tasks): pole wykonania, numer zgłoszenia mono, nazwa, plakietka stanu, pod nimi
+   tytuł, opis i dane zgłoszenia; wykonane przekreślone i przygaszone. */
+.ss-tasks {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    min-height: 0;
+}
+
+.ss-tasks__heading {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-tasks__heading-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.ss-tasks__count {
+    margin-left: auto;
+    font-family: var(--ss-font-mono);
+}
+
+.ss-tasks__list {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.ss-task {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: flex-start;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+}
+
+.ss-task:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-task__toggle {
+    flex: none;
+    margin: 0;
+    padding-top: 0.125rem;
+}
+
+.ss-task__check {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--ss-color-accent);
+    cursor: pointer;
+}
+
+.ss-task__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.ss-task__head {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: baseline;
+}
+
+.ss-task__issue {
+    flex: none;
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-task__name {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ss-task__status {
+    flex: none;
+    padding: 0 var(--ss-space-2);
+    font-size: 0.6875rem;
+}
+
+.ss-task__title,
+.ss-task__description {
+    font-size: 0.8125rem;
+}
+
+.ss-task__description {
+    color: var(--ss-color-muted);
+}
+
+.ss-task__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1) var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-task__meta > span {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+}
+
+.ss-task__meta-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.ss-task__delay {
+    color: var(--ss-color-danger);
+}
+
+.ss-task--done .ss-task__name,
+.ss-task--done .ss-task__title {
+    color: var(--ss-color-muted);
+    text-decoration: line-through;
+}

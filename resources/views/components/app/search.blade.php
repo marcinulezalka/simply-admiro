@@ -1,12 +1,12 @@
-{{-- Globalna wyszukiwarka layoutu aplikacji (View\Navigation\SearchBox): formularz GET z polem (skrót „/”), opcjonalnie menu zakresów „Szukaj w” (przełączniki z ikonami, pola `<scopeName>[]`) i lista podpowiedzi (suggestUrl, js/global-search.js). compose: pole w stylu okna czatu (wariant Workspace, środek stopki treści): szare tło, po lewej „+” z menu szybkich akcji (search->actions, np. dodaj organizację; admiro::search.actions) zamiast lupy i suwaki zakresów, po prawej zaokrąglony przycisk szukania ze strzałką Entera zamiast skrótu „/”; podpowiedzi i menu otwierają się nad polem; za „+” błyskawica z szybkimi akcjami niezwiązanymi z dodawaniem (search->findActions, admiro::search.find; null = bez niej). folders: menu „+” jak teczka, jak menu błyskawicy (layout stref). trailingScopes: suwaki zakresów między polem a przyciskiem szukania (layout stref) zamiast po lewej. Bez compose — lupa, pole, skrót „/” i suwaki po prawej (top bar). search: SearchBox. --}}
-@props(['search', 'compose' => false, 'trailingScopes' => false, 'folders' => false])
+{{-- Globalna wyszukiwarka layoutu aplikacji (View\Navigation\SearchBox): formularz GET z polem (skrót „/”), opcjonalnie menu zakresów „Szukaj w” (przełączniki z ikonami, pola `<scopeName>[]`) i lista podpowiedzi (suggestUrl, js/global-search.js). compose: pole w stylu okna czatu (wariant Workspace, środek stopki treści): szare tło, po lewej „+” z menu szybkich akcji (search->actions, np. dodaj organizację; admiro::search.actions) zamiast lupy i suwaki zakresów, po prawej zaokrąglony przycisk szukania ze strzałką Entera zamiast skrótu „/”; podpowiedzi i menu otwierają się nad polem; za „+” błyskawica z szybkimi akcjami niezwiązanymi z dodawaniem (search->findActions, admiro::search.find; null = bez niej). folders: menu „+” jak teczka, jak menu błyskawicy (layout stref). commandUrl: adres formularza komend (POST, #ss-command-form za formularzem wyszukiwarki) — pole komend „/” na dole menu błyskawicy (admiro::search.commands; layout stref), null = bez niego. trailingScopes: suwaki zakresów między polem a przyciskiem szukania (layout stref) zamiast po lewej. Bez compose — lupa, pole, skrót „/” i suwaki po prawej (top bar). search: SearchBox. --}}
+@props(['search', 'compose' => false, 'trailingScopes' => false, 'folders' => false, 'commandUrl' => null])
 <form @class(['ss-search', 'ss-search--compose' => $compose]) role="search" method="GET" action="{{ $search->action }}"@if ($search->suggestUrl !== null) data-ss-search-suggest="{{ $search->suggestUrl }}"@endif>
     <label class="ss-sr-only" for="ss-global-search">{{ text('layout.search') }}</label>
     @if ($compose && $search->hasActions())
         @include('admiro::search.actions', ['actions' => $search->actions, 'primary' => $search->primaryAction, 'folder' => $folders])
     @endif
     @if ($compose && $search->findActions !== null)
-        @include('admiro::search.find', ['actions' => $search->findActions])
+        @include('admiro::search.find', ['actions' => $search->findActions, 'commandUrl' => $commandUrl])
     @endif
     @if ($compose && ! $trailingScopes && $search->scopes !== [])
         @include('admiro::search.scopes', ['search' => $search])
@@ -33,3 +33,8 @@
         <div class="ss-search__suggestions" id="ss-search-suggestions" role="listbox" aria-label="{{ text('layout.search_suggestions') }}" hidden data-ss-search-suggestions></div>
     @endif
 </form>
+@if ($compose && $search->findActions !== null && $commandUrl !== null)
+    <form class="ss-command__form" id="ss-command-form" method="POST" action="{{ $commandUrl }}" hidden>
+        @csrf
+    </form>
+@endif

@@ -143,6 +143,21 @@ return [
         'table_number' => 'NBP table number',
     ],
 
+    'account_task' => [
+        'name' => 'Name',
+        'status' => 'Status',
+        'zone' => 'Zone',
+        'account_id' => 'Account',
+        'issue' => 'Issue number',
+        'title' => 'Title',
+        'description' => 'Description',
+        'due_on' => 'Due date',
+        'delay_days' => 'Delay (days)',
+        'project' => 'Project',
+        'customer' => 'Customer',
+        'completed_at' => 'Completed',
+    ],
+
     'legal_document' => [
         'name' => 'Document version',
         'document' => 'Document',

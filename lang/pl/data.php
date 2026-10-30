@@ -143,6 +143,21 @@ return [
         'table_number' => 'Numer tabeli NBP',
     ],
 
+    'account_task' => [
+        'name' => 'Nazwa',
+        'status' => 'Status',
+        'zone' => 'Strefa',
+        'account_id' => 'Konto',
+        'issue' => 'Numer zgłoszenia',
+        'title' => 'Tytuł',
+        'description' => 'Opis',
+        'due_on' => 'Termin',
+        'delay_days' => 'Opóźnienie (dni)',
+        'project' => 'Projekt',
+        'customer' => 'Klient',
+        'completed_at' => 'Wykonano',
+    ],
+
     'legal_document' => [
         'name' => 'Wersja dokumentu',
         'document' => 'Dokument',

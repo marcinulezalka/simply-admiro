@@ -21,6 +21,7 @@ use Simplysmart\Admiro\Http\Controllers\Account\PinChangeController;
 use Simplysmart\Admiro\Http\Controllers\Account\RecoveryEmailController;
 use Simplysmart\Admiro\Http\Controllers\Account\ScreenLockController;
 use Simplysmart\Admiro\Http\Controllers\Account\SecurityController;
+use Simplysmart\Admiro\Http\Controllers\Account\TaskController;
 use Simplysmart\Admiro\Http\Controllers\Account\TrustedDeviceController;
 use Simplysmart\Admiro\Http\Controllers\Account\ProfileController;
 use Simplysmart\Admiro\Http\Controllers\Account\RoleSwitchController;
@@ -32,7 +33,8 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
  * awatara), strona bezpieczeństwa (zmiana PIN-u, zapasowy adres e-mail, historia konta, wylogowanie wszędzie; dawne `pin` i `devices`
  * przekierowują do jej sekcji), wygląd (motyw i kolorystyka; w strefie z `appearance.account` także zapis w koncie
  * i przywrócenie domyślnego), w strefie z zaufanymi urządzeniami ich odwołanie, w strefie
- * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli. Każda zmiana (poza wyglądem — wiele kliknięć przełączników) ma limit
+ * z zespołami przełączenie organizacji, a w strefie z `role_contexts` przełączenie aktywnej roli; do tego zadania TODO konta (komenda `todo:` z pola komend menu błyskawicy i przełączenie
+ * wykonania z listy pod powiadomieniami). Każda zmiana (poza wyglądem i przełączeniem wykonania zadania — wiele kliknięć) ma limit
  * `admiro.sign-in`.
  */
 final readonly class AccountRoutes
@@ -101,6 +103,11 @@ final readonly class AccountRoutes
     /** Kotwica „Wyloguj wszędzie”; po wejściu na nią podświetlone są karty blokowania dostępu (urządzenia, wylogowanie). */
     public const string SECTION_LOCK = 'lock';
 
+    /** Zadania TODO konta: komenda z pola komend menu błyskawicy (POST) i przełączenie wykonania zadania (PATCH). */
+    public const string TASKS_STORE = 'account.tasks.store';
+
+    public const string TASKS_TOGGLE = 'account.tasks.toggle';
+
     private const string PREFIX = 'account';
 
     public function __construct(
@@ -119,6 +126,8 @@ final readonly class AccountRoutes
             $this->router->get('unlock', [ScreenLockController::class, 'show'])->name(self::UNLOCK);
             $this->router->post('unlock', [ScreenLockController::class, 'unlock'])->middleware($throttle)->name(self::UNLOCK_STORE);
             $this->router->view('appearance', self::APPEARANCE_VIEW)->name(self::APPEARANCE);
+            $this->router->post('tasks', [TaskController::class, 'store'])->middleware($throttle)->name(self::TASKS_STORE);
+            $this->router->patch('tasks/{task}', [TaskController::class, 'toggle'])->name(self::TASKS_TOGGLE);
             $this->router->delete('security/sessions', [SecurityController::class, 'signOutEverywhere'])->middleware($throttle)->name(self::SIGN_OUT_EVERYWHERE);
             $this->router->get('pin', [SecurityController::class, 'section'])->defaults('section', self::SECTION_PIN)->name(self::PIN);
             $this->router->post('pin/code', [PinChangeController::class, 'sendCode'])->middleware($throttle)->name(self::PIN_CODE);
