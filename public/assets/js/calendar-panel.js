@@ -3,7 +3,10 @@
  * odświeża zegar w czasie przeglądarki — godzinę [data-ss-clock-time] („10:42”), datę [data-ss-clock-day]
  * („27.10.2026”, dzień i miesiąc dwucyfrowo) i atrybut datetime [data-ss-clock-date]; w panelu [data-ss-calendar] klik w dzień
  * [data-ss-calendar-day] zaznacza go (aria-pressed) i pokazuje w podglądzie jego datę (data-label) i opis (data-note: dzień wolny albo brak wydarzeń),
- * a przycisk [data-ss-calendar-close] zamyka panel (przycisk w stopce jest wtedy pod panelem).
+ * a przycisk [data-ss-calendar-close] zamyka panel (przycisk w stopce jest wtedy pod panelem). Harmonijka paneli
+ * [data-ss-side-panels] (x-admiro::app.side-panels): otwarcie daty wysuwa najpierw kalendarz, a po chwili z jego krawędzi
+ * powiadomienia (stan w atrybutach data-calendar / data-notifications = open | closed, ruch w CSS); [data-ss-side-panel-close]
+ * zamyka swój panel, a po zamknięciu obu — po animacji — zamyka się całość.
  * Bez skryptu zostaje data z chwili wczytania strony oraz podgląd dnia dzisiejszego. Osadzany inline
  * z nonce CSP (x-admiro::scripts).
  */
@@ -61,6 +64,53 @@
         }));
     };
 
+    /* Opóźnienie wysunięcia powiadomień za kalendarzem i czas animacji paneli (jak w CSS .ss-side-panels__panel). */
+    const SECOND_PANEL_DELAY = 140;
+    const PANEL_TRANSITION = 260;
+
+    const initSidePanels = (details) => {
+        const panels = [...details.querySelectorAll('[data-ss-side-panel]')];
+        const timers = [];
+        const state = (name, value) => { details.dataset[name] = value; };
+        const closeAll = () => panels.forEach((panel) => state(panel.dataset.ssSidePanel, 'closed'));
+        const clearTimers = () => timers.splice(0).forEach((timer) => window.clearTimeout(timer));
+
+        closeAll();
+
+        details.addEventListener('toggle', () => {
+            clearTimers();
+            closeAll();
+
+            if (!details.open) {
+                return;
+            }
+
+            window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+                panels.forEach((panel, index) => {
+                    timers.push(window.setTimeout(() => state(panel.dataset.ssSidePanel, 'open'), index * SECOND_PANEL_DELAY));
+                });
+            }));
+        });
+
+        details.querySelectorAll('[data-ss-side-panel-close]').forEach((button) => {
+            button.hidden = false;
+            button.addEventListener('click', () => {
+                const panel = button.closest('[data-ss-side-panel]');
+
+                if (panel) {
+                    state(panel.dataset.ssSidePanel, 'closed');
+                }
+
+                if (panels.every((other) => details.dataset[other.dataset.ssSidePanel] === 'closed')) {
+                    timers.push(window.setTimeout(() => {
+                        details.open = false;
+                        details.querySelector('summary')?.focus();
+                    }, PANEL_TRANSITION));
+                }
+            });
+        });
+    };
+
     const start = () => {
         document.querySelectorAll('[data-ss-clock]').forEach((clock) => {
             tick(clock);
@@ -70,6 +120,7 @@
             }, 60000 - (Date.now() % 60000));
         });
         document.querySelectorAll('[data-ss-calendar]').forEach(initCalendar);
+        document.querySelectorAll('[data-ss-side-panels]').forEach(initSidePanels);
     };
 
     if (document.readyState === 'loading') {

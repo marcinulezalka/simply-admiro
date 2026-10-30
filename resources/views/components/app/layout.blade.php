@@ -4,9 +4,7 @@
 @php($workspace = $variant === \Simplysmart\Admiro\Enums\AppLayout::Workspace)
 <x-admiro::page :title="$pageTitle ?? $title" :description="$description" robots="noindex, nofollow" :palettes="$palettes" :palette-scope="$paletteScope" :font-styles="$fontStyles" :font-faces="$fontFaces" :appearance="$appearance" :appearance-url="$appearanceUrl">
     <x-slot:head>
-        <x-admiro::styles :files="[...\Simplysmart\Admiro\View\CoreAssets::STYLESHEETS, ...$stylesheets]" />
-        <x-admiro::zone-styles :paths="$zoneStylesheets" />
-        <x-admiro::scripts :files="['js/app-shell.js', 'js/toasts.js', 'js/input-mask.js', 'js/pin-keypad.js', 'js/global-search.js', 'js/autosubmit.js', 'js/calendar-panel.js', 'js/tabs.js', 'js/live-search.js', 'js/tree-dnd.js', 'js/file-drop.js', 'js/keep-scroll.js', 'js/view-switch.js', 'js/post-toggle.js']" />
+        <x-admiro::app.head :stylesheets="$stylesheets" :zone-stylesheets="$zoneStylesheets" />
     </x-slot:head>
 
     {{ $before ?? '' }}
@@ -166,27 +164,7 @@
                 </x-admiro::app.context>
 
                 @if ($settingsArea && $settings?->active)
-                    <div class="ss-settings-area">
-                        <nav class="ss-settings-area__nav" aria-label="{{ text('layout.settings') }}">
-                            @foreach ($settings->groups as $group)
-                                <div class="ss-settings-area__group">
-                                    @if (filled($group->label))
-                                        <p class="ss-settings-area__group-title">{{ $group->label }}</p>
-                                    @endif
-                                    <ul class="ss-settings-area__list">
-                                        @foreach ($group->items as $item)
-                                            @if ($item instanceof \Simplysmart\Admiro\View\Navigation\NavigationItem)
-                                                <li><a class="ss-settings-area__link" href="{{ $item->url }}" @if ($item->current) aria-current="page" @endif><x-admiro::icon :name="$item->icon" class="ss-icon--tile ss-settings-area__icon" /><span class="ss-settings-area__label">{{ $item->label }}</span></a></li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endforeach
-                        </nav>
-                        <div class="ss-settings-area__panel">
-                            {{ $slot }}
-                        </div>
-                    </div>
+                    <x-admiro::app.settings-area :settings="$settings">{{ $slot }}</x-admiro::app.settings-area>
                 @else
                     {{ $slot }}
                 @endif

@@ -8358,6 +8358,198 @@ a.ss-notification:focus-visible {
     }
 }
 
+/*
+ * .ss-shell--zone — bazowy layout stref (Enums\AppLayout::Zone, x-admiro::app.zone-layout) na klasach stopki Workspace:
+ * odnośnik „Wyloguj” nad tytułem jako przycisk formularza (.ss-context__back-form), błyskawica szybkich akcji przy polu
+ * wyszukiwania (.ss-search__find), role wcięte pod organizacją w przełączniku kontekstu (.ss-context-switch--tree),
+ * dwa panele boczne jak harmonijka (.ss-side-panels), narzędzia wyglądu w siatce bez podpisów
+ * (.ss-side-panel__tools--grid) i napis „TEMP” nad treścią widoku w przygotowaniu (.ss-temp-mark).
+ */
+.ss-context__back-form {
+    margin: 0;
+}
+
+button.ss-context__back {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+.ss-search__find-toggle:hover .ss-search__find-icon,
+.ss-search__find[open] .ss-search__find-icon {
+    color: var(--ss-color-warning);
+    animation: ss-zap-flash 0.6s ease-in-out;
+}
+
+@keyframes ss-zap-flash {
+    30% {
+        opacity: 0.35;
+        transform: scale(0.85);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+.ss-search__menu-empty {
+    margin: 0;
+    padding: var(--ss-space-2) var(--ss-space-3);
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+}
+
+.ss-context-switch--tree .ss-context-switch__group + .ss-account-menu__list {
+    margin-left: var(--ss-space-4);
+    padding-left: var(--ss-space-2);
+    border-left: 1px solid var(--ss-color-border-strong);
+}
+
+/* Harmonijka: kalendarz przy prawej krawędzi okna (na wierzchu), powiadomienia pod nim, wsunięte pod jego zaokrągloną
+   krawędź (--ss-side-panel-tuck), więc między panelami nie ma przerwy. Zamknięty panel wysuwa się w prawo (kalendarz
+   za krawędź okna, powiadomienia pod kalendarz); bez kalendarza powiadomienia przesuwają się do krawędzi okna. Stan
+   ustawia js/calendar-panel.js; bez skryptu oba panele są otwarte. */
+.ss-side-panels {
+    --ss-side-panel-width: min(22rem, calc(100vw - 2 * var(--ss-space-4)));
+    --ss-side-panel-tuck: var(--ss-radius-card);
+}
+
+.ss-side-panels__panel {
+    position: fixed;
+    top: var(--ss-space-4);
+    right: var(--ss-space-4);
+    bottom: calc(var(--ss-workspace-footer-height, 0px) + var(--ss-space-3));
+    display: flex;
+    flex-direction: column;
+    width: var(--ss-side-panel-width);
+    overflow-y: auto;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+    color: var(--ss-color-text);
+    transition: transform 0.26s ease, opacity 0.26s ease, right 0.26s ease, padding 0.26s ease, visibility 0s;
+}
+
+.ss-side-panels__panel--calendar {
+    z-index: 91;
+}
+
+.ss-side-panels__panel--notifications {
+    z-index: 90;
+    right: calc(var(--ss-space-4) + var(--ss-side-panel-width) - var(--ss-side-panel-tuck));
+    padding-right: calc(var(--ss-space-3) + var(--ss-side-panel-tuck));
+}
+
+.ss-side-panels[data-calendar="closed"] .ss-side-panels__panel--notifications {
+    right: var(--ss-space-4);
+    padding-right: var(--ss-space-3);
+}
+
+.ss-side-panels[data-calendar="closed"] .ss-side-panels__panel--calendar,
+.ss-side-panels[data-notifications="closed"] .ss-side-panels__panel--notifications {
+    visibility: hidden;
+    opacity: 0;
+    transition: transform 0.26s ease, opacity 0.26s ease, right 0.26s ease, padding 0.26s ease, visibility 0s linear 0.26s;
+}
+
+.ss-side-panels[data-calendar="closed"] .ss-side-panels__panel--calendar {
+    transform: translateX(calc(100% + var(--ss-space-4)));
+}
+
+.ss-side-panels[data-notifications="closed"] .ss-side-panels__panel--notifications {
+    transform: translateX(calc(var(--ss-side-panel-width) - var(--ss-side-panel-tuck)));
+}
+
+/* Wąski ekran: panele nie mieszczą się obok siebie — powiadomienia leżą pod kalendarzem przy krawędzi okna i odsłaniają
+   się po jego zamknięciu. */
+@media (max-width: 48rem) {
+    .ss-side-panels__panel--notifications {
+        right: var(--ss-space-4);
+        padding-right: var(--ss-space-3);
+    }
+
+    .ss-side-panels[data-notifications="closed"] .ss-side-panels__panel--notifications {
+        transform: translateX(calc(100% + var(--ss-space-4)));
+    }
+}
+
+.ss-side-panels__header {
+    display: flex;
+    flex: none;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-side-panels__title {
+    flex: 1;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.ss-side-panels__header .ss-icon-button[hidden] {
+    display: none;
+}
+
+/* Narzędzia wyglądu w jednej siatce dopasowanej do szerokości panelu: wiersze i grupy nie tworzą własnych pudełek,
+   podpisy zostają tylko dla czytników ekranu. */
+.ss-side-panel__tools--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(2.5rem, 1fr));
+    gap: var(--ss-space-1);
+    justify-items: center;
+}
+
+.ss-side-panel__tools--grid .ss-side-panel__row,
+.ss-side-panel__tools--grid .ss-side-panel__tool-group {
+    display: contents;
+}
+
+.ss-side-panel__tools--grid .ss-side-panel__tool-group[hidden] {
+    display: none;
+}
+
+/* „TEMP” na środku okna nad treścią widoku w przygotowaniu: duży, przechylony, półprzezroczysty, nie łapie kliknięć. */
+.ss-temp-mark {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    z-index: 5;
+    margin: 0;
+    color: color-mix(in srgb, var(--ss-color-danger) 24%, transparent);
+    font-family: var(--ss-font-sans);
+    font-size: clamp(5rem, 18vw, 14rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-side-panels__panel,
+    .ss-side-panels[data-calendar="closed"] .ss-side-panels__panel--calendar,
+    .ss-side-panels[data-notifications="closed"] .ss-side-panels__panel--notifications {
+        transition: none;
+    }
+
+    .ss-search__find-toggle:hover .ss-search__find-icon,
+    .ss-search__find[open] .ss-search__find-icon {
+        animation: none;
+    }
+}
+
+@media print {
+    .ss-temp-mark {
+        display: none;
+    }
+}
+
 
 
 /*

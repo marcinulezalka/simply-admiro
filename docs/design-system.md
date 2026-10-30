@@ -196,6 +196,20 @@ Strona składa się z poziomych warstw, od ogólnej do szczegółowej:
 | **Tło płótna** | pod wszystkimi warstwami layoutu aplikacji duży logotyp simplysmart na środku okna (`x-admiro::app.backdrop`, `.ss-backdrop`), wtopiony w płótno: kolor marki `--ss-color-brand` (czerń albo biel) z kryciem 3,5%, proporcje logo bez zmian; strefa z `backdrop` = `zone-logo` (`Enums\AppBackdrop`, `View\ZoneLogos::backdrop()`) ma zamiast niego swoje logo przy dolnej krawędzi okna, dolną krawędzią napisu równo z dołem okna — przycina go stopka na dole (`.ss-backdrop--bottom`); czysta dekoracja (`aria-hidden`), bez motywów wysokiego kontrastu i wydruku | logotyp na prawie całą szerokość |
 | **Siatka kart** | niezależne karty; w karcie pary etykieta (`muted`, lewa) → wartość (`text`, prawa). Etykieta z `text_data($model, $kolumna)`, wartość sformatowana `local_*` | jedna kolumna; para etykieta nad wartością |
 
+### Layout stref (`Enums\AppLayout::Zone`)
+
+Strefy (poza strefą administratorów, która zostaje na Workspace) po zalogowaniu mają osobny bazowy layout `x-admiro::app.zone-layout` (`app_layout` = `zone` albo `Contracts\ZoneAppLayout`), wybierany przez `x-admiro::zone.layout`. Role i konteksty różnią się tylko treścią, nie layoutem.
+
+| Element | Zawartość |
+| --- | --- |
+| **Nagłówek** | ikona strony i nad tytułem zawsze odnośnik ze strzałką ←: na podstronie „Wstecz”; na stronie startowej (`home` w `x-admiro::zone.layout`) „Zmień kontekst” (kotwica przełącznika), gdy konto ma co najmniej dwa konteksty, a inaczej „Wyloguj” (formularz POST, `backSignOut` w `x-admiro::app.context`); pod nim duży tytuł |
+| **Treść** | slot strony na tle płótna (logo strefy); widok w przygotowaniu (`Contracts\ZonePageProgress::pageInProgress()`) dostaje na środku napis „TEMP” (`.ss-temp-mark`) |
+| **Stopka — lewo** | awatar, nazwa i identyfikator konta; menu tylko z „Mój profil” (`ZoneSettingsMenu::profileItem()`) i „Wyloguj” |
+| **Stopka — środek** | wyszukiwarka: „+” (szybkie dodawanie, `SearchBox::$actions`), błyskawica (szybkie akcje bez dodawania, `SearchBox::$findActions`; `[]` = pusty dropdown), pole, suwaki z multiwyborem zakresów (`SearchBox::$scopes`), Enter |
+| **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole ikony ustawień, kolorów i rozmiarów w siatce bez podpisów), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy; każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
+
+Bez mapy strony i bez menu bocznego: nawigacja to pulpit, wyszukiwarka i odnośniki na stronach.
+
 ## 6. Kolor i dostępność
 
 - Kontrast tekstu co najmniej WCAG AA 4.5:1. `--ss-color-muted` (`#6b7280`) ma 4.8:1 na bieli —

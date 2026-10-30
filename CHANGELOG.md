@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Bazowy layout stref oddzielony od layoutu strefy administratorów: nowy wariant `app_layout` = `zone` (`Enums\AppLayout::Zone`, `x-admiro::app.zone-layout`). Nad tytułem zawsze odnośnik ze strzałką ← — na podstronie „Wstecz”, na stronie startowej (`home` w `x-admiro::zone.layout`) „Zmień kontekst” przy kilku kontekstach konta, a inaczej „Wyloguj”. W stopce menu konta tylko z „Mój profil” i „Wyloguj”, wyszukiwarka z „+”, błyskawicą szybkich akcji (`SearchBox::$findActions`, pusty dropdown dopuszczalny), polem, suwakami zakresów i Enterem, przełącznik kontekstu z rolami wciętymi pod organizacją oraz data otwierająca dwa panele jak harmonijka: kalendarz przy krawędzi okna (ustawienia, kolory i rozmiary jako siatka ikon bez podpisów) i z jego krawędzi powiadomienia; każdy panel zamyka się osobno. Bez mapy strony. Strefa może oznaczać widoki w przygotowaniu (`Contracts\ZonePageProgress`) — dostają na środku napis „TEMP”. Layout Workspace strefy administratorów bez zmian.
+
 ### Changed
 
 - Brak pliku ikony (`x-admiro::icon`) nie przerywa już strony błędem 500: ikona zostaje pusta, a błąd trafia do logu (`View\CoreAssets::icon()`). Chroni m.in. okno wdrożenia, gdy działający jeszcze stary kod odwołuje się do ikony usuniętej w nowej wersji.

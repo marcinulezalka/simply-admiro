@@ -1,0 +1,34 @@
+{{-- Narzędzia wyglądu na dole panelu bocznego (js/theme.js, bez skryptu ukryte): ustawienia (koło zębate, settingsUrl: ?string), tryby kolorów (jasny/ciemny, motywy wysokiego kontrastu WCAG) oraz rozmiar i powiększenie (A, AA, pomniejsz −, powiększ + — o jeden stopień rozmiaru tekstu); włączone (aria-pressed) w kolorach akcentu. grid: bez widocznych podpisów wierszy — wszystkie ikony w jednej siatce dopasowanej do szerokości panelu (.ss-side-panel__tools--grid; podpisy zostają dla czytników ekranu); bez grid trzy podpisane wiersze. --}}
+@props(['settingsUrl' => null, 'grid' => false])
+@php($labelClass = $grid ? 'ss-sr-only' : 'ss-side-panel__row-label')
+<div @class(['ss-side-panel__tools', 'ss-side-panel__tools--grid' => $grid]) role="group" aria-label="{{ text('layout.appearance_tools') }}">
+    @if ($settingsUrl !== null)
+        <div class="ss-side-panel__row">
+            <span class="{{ $labelClass }}">{{ text('layout.settings') }}</span>
+            <span class="ss-side-panel__tool-group">
+                <a class="ss-icon-button ss-side-panel__tool ss-side-panel__settings" href="{{ $settingsUrl }}" title="{{ text('layout.settings') }}"><x-admiro::icon name="settings-gear" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('layout.settings') }}</span></a>
+            </span>
+        </div>
+    @endif
+    <div class="ss-side-panel__row">
+        <span class="{{ $labelClass }}">{{ text('layout.color_modes') }}</span>
+        <span class="ss-side-panel__tool-group">
+            <span class="ss-side-panel__tool-group" data-ss-theme-flip-control hidden>
+                <button class="ss-icon-button ss-side-panel__tool" type="button" aria-pressed="false" title="{{ text('layout.theme_dark') }}" data-ss-theme-flip><x-admiro::icon name="moon" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('layout.theme_dark') }}</span></button>
+            </span>
+            <span class="ss-side-panel__tool-group" data-ss-theme-toggle hidden>
+                <button class="ss-icon-button ss-side-panel__tool" type="button" aria-pressed="false" title="{{ text('layout.themes.contrast') }}" data-ss-theme="contrast"><x-admiro::icon name="contrast" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('layout.themes.contrast') }}</span></button>
+                <button class="ss-icon-button ss-side-panel__tool" type="button" aria-pressed="false" title="{{ text('layout.themes.contrast-yellow') }}" data-ss-theme="contrast-yellow"><x-admiro::icon name="eye" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('layout.themes.contrast-yellow') }}</span></button>
+            </span>
+        </span>
+    </div>
+    <div class="ss-side-panel__row">
+        <span class="{{ $labelClass }}">{{ text('layout.resize_zoom') }}</span>
+        <span class="ss-side-panel__tool-group" data-ss-preference="text-size" hidden>
+            <button class="ss-icon-button ss-side-panel__tool ss-side-panel__tool--text" type="button" aria-pressed="false" title="{{ text('layout.text_sizes.normal') }}" data-ss-preference-value="normal">A<span class="ss-sr-only"> — {{ text('layout.text_sizes.normal') }}</span></button>
+            <button class="ss-icon-button ss-side-panel__tool ss-side-panel__tool--text" type="button" aria-pressed="false" title="{{ text('layout.text_sizes.large') }}" data-ss-preference-value="large">AA<span class="ss-sr-only"> — {{ text('layout.text_sizes.large') }}</span></button>
+            <button class="ss-icon-button ss-side-panel__tool" type="button" title="{{ text('layout.zoom_out') }}" data-ss-preference-step="-1"><x-admiro::icon name="zoom-out" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('layout.zoom_out') }}</span></button>
+            <button class="ss-icon-button ss-side-panel__tool" type="button" title="{{ text('layout.zoom_in') }}" data-ss-preference-step="1"><x-admiro::icon name="zoom-in" class="ss-icon-button__icon" /><span class="ss-sr-only">{{ text('layout.zoom_in') }}</span></button>
+        </span>
+    </div>
+</div>

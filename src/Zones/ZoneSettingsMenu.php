@@ -56,10 +56,18 @@ final readonly class ZoneSettingsMenu
     public function accountItems(ZoneDefinition $zone): array
     {
         return [
-            $this->item($zone, AccountRoutes::PROFILE, text('account.profile_title'), 'user'),
+            $this->profileItem($zone),
             $this->item($zone, AccountRoutes::SECURITY, text('account.security_title'), 'shield-check'),
             $this->item($zone, AccountRoutes::APPEARANCE, text('account.appearance_title'), 'contrast'),
         ];
+    }
+
+    /**
+     * „Mój profil” — jedyna pozycja konta w menu pod awatarem layoutu stref (Enums\AppLayout::Zone), bieżąca oznaczona.
+     */
+    public function profileItem(ZoneDefinition $zone): NavigationItem
+    {
+        return $this->item($zone, AccountRoutes::PROFILE, text('account.profile_title'), 'user');
     }
 
     private function item(ZoneDefinition $zone, string $route, string $label, string $icon): NavigationItem
