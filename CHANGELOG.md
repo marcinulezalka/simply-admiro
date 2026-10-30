@@ -6,10 +6,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Layout stref: odnośnik nad tytułem („Wstecz”, „Zmień kontekst”, „Wyloguj”) krojem mono wersalikami; narzędzia wyglądu w panelu kalendarza w karcie z tłem jak podgląd dnia (bez kreski) jako kafelki po dwa w rzędzie z podpisami — tryb kolorów (jasny, ciemny, kontrast WCAG, duży kontrast), rozmiar tekstu (A, AA) i powiększenie rozwijają listę trybów z ikonami i nazwami; kłódka „Zablokuj ekran” w stopce obok przełącznika kontekstu (jak Win+L: kończy sesję na tym urządzeniu).
+- Layout stref: odnośnik nad tytułem („Wstecz”, „Zmień kontekst”, „Wyloguj”) krojem mono wersalikami; narzędzia wyglądu w panelu kalendarza jako kafelki po dwa w rzędzie z podpisami na przygaszonym tle przycisków (bez tła pod spodem i bez kreski) — tryb kolorów (jasny, ciemny, kontrast WCAG, duży kontrast), rozmiar tekstu (A, AA) i powiększenie rozwijają listę trybów z ikonami i nazwami; kłódka „Zablokuj ekran” w stopce obok przełącznika kontekstu (jak Win+L: kończy sesję na tym urządzeniu).
 - Strona bezpieczeństwa konta: kotwica `#lock` (`AccountRoutes::SECTION_LOCK`) podświetla karty blokowania dostępu — zaufane urządzenia i „Wyloguj wszędzie”.
 - Wizytówka organizacji: adres w dwóch liniach — ulica, pod nią kod pocztowy, miasto i kraj.
-- Jednostka organizacyjna jako wiersz listy `x-admiro::organization.item` (kafelek z ikoną rodzaju, nazwa, rodzaj i NIP, miękki cień, bieżąca wyróżniona) i stos kart `.ss-card-stack` (warstwy wychylające się zza karty).
+- Jednostka organizacyjna jako wiersz listy `x-admiro::organization.item` (subtelnie jak przycisk zegara: ikona rodzaju, nazwa, rodzaj i NIP na przygaszonym tle, bieżąca z obwódką) i stos kart `.ss-card-stack` (warstwy wychylające się zza karty, szerokość do 40rem jak karta postępu).
 - Layout stref: w menu konta druga kolumna „Twoje jednostki” — lista jednostek konta (`ZoneContexts::units()`, `x-admiro::organization.item`), bieżąca wyróżniona; odnośnik nad tytułem tuż przy tytule.
 - Wyszukiwarka: akcja główna menu „+” na górze, pod nią separator (`SearchBox::$primaryAction`).
 - Komponent `x-admiro::checklist.card`: karta postępu listy zadań z następnym zadaniem (jak karta onboardingu na dashboardzie admiro, który z niej korzysta) do użycia w strefach; klasa siatki `.ss-grid--2` (dwie kolumny od 40rem).

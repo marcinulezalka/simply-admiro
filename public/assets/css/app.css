@@ -8517,23 +8517,22 @@ button.ss-context__back {
     display: none;
 }
 
-/* Narzędzia wyglądu w panelu kalendarza layoutu stref: karta z tłem jak podgląd dnia (bez kreski nad nią) z kafelkami
-   po dwa w rzędzie jak szybkie ustawienia systemu — ikona i podpis, bez tła, delikatna ramka; kafelek z kilkoma trybami
+/* Narzędzia wyglądu w panelu kalendarza layoutu stref: bez tła pod spodem i bez kreski nad nimi, kafelki po dwa
+   w rzędzie jak szybkie ustawienia systemu — ikona i podpis na przygaszonym tle przycisku, delikatna ramka; kafelek z kilkoma trybami
    rozwija się na cały rząd z listą trybów (ikona i nazwa), wybrany tryb delikatnie zaznaczony. */
 .ss-side-panel__tools--grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--ss-space-2);
-    padding: var(--ss-space-3);
-    border: 1px solid var(--ss-color-border);
-    border-radius: var(--ss-radius-card);
-    background: var(--ss-color-surface-muted);
+    padding: 0;
+    border: 0;
 }
 
 .ss-quick-tile {
     min-width: 0;
     border: 1px solid var(--ss-color-border);
     border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface-muted);
     color: var(--ss-color-text);
     text-decoration: none;
 }
@@ -8655,9 +8654,9 @@ a.ss-quick-tile:focus-visible,
     color: var(--ss-color-accent);
 }
 
-/* Menu konta w stopce layoutu stref z jednostkami konta: po lewej profil i wylogowanie, po prawej na przygaszonym tle
-   lista jednostek (x-admiro::organization.item: organizacja, placówka, poradnia), bieżąca z obwódką akcentu; na
-   telefonie pod menu. */
+/* Menu konta w stopce layoutu stref z jednostkami konta (jednolite tło menu): po lewej profil i wylogowanie, po prawej
+   za cienką linią lista jednostek (x-admiro::organization.item: organizacja, placówka, poradnia), bieżąca z obwódką;
+   na telefonie pod menu. */
 .ss-zone-account {
     display: grid;
     grid-template-columns: minmax(12rem, auto) minmax(14rem, 18rem);
@@ -8672,10 +8671,17 @@ a.ss-quick-tile:focus-visible,
 .ss-zone-account__units {
     display: flex;
     flex-direction: column;
-    gap: var(--ss-space-2);
-    padding: var(--ss-space-3);
-    border-radius: var(--ss-radius-card);
-    background: var(--ss-color-surface-muted);
+    gap: var(--ss-space-1);
+    padding-left: var(--ss-space-3);
+    border-left: 1px solid var(--ss-color-border);
+}
+
+@media (max-width: 40rem) {
+    .ss-zone-account__units {
+        padding: var(--ss-space-3) 0 0;
+        border-top: 1px solid var(--ss-color-border);
+        border-left: 0;
+    }
 }
 
 .ss-zone-account__title {
@@ -8695,24 +8701,23 @@ a.ss-quick-tile:focus-visible,
 
 }
 
-/* Jednostka konta jako wiersz listy (x-admiro::organization.item): biała karta z miękkim, szerokim cieniem, kafelek
-   z ikoną w kolorze akcentu, nazwa i pod nią rodzaj z NIP-em krojem mono; bieżąca z obwódką akcentu. */
+/* Jednostka konta jako wiersz listy (x-admiro::organization.item), subtelnie jak przycisk zegara w stopce: przygaszone
+   tło bez cienia, ikona rodzaju bez wypełnienia, nazwa i pod nią rodzaj z NIP-em krojem mono; bieżąca z obwódką. */
 .ss-org-item {
     display: flex;
-    gap: var(--ss-space-3);
+    gap: var(--ss-space-2);
     align-items: center;
     min-width: 0;
-    padding: var(--ss-space-2) var(--ss-space-3) var(--ss-space-2) var(--ss-space-2);
-    border: 1px solid var(--ss-color-border);
-    border-radius: var(--ss-radius-card);
-    background: var(--ss-color-surface);
-    box-shadow: 0 1px 2px color-mix(in srgb, var(--ss-color-text) 6%, transparent), 0 10px 24px -8px color-mix(in srgb, var(--ss-color-text) 18%, transparent);
+    padding: var(--ss-space-2) var(--ss-space-3);
+    border: 1px solid transparent;
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface-muted);
     color: var(--ss-color-text);
     text-decoration: none;
 }
 
 .ss-org-item--current {
-    border-color: var(--ss-color-accent);
+    border-color: var(--ss-color-border-strong);
 }
 
 .ss-org-item__tile {
@@ -8720,29 +8725,28 @@ a.ss-quick-tile:focus-visible,
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 2px solid color-mix(in srgb, var(--ss-color-accent) 70%, var(--ss-color-text));
-    border-radius: var(--ss-radius-control);
-    background: var(--ss-color-accent);
-    color: var(--ss-color-on-accent);
+    color: var(--ss-color-muted);
+}
+
+.ss-org-item--current .ss-org-item__tile {
+    color: var(--ss-color-accent);
 }
 
 .ss-org-item__icon {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
 }
 
 .ss-org-item__text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
     min-width: 0;
 }
 
 .ss-org-item__name {
     overflow: hidden;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -8755,10 +8759,11 @@ a.ss-quick-tile:focus-visible,
 }
 
 /* Stos kart (.ss-card-stack, np. wizytówka na pulpicie): za kartą wychylają się u góry dwie węższe, coraz jaśniejsze
-   warstwy — efekt kolejnych kart pod spodem. */
+   warstwy — efekt kolejnych kart pod spodem; szerokość jak karta postępu (.ss-onboarding-card, do 40rem). */
 .ss-card-stack {
     position: relative;
     isolation: isolate;
+    max-width: 40rem;
     margin-top: var(--ss-space-4);
 }
 
