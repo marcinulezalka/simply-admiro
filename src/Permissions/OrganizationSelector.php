@@ -16,13 +16,17 @@ namespace Simplysmart\Admiro\Permissions;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Simplysmart\Admiro\Models\Organization;
+use Simplysmart\Admiro\Models\ZoneAccount;
 use Simplysmart\Admiro\Queries\Organizations\ActiveMemberships;
+use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Wybiera organizację żądania. Strefa bez zespołów: zawsze organizacja operatora. Strefa z zespołami:
- * organizacja wybrana przez konto (sesja strefy), o ile nadal jest jego aktywnym członkostwem, inaczej
- * pierwsza aktywna organizacja konta; bez konta lub bez członkostw: brak organizacji.
+ * organizacja wybrana przez konto (sesja strefy), o ile nadal jest jego aktywnym członkostwem, inaczej domyślny
+ * kontekst — najstarsze członkostwo, w którym konto ma rolę strefy (a bez takiego najstarsze członkostwo) —
+ * zapamiętany w sesji, więc konto zaraz po zalogowaniu działa w kontekście z rolą, a nowe członkostwo nadane
+ * w trakcie sesji nie zmienia go samo; bez konta lub bez członkostw: brak organizacji.
  */
 final readonly class OrganizationSelector
 {
@@ -30,6 +34,7 @@ final readonly class OrganizationSelector
 
     public function __construct(
         private ActiveMemberships $memberships,
+        private ZoneRoleNames $roles,
     ) {}
 
     public function select(ZoneDefinition $zone, ?Model $account, Session $session): ?int
@@ -45,7 +50,17 @@ final readonly class OrganizationSelector
         $memberships = $this->memberships->ids($account);
         $chosen = $session->get(self::SESSION_KEY);
 
-        return is_int($chosen) && in_array($chosen, $memberships, true) ? $chosen : ($memberships[0] ?? null);
+        if (is_int($chosen) && in_array($chosen, $memberships, true)) {
+            return $chosen;
+        }
+
+        $default = $this->withRole($account, $memberships) ?? $memberships[0] ?? null;
+
+        if ($default !== null) {
+            $session->put(self::SESSION_KEY, $default);
+        }
+
+        return $default;
     }
 
     /**
@@ -62,5 +77,25 @@ final readonly class OrganizationSelector
         $session->put(self::SESSION_KEY, $id);
 
         return true;
+    }
+
+    /**
+     * Najstarsze członkostwo, w którym konto strefy ma rolę; null bez takiego (albo dla konta bez ról strefy).
+     *
+     * @param list<int> $memberships
+     */
+    private function withRole(Model $account, array $memberships): ?int
+    {
+        if (! $account instanceof ZoneAccount) {
+            return null;
+        }
+
+        foreach ($memberships as $organizationId) {
+            if ($this->roles->of($account, $organizationId) !== []) {
+                return $organizationId;
+            }
+        }
+
+        return null;
     }
 }

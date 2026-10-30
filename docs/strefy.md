@@ -322,8 +322,9 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
   w organizacjach (`organizations()`). Guard spatie wykrywa z providera strefy.
 - **Organizacja żądania** (`Http\Middleware\UseCurrentTeam`, kontrakt `Contracts\CurrentOrganization`):
   strefa bez `teams` działa w organizacji operatora; strefa z `teams` w organizacji wybranej przez konto
-  (sesja strefy, `account.organization.switch`), o ile nadal jest jego aktywnym członkostwem, inaczej
-  w pierwszej. Bez członkostwa nie ma organizacji, więc nie ma uprawnień. Po odpowiedzi organizacja jest czyszczona.
+  (sesja strefy, `account.organization.switch`), o ile nadal jest jego aktywnym członkostwem, inaczej w domyślnej
+  (`Permissions\OrganizationSelector`): najstarszym członkostwie, w którym konto ma rolę strefy (bez takiego —
+  najstarszym), zapamiętanym w sesji, więc zaraz po zalogowaniu konto działa w kontekście z rolą. Bez członkostwa nie ma organizacji, więc nie ma uprawnień. Po odpowiedzi organizacja jest czyszczona.
   Layout strefy pokazuje przełącznik organizacji, gdy konto należy do więcej niż jednej (`$organizations`,
   `$currentOrganizationId` daje Core).
 - **Role jako konteksty** (`role_contexts` w configu strefy z `teams`; kontrakt `Contracts\CurrentRole`,

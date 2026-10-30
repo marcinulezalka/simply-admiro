@@ -4,6 +4,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Domyślny kontekst po zalogowaniu w strefie z organizacjami: gdy konto nic nie wybrało, organizacją żądania jest najstarsze członkostwo, w którym konto ma rolę (dotąd najstarsze w ogóle, także bez roli — konto lądowało bez kontekstu), zapamiętane w sesji.
+
 ### Added
 
 - Wygląd zapisany w koncie: strefa z kluczem `appearance` (`'account' => true`) zapisuje wybory ze strony „Personalizacja” i panelu bocznego (motyw, kolorystyka, rozmiar tekstu, szerokość treści, krój) w koncie zamiast w przeglądarce, więc obowiązują na każdym urządzeniu i rysują się od razu, bez błysku. Domyślny wygląd ma aplikacja (`appearance.defaults`), konto go nadpisuje, a „Przywróć domyślny wygląd” usuwa wybory konta. Strona „Personalizacja” ma sekcje w kolejności: szerokość treści, motyw, kolorystyka, krój pisma, rozmiar tekstu, i mówi pod tytułem, gdzie trafiają wybory. Strefy bez klucza działają jak dotąd.
