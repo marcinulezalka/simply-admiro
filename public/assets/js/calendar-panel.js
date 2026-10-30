@@ -6,7 +6,8 @@
  * a przycisk [data-ss-calendar-close] zamyka panel (przycisk w stopce jest wtedy pod panelem). Harmonijka paneli
  * [data-ss-side-panels] (x-admiro::app.side-panels): otwarcie daty wysuwa najpierw kalendarz, a po chwili z jego krawędzi
  * powiadomienia (stan w atrybutach data-calendar / data-notifications = open | closed, ruch w CSS); [data-ss-side-panel-close]
- * zamyka swój panel, a po zamknięciu obu — po animacji — zamyka się całość.
+ * zamyka swój panel, a po zamknięciu obu — po animacji — zamyka się całość. Wybór trybu w rozwijanym kafelku narzędzi
+ * wyglądu ([data-ss-tile-close]) zamyka jego listę.
  * Bez skryptu zostaje data z chwili wczytania strony oraz podgląd dnia dzisiejszego. Osadzany inline
  * z nonce CSP (x-admiro::scripts).
  */
@@ -121,6 +122,13 @@
         });
         document.querySelectorAll('[data-ss-calendar]').forEach(initCalendar);
         document.querySelectorAll('[data-ss-side-panels]').forEach(initSidePanels);
+        document.querySelectorAll('[data-ss-tile-close]').forEach((button) => button.addEventListener('click', () => {
+            const tile = button.closest('details');
+
+            if (tile) {
+                tile.open = false;
+            }
+        }));
     };
 
     if (document.readyState === 'loading') {

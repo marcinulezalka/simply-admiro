@@ -84,6 +84,7 @@ return [
     ],
     'mask_format' => 'Format: :format',
     'switch_context' => 'Przełącz kontekst',
+    'lock_screen' => 'Zablokuj ekran',
     'change_context' => 'Zmień kontekst',
     'in_progress' => 'TEMP',
     'switch_on' => 'ON',

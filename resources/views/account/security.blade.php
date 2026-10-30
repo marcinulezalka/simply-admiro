@@ -1,4 +1,4 @@
-{{-- Bezpieczeństwo zalogowanego konta (SecurityController): zasady logowania strefy (zakres PIN-u, kod z e-maila przy każdym logowaniu albo tylko na nowym urządzeniu — strefa z zaufanymi urządzeniami), zmiana PIN-u (#pin: kod z e-maila, obecny i nowy PIN w zakresie strefy; pola PIN-u z klawiaturą ekranową x-admiro::pin-field), zapasowy adres e-mail do resetu PIN-u (#recovery: kod na nowy adres, potwierdzenie, usunięcie; $recoveryEmail, $pendingRecoveryEmail: ?string), zaufane urządzenia (#devices, gdy strefa je ma) z odwołaniem, wylogowanie ze wszystkich urządzeń i ostatnie zdarzenia konta (Queries\Audit\AccountHistory, bez adresów IP). $currentPinLength, $pinLength: Auth\PinLength; $codeLength: int; $devices: ?list<Auth\Devices\TrustedDeviceRecord> (null = strefa bez zaufanych urządzeń); $currentSelector: ?string; $history: Collection<int, Models\AuditEvent>; $zone daje Core. --}}
+{{-- Bezpieczeństwo zalogowanego konta (SecurityController): zasady logowania strefy (zakres PIN-u, kod z e-maila przy każdym logowaniu albo tylko na nowym urządzeniu — strefa z zaufanymi urządzeniami), zmiana PIN-u (#pin: kod z e-maila, obecny i nowy PIN w zakresie strefy; pola PIN-u z klawiaturą ekranową x-admiro::pin-field), karty blokowania dostępu (.ss-security-lock: zaufane urządzenia i „Wyloguj wszędzie” — #lock podświetla obie), zapasowy adres e-mail do resetu PIN-u (#recovery: kod na nowy adres, potwierdzenie, usunięcie; $recoveryEmail, $pendingRecoveryEmail: ?string), zaufane urządzenia (#devices, gdy strefa je ma) z odwołaniem, wylogowanie ze wszystkich urządzeń i ostatnie zdarzenia konta (Queries\Audit\AccountHistory, bez adresów IP). $currentPinLength, $pinLength: Auth\PinLength; $codeLength: int; $devices: ?list<Auth\Devices\TrustedDeviceRecord> (null = strefa bez zaufanych urządzeń); $currentSelector: ?string; $history: Collection<int, Models\AuditEvent>; $zone daje Core. --}}
 @php
     $routes = \Simplysmart\Admiro\Http\AccountRoutes::class;
     $codeField = static fn (string $id, string $name, string $label, string $type, string $autocomplete, int $min, int $max, bool $keypad = true) => compact('id', 'name', 'label', 'type', 'autocomplete', 'min', 'max', 'keypad');
@@ -71,7 +71,7 @@
             </section>
 
             @if ($devices !== null)
-                <section class="ss-card" id="{{ $routes::SECTION_DEVICES }}" aria-labelledby="security-devices-title">
+                <section class="ss-card ss-security-lock" id="{{ $routes::SECTION_DEVICES }}" aria-labelledby="security-devices-title">
                     <h2 class="ss-card__title" id="security-devices-title">{{ text('account.devices_title') }}</h2>
                     <p class="ss-card__lead ss-muted">{{ text('account.devices_hint') }}</p>
                     @if ($devices === [])
@@ -101,7 +101,7 @@
                 </section>
             @endif
 
-            <section class="ss-card ss-card--inverse" aria-labelledby="security-everywhere-title">
+            <section class="ss-card ss-card--inverse ss-security-lock" id="{{ $routes::SECTION_LOCK }}" aria-labelledby="security-everywhere-title">
                 <h2 class="ss-card__title" id="security-everywhere-title">{{ text('account.sign_out_everywhere') }}</h2>
                 <p class="ss-muted">{{ text('account.sign_out_everywhere_hint') }}</p>
                 <form class="ss-card__footer" method="POST" action="{{ route($zone->routeName($routes::SIGN_OUT_EVERYWHERE)) }}">

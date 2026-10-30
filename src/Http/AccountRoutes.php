@@ -83,12 +83,15 @@ final readonly class AccountRoutes
 
     public const string SIGN_OUT_EVERYWHERE = 'account.security.sign-out-everywhere';
 
-    /** Kotwice sekcji strony bezpieczeństwa (`#pin`, `#devices`, `#recovery`). */
+    /** Kotwice sekcji strony bezpieczeństwa (`#pin`, `#devices`, `#recovery`, `#lock` — karty blokowania dostępu). */
     public const string SECTION_PIN = 'pin';
 
     public const string SECTION_DEVICES = 'devices';
 
     public const string SECTION_RECOVERY = 'recovery';
+
+    /** Kotwica „Wyloguj wszędzie”; po wejściu na nią podświetlone są karty blokowania dostępu (urządzenia, wylogowanie). */
+    public const string SECTION_LOCK = 'lock';
 
     private const string PREFIX = 'account';
 

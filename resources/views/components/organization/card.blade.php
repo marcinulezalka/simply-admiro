@@ -1,9 +1,9 @@
-{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty adres z krajem, telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
+{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty adres w dwóch liniach (ulica, pod nią kod, miasto i kraj), telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji). organization: Models\Organization; href: ?string; kicker: ?string. --}}
 @props(['organization', 'href' => null, 'kicker' => null])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
     $locality = trim(implode(' ', array_filter([$organization->postal_code, $organization->city])));
-    $address = implode(', ', array_filter([$organization->street, $locality, $organization->country?->translatedName()], filled(...)));
+    $address = array_values(array_filter([$organization->street, implode(', ', array_filter([$locality, $organization->country?->translatedName()], filled(...)))], filled(...)));
     $registry = array_values(array_filter(array_map(
         static fn (string $column): ?string => filled($organization->{$column}) || $column === $model::NIP ? text_data($organization, $column) . ' ' . ($organization->{$column} ?: '—') : null,
         [$model::NIP, $model::REGON, $model::KRS],
@@ -35,7 +35,7 @@
     @if ($details !== [])
         <span class="ss-business-card__details">
             @foreach ($details as $detail)
-                <span class="ss-business-card__detail" @if ($detail['column'] !== null) title="{{ text_data($organization, $detail['column']) }}" @endif><x-admiro::icon :name="$detail['icon']" class="ss-business-card__detail-icon" />{{ $detail['value'] }}</span>
+                <span class="ss-business-card__detail" @if ($detail['column'] !== null) title="{{ text_data($organization, $detail['column']) }}" @endif><x-admiro::icon :name="$detail['icon']" class="ss-business-card__detail-icon" />@if (is_array($detail['value']))<span class="ss-business-card__lines">@foreach ($detail['value'] as $line)<span class="ss-business-card__line">{{ $line }}</span>@endforeach</span>@else{{ $detail['value'] }}@endif</span>
             @endforeach
         </span>
     @endif
