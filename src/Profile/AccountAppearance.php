@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Profile;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Simplysmart\Admiro\Contracts\CurrentOrganization;
+use Simplysmart\Admiro\Contracts\CurrentRole;
 use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Enums\AppearanceSetting;
 use Simplysmart\Admiro\Models\ZoneAccount;
@@ -21,22 +24,33 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Wygląd zapisany w koncie (`json_attributes` pod {@see self::ATTRIBUTE}), w strefie z `appearance.account`
- * (Zones\ZoneAppearance): domyślny wygląd ma aplikacja (`appearance.defaults`), a konto nadpisuje go swoimi
- * wyborami (Enums\AppearanceSetting). Wybór spoza wartości strefy (np. kolorystyka usunięta z configu) się nie liczy.
- * Zapis zmienia tylko podane ustawienia i nie narusza innych atrybutów (historia tabeli zapisuje zmianę jak każdą inną).
+ * (Zones\ZoneAppearance), osobno dla każdej roli konta: klucz to aktywna rola (Contracts\CurrentRole, strefa
+ * z `role_contexts`), a bez niej {@see self::WITHOUT_ROLE}. Domyślny wygląd ma aplikacja (`appearance.defaults`),
+ * a konto nadpisuje go w danej roli swoimi wyborami (Enums\AppearanceSetting), więc np. właściciel i lekarz w jednym
+ * koncie mają osobny wygląd. Wybór spoza wartości strefy (np. kolorystyka usunięta z configu) się nie liczy. Zapis
+ * zmienia tylko podane ustawienia bieżącej roli i nie narusza innych atrybutów (historia tabeli zapisuje zmianę).
  */
-final class AccountAppearance
+final readonly class AccountAppearance
 {
     public const string ATTRIBUTE = 'appearance';
 
+    /** Klucz wyglądu konta bez aktywnej roli (strefa bez `role_contexts` albo konto bez roli). */
+    public const string WITHOUT_ROLE = '*';
+
+    public function __construct(
+        private CurrentRole $role,
+        private CurrentOrganization $organization,
+    ) {}
+
     /**
-     * Bieżący wygląd konta: każde ustawienie z wyborem konta albo domyślną wartością strefy.
+     * Bieżący wygląd konta w jego aktywnej roli: każde ustawienie z wyborem konta albo domyślną wartością strefy.
      *
      * @return array<value-of<AppearanceSetting>, string>
      */
     public function of(ZoneDefinition $zone, Model $account): array
     {
-        $chosen = $this->chosen($account);
+        $chosen = $this->chosen($account)[$this->context($account)] ?? null;
+        $chosen = is_array($chosen) ? $chosen : [];
         $settings = [];
 
         foreach (AppearanceSetting::cases() as $setting) {
@@ -48,8 +62,8 @@ final class AccountAppearance
     }
 
     /**
-     * Atrybuty `data-*` na `<html>` rysujące wygląd konta (bez wartości bazowych); pusta lista, gdy strefa nie zapisuje
-     * wyglądu w koncie albo nie ma zalogowanego konta.
+     * Atrybuty `data-*` na `<html>` rysujące wygląd konta w aktywnej roli (bez wartości bazowych); pusta lista, gdy
+     * strefa nie zapisuje wyglądu w koncie albo nie ma zalogowanego konta.
      *
      * @return array<string, string>
      */
@@ -73,21 +87,39 @@ final class AccountAppearance
     }
 
     /**
-     * Zapisuje wybory konta (ustawienie → wartość, już sprawdzone z AppearanceSetting::values()).
+     * Zapisuje wybory konta w jego aktywnej roli (ustawienie → wartość, już sprawdzone z AppearanceSetting::values()).
      *
      * @param array<value-of<AppearanceSetting>, string> $choices
      */
     public function save(ZoneAccount $account, array $choices): void
     {
-        $this->store($account, [...$this->chosen($account), ...$choices]);
+        $context = $this->context($account);
+        $chosen = $this->chosen($account);
+        $current = $chosen[$context] ?? null;
+        $chosen[$context] = [...(is_array($current) ? $current : []), ...$choices];
+
+        $this->store($account, $chosen);
     }
 
     /**
-     * Usuwa wybory konta: wraca domyślny wygląd aplikacji.
+     * Usuwa wybory konta w jego aktywnej roli: w niej wraca domyślny wygląd aplikacji, inne role zostają.
      */
     public function reset(ZoneAccount $account): void
     {
-        $this->store($account, []);
+        $chosen = $this->chosen($account);
+        unset($chosen[$this->context($account)]);
+
+        $this->store($account, $chosen);
+    }
+
+    /**
+     * Klucz wyglądu: aktywna rola konta w organizacji żądania albo {@see self::WITHOUT_ROLE}.
+     */
+    private function context(Model $account): string
+    {
+        $role = $account instanceof Authenticatable ? $this->role->of($account, $this->organization->id()) : null;
+
+        return $role ?? self::WITHOUT_ROLE;
     }
 
     /**
@@ -102,17 +134,17 @@ final class AccountAppearance
     }
 
     /**
-     * @param array<array-key, mixed> $choices
+     * @param array<array-key, mixed> $chosen
      */
-    private function store(ZoneAccount $account, array $choices): void
+    private function store(ZoneAccount $account, array $chosen): void
     {
         $attributes = $account->getAttribute(ColumnNames::JSON_ATTRIBUTES);
         $attributes = is_array($attributes) ? $attributes : [];
 
-        if ($choices === []) {
+        if ($chosen === []) {
             unset($attributes[self::ATTRIBUTE]);
         } else {
-            $attributes[self::ATTRIBUTE] = $choices;
+            $attributes[self::ATTRIBUTE] = $chosen;
         }
 
         $account->forceFill([ColumnNames::JSON_ATTRIBUTES => $attributes])->save();

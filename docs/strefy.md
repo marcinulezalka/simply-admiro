@@ -41,8 +41,8 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     tokeny --ss-font-* dla :root[data-font="serif"] i daje rodzinę próbce [data-ss-font-sample="serif"]; fonty
        //     z `fonts`; zły klucz albo nazwa zatrzymuje start),
        // 'appearance' => ['account' => true, 'defaults' => ['layout-width' => 'centered']] (tylko strefa z logowaniem:
-       //     wybory wyglądu zapisuje konto — `json_attributes.appearance`, Profile\AccountAppearance — zamiast przeglądarki,
-       //     więc obowiązują na każdym urządzeniu; serwer rysuje je na <html> bez błysku, a js/theme.js wysyła każdą zmianę
+       //     wybory wyglądu zapisuje konto — `json_attributes.appearance.<rola>`, osobno dla każdej aktywnej roli
+       //     (`*` bez roli), Profile\AccountAppearance — zamiast przeglądarki, więc obowiązują na każdym urządzeniu; serwer rysuje je na <html> bez błysku, a js/theme.js wysyła każdą zmianę
        //     na `account.appearance.update`; `defaults` to domyślny wygląd aplikacji, który konto nadpisuje — ustawienia
        //     Enums\AppearanceSetting: theme, palette, text-size, layout-width, font; puste wartości pomijane, wartość spoza
        //     wyboru strefy zatrzymuje start; domyślnie wybory zapamiętuje przeglądarka),
@@ -152,7 +152,7 @@ Trasy konta (`Http\AccountRoutes`, pod `account/`, poziom `Authenticated`, zmian
 | `<strefa>.account.profile` | profil: imię i nazwisko, adres e-mail (tylko odczyt), język interfejsu (przy kilku włączonych; `json_attributes.locale`, `Profile\AccountLocale`, po logowaniu dashboard w tym języku), kolor awatara; w strefie z `teams` organizacje konta z rolami (`roleLabel()`: `<texts>::roles.<strefa>.<rola>`) i przełącznikiem; `account.profile.update` zapisuje (`Profile\UpdateProfile`) |
 | `<strefa>.account.security` | bezpieczeństwo: zmiana PIN-u (`#pin`; `account.pin.code` wysyła kod, `account.pin.update` zapisuje), zaufane urządzenia (`#devices`; `account.devices.revoke` po tokenie, `account.devices.revoke-all`), ostatnie zdarzenia konta (`Queries\Audit\AccountHistory`, bez IP), `account.security.sign-out-everywhere` (DELETE: `RevokeAccountAccess` z powodem `SignedOutEverywhere` i wylogowanie) |
 | `<strefa>.account.pin`, `<strefa>.account.devices` | dawne adresy sekcji: przekierowanie do `account.security#pin` / `#devices` |
-| `<strefa>.account.appearance` | „Personalizacja”: szerokość treści, motyw (`x-admiro::theme-toggle`), kolorystyka (gdy strefa ma `palettes`), krój pisma (gdy ma `font_styles`) i rozmiar tekstu; wybory zapamiętuje przeglądarka, a w strefie z `appearance.account` konto: `account.appearance.update` (PUT, JSON → 204, każda zmiana przełącznika osobno) i `account.appearance.reset` (DELETE, wraca domyślny wygląd aplikacji) |
+| `<strefa>.account.appearance` | „Personalizacja”: szerokość treści, motyw (`x-admiro::theme-toggle`), kolorystyka (gdy strefa ma `palettes`), krój pisma (gdy ma `font_styles`) i rozmiar tekstu; wybory zapamiętuje przeglądarka, a w strefie z `appearance.account` konto: `account.appearance.update` (PUT, JSON → 204, każda zmiana przełącznika osobno) i `account.appearance.reset` (DELETE, wraca domyślny wygląd aplikacji); w strefie z `role_contexts` osobno dla każdej roli konta |
 | `<strefa>.account.organization.switch` | przełączenie bieżącej organizacji (strefa z `teams`) |
 | `<strefa>.account.role.switch` | przełączenie aktywnej roli (strefa z `role_contexts`; POST `role`, rola spoza ról konta to 404) i przekierowanie na pulpit strefy |
 
@@ -329,7 +329,8 @@ strefa bez `teams` — organizacja operatora, strefa z `teams` — jedyna aktywn
   `$currentOrganizationId` daje Core).
 - **Role jako konteksty** (`role_contexts` w configu strefy z `teams`; kontrakt `Contracts\CurrentRole`,
   `Permissions\RoleSelector`): konto z kilkoma rolami w organizacji działa w jednej aktywnej roli — wybranej
-  (`account.role.switch`, sesja strefy osobno dla każdej organizacji) albo pierwszej, zapamiętanej w sesji, więc rola
+  (`account.role.switch`, sesja strefy osobno dla każdej organizacji) albo domyślnej — najszerszej, z największą liczbą
+  uprawnień (np. właściciel przed lekarzem) — zapamiętanej w sesji, więc rola
   nadana w trakcie sesji nie zmienia kontekstu sama. `UseCurrentTeam` ustawia ją razem z organizacją, a
   `HasZonePermissions::hasPermissionTo()` liczy wtedy tylko uprawnienia tej roli (plus bezpośrednie, odmowy nadal
   wygrywają); inne konta i inne organizacje nie są zawężane. Menu, pulpit i trasy strefy wynikają więc z aktywnej roli

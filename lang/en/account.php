@@ -24,6 +24,8 @@ return [
     'appearance_title' => 'Personalization',
     'appearance_storage_browser' => 'This browser remembers your choices.',
     'appearance_storage_account' => 'Your choices are saved to your account at once and apply on every device. Everything else follows the default look of the application.',
+    'appearance_storage_account_roles' => 'Your choices are saved to your account at once, separately for each role, and apply on every device. Everything else follows the default look of the application.',
+    'appearance_reset_role_done' => 'The default look of the application is back in this role.',
     'appearance_reset' => 'Restore the default look',
     'appearance_saved' => 'Look saved.',
     'appearance_reset_done' => 'The default look of the application is back.',

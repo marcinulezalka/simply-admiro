@@ -25,9 +25,9 @@ use Simplysmart\Admiro\Http\AccountRoutes;
 use Simplysmart\Admiro\Profile\AccountAppearance;
 
 /**
- * Zapis wyglądu w koncie (strefa z `appearance.account`): każdy przełącznik strony „Personalizacja” i panelu bocznego
- * wysyła od razu jedno albo kilka ustawień (js/theme.js, JSON → 204), a przywrócenie usuwa wybory konta — wraca domyślny
- * wygląd aplikacji. Puste pole (null po ConvertEmptyStringsToNull) to wartość bazowa ustawienia (AppearanceSetting::base(): motyw
+ * Zapis wyglądu w koncie (strefa z `appearance.account`), w aktywnej roli konta (Profile\AccountAppearance): każdy przełącznik strony „Personalizacja” i panelu bocznego
+ * wysyła od razu jedno albo kilka ustawień (js/theme.js, JSON → 204), a przywrócenie usuwa wybory konta w tej roli — wraca w niej
+ * domyślny wygląd aplikacji. Puste pole (null po ConvertEmptyStringsToNull) to wartość bazowa ustawienia (AppearanceSetting::base(): motyw
  * systemu, kolory i krój bazowy strefy, normalny tekst, pełna szerokość), nie domyślna wartość aplikacji.
  */
 final readonly class AppearanceController
@@ -67,7 +67,7 @@ final readonly class AppearanceController
     {
         $this->appearance->reset($this->current->require());
 
-        return $this->back('account.appearance_reset_done');
+        return $this->back($this->zone->get()->roleContexts ? 'account.appearance_reset_role_done' : 'account.appearance_reset_done');
     }
 
     private function back(string $status): RedirectResponse

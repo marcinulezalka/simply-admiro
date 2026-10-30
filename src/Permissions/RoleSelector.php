@@ -20,8 +20,10 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Wybiera aktywną rolę (kontekst) konta w organizacji strefy z `role_contexts`: rolę wybraną przez konto (sesja strefy,
- * osobno dla każdej organizacji), o ile konto nadal ją ma, inaczej pierwszą rolę konta w organizacji — zapamiętaną w
- * sesji, więc nowa rola nadana w trakcie sesji nie zmienia kontekstu sama; bez ról albo poza taką strefą: brak kontekstu.
+ * osobno dla każdej organizacji), o ile konto nadal ją ma, inaczej domyślną — najszerszą rolę konta w organizacji
+ * (najwięcej uprawnień, ZoneRoleNames::permissionCounts(); przy remisie pierwszą), np. właściciel przed lekarzem —
+ * zapamiętaną w sesji, więc nowa rola nadana w trakcie sesji nie zmienia kontekstu sama; bez ról albo poza taką
+ * strefą: brak kontekstu.
  */
 final readonly class RoleSelector
 {
@@ -44,7 +46,7 @@ final readonly class RoleSelector
             return $chosen;
         }
 
-        $role = $roles[0] ?? null;
+        $role = $this->broadest($zone, $roles);
 
         if ($role !== null) {
             $session->put($this->key($organizationId), $role);
@@ -81,6 +83,29 @@ final readonly class RoleSelector
         $session->put($this->key($organizationId), $role);
 
         return true;
+    }
+
+    /**
+     * Rola z największą liczbą uprawnień (przy remisie pierwsza); null przy pustej liście.
+     *
+     * @param list<string> $roles
+     */
+    private function broadest(ZoneDefinition $zone, array $roles): ?string
+    {
+        if (count($roles) < 2) {
+            return $roles[0] ?? null;
+        }
+
+        $counts = $this->roles->permissionCounts($zone);
+        $broadest = $roles[0];
+
+        foreach ($roles as $role) {
+            if (($counts[$role] ?? 0) > ($counts[$broadest] ?? 0)) {
+                $broadest = $role;
+            }
+        }
+
+        return $broadest;
     }
 
     private function key(int $organizationId): string

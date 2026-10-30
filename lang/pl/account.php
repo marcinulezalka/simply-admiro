@@ -24,6 +24,8 @@ return [
     'appearance_title' => 'Personalizacja',
     'appearance_storage_browser' => 'Wybory zapamiętuje ta przeglądarka.',
     'appearance_storage_account' => 'Wybory zapisują się od razu w Twoim koncie i obowiązują na każdym urządzeniu. Pozostałe ustawienia są jak w domyślnym wyglądzie aplikacji.',
+    'appearance_storage_account_roles' => 'Wybory zapisują się od razu w Twoim koncie, osobno dla każdej roli, i obowiązują na każdym urządzeniu. Pozostałe ustawienia są jak w domyślnym wyglądzie aplikacji.',
+    'appearance_reset_role_done' => 'Przywrócono domyślny wygląd aplikacji w tej roli.',
     'appearance_reset' => 'Przywróć domyślny wygląd',
     'appearance_saved' => 'Wygląd zapisany.',
     'appearance_reset_done' => 'Przywrócono domyślny wygląd aplikacji.',
