@@ -25,6 +25,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Menu błyskawicy wyszukiwarki w layoucie stref jak teczka: wspólne tło obejmuje od dołu przycisk błyskawicy (zakładka), tytuł i szybkie akcje krojem mono leżą na tym tle, a pod nimi kartka w kropki.
+
 - Panel boczny layoutu stref: podpisy kafelków narzędzi krojem mono; lista powiadomień wypełnia panel do dołu. Menu „+” i błyskawicy wyszukiwarki w layoucie stref w kolorach odwróconych (jasny tekst na ciemnym tle); menu błyskawicy jako teczka (zakładka „Szybkie akcje” nad arkuszem z siatką kropek); przycisk obracania karty wtopiony w kartę (bez tła i obwódki).
 - Karty z wyróżnieniem (`.ss-card--feature`, np. karta onboardingu i postępu) nie unoszą się i nie rosną im cienie po najechaniu — zmienia się tylko obwódka.
 - Strefa administratorów: administrator pracuje w jednej roli naraz (`role_contexts`, domyślnie najszersza), przełącza ją w stopce, a adresy panelu mają klucz kontekstu (`/admiro/<klucz>/...`); pod nazwą konta jest aktywna rola.

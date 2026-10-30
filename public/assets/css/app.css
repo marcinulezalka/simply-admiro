@@ -1739,8 +1739,7 @@ a.ss-onboarding-organizations__missing:hover {
     opacity: 0.7;
 }
 
-.ss-folder__tab[aria-selected="true"],
-.ss-folder__tab--current {
+.ss-folder__tab[aria-selected="true"] {
     z-index: 2;
     background: var(--ss-folder-back);
     color: var(--ss-color-text);
@@ -8945,40 +8944,104 @@ a.ss-org-item:focus-visible {
     border-color: color-mix(in srgb, var(--ss-color-on-inverse) 18%, transparent);
 }
 
-/* Menu błyskawicy (szybkie akcje) jako teczka Core: zakładka „Szybkie akcje” ze skosem nad arkuszem z siatką kropek;
-   panel bez własnego tła, obwódki i odstępów — wygląd daje teczka (także w layoucie stref, bez kolorów odwróconych). */
+/* Menu błyskawicy (szybkie akcje) jak teczka: wspólne tło (kolor tylnej warstwy teczek) schodzi wypustką
+   (.ss-search__find-tab) w dół i obejmuje przycisk błyskawicy, który stoi na wierzchu; na tle podpis i akcje krojem mono,
+   pod nimi arkusz z siatką kropek. Panel bez własnego tła, obwódki i cienia. */
 .ss-search__find .ss-search__menu-panel,
-.ss-shell--zone .ss-search__find .ss-search__menu-panel {
+.ss-shell--zone .ss-search__find .ss-search__menu-panel,
+.ss-workspace-footer .ss-search__find .ss-search__menu-panel {
+    top: auto;
+    bottom: -0.375rem;
+    left: -0.375rem;
+    display: flex;
+    flex-direction: column;
     min-width: 18rem;
     padding: 0;
     border: 0;
     background: transparent;
     box-shadow: none;
     color: var(--ss-color-text);
+    filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--ss-color-text) 16%, transparent));
 }
 
-.ss-search__find-folders .ss-folder__tab {
-    gap: var(--ss-space-2);
-    margin: 0;
-    cursor: default;
-}
-
-.ss-search__find-folders .ss-folder__body {
-    min-height: 8rem;
-    padding: var(--ss-space-3);
-}
-
-.ss-shell--zone .ss-search__find .ss-search__menu-panel .ss-account-menu__link,
-.ss-shell--zone .ss-search__find .ss-search__menu-panel .ss-search__menu-empty {
+.ss-search__find[open] > .ss-search__menu-toggle {
+    position: relative;
+    z-index: 46;
     color: var(--ss-color-text);
 }
 
-.ss-shell--zone .ss-search__find .ss-search__menu-panel .ss-account-menu__icon {
+.ss-search__find-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    padding: var(--ss-space-3);
+    border-radius: var(--ss-folder-radius, 1.5rem) var(--ss-folder-radius, 1.5rem) var(--ss-folder-radius, 1.5rem) 0;
+    background: var(--ss-folder-back, var(--ss-color-surface-muted));
+}
+
+.ss-search__find-tab {
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-top: -1px;
+    border-radius: 0 0 1.375rem 1.375rem;
+    background: var(--ss-folder-back, var(--ss-color-surface-muted));
+}
+
+.ss-search__find-title {
+    margin: 0;
+    padding: 0 var(--ss-space-2);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.ss-search__find-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-search__find-action {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-text);
+    font-family: var(--ss-font-mono);
+    font-size: 0.8125rem;
+    text-decoration: none;
+}
+
+.ss-search__find-action:hover,
+.ss-search__find-action:focus-visible {
+    background: color-mix(in srgb, var(--ss-color-surface) 70%, transparent);
+}
+
+.ss-search__find-action-icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
     color: var(--ss-color-muted);
 }
 
-.ss-shell--zone .ss-search__find .ss-search__menu-panel .ss-account-menu__link:hover {
-    background: var(--ss-color-surface);
+.ss-search__find-sheet {
+    min-height: 5rem;
+    padding: var(--ss-space-3);
+    border: 1px solid var(--ss-folder-edge, var(--ss-color-border));
+    border-radius: var(--ss-radius-card);
+    background-color: var(--ss-workspace-bg);
+    background-image: var(--ss-workspace-dots);
+    background-size: 20px 20px;
+}
+
+:root[data-theme^="contrast"] .ss-search__find-sheet {
+    background-image: none;
 }
 
 /* Karta obracana (x-admiro::flip-card): przód i tył w jednej komórce siatki (wysokość większej), obrót w 3D wokół osi
