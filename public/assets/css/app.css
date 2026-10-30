@@ -6126,8 +6126,12 @@ a.ss-notification:focus-visible {
     color: var(--ss-color-on-inverse);
 }
 
-.ss-business-card__icon + .ss-business-card__kicker {
-    flex: 1;
+/* Nazwa z ikoną w kafelku przed nią. */
+.ss-business-card__heading {
+    display: flex;
+    gap: var(--ss-space-3);
+    align-items: center;
+    min-width: 0;
 }
 
 .ss-business-card__top {
@@ -6200,12 +6204,35 @@ a.ss-notification:focus-visible {
     font-size: 0.875rem;
 }
 
-/* Każda dana (adres, telefony, e-maile) w osobnym panelu: delikatne tło karty, cienka obwódka, czytelna na motywie tła. */
+/* Każda dana (adres, telefony, e-maile) w osobnym panelu: prawie niewidocznym, po najechaniu z pełnym tłem, obwódką
+   i ikoną w kolorze akcentu. */
 .ss-business-card__details .ss-business-card__detail {
     padding: var(--ss-space-2) var(--ss-space-3);
-    border: 1px solid var(--ss-color-border);
+    border: 1px solid color-mix(in srgb, var(--ss-color-border) 25%, transparent);
     border-radius: var(--ss-radius-control);
-    background: color-mix(in srgb, var(--ss-color-surface) 88%, transparent);
+    background: color-mix(in srgb, var(--ss-color-surface) 12%, transparent);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.ss-business-card__details .ss-business-card__detail:hover {
+    border-color: var(--ss-color-border);
+    background: var(--ss-color-surface);
+}
+
+.ss-business-card__detail-icon {
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.ss-business-card__details .ss-business-card__detail:hover .ss-business-card__detail-icon {
+    color: var(--ss-color-accent);
+    transform: scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-business-card__details .ss-business-card__detail,
+    .ss-business-card__detail-icon {
+        transition: none;
+    }
 }
 
 .ss-business-card__detail {

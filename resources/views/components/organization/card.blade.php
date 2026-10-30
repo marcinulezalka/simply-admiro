@@ -1,4 +1,4 @@
-{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono, każdy w osobnej linii (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty, każda dana w osobnym panelu (delikatne tło, cienka obwódka): adres w dwóch liniach (ulica, pod nią kod, miasto i kraj), telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji); icon: ikona w kafelku przed podpisem (np. building). organization: Models\Organization; href: ?string; kicker: ?string. --}}
+{{-- Wizytówka organizacji (karta jak papierowa wizytówka): u góry podpis krojem mono (kicker, np. „Organizacja”) w jednym rzędzie z ikoną odnośnika (external-link; pod kursorem jej strzałka wysuwa się z ramki), pod nim nazwa skrócona (bez niej pełna) krojem nagłówków i numery rejestrowe krojem mono, każdy w osobnej linii (NIP zawsze — pusty jako „—”, REGON i KRS, gdy są), dosunięte do dołu karty, każda dana w osobnym panelu — prawie niewidocznym, a po najechaniu z pełnym tłem, obwódką i ikoną w kolorze akcentu: adres w dwóch liniach (ulica, pod nią kod, miasto i kraj), telefon stacjonarny i komórkowy, e-mail i e-mail do rozliczeń z ikoną paragonu (puste pomijane), w rogu ikona linku (pod kursorem przesuwa się tylko ona, karta stoi); tło z motywem (poświata i koncentryczne łuki w kolorze akcentu, .ss-business-card; strefa może podmienić motyw warstwą ::before). Z href cała karta jest odnośnikiem (np. do ustawień organizacji); icon: ikona w kafelku przed nazwą (np. building). organization: Models\Organization; href: ?string; kicker: ?string. --}}
 @props(['organization', 'href' => null, 'kicker' => null, 'icon' => null])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
@@ -19,11 +19,8 @@
 @endphp
 <{{ $tag }} {{ $attributes->class(['ss-business-card', 'ss-business-card--link' => $href !== null]) }} @if ($href !== null) href="{{ $href }}" @endif>
     <span class="ss-business-card__identity">
-        @if (filled($kicker) || $href !== null || filled($icon))
+        @if (filled($kicker) || $href !== null)
             <span class="ss-business-card__top">
-                @if (filled($icon))
-                    <x-admiro::icon :name="$icon" class="ss-business-card__icon" />
-                @endif
                 @if (filled($kicker))
                     <span class="ss-business-card__kicker">{{ $kicker }}</span>
                 @endif
@@ -32,7 +29,11 @@
                 @endif
             </span>
         @endif
-        <span class="ss-business-card__name">{{ $organization->shortName() }}</span>
+        @if (filled($icon))
+            <span class="ss-business-card__heading"><x-admiro::icon :name="$icon" class="ss-business-card__icon" /><span class="ss-business-card__name">{{ $organization->shortName() }}</span></span>
+        @else
+            <span class="ss-business-card__name">{{ $organization->shortName() }}</span>
+        @endif
         <span class="ss-business-card__registry">@foreach ($registry as $number)<span class="ss-business-card__number">{{ $number }}</span>@endforeach</span>
     </span>
     @if ($details !== [])
