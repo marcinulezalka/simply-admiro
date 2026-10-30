@@ -37,7 +37,10 @@ Status: rejestracja stref, sesja, język, nagłówki, zaufane proxy; logowanie k
        //     mapa pokazuje sitemap(), z Contracts\ZoneShortcuts obok konta są skróty shortcuts(); domyślnie `sidebar`;
        //     menu strefy z Contracts\ZoneAppLayout wybiera wariant dla bieżącego żądania, np. Workspace w kontekście jednej roli;
        //     `zone` — bazowy layout stref x-admiro::app.zone-layout: konto tylko z profilem i wylogowaniem, wyszukiwarka,
-       //     przełącznik kontekstu i data z panelami kalendarza i powiadomień, bez mapy strony; docs/design-system.md §5),
+       //     przełącznik kontekstu i data z panelami kalendarza i powiadomień, bez mapy strony; `columns` — ten sam layout
+       //     stref z treścią w kolumnach: lewe menu strony (slot `left`, na stronach ustawień kategorie ustawień), treść
+       //     i prawy sidebar wiki i podpowiedzi do przypięcia (slot `sidebar-wiki` — jedyne miejsce na wiki strony);
+       //     docs/design-system.md §5),
        // 'font_styles' => ['serif' => '<paczka>::appearance.fonts.serif'] (kroje do wyboru na stronie „Personalizacja” obok kroju
        //     bazowego strefy: klucz kroju — małe litery, cyfry i myślniki — → klucz tekstu z nazwą; arkusz strefy przestawia
        //     tokeny --ss-font-* dla :root[data-font="serif"] i daje rodzinę próbce [data-ss-font-sample="serif"]; fonty

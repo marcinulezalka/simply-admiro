@@ -21,11 +21,14 @@ namespace Simplysmart\Admiro\Enums;
  * z logo simplysmart, przełącznikiem motywu i mapą strony (layout strefy administratorów); Zone — bazowy layout stref
  * (x-admiro::app.zone-layout): nagłówek z odnośnikiem ← i dużym tytułem, treść na tle płótna, stopka z kontem (tylko
  * profil i wylogowanie), wyszukiwarką i narzędziami (przełącznik kontekstu, data otwierająca dwa panele boczne), bez mapy
- * strony.
+ * strony; Columns — layout stref z kolumnami (x-admiro::app.zone-layout z `columns`): nagłówek i stopka jak w Zone, treść
+ * w kolumnach — po lewej menu strony na wysokość okna z własnym przewijaniem (slot `left`, na stronach ustawień
+ * kategorie ustawień), na środku treść, po prawej sidebar wiki i podpowiedzi do przypięcia (slot `sidebarWiki`).
  */
 enum AppLayout: string
 {
     case Sidebar = 'sidebar';
     case Workspace = 'workspace';
     case Zone = 'zone';
+    case Columns = 'columns';
 }

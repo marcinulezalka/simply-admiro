@@ -5869,6 +5869,226 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * .ss-columns — treść layoutu stref z kolumnami (Enums\AppLayout::Columns, x-admiro::app.columns): od 64rem lewe menu
+ * strony (__left, tylko z --with-left), treść (__content) i prawy sidebar wiki i podpowiedzi (.ss-sidebar-wiki). Lewe
+ * menu i przypięty sidebar są przyklejone pod górną krawędzią okna, na jego wysokość, z własnym przewijaniem — także
+ * palcem na ekranie dotykowym (przewijanie zostaje w pudełku, nie przechodzi na stronę). Węziej menu stoi nad treścią
+ * (do połowy wysokości okna), a sidebar zawsze się wysuwa.
+ */
+.ss-columns {
+    --ss-columns-sticky-top: var(--ss-space-6);
+    --ss-columns-height: calc(100dvh - 2 * var(--ss-columns-sticky-top));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--ss-space-6);
+    align-items: start;
+}
+
+.ss-columns__left,
+.ss-sidebar-wiki__body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+}
+
+.ss-columns__left {
+    grid-column: 1 / -1;
+    max-height: 50dvh;
+    padding: var(--ss-space-1);
+}
+
+.ss-columns__left:focus-visible,
+.ss-sidebar-wiki__body:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+/* Kategorie ustawień w lewym menu przewijają się z pudełkiem, zamiast przyklejać się w nim jak w .ss-settings-area. */
+.ss-columns__left .ss-settings-area__nav {
+    position: static;
+}
+
+.ss-columns__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-6);
+    min-width: 0;
+}
+
+@media (min-width: 64rem) {
+    .ss-columns--with-left {
+        grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr) auto;
+    }
+
+    .ss-columns__left {
+        position: sticky;
+        top: var(--ss-columns-sticky-top);
+        grid-column: auto;
+        max-height: var(--ss-columns-height);
+    }
+}
+
+/**
+ * .ss-sidebar-wiki — prawy sidebar wiki i podpowiedzi (x-admiro::app.sidebar-wiki, js/sidebar-wiki.js): nagłówek
+ * (__head: tytuł z ikoną, pinezka __pin i × __close) nad przewijaną treścią (__body; pusty — __empty). Bez skryptu
+ * panel stoi w prawej kolumnie; ze skryptem (--js) nieprzypięty panel chowa się za wąską pionową zakładką (__rail)
+ * przy prawej krawędzi i wysuwa nad treść (--open), a przypięty (--pinned, od 64rem) stoi w kolumnie bez zakładki i ×.
+ */
+.ss-sidebar-wiki {
+    position: sticky;
+    top: var(--ss-columns-sticky-top);
+    grid-column: -2;
+    grid-row: 1;
+}
+
+/* Węziej lewe menu zajmuje pierwszy rząd, a zakładka sidebaru stoi obok treści w drugim. */
+@media (max-width: 63.99rem) {
+    .ss-columns--with-left .ss-sidebar-wiki {
+        grid-row: 2;
+    }
+}
+
+.ss-sidebar-wiki__panel {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    max-height: var(--ss-columns-height);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+}
+
+.ss-sidebar-wiki__head {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    padding: var(--ss-space-3) var(--ss-space-3) var(--ss-space-3) var(--ss-space-4);
+    border-bottom: 1px solid var(--ss-color-border);
+}
+
+.ss-sidebar-wiki__title {
+    display: flex;
+    flex: 1;
+    gap: var(--ss-space-2);
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    font-weight: 600;
+}
+
+.ss-sidebar-wiki__title-icon {
+    flex: none;
+    color: var(--ss-color-muted);
+}
+
+.ss-sidebar-wiki__pin[aria-pressed="true"] {
+    border-color: var(--ss-color-accent);
+    color: var(--ss-color-accent);
+}
+
+.ss-sidebar-wiki__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-4);
+    min-height: 0;
+    padding: var(--ss-space-4);
+}
+
+.ss-sidebar-wiki__empty {
+    margin: 0;
+    color: var(--ss-color-muted);
+}
+
+.ss-sidebar-wiki__rail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: center;
+    width: 2.5rem;
+    padding: var(--ss-space-3) 0;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-button);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-soft);
+    color: var(--ss-color-text);
+    font: inherit;
+    cursor: pointer;
+}
+
+.ss-sidebar-wiki__rail:hover {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-sidebar-wiki__rail:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-sidebar-wiki__rail-icon {
+    flex: none;
+}
+
+.ss-sidebar-wiki__rail-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+}
+
+.ss-sidebar-wiki--js:not(.ss-sidebar-wiki--pinned) .ss-sidebar-wiki__panel {
+    position: fixed;
+    top: var(--ss-space-4);
+    right: var(--ss-space-4);
+    bottom: calc(var(--ss-workspace-footer-height, 4.5rem) + var(--ss-space-4));
+    z-index: 14;
+    width: min(22rem, calc(100vw - 2 * var(--ss-space-4)));
+    max-height: none;
+    box-shadow: var(--ss-shadow-elevated);
+    visibility: hidden;
+    transform: translateX(calc(100% + var(--ss-space-4)));
+    transition: transform 0.25s ease, visibility 0s linear 0.25s;
+}
+
+.ss-sidebar-wiki--open .ss-sidebar-wiki__panel {
+    visibility: visible;
+    transform: none;
+    transition: transform 0.25s ease;
+}
+
+.ss-sidebar-wiki--pinned .ss-sidebar-wiki__rail,
+.ss-sidebar-wiki--pinned .ss-sidebar-wiki__close {
+    display: none;
+}
+
+@media (max-width: 63.99rem) {
+    .ss-sidebar-wiki__pin {
+        display: none;
+    }
+
+    /* Bez skryptu na wąskim ekranie panel stoi pod treścią na całą szerokość. */
+    .ss-sidebar-wiki:not(.ss-sidebar-wiki--js) {
+        position: static;
+        grid-column: 1 / -1;
+        grid-row: auto;
+    }
+
+    .ss-sidebar-wiki:not(.ss-sidebar-wiki--js) .ss-sidebar-wiki__panel {
+        width: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-sidebar-wiki__panel {
+        transition: none !important;
+    }
+}
+
+/**
  * .ss-record-rows — lista rekordów w wierszach jak wiersze języków w panelu ustawień (w teczce .ss-folder albo karcie):
  * wiersz (.ss-record-row; --primary — wyróżniony ramką akcentu) z częścią główną (__main: ikona albo flaga, __text
  * z nazwą __name i drugą linią __sub), faktami (__facts — <dl> z __fact: etykieta mono nad wartością) i akcjami
