@@ -1714,10 +1714,10 @@ a.ss-onboarding-organizations__missing:hover {
     border-top-left-radius: calc(var(--ss-folder-radius) / 1.5);
 }
 
-/* Falisty skos zakładki teczki — także zakładek menu błyskawicy (u góry i, odbity w pionie, przy przycisku). */
+/* Falisty skos zakładki teczki — także zakładek menu wyszukiwarki jak teczka (u góry i, odbity w pionie, przy przycisku). */
 .ss-folder__tab::after,
-.ss-search__find-head::after,
-.ss-search__find-tab::after {
+.ss-search__folder-head::after,
+.ss-search__folder-tab::after {
     content: "";
     position: absolute;
     top: 0;
@@ -6111,7 +6111,8 @@ a.ss-notification:focus-visible {
     overflow: hidden;
 }
 
-.ss-business-card--link:focus-visible {
+.ss-business-card--link:focus-visible,
+.ss-business-card:has(.ss-business-card__link:focus-visible) {
     outline: 2px solid var(--ss-color-accent);
     outline-offset: 3px;
 }
@@ -6167,12 +6168,37 @@ a.ss-notification:focus-visible {
     transition: transform 0.25s ease;
 }
 
-.ss-business-card--link:is(:hover, :focus-visible) .ss-business-card__arrow {
+.ss-business-card--link:is(:hover, :focus-visible, :focus-within) .ss-business-card__arrow {
     color: var(--ss-color-text);
 }
 
-.ss-business-card--link:is(:hover, :focus-visible) .ss-business-card__arrow path:first-child {
+.ss-business-card--link:is(:hover, :focus-visible, :focus-within) .ss-business-card__arrow path:first-child {
     transform: translate(2px, -2px);
+}
+
+/* Karta z odnośnikami na dole (slot actions): całą kartę obejmuje rozciągnięty odnośnik ikony strzałki, a odnośniki
+   slotu leżą nad nim. */
+.ss-business-card__link {
+    display: inline-flex;
+    margin-left: auto;
+    color: inherit;
+    outline: none;
+}
+
+.ss-business-card__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+.ss-business-card__actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2);
+    margin-top: auto;
 }
 
 .ss-business-card__identity {
@@ -8927,41 +8953,13 @@ a.ss-org-item:focus-visible {
     margin-bottom: 0;
 }
 
-/* Menu „+” i błyskawicy wyszukiwarki w stopce layoutu stref w kolorach odwróconych: jasny tekst na ciemnym tle
-   (w ciemnym motywie odwrotnie). */
-.ss-shell--zone .ss-search__menu-panel {
-    border-color: transparent;
-    background: var(--ss-color-surface-inverse);
-    color: var(--ss-color-on-inverse);
-}
-
-.ss-shell--zone .ss-search__menu-panel .ss-search__menu-title,
-.ss-shell--zone .ss-search__menu-panel .ss-search__menu-empty,
-.ss-shell--zone .ss-search__menu-panel .ss-account-menu__icon {
-    color: var(--ss-color-muted-inverse);
-}
-
-.ss-shell--zone .ss-search__menu-panel .ss-account-menu__link {
-    color: var(--ss-color-on-inverse);
-}
-
-.ss-shell--zone .ss-search__menu-panel .ss-account-menu__link:hover,
-.ss-shell--zone .ss-search__menu-panel .ss-account-menu__link:focus-visible {
-    background: color-mix(in srgb, var(--ss-color-on-inverse) 12%, transparent);
-}
-
-.ss-shell--zone .ss-search__menu-panel .ss-search__menu-separator,
-.ss-shell--zone .ss-search__menu-panel .ss-search__menu-title {
-    border-color: color-mix(in srgb, var(--ss-color-on-inverse) 18%, transparent);
-}
-
-/* Menu błyskawicy (szybkie akcje) jak teczka: u góry zakładka z ikoną i tytułem (.ss-search__find-head, falisty skos
-   zakładek teczek), pod nią wspólne tło (kolor tylnej warstwy teczek) z akcjami krojem mono i arkuszem z siatką kropek;
-   tło schodzi wypustką (.ss-search__find-tab, ta sama fala odbita w pionie) w dół i obejmuje przycisk błyskawicy, który
-   stoi na wierzchu. Panel bez własnego tła, obwódki i cienia. */
-.ss-search__find .ss-search__menu-panel,
-.ss-shell--zone .ss-search__find .ss-search__menu-panel,
-.ss-workspace-footer .ss-search__find .ss-search__menu-panel {
+/* Menu wyszukiwarki jak teczka (admiro::search.folder: menu błyskawicy, a w layoucie stref także „+”) w jasnych kolorach
+   teczek: u góry zakładka z ikoną i tytułem (.ss-search__folder-head, falisty skos zakładek teczek), pod nią wspólne tło
+   (kolor tylnej warstwy teczek) z odnośnikami w zwykłym stylu menu (ikona i tekst, .ss-account-menu__link) i arkuszem
+   z siatką kropek; tło schodzi wypustką (.ss-search__folder-tab, ta sama fala odbita w pionie) w dół i obejmuje przycisk
+   menu, który stoi na wierzchu. Panel bez własnego tła, obwódki i cienia. */
+.ss-search__menu--folder > .ss-search__menu-panel,
+.ss-workspace-footer .ss-search__menu--folder > .ss-search__menu-panel {
     top: auto;
     bottom: -0.375rem;
     left: -0.375rem;
@@ -8976,13 +8974,13 @@ a.ss-org-item:focus-visible {
     filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--ss-color-text) 16%, transparent));
 }
 
-.ss-search__find[open] > .ss-search__menu-toggle {
+.ss-search__menu--folder[open] > .ss-search__menu-toggle {
     position: relative;
     z-index: 46;
     color: var(--ss-color-text);
 }
 
-.ss-search__find-head {
+.ss-search__folder-head {
     position: relative;
     display: flex;
     gap: var(--ss-space-2);
@@ -8997,14 +8995,14 @@ a.ss-org-item:focus-visible {
     font-weight: 600;
 }
 
-.ss-search__find-head-icon {
+.ss-search__folder-head-icon {
     flex: none;
     width: 1rem;
     height: 1rem;
     opacity: 0.7;
 }
 
-.ss-search__find-body {
+.ss-search__folder-body {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-2);
@@ -9014,7 +9012,17 @@ a.ss-org-item:focus-visible {
     background: var(--ss-folder-back, var(--ss-color-surface-muted));
 }
 
-.ss-search__find-tab {
+.ss-search__folder-body .ss-account-menu__link:hover,
+.ss-search__folder-body .ss-account-menu__link:focus-visible {
+    background: color-mix(in srgb, var(--ss-color-surface) 70%, transparent);
+}
+
+.ss-search__folder-body .ss-search__menu-separator {
+    margin: 0;
+    border-color: var(--ss-folder-edge, var(--ss-color-border));
+}
+
+.ss-search__folder-tab {
     position: relative;
     width: 2.75rem;
     height: 44px;
@@ -9023,44 +9031,11 @@ a.ss-org-item:focus-visible {
     background: var(--ss-folder-back, var(--ss-color-surface-muted));
 }
 
-.ss-search__find-tab::after {
+.ss-search__folder-tab::after {
     transform: scaleY(-1);
 }
 
-.ss-search__find-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.ss-search__find-action {
-    display: flex;
-    gap: var(--ss-space-2);
-    align-items: center;
-    padding: var(--ss-space-2);
-    border-radius: var(--ss-radius-control);
-    color: var(--ss-color-text);
-    font-family: var(--ss-font-mono);
-    font-size: 0.8125rem;
-    text-decoration: none;
-}
-
-.ss-search__find-action:hover,
-.ss-search__find-action:focus-visible {
-    background: color-mix(in srgb, var(--ss-color-surface) 70%, transparent);
-}
-
-.ss-search__find-action-icon {
-    flex: none;
-    width: 1.125rem;
-    height: 1.125rem;
-    color: var(--ss-color-muted);
-}
-
-.ss-search__find-sheet {
+.ss-search__folder-sheet {
     min-height: 5rem;
     padding: var(--ss-space-3);
     border: 1px solid var(--ss-folder-edge, var(--ss-color-border));
@@ -9070,7 +9045,7 @@ a.ss-org-item:focus-visible {
     background-size: 20px 20px;
 }
 
-:root[data-theme^="contrast"] .ss-search__find-sheet {
+:root[data-theme^="contrast"] .ss-search__folder-sheet {
     background-image: none;
 }
 
