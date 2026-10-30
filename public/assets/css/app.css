@@ -6056,18 +6056,18 @@ a.ss-notification:focus-visible {
     outline-offset: 3px;
 }
 
+/* Ikona wizytówki jak ikona karty postępu (.ss-onboarding-card__icon): ciemny kafelek 2,5 rem. */
 .ss-business-card__icon {
     display: inline-flex;
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    padding: 0.375rem;
-    border: 1px solid var(--ss-color-border);
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: var(--ss-space-2);
     border-radius: var(--ss-radius-control);
-    background: var(--ss-color-surface);
-    color: var(--ss-color-accent);
+    background: var(--ss-color-surface-inverse);
+    color: var(--ss-color-on-inverse);
 }
 
 .ss-business-card__icon + .ss-business-card__kicker {
@@ -6133,10 +6133,19 @@ a.ss-notification:focus-visible {
     letter-spacing: 0.02em;
 }
 
+.ss-business-card__number {
+    display: block;
+}
+
 .ss-business-card__details {
     display: grid;
     gap: var(--ss-space-1);
     margin-top: auto;
+    padding: var(--ss-space-3);
+    border: 1px solid color-mix(in srgb, var(--ss-color-border) 70%, transparent);
+    border-radius: var(--ss-radius-control);
+    background: color-mix(in srgb, var(--ss-color-surface) 62%, transparent);
+    backdrop-filter: blur(10px);
     font-size: 0.875rem;
 }
 
@@ -8721,6 +8730,16 @@ a.ss-quick-tile:focus-visible,
     text-decoration: none;
 }
 
+a.ss-org-item:hover {
+    border-color: var(--ss-color-border-strong);
+    background: color-mix(in srgb, var(--ss-color-surface-muted) 80%, var(--ss-color-text));
+}
+
+a.ss-org-item:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
 .ss-org-item--current {
     border-color: var(--ss-color-border-strong);
 }
@@ -8809,6 +8828,23 @@ a.ss-quick-tile:focus-visible,
 
 .ss-shell--zone .ss-context__back-form .ss-context__back {
     margin-bottom: 0;
+}
+
+/* Kafelki narzędzi wyglądu: podpisy i tryby krojem mono. */
+.ss-quick-tile__label,
+.ss-quick-tile__option {
+    font-family: var(--ss-font-mono);
+    letter-spacing: 0.01em;
+}
+
+/* Powiadomienia w panelu bocznym harmonijki wypełniają panel do dołu: zakładki rosną, lista bez własnej wysokości. */
+.ss-side-panels__panel--notifications .ss-notifications__tabs-wrap {
+    flex: 1;
+    min-height: 0;
+}
+
+.ss-side-panels__panel--notifications .ss-notifications__list {
+    max-height: none;
 }
 
 /* Strona bezpieczeństwa otwarta na #lock (np. „Zablokuj konto” z szybkich akcji): karty blokowania dostępu — zaufane

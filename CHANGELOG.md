@@ -7,7 +7,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 ### Added
 
 - Blokada ekranu jak Win+L (`account.lock` / `account.unlock`, `Auth\ScreenLock`): przycisk „Zablokuj ekran” w stopce layoutu stref (nowa ikona `lock-screen` z Qlementine Icons, MIT — licencja w `public/assets/img/icons/`) zostawia konto zalogowane, a każda strona prowadzi na ekran PIN-u; poprawny PIN wraca na stronę sprzed blokady, błędne liczą się jak przy logowaniu (po limicie blokada konta i wylogowanie), wylogowanie działa zawsze.
-- Wizytówka organizacji: opcjonalna ikona przed podpisem (`icon`).
+- Wizytówka organizacji: opcjonalna ikona przed podpisem (`icon`, ciemny kafelek jak na karcie postępu), numery rejestrowe (NIP, REGON, KRS) każdy w osobnej linii, adres i kontakty w szklanym boksie czytelnym na motywie tła.
+- Jednostki w menu konta layoutu stref to odnośniki — strefa wskazuje dane jednostki (`Contracts\ZoneUnitLinks`), domyślnie pulpit jednostki w jej kontekście; `RoleSelector::broadest()` publiczne.
 - Layout stref: odnośnik nad tytułem („Wstecz”, „Zmień kontekst”, „Wyloguj”) krojem mono wersalikami; narzędzia wyglądu w panelu kalendarza jako kafelki po dwa w rzędzie z podpisami na przygaszonym tle przycisków (bez tła pod spodem i bez kreski) — tryb kolorów (jasny, ciemny, kontrast WCAG, duży kontrast), rozmiar tekstu (A, AA) i powiększenie rozwijają listę trybów z ikonami i nazwami; kłódka „Zablokuj ekran” w stopce obok przełącznika kontekstu (jak Win+L: kończy sesję na tym urządzeniu).
 - Strona bezpieczeństwa konta: kotwica `#lock` (`AccountRoutes::SECTION_LOCK`) podświetla karty blokowania dostępu — zaufane urządzenia i „Wyloguj wszędzie”.
 - Wizytówka organizacji: adres w dwóch liniach — ulica, pod nią kod pocztowy, miasto i kraj.
@@ -22,6 +23,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Panel boczny layoutu stref: podpisy kafelków narzędzi krojem mono; lista powiadomień wypełnia panel do dołu.
 - Karty z wyróżnieniem (`.ss-card--feature`, np. karta onboardingu i postępu) nie unoszą się i nie rosną im cienie po najechaniu — zmienia się tylko obwódka.
 - Strefa administratorów: administrator pracuje w jednej roli naraz (`role_contexts`, domyślnie najszersza), przełącza ją w stopce, a adresy panelu mają klucz kontekstu (`/admiro/<klucz>/...`); pod nazwą konta jest aktywna rola.
 - Brak pliku ikony (`x-admiro::icon`) nie przerywa już strony błędem 500: ikona zostaje pusta, a błąd trafia do logu (`View\CoreAssets::icon()`). Chroni m.in. okno wdrożenia, gdy działający jeszcze stary kod odwołuje się do ikony usuniętej w nowej wersji.

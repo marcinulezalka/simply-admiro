@@ -95,11 +95,12 @@ final readonly class RoleSelector
     }
 
     /**
-     * Rola z największą liczbą uprawnień (przy remisie pierwsza); null przy pustej liście.
+     * Rola z największą liczbą uprawnień (przy remisie pierwsza); null przy pustej liście — domyślny kontekst konta
+     * w organizacji (także klucz kontekstu jednostki w menu konta, Zones\ZoneContexts::units()).
      *
      * @param list<string> $roles
      */
-    private function broadest(ZoneDefinition $zone, array $roles): ?string
+    public function broadest(ZoneDefinition $zone, array $roles): ?string
     {
         if (count($roles) < 2) {
             return $roles[0] ?? null;

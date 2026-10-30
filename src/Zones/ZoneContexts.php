@@ -20,6 +20,7 @@ use Simplysmart\Admiro\Http\AccountRoutes;
 use Simplysmart\Admiro\Http\Controllers\Account\RoleSwitchController;
 use Simplysmart\Admiro\Models\Organization;
 use Simplysmart\Admiro\Models\ZoneAccount;
+use Simplysmart\Admiro\Permissions\RoleSelector;
 use Simplysmart\Admiro\Queries\Organizations\ActiveMemberships;
 use Simplysmart\Admiro\Queries\Permissions\ZoneRoleNames;
 use Simplysmart\Admiro\View\Navigation\NavigationForm;
@@ -64,6 +65,7 @@ final readonly class ZoneContexts
         private CurrentOrganization $organization,
         private CurrentRole $role,
         private ContextKeys $keys,
+        private RoleSelector $roleSelector,
     ) {}
 
     /**
@@ -129,7 +131,10 @@ final readonly class ZoneContexts
      * z `role_contexts`; inaczej każde członkostwo), z nazwą i ikoną rodzaju i znacznikiem bieżącej — np. lista
      * jednostek w menu konta layoutu stref; strefa bez `teams` — lista pusta.
      *
-     * @return list<array{organization: Organization, kind: string, icon: string, current: bool}>
+     * Każda jednostka ma też rolę konta w niej (najszerszą — RoleSelector::broadest(); bieżąca jednostka: aktywną)
+     * i adres jej pulpitu w tym kontekście (`url`; w strefie z `context_in_url` z kluczem kontekstu).
+     *
+     * @return list<array{organization: Organization, kind: string, icon: string, current: bool, role: ?string, url: string}>
      */
     public function units(ZoneDefinition $zone, ZoneAccount $account): array
     {
@@ -145,11 +150,16 @@ final readonly class ZoneContexts
             }
 
             $kind = self::kind($organization);
+            $current = $organization->id === $this->organization->id();
+            $role = $current ? $this->role->of($account, $organization->id) : null;
+            $role ??= $zone->roleContexts ? $this->roleSelector->broadest($zone, $this->roles->of($account, $organization->id)) : null;
             $units[] = [
                 'organization' => $organization,
                 'kind' => text($zone->textKey('account.context_kinds.' . $kind)),
                 'icon' => self::KIND_ICONS[$kind],
-                'current' => $organization->id === $this->organization->id(),
+                'current' => $current,
+                'role' => $role,
+                'url' => route($zone->routeName(ZoneRedirects::HOME_ROUTE), $zone->contextInUrl ? [ContextKeys::PARAMETER => $this->keys->key($zone, $account, $organization->id, $role)] : []),
             ];
         }
 
