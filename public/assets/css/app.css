@@ -1689,12 +1689,13 @@ a.ss-onboarding-organizations__missing:hover {
     padding-right: 48px;
 }
 
-.ss-folders__tabs[hidden] + .ss-folder-actions {
+.ss-folder-actions:has(+ .ss-folders__tabs[hidden]) {
     margin-bottom: 0;
 }
 
-/* Szybkie akcje teczek (x-admiro::folder-actions) zaraz za zakładkami: teczki z nimi układają pierwszy rząd z zakładek
-   i błyskawicy, a każda teczka zajmuje cały kolejny rząd. Menu „Zapisz” / „Anuluj” rozwija się pod ikoną. */
+/* Szybkie akcje teczek (x-admiro::folder-actions) na pierwszym miejscu, przed zakładkami: teczki z nimi układają
+   pierwszy rząd z błyskawicy i zakładek, a każda teczka zajmuje cały kolejny rząd. Menu „Zapisz” / „Anuluj” rozwija
+   się pod ikoną nad teczką (błyskawica leży nad nią, z-index 3). */
 .ss-folders:has(> .ss-folder-actions) {
     flex-flow: row wrap;
     align-items: flex-end;
@@ -1705,13 +1706,9 @@ a.ss-onboarding-organizations__missing:hover {
     flex: 1 1 100%;
 }
 
-.ss-folders:has(> .ss-folder-actions) > .ss-folders__tabs {
-    padding-right: 0;
-}
-
 .ss-folder-actions {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     flex: none;
     margin-bottom: calc(-1 * var(--ss-space-3));
 }
@@ -6042,7 +6039,7 @@ a.ss-notification:focus-visible {
 .ss-sidebar-wiki__panel {
     display: flex;
     flex-direction: column;
-    width: 20rem;
+    width: 30rem;
     max-height: var(--ss-columns-height);
     border: 1px solid var(--ss-color-border);
     border-radius: var(--ss-radius-card);
@@ -6124,7 +6121,7 @@ a.ss-notification:focus-visible {
     right: var(--ss-space-4);
     bottom: calc(var(--ss-workspace-footer-height, 4.5rem) + var(--ss-space-4));
     z-index: 14;
-    width: min(22rem, calc(100vw - 2 * var(--ss-space-4)));
+    width: min(33rem, calc(100vw - 2 * var(--ss-space-4)));
     max-height: none;
     box-shadow: var(--ss-shadow-elevated);
     visibility: hidden;
@@ -9816,6 +9813,25 @@ body:has(#lock:target) .ss-security-lock {
 .ss-command:focus-within .ss-command__send {
     background: var(--ss-color-border);
     color: var(--ss-color-text);
+}
+
+/* Wyszukiwarka w pasku teczki (x-admiro::folder-search): pole komend bez własnego tła, wtopione w tło paska, z lupą. */
+.ss-command--search {
+    flex: 1 1 16rem;
+    max-width: 28rem;
+    padding-left: var(--ss-space-2);
+    background: transparent;
+}
+
+.ss-command__search-icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-command--search .ss-command__input::-webkit-search-cancel-button {
+    cursor: pointer;
 }
 
 /* Zapis komendy w tle (js/command-box.js, .ss-command[aria-busy="true"]): w miejscu strzałki Entera kręci się loader. */

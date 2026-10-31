@@ -1,4 +1,4 @@
-{{-- Szybkie akcje teczek (Core .ss-folders): sama ikona błyskawicy obok zakładek teczek jako dropdown (<details data-ss-dropdown>) z „Zapisz” i „Anuluj”. „Zapisz” wysyła formularz wybranej teczki oznaczony form[data-ss-folder-form] (js/folder-actions.js; bez skryptu ukryty), „Anuluj” to odnośnik cancelUrl — powrót bez zapisu zmian (np. ta sama strona bez otwartych formularzy). Stawia się w .ss-folders zaraz za listą zakładek. cancelUrl: string. --}}
+{{-- Szybkie akcje teczek (Core .ss-folders): sama ikona błyskawicy na pierwszym miejscu, przed zakładkami teczek, jako dropdown (<details data-ss-dropdown>) z „Zapisz” i „Anuluj”. „Zapisz” wysyła formularz wybranej teczki oznaczony form[data-ss-folder-form] (js/folder-actions.js; bez skryptu ukryty), „Anuluj” to odnośnik cancelUrl — powrót bez zapisu zmian (np. ta sama strona bez otwartych formularzy). Stawia się w .ss-folders przed listą zakładek; rozwinięte menu leży nad teczką. cancelUrl: string. --}}
 @props(['cancelUrl'])
 <details class="ss-folder-actions" data-ss-dropdown data-ss-folder-actions>
     <summary class="ss-folder-actions__toggle" title="{{ text('layout.folder_actions') }}">

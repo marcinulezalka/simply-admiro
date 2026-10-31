@@ -222,7 +222,9 @@ Wariant layoutu stref (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`, 
 | **Treść** | zwykła treść strony (slot) |
 | **Sidebar wiki** | prawy panel wiki i podpowiedzi (`x-admiro::app.sidebar-wiki`, `js/sidebar-wiki.js`): nagłówek jak w panelu powiadomień (ikona `book-open` na kafelku, tytuł, pinezka i ×), pod wiki zadania TODO konta (pole „/todo:” zapisujące w tle i lista `x-admiro::app.tasks` w zakresie `sidebar`, ok. 40% wysokości); otwiera go kafelek „Wiki” w narzędziach panelu kalendarza (widoczny tylko na stronie z sidebarem) — wysuwa się z prawej nad treść (×, Esc, klik obok chowają), a pinezka przypina go jako stałą kolumnę na wysokość okna z własnym przewijaniem (stan w przeglądarce, od 64rem); nieprzypięty nie zajmuje kolumny; bez skryptu stoi przypięty |
 
-**Szybkie akcje teczek** (`x-admiro::folder-actions`, `js/folder-actions.js`): sama ikona błyskawicy zaraz za zakładkami `.ss-folders` jako dropdown z „Zapisz” (wysyła formularz wybranej teczki oznaczony `form[data-ss-folder-form]`) i „Anuluj” (odnośnik `cancelUrl`, powrót bez zmian).
+**Szybkie akcje teczek** (`x-admiro::folder-actions`, `js/folder-actions.js`): sama ikona błyskawicy na pierwszym miejscu, przed zakładkami `.ss-folders`, jako dropdown (rozwinięte menu leży nad teczką) z „Zapisz” (wysyła formularz wybranej teczki oznaczony `form[data-ss-folder-form]`) i „Anuluj” (odnośnik `cancelUrl`, powrót bez zmian).
+
+**Wyszukiwarka w pasku teczki** (`x-admiro::folder-search`, `js/live-search.js`): w `.ss-folder__toolbar` pole wtopione w tło jak pole komend menu błyskawicy (`.ss-command--search`: przezroczysta pigułka z delikatną szarą obwódką, lupa, pole i wyciszony Enter); formularz GET (`action`, ukryte `params`, parametr `name`) podmienia na żywo tylko element wyników o id `results`.
 
 **Wiki strony dodaje się wyłącznie w ramach sidebar-wiki**: slot `sidebar-wiki` w `x-admiro::zone.layout` (wpisy słownika `x-admiro::wiki-tip`, podpowiedzi do strony), nie w treści strony. Bez slotu panel pokazuje „Brak podpowiedzi dla tej strony.”.
 

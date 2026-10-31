@@ -9,12 +9,14 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 - Aktualizacje słowników po zatwierdzeniu administratora: strefy nie pobierają danych z zewnątrz, tylko proszą o aktualizację (`DictionaryUpdates\DictionaryUpdateRequests`, tabela `dictionary_update_requests`); paczki rejestrują słowniki jako `Contracts\DictionaryUpdater`, a panel admiro ma stronę „Aktualizacje słowników” z „Zatwierdź” (zadanie w kolejce `RunDictionaryUpdate`, wynik albo błąd w prośbie) i „Odrzuć”.
 - Sidebar wiki: nagłówek z ikoną na kafelku jak w panelu powiadomień (nowa ikona `book-open`, Lucide), a pod wiki zadania TODO konta — pole „/todo:” zapisujące zadanie w tle i lista z polem wykonania; lista jest przypisana do konta, które ją zapisuje, i odświeża się w panelu powiadomień i w sidebarze naraz.
 - Zadanie TODO zapamiętuje adres strony, z której je zapisano (nagłówek `Referer`, `json_attributes.source_url`, `AccountTask::sourceUrl()`) — informacja dla wykonawcy poprawki, niepokazywana w interfejsie.
+- Wyszukiwarka w pasku teczki `x-admiro::folder-search`: pole wtopione w tło jak pole komend menu błyskawicy (lupa, pole, wyciszony Enter), wyszukujące na żywo (`js/live-search.js`).
 - Kafelek „Wiki” w narzędziach panelu kalendarza (obok ustawień) otwiera prawy sidebar wiki; zamiast pionowej zakładki przy prawej krawędzi — nieprzypięty sidebar nie zajmuje kolumny, a pinezka obok × przypina go na stałe.
 - Szybkie akcje teczek `x-admiro::folder-actions`: ikona błyskawicy za zakładkami teczek z „Zapisz” (formularz wybranej teczki) i „Anuluj”.
 - Wpisy wiki mogą mieć instrukcję „Jak korzystać” (`wiki.<klucz>.usage`).
 
 ### Fixed
 
+- Szybkie akcje teczek `x-admiro::folder-actions`: błyskawica stoi na pierwszym miejscu, przed zakładkami, a jej menu „Zapisz” / „Anuluj” rozwija się nad teczką (wcześniej teczka je zakrywała).
 - Komenda `todo:` zapisuje zadanie: menu „+” w layoucie stref nie dostaje już ukrytej kopii pola komend (przez `@include` przechodził do niego adres komend, a skrypt brał puste pole kopii i nic nie wysyłał), a skrypt bierze pole z sekcji przycisku, który wysłał formularz. Kafelek „Wiki” wysuwa nieprzypięty sidebar — reguła stanu otwartego przegrywała specyficznością z regułą ukrycia, więc panel i jego pole „/todo:” zostawały poza ekranem.
 - Menu błyskawicy: sekcja z polem komend w kolorze reszty menu, a arkusz z kropkami na całą szerokość, bez bocznych marginesów.
 
@@ -39,6 +41,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Sidebar wiki i podpowiedzi o 50% szerszy (30rem w kolumnie, do 33rem wysunięty).
 - Wizytówka organizacji: ikona w kafelku po lewej, a podpis i nazwa w kolumnie obok niej, wyrównane do jednej krawędzi.
 - Karta obracana `x-admiro::flip-card` może mieć drugi odwrót (slot `alternate`) z własnym przyciskiem obok obracania (domyślnie ikona flagi); dane kontaktowe organizacji jako osobny komponent `x-admiro::organization.contact`, a wizytówka może je pominąć (`contact`).
 - Menu błyskawicy, a w layoucie stref także menu „+”, jak jasna teczka (wspólny `admiro::search.folder`): u góry zakładka z ikoną i tytułem (falisty skos jak zakładki teczek), pod nią na wspólnym tle odnośniki w zwykłym stylu menu (ikona i tekst) i kartka w kropki, a tło schodzi w dół wypustką z tą samą falą i obejmuje przycisk menu. Menu wyszukiwarki w stopce layoutu stref nie mają już kolorów odwróconych.
