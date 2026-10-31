@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Modal `x-admiro::dialog` (`js/dialog.js`, natywny `<dialog>`, otwierany odnośnikiem `data-ss-dialog-open`, ponownie po błędzie walidacji) i pusty stan teczki `x-admiro::folder-empty` (ikona `folder-open` z Lucide, tytuł, opis, akcja) zamiast „Brak.”; w polu komend teczki „+” z akcjami teczki (slot `add`), a błyskawica stoi w przycisku komendy w miejscu „/”.
 - Zadania TODO jak w systemie ticketowym: `AccountTasks::start()` ustawia stan „w toku”, a lista TODO pokazuje tylko niezrealizowane zadania (otwarte i w toku) — wykonane są ukryte.
 - Aktualizacje słowników po zatwierdzeniu administratora: strefy nie pobierają danych z zewnątrz, tylko proszą o aktualizację (`DictionaryUpdates\DictionaryUpdateRequests`, tabela `dictionary_update_requests`); paczki rejestrują słowniki jako `Contracts\DictionaryUpdater`, a panel admiro ma stronę „Aktualizacje słowników” z „Zatwierdź” (zadanie w kolejce `RunDictionaryUpdate`, wynik albo błąd w prośbie) i „Odrzuć”.
 - Sidebar wiki: nagłówek z ikoną na kafelku jak w panelu powiadomień (nowa ikona `book-open`, Lucide), a pod wiki zadania TODO konta — pole „/todo:” zapisujące zadanie w tle i lista z polem wykonania; lista jest przypisana do konta, które ją zapisuje, i odświeża się w panelu powiadomień i w sidebarze naraz.
@@ -43,6 +44,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Komenda `todo:` nazywa się „Dodaj zadanie” (zamiast „Nowe zadanie”).
 - Sidebar wiki i podpowiedzi o 50% szerszy (30rem w kolumnie, do 33rem wysunięty).
 - Wizytówka organizacji: ikona w kafelku po lewej, a podpis i nazwa w kolumnie obok niej, wyrównane do jednej krawędzi.
 - Karta obracana `x-admiro::flip-card` może mieć drugi odwrót (slot `alternate`) z własnym przyciskiem obok obracania (domyślnie ikona flagi); dane kontaktowe organizacji jako osobny komponent `x-admiro::organization.contact`, a wizytówka może je pominąć (`contact`).

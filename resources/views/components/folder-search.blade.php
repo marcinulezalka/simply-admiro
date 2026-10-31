@@ -1,16 +1,30 @@
-{{-- Pole komend w pasku teczki (Core .ss-folder__toolbar) w wyglądzie pola komend menu błyskawicy (admiro::search.commands): białe pole z delikatną szarą obwódką, po lewej błyskawica (co 12 s drży jak piorun; bez animacji przy prefers-reduced-motion), przycisk „/” z wybraną komendą, pole i wyciszony przycisk Enter. Domyślna komenda `szukaj:` to formularz GET na action z parametrami params (ukryte pola), wyszukujący na żywo (js/live-search.js: podmienia tylko element wyników o id results); bez skryptu wysyła się zwykłą drogą. Z commandUrl „/” rozwija też komendy systemu (Enums\QuickCommand, np. `todo:`) — wybór przepina pole i Enter do formularza POST komend (atrybuty form, js/command-box.js: zapis w tle, odświeżona lista TODO). action: string, results: string (id elementu wyników), label: string (etykieta pola dla czytnika ekranu), name: string (parametr zapytania), value: string, placeholder: string, params: array<string, string>, commandUrl: ?string (adres zapisu komend strefy). --}}
-@props(['action', 'results', 'label', 'name' => 'q', 'value' => '', 'placeholder' => '', 'params' => [], 'commandUrl' => null])
+{{-- Pole komend w pasku teczki (Core .ss-folder__toolbar) w wyglądzie pola komend menu błyskawicy (admiro::search.commands): białe pole z delikatną szarą obwódką, po lewej „+” z dropdownem akcji teczki (slot add: elementy <li> menu, np. „Dodaj gabinet” otwierający modal x-admiro::dialog; bez slotu go nie ma), przycisk komendy z błyskawicą w miejscu „/” (co 12 s drży jak piorun; bez animacji przy prefers-reduced-motion) i wybraną komendą, pole i wyciszony przycisk Enter. Domyślna komenda `szukaj:` to formularz GET na action z parametrami params (ukryte pola), wyszukujący na żywo (js/live-search.js: podmienia tylko element wyników o id results); bez skryptu wysyła się zwykłą drogą. Z commandUrl przycisk komendy rozwija też komendy systemu (Enums\QuickCommand, np. `todo:`) — wybór przepina pole i Enter do formularza POST komend (atrybuty form, js/command-box.js: zapis w tle, odświeżona lista TODO). action: string, results: string (id elementu wyników), label: string (etykieta pola dla czytnika ekranu), name: string (parametr zapytania), value: string, placeholder: string, params: array<string, string>, commandUrl: ?string (adres zapisu komend strefy). --}}
+@props(['action', 'results', 'label', 'name' => 'q', 'value' => '', 'placeholder' => '', 'params' => [], 'commandUrl' => null, 'add' => null])
 @php
     $searchForm = $results . '-search-form';
     $commandForm = $results . '-command-form';
     $searchPrefix = text('layout.command_search_prefix');
 @endphp
 <div class="ss-command ss-command--folder" data-ss-command>
-    <x-admiro::icon name="zap" class="ss-command__zap" />
-    @if ($commandUrl !== null)
+    @if ($add !== null && $add->isNotEmpty())
+        <details class="ss-command__add" data-ss-dropdown>
+            <summary class="ss-command__add-toggle" title="{{ text('layout.search_actions') }}">
+                <x-admiro::icon name="plus" class="ss-command__add-icon" />
+                <span class="ss-sr-only">{{ text('layout.search_actions') }}</span>
+            </summary>
+            <div class="ss-command__add-panel">
+                <ul class="ss-account-menu__list">
+                    {{ $add }}
+                </ul>
+            </div>
+        </details>
+    @endif
+    @if ($commandUrl === null)
+        <x-admiro::icon name="zap" class="ss-command__zap" />
+    @else
         <details class="ss-command__picker">
             <summary class="ss-command__toggle" title="{{ text('layout.commands') }}">
-                <span class="ss-command__slash" aria-hidden="true">/</span>
+                <x-admiro::icon name="zap" class="ss-command__zap" />
                 <span class="ss-command__current" data-ss-command-current>{{ $searchPrefix }}</span>
                 <span class="ss-sr-only">{{ text('layout.commands') }}</span>
             </summary>

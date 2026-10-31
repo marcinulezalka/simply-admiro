@@ -31,7 +31,7 @@ return [
 
     'quick_command' => [
         'todo' => [
-            'label' => 'Nowe zadanie',
+            'label' => 'Dodaj zadanie',
             'placeholder' => 'Nazwa zadania',
         ],
     ],

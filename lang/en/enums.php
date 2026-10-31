@@ -31,7 +31,7 @@ return [
 
     'quick_command' => [
         'todo' => [
-            'label' => 'New task',
+            'label' => 'Add task',
             'placeholder' => 'Task name',
         ],
     ],
