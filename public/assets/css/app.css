@@ -1771,6 +1771,52 @@ a.ss-onboarding-organizations__missing:hover {
     display: none;
 }
 
+/* Linki ze strzałką na prawo od zakładek (.ss-folders__links, np. strony tematyczne modułu): czyste odnośniki w rzędzie
+   zakładek, poza role="tablist"; bez skryptu (zakładki ukryte) stoją nad teczkami. */
+.ss-folders {
+    position: relative;
+}
+
+.ss-folders__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-2) var(--ss-space-4);
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.ss-folders__tabs:not([hidden]) + .ss-folders__links {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 44px;
+}
+
+.ss-folders__link {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ss-folders__link:hover {
+    color: var(--ss-color-accent);
+}
+
+.ss-folders__link:focus-visible {
+    border-radius: var(--ss-radius-control);
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-folders__link-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
 .ss-folder__tab {
     position: relative;
     z-index: 1;
