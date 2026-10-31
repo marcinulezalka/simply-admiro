@@ -14,6 +14,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Komenda `todo:` zapisuje zadanie: menu „+” w layoucie stref nie dostaje już ukrytej kopii pola komend (przez `@include` przechodził do niego adres komend, a skrypt brał puste pole kopii i nic nie wysyłał), a skrypt bierze pole z sekcji przycisku, który wysłał formularz. Kafelek „Wiki” wysuwa nieprzypięty sidebar — reguła stanu otwartego przegrywała specyficznością z regułą ukrycia, więc panel i jego pole „/todo:” zostawały poza ekranem.
 - Menu błyskawicy: sekcja z polem komend w kolorze reszty menu, a arkusz z kropkami na całą szerokość, bez bocznych marginesów.
 
 - Nowy wariant layoutu stref z kolumnami `Enums\AppLayout::Columns` (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`): nagłówek i stopka jak w layoucie stref, a treść w kolumnach (`x-admiro::app.columns`) — po lewej menu strony w pudełku na wysokość okna z własnym przewijaniem, także palcem na ekranie dotykowym (slot `left` — pusty daje pusty kontener —, bez niego na stronach ustawień kategorie ustawień — wydzielony komponent `x-admiro::app.settings-nav`), na środku treść, po prawej sidebar wiki i podpowiedzi (`x-admiro::app.sidebar-wiki`, `js/sidebar-wiki.js`, slot `sidebar-wiki` — jedyne miejsce na wiki strony), który pinezka przypina jako stałą kolumnę (stan w przeglądarce), a nieprzypięty wysuwa się z wąskiej zakładki przy prawej krawędzi; ikona `pin` (Lucide).

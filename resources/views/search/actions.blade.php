@@ -1,4 +1,4 @@
-{{-- Menu akcji „+” przy polu wyszukiwania (x-admiro::app.search :compose, krok „Organizacje” kreatora onboardingu): przycisk z plusem otwiera listę akcji dodawania pod nagłówkiem „Dodaj” oddzielonym linią od pozycji; akcja główna (np. nowa wizyta) na górze, pod nią separator; z $folder (layout stref) panel jak teczka (admiro::search.folder, jak menu błyskawicy) z zakładką „Dodaj”. $actions: list<View\Navigation\NavigationItem>; $primary: ?View\Navigation\NavigationItem (domyślnie null); $folder: bool (domyślnie false). --}}
+{{-- Menu akcji „+” przy polu wyszukiwania (x-admiro::app.search :compose, krok „Organizacje” kreatora onboardingu): przycisk z plusem otwiera listę akcji dodawania pod nagłówkiem „Dodaj” oddzielonym linią od pozycji; akcja główna (np. nowa wizyta) na górze, pod nią separator; z $folder (layout stref) panel jak teczka (admiro::search.folder, jak menu błyskawicy) z zakładką „Dodaj”, bez pola komend (commandUrl jawnie null — @include przekazuje zmienne rodzica, a pole komend należy tylko do menu błyskawicy). $actions: list<View\Navigation\NavigationItem>; $primary: ?View\Navigation\NavigationItem (domyślnie null); $folder: bool (domyślnie false). --}}
 @php($primary ??= null)
 @php($folder ??= false)
 <details @class(['ss-search__menu', 'ss-search__menu--folder' => $folder, 'ss-search__actions']) data-ss-dropdown>
@@ -7,7 +7,7 @@
         <span class="ss-sr-only">{{ text('layout.search_actions') }}</span>
     </summary>
     @if ($folder)
-        @include('admiro::search.folder', ['icon' => 'plus', 'title' => text('layout.search_actions'), 'actions' => $actions, 'primary' => $primary])
+        @include('admiro::search.folder', ['icon' => 'plus', 'title' => text('layout.search_actions'), 'actions' => $actions, 'primary' => $primary, 'commandUrl' => null])
     @else
         <div class="ss-search__menu-panel">
             <p class="ss-search__menu-title">{{ text('layout.search_actions') }}</p>

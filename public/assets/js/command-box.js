@@ -2,7 +2,8 @@
  * Pole komend na dole menu błyskawicy ([data-ss-command], admiro::search.commands): wybór komendy z listy pod „/”
  * podmienia prefiks przy ikonie (np. „todo:”) i podpowiedź pola, zamyka listę i ustawia kursor w polu; otwarcie menu
  * błyskawicy też ustawia kursor w polu komend. Wysłanie formularza komend (form[data-ss-command-form]: #ss-command-form
- * menu błyskawicy i pole „/todo:” sidebaru wiki) idzie w tle (fetch
+ * menu błyskawicy i pole „/todo:” sidebaru wiki) idzie w tle — pole komendy to pole z sekcji przycisku, który wysłał
+ * formularz (event.submitter; Enter w polu też go „klika”) — (fetch
  * z `Accept: application/json`): na czas zapisu pole ma aria-busy — strzałka Entera zmienia się w loader, a pole
  * i przycisk są zablokowane —, po zapisie pole jest puste z kursorem na kolejne zadanie, lista TODO w panelu
  * powiadomień i w sidebarze ([data-ss-tasks] — każda w swoim zakresie, z `lists` odpowiedzi) zostaje podmieniona na
@@ -44,7 +45,10 @@
             return;
         }
 
-        const input = form.querySelector('[data-ss-command-input]') ?? document.querySelector(`[data-ss-command-input][form="${form.id}"]`);
+        const submitterBox = event.submitter?.closest('[data-ss-command]');
+        const input = submitterBox?.querySelector('[data-ss-command-input]')
+            ?? form.querySelector('[data-ss-command-input]')
+            ?? document.querySelector(`[data-ss-command-input][form="${form.id}"]`);
         const box = input?.closest('[data-ss-command]');
         const send = box?.querySelector('[data-ss-command-send]');
         const status = box?.querySelector('[data-ss-command-status]');

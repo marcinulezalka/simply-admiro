@@ -6132,7 +6132,7 @@ a.ss-notification:focus-visible {
     transition: transform 0.25s ease, visibility 0s linear 0.25s;
 }
 
-.ss-sidebar-wiki--open .ss-sidebar-wiki__panel {
+.ss-sidebar-wiki--js.ss-sidebar-wiki--open .ss-sidebar-wiki__panel {
     visibility: visible;
     transform: none;
     transition: transform 0.25s ease;
