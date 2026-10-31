@@ -1,4 +1,4 @@
-{{-- Pole komend w pasku teczki (Core .ss-folder__toolbar) w wyglądzie pola komend menu błyskawicy (admiro::search.commands): białe pole z delikatną szarą obwódką, po lewej jedna szara pigułka (__group) z „+” — dropdown akcji dodania (slot add: elementy <li> menu, np. „Dodaj gabinet” otwierający modal x-admiro::dialog; bez slotu go nie ma) — przełącznikiem układu listy (layouts: przycisk lista → siatka, z tree także → drzewo — ikona pokazuje układ, na który przełącza — js/folder-layout.js ustawia data-ss-layout na elemencie wyników i pamięta wybór w przeglądarce; bez skryptu ukryty; lista to zwarte wpisy jeden pod drugim — tylko nazwa i druga linia —, siatka to wpisy jako teczki bez akcji, a drzewo to pełne wiersze — fakty, akcje, edycja — w tabeli z wcięciem data-ss-depth; wiersze .ss-record-row--tree i fakty .ss-record-row__fact--tree — np. rodzic wpisu — widać tylko w drzewie) i przyciskiem komendy z błyskawicą w miejscu „/” (co 12 s drży jak piorun; bez animacji przy prefers-reduced-motion) i wybraną komendą, dalej pole i wyciszony przycisk Enter. Oba dropdowny są [data-ss-dropdown] (js/app-shell.js: otwarcie jednego zamyka drugi, klik obok zamyka). Inne akcje teczki niż dodanie (slot actions: np. formularz POST z przyciskiem .ss-command__option i prefiksem `sync:`) stoją w dropdownie błyskawicy pod komendami. Domyślna komenda `szukaj:` to formularz GET na action z parametrami params (ukryte pola), wyszukujący na żywo (js/live-search.js: podmienia tylko element wyników o id results); bez skryptu wysyła się zwykłą drogą. Z commandUrl przycisk komendy rozwija też komendy systemu (Enums\QuickCommand, np. `todo:`) — wybór przepina pole i Enter do formularza POST komend (atrybuty form, js/command-box.js: zapis w tle, odświeżona lista TODO). action: string, results: string (id elementu wyników), label: string (etykieta pola dla czytnika ekranu), name: string (parametr zapytania), value: string, placeholder: string, params: array<string, string>, commandUrl: ?string (adres zapisu komend strefy), layouts: bool (przełącznik lista/siatka; domyślnie bez niego), tree: bool (z layouts: trzeci układ drzewa). --}}
+{{-- Pole komend w pasku teczki (Core .ss-folder__toolbar) w wyglądzie pola komend menu błyskawicy (admiro::search.commands): białe pole z delikatną szarą obwódką, po lewej jedna szara pigułka (__group) z „+” — dropdown akcji dodania (slot add: elementy <li> menu, np. „Dodaj gabinet” otwierający modal x-admiro::dialog; bez slotu go nie ma) — dropdownem układu listy (layouts: ikona pokazuje bieżący układ, menu wybiera listę albo siatkę, z tree także drzewo — js/folder-layout.js ustawia data-ss-layout na elemencie wyników i pamięta wybór w przeglądarce; bez skryptu ukryty; lista to zwarte wpisy jeden pod drugim — tylko nazwa i druga linia —, siatka to wpisy jako teczki bez akcji, a drzewo to pełne wiersze — fakty, akcje, edycja — w tabeli z wcięciem data-ss-depth; wiersze .ss-record-row--tree i fakty .ss-record-row__fact--tree — np. rodzic wpisu — widać tylko w drzewie) i przyciskiem komendy z błyskawicą w miejscu „/” (co 12 s drży jak piorun; bez animacji przy prefers-reduced-motion) i wybraną komendą, dalej pole i wyciszony przycisk Enter. Oba dropdowny są [data-ss-dropdown] (js/app-shell.js: otwarcie jednego zamyka drugi, klik obok zamyka). Inne akcje teczki niż dodanie (slot actions: np. formularz POST z przyciskiem .ss-command__option i prefiksem `sync:`) stoją w dropdownie błyskawicy pod komendami. Domyślna komenda `szukaj:` to formularz GET na action z parametrami params (ukryte pola), wyszukujący na żywo (js/live-search.js: podmienia tylko element wyników o id results); bez skryptu wysyła się zwykłą drogą. Z commandUrl przycisk komendy rozwija też komendy systemu (Enums\QuickCommand, np. `todo:`) — wybór przepina pole i Enter do formularza POST komend (atrybuty form, js/command-box.js: zapis w tle, odświeżona lista TODO). action: string, results: string (id elementu wyników), label: string (etykieta pola dla czytnika ekranu), name: string (parametr zapytania), value: string, placeholder: string, params: array<string, string>, commandUrl: ?string (adres zapisu komend strefy), layouts: bool (przełącznik lista/siatka; domyślnie bez niego), tree: bool (z layouts: trzeci układ drzewa). --}}
 @props(['action', 'results', 'label', 'name' => 'q', 'value' => '', 'placeholder' => '', 'params' => [], 'commandUrl' => null, 'add' => null, 'actions' => null, 'layouts' => false, 'tree' => false])
 @php
     $searchForm = $results . '-search-form';
@@ -23,14 +23,24 @@
             </details>
         @endif
         @if ($layouts)
-            <button class="ss-command__layout" type="button" aria-pressed="false" title="{{ text('layout.folder_layout_grid') }}" hidden data-ss-folder-layout="{{ $results }}" data-ss-layout-next="grid" data-layouts="{{ $tree ? 'list grid tree' : 'list grid' }}" data-title-list="{{ text('layout.folder_layout_list') }}" data-title-grid="{{ text('layout.folder_layout_grid') }}" @if ($tree) data-title-tree="{{ text('layout.folder_layout_tree') }}" @endif>
-                <x-admiro::icon name="grid" class="ss-command__layout-icon ss-command__layout-icon--grid" />
-                <x-admiro::icon name="list" class="ss-command__layout-icon ss-command__layout-icon--list" />
-                @if ($tree)
-                    <x-admiro::icon name="sitemap" class="ss-command__layout-icon ss-command__layout-icon--tree" />
-                @endif
-                <span class="ss-sr-only">{{ text('layout.folder_layout') }}</span>
-            </button>
+            @php($layoutOptions = $tree ? ['list', 'grid', 'tree'] : ['list', 'grid'])
+            <details class="ss-command__add ss-command__layouts" data-ss-dropdown hidden data-ss-folder-layout="{{ $results }}" data-layouts="{{ implode(' ', $layoutOptions) }}">
+                <summary class="ss-command__add-toggle ss-command__layout" title="{{ text('layout.folder_layout') }}" data-ss-layout-current="list">
+                    <x-admiro::icon name="list" class="ss-command__layout-icon ss-command__layout-icon--list" />
+                    <x-admiro::icon name="grid" class="ss-command__layout-icon ss-command__layout-icon--grid" />
+                    @if ($tree)
+                        <x-admiro::icon name="sitemap" class="ss-command__layout-icon ss-command__layout-icon--tree" />
+                    @endif
+                    <span class="ss-sr-only">{{ text('layout.folder_layout') }}</span>
+                </summary>
+                <div class="ss-command__add-panel">
+                    <ul class="ss-account-menu__list" role="group" aria-label="{{ text('layout.folder_layout') }}">
+                        @foreach ($layoutOptions as $layoutOption)
+                            <li><button class="ss-account-menu__link ss-command__layout-option" type="button" title="{{ text('layout.folder_layout_' . $layoutOption) }}" aria-pressed="{{ $layoutOption === 'list' ? 'true' : 'false' }}" data-ss-layout-option="{{ $layoutOption }}"><x-admiro::icon :name="['list' => 'list', 'grid' => 'grid', 'tree' => 'sitemap'][$layoutOption]" class="ss-account-menu__icon" />{{ text('layout.folder_layout_' . $layoutOption . '_label') }}</button></li>
+                        @endforeach
+                    </ul>
+                </div>
+            </details>
         @endif
         @if ($commandUrl === null && ! $hasActions)
             <x-admiro::icon name="zap" class="ss-command__zap" />

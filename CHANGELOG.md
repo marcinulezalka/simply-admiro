@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Przełącznik układu teczki (`layouts` w `x-admiro::folder-search`) jako dropdown jak „+”: ikona przycisku pokazuje bieżący układ, a menu wybiera listę, siatkę albo (z `tree`) drzewo; wybrany z akcentem.
 - Komenda `wiki:` w polu komend błyskawicy i teczki (`QuickCommand::Wiki`): wpisana fraza prowadzi do nowej strony wiki konta w każdej strefie (`account.wiki`, wyszukiwanie po wpisach `Wiki\Wiki`); `js/command-box.js` przechodzi pod adres z `redirect` odpowiedzi.
 - Wpis wiki z pytaniem (Q&A) ma pod ikoną pojęcia znacznik „Q&A” (`.ss-wiki-tip__qa-badge`).
 - Układy teczki z przełącznikiem: lista to zwarte wpisy jeden pod drugim (tylko nazwa i druga linia), siatka to wpisy jako teczki z zakładką bez akcji, a pełne wiersze z faktami, akcjami i edycją są w drzewie; wiersz z otwartą edycją zostaje pełny w każdym układzie.

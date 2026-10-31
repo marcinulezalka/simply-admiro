@@ -10332,34 +10332,10 @@ button.ss-command__option {
     }
 }
 
-/* Przełącznik układu listy w pigułce pola teczki (layouts x-admiro::folder-search, js/folder-layout.js): ikona układu,
-   na który przełącza (data-ss-layout-next) — siatka przy liście, drzewo albo lista przy siatce, lista przy drzewie. */
-.ss-command__layout {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    padding: 0;
-    border: 0;
-    border-radius: var(--ss-radius-pill);
-    background: transparent;
-    color: var(--ss-color-text);
-    cursor: pointer;
-}
-
-.ss-command__layout[hidden] {
+/* Dropdown układu listy w pigułce pola teczki (layouts x-admiro::folder-search, js/folder-layout.js): przycisk jak „+”
+   z ikoną bieżącego układu (data-ss-layout-current), w menu lista, siatka i drzewo — wybrany z akcentem. */
+.ss-command__layouts[hidden] {
     display: none;
-}
-
-.ss-command__layout:hover {
-    background: var(--ss-color-border);
-}
-
-.ss-command__layout:focus-visible {
-    outline: 2px solid var(--ss-color-accent);
-    outline-offset: 2px;
 }
 
 .ss-command__layout-icon {
@@ -10367,10 +10343,24 @@ button.ss-command__option {
     height: 1rem;
 }
 
-.ss-command__layout:not([data-ss-layout-next="grid"]) .ss-command__layout-icon--grid,
-.ss-command__layout:not([data-ss-layout-next="list"]) .ss-command__layout-icon--list,
-.ss-command__layout:not([data-ss-layout-next="tree"]) .ss-command__layout-icon--tree {
+.ss-command__layout:not([data-ss-layout-current="list"]) .ss-command__layout-icon--list,
+.ss-command__layout:not([data-ss-layout-current="grid"]) .ss-command__layout-icon--grid,
+.ss-command__layout:not([data-ss-layout-current="tree"]) .ss-command__layout-icon--tree {
     display: none;
+}
+
+.ss-command__layout-option {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ss-command__layout-option[aria-pressed="true"] {
+    color: var(--ss-color-accent);
+    font-weight: 600;
 }
 
 /* Wiersze teczki w układzie listy (lista ze skryptem przełącznika): zwarte wpisy jeden pod drugim w jednej ramce — tylko
