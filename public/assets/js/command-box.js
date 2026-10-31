@@ -1,8 +1,10 @@
 /**
  * Pole komend na dole menu błyskawicy ([data-ss-command], admiro::search.commands): wybór komendy z listy pod „/”
- * podmienia prefiks przy ikonie (np. „todo:”) i podpowiedź pola, zamyka listę i ustawia kursor w polu; otwarcie menu
+ * podmienia prefiks przy ikonie (np. „todo:”) i podpowiedź pola, a opcja z data-form / data-name przepina pole i Enter
+ * do innego formularza i zmienia nazwę pola (pole komend teczki x-admiro::folder-search: `szukaj:` ↔ `todo:`); potem
+ * zamyka listę i ustawia kursor w polu; otwarcie menu
  * błyskawicy też ustawia kursor w polu komend. Wysłanie formularza komend (form[data-ss-command-form]: #ss-command-form
- * menu błyskawicy i pole „/todo:” sidebaru wiki) idzie w tle — pole komendy to pole z sekcji przycisku, który wysłał
+ * menu błyskawicy, pole „/todo:” sidebaru wiki i komendy pola teczki) idzie w tle — pole komendy to pole z sekcji przycisku, który wysłał
  * formularz (event.submitter; Enter w polu też go „klika”) — (fetch
  * z `Accept: application/json`): na czas zapisu pole ma aria-busy — strzałka Entera zmienia się w loader, a pole
  * i przycisk są zablokowane —, po zapisie pole jest puste z kursorem na kolejne zadanie, lista TODO w panelu
@@ -30,6 +32,16 @@
 
         if (input instanceof HTMLInputElement) {
             input.placeholder = option.dataset.placeholder ?? '';
+
+            if (option.dataset.form) {
+                input.setAttribute('form', option.dataset.form);
+                box?.querySelector('[data-ss-command-send]')?.setAttribute('form', option.dataset.form);
+            }
+
+            if (option.dataset.name) {
+                input.name = option.dataset.name;
+            }
+
             input.focus();
         }
 

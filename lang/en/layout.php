@@ -36,6 +36,7 @@ return [
     'search_find_empty' => 'No quick actions yet.',
     'commands' => 'Commands',
     'command_text' => 'Command text',
+    'command_search_prefix' => 'search:',
     'command_submit' => 'Run command',
     'tasks' => 'TODO',
     'tasks_empty' => 'No tasks. Add them in the quick actions menu with the todo: command.',

@@ -20,7 +20,7 @@ namespace Simplysmart\Admiro\View\Tasks;
 final readonly class TaskPanel
 {
     /**
-     * @param list<TaskItem> $items Otwarte zadania od najstarszego, pod nimi ostatnio wykonane.
+     * @param list<TaskItem> $items Niezrealizowane zadania (otwarte i w toku) od najstarszego; zrealizowane są ukryte.
      */
     public function __construct(
         public array $items,

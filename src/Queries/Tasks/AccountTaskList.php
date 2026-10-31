@@ -18,29 +18,22 @@ use Simplysmart\Admiro\Enums\TaskStatus;
 use Simplysmart\Admiro\Models\AccountTask;
 
 /**
- * Zadania TODO jednego konta strefy: lista do panelu (otwarte od najstarszego zgłoszenia, pod nimi ostatnio wykonane),
+ * Zadania TODO jednego konta strefy: lista do panelu (niezrealizowane — otwarte i w toku — od najstarszego zgłoszenia;
+ * zrealizowane są ukryte),
  * zadanie konta po tokenie i następny numer zgłoszenia. Zadania innych kont i stref nigdy nie trafiają do wyniku.
  */
 final class AccountTaskList
 {
-    /** Ile ostatnio wykonanych zadań zostaje na liście pod otwartymi. */
-    public const int RECENTLY_DONE = 5;
-
     /**
      * @return list<AccountTask>
      */
     public function forPanel(string $zone, int $accountId): array
     {
-        $open = $this->of($zone, $accountId);
-        $open->where('status', '!=', TaskStatus::Done->value);
-        $open->orderBy('issue');
+        $query = $this->of($zone, $accountId);
+        $query->where('status', '!=', TaskStatus::Done->value);
+        $query->orderBy('issue');
 
-        $done = $this->of($zone, $accountId);
-        $done->where('status', TaskStatus::Done->value);
-        $done->orderByDesc('completed_at')->orderByDesc('issue');
-        $done->limit(self::RECENTLY_DONE);
-
-        return [...$open->get()->all(), ...$done->get()->all()];
+        return array_values($query->get()->all());
     }
 
     public function find(string $zone, int $accountId, string $token): ?AccountTask

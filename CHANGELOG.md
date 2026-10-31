@@ -6,10 +6,11 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Zadania TODO jak w systemie ticketowym: `AccountTasks::start()` ustawia stan „w toku”, a lista TODO pokazuje tylko niezrealizowane zadania (otwarte i w toku) — wykonane są ukryte.
 - Aktualizacje słowników po zatwierdzeniu administratora: strefy nie pobierają danych z zewnątrz, tylko proszą o aktualizację (`DictionaryUpdates\DictionaryUpdateRequests`, tabela `dictionary_update_requests`); paczki rejestrują słowniki jako `Contracts\DictionaryUpdater`, a panel admiro ma stronę „Aktualizacje słowników” z „Zatwierdź” (zadanie w kolejce `RunDictionaryUpdate`, wynik albo błąd w prośbie) i „Odrzuć”.
 - Sidebar wiki: nagłówek z ikoną na kafelku jak w panelu powiadomień (nowa ikona `book-open`, Lucide), a pod wiki zadania TODO konta — pole „/todo:” zapisujące zadanie w tle i lista z polem wykonania; lista jest przypisana do konta, które ją zapisuje, i odświeża się w panelu powiadomień i w sidebarze naraz.
 - Zadanie TODO zapamiętuje adres strony, z której je zapisano (nagłówek `Referer`, `json_attributes.source_url`, `AccountTask::sourceUrl()`) — informacja dla wykonawcy poprawki, niepokazywana w interfejsie.
-- Wyszukiwarka w pasku teczki `x-admiro::folder-search`: pole wtopione w tło jak pole komend menu błyskawicy (lupa, pole, wyciszony Enter), wyszukujące na żywo (`js/live-search.js`).
+- Pole komend w pasku teczki `x-admiro::folder-search`: białe pole jak pole komend menu błyskawicy, z błyskawicą, która co 12 s drży jak piorun, „/” z komendą, polem i Enterem; domyślnie `szukaj:` (wyszukiwanie na żywo, `js/live-search.js`), a z `commandUrl` także komendy systemu, np. `todo:` (zapis zadania w tle).
 - Kafelek „Wiki” w narzędziach panelu kalendarza (obok ustawień) otwiera prawy sidebar wiki; zamiast pionowej zakładki przy prawej krawędzi — nieprzypięty sidebar nie zajmuje kolumny, a pinezka obok × przypina go na stałe.
 - Szybkie akcje teczek `x-admiro::folder-actions`: ikona błyskawicy za zakładkami teczek z „Zapisz” (formularz wybranej teczki) i „Anuluj”.
 - Wpisy wiki mogą mieć instrukcję „Jak korzystać” (`wiki.<klucz>.usage`).

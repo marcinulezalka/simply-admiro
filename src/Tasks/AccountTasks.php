@@ -26,7 +26,8 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Zapis zadań TODO konta strefy: nowe zadanie z komendy `todo:` (otwarte, z kolejnym numerem zgłoszenia konta
- * i adresem strony, z której je zapisano — AccountTask::SOURCE_URL) i przełączenie wykonania z listy zadań (wykonane ↔ otwarte, z chwilą wykonania).
+ * i adresem strony, z której je zapisano — AccountTask::SOURCE_URL), rozpoczęcie pracy nad zadaniem (w toku, jak
+ * w systemie ticketowym) i przełączenie wykonania z listy zadań (wykonane ↔ otwarte, z chwilą wykonania).
  */
 final readonly class AccountTasks
 {
@@ -56,7 +57,17 @@ final readonly class AccountTasks
     }
 
     /**
-     * Wykonane zadanie wraca do otwartych, każde inne staje się wykonane.
+     * Rozpoczęcie pracy nad zadaniem: stan „w toku” (Enums\TaskStatus::InProgress), bez chwili wykonania.
+     */
+    public function start(AccountTask $task): AccountTask
+    {
+        $task->forceFill(['status' => TaskStatus::InProgress, 'completed_at' => null])->save();
+
+        return $task;
+    }
+
+    /**
+     * Wykonane zadanie wraca do otwartych, każde inne (otwarte albo w toku) staje się wykonane.
      */
     public function toggleDone(AccountTask $task): AccountTask
     {

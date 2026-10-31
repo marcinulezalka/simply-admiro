@@ -9815,23 +9815,61 @@ body:has(#lock:target) .ss-security-lock {
     color: var(--ss-color-text);
 }
 
-/* Wyszukiwarka w pasku teczki (x-admiro::folder-search): pole komend bez własnego tła, wtopione w tło paska, z lupą. */
-.ss-command--search {
-    flex: 1 1 16rem;
-    max-width: 28rem;
+/* Pole komend w pasku teczki (x-admiro::folder-search): białe jak pole komend menu błyskawicy, po lewej błyskawica,
+   która co 12 s drży jak piorun (bez animacji przy prefers-reduced-motion). */
+.ss-command--folder {
+    flex: 1 1 18rem;
+    max-width: 32rem;
     padding-left: var(--ss-space-2);
-    background: transparent;
 }
 
-.ss-command__search-icon {
+.ss-command--folder .ss-command__list {
+    top: calc(100% + var(--ss-space-2));
+    bottom: auto;
+}
+
+.ss-command__zap {
     flex: none;
     width: 1rem;
     height: 1rem;
     color: var(--ss-color-muted);
+    transform-origin: 50% 40%;
+    animation: ss-command-zap 12s ease-in-out infinite;
 }
 
-.ss-command--search .ss-command__input::-webkit-search-cancel-button {
-    cursor: pointer;
+@keyframes ss-command-zap {
+    0%, 6%, 100% {
+        color: var(--ss-color-muted);
+        transform: none;
+    }
+
+    1% {
+        color: var(--ss-color-accent);
+        transform: translateX(-1px) rotate(-12deg) scale(1.15);
+    }
+
+    2% {
+        transform: translateX(1px) rotate(10deg) scale(1.15);
+    }
+
+    3% {
+        color: var(--ss-color-accent);
+        transform: translateX(-1px) rotate(-8deg) scale(1.1);
+    }
+
+    4% {
+        transform: translateX(1px) rotate(6deg);
+    }
+
+    5% {
+        transform: rotate(-3deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ss-command__zap {
+        animation: none;
+    }
 }
 
 /* Zapis komendy w tle (js/command-box.js, .ss-command[aria-busy="true"]): w miejscu strzałki Entera kręci się loader. */

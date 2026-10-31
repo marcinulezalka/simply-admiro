@@ -36,6 +36,7 @@ return [
     'search_find_empty' => 'Brak szybkich akcji.',
     'commands' => 'Komendy',
     'command_text' => 'Treść komendy',
+    'command_search_prefix' => 'szukaj:',
     'command_submit' => 'Wykonaj komendę',
     'tasks' => 'TODO',
     'tasks_empty' => 'Brak zadań. Dodaj je w menu szybkich akcji komendą todo:.',

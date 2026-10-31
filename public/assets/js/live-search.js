@@ -1,6 +1,6 @@
 /**
  * Wyszukiwanie na żywo (form[data-ss-live-search="<id wyników>"], np. języki w kreatorze onboardingu): pisanie w polu
- * (z opóźnieniem) pobiera stronę formularza z nowym zapytaniem i podmienia w niej tylko element wyników o podanym id,
+ * formularza — także stojącym poza nim i przypiętym atrybutem form, jak w x-admiro::folder-search — (z opóźnieniem) pobiera stronę formularza z nowym zapytaniem i podmienia w niej tylko element wyników o podanym id,
  * a adres w pasku przeglądarki dostaje to samo zapytanie (history.replaceState), więc odświeżenie i powrót po zapisie
  * przełącznika pokazują te same wyniki. Wysłanie formularza (Enter) też nie przeładowuje strony. Bez skryptu formularz
  * działa zwykłym GET. Osadzany inline z nonce CSP (x-admiro::scripts).
@@ -50,7 +50,11 @@
             }
         };
 
-        form.addEventListener('input', () => {
+        document.addEventListener('input', (event) => {
+            if (event.target?.form !== form) {
+                return;
+            }
+
             window.clearTimeout(timer);
             timer = window.setTimeout(refresh, DELAY);
         });

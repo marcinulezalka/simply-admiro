@@ -224,7 +224,7 @@ Wariant layoutu stref (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`, 
 
 **Szybkie akcje teczek** (`x-admiro::folder-actions`, `js/folder-actions.js`): sama ikona błyskawicy na pierwszym miejscu, przed zakładkami `.ss-folders`, jako dropdown (rozwinięte menu leży nad teczką) z „Zapisz” (wysyła formularz wybranej teczki oznaczony `form[data-ss-folder-form]`) i „Anuluj” (odnośnik `cancelUrl`, powrót bez zmian).
 
-**Wyszukiwarka w pasku teczki** (`x-admiro::folder-search`, `js/live-search.js`): w `.ss-folder__toolbar` pole wtopione w tło jak pole komend menu błyskawicy (`.ss-command--search`: przezroczysta pigułka z delikatną szarą obwódką, lupa, pole i wyciszony Enter); formularz GET (`action`, ukryte `params`, parametr `name`) podmienia na żywo tylko element wyników o id `results`.
+**Pole komend w pasku teczki** (`x-admiro::folder-search`, `js/live-search.js`, `js/command-box.js`): w `.ss-folder__toolbar` białe pole jak pole komend menu błyskawicy (`.ss-command--folder`): błyskawica, która co 12 s drży jak piorun (bez animacji przy `prefers-reduced-motion`), „/” z komendą, pole i wyciszony Enter. Domyślna komenda `szukaj:` to formularz GET (`action`, ukryte `params`, parametr `name`) podmieniający na żywo tylko element wyników o id `results`; z `commandUrl` „/” rozwija też komendy `Enums\QuickCommand` (np. `todo:`), a wybór przepina pole do formularza komend (atrybuty `form`, zapis w tle).
 
 **Wiki strony dodaje się wyłącznie w ramach sidebar-wiki**: slot `sidebar-wiki` w `x-admiro::zone.layout` (wpisy słownika `x-admiro::wiki-tip`, podpowiedzi do strony), nie w treści strony. Bez slotu panel pokazuje „Brak podpowiedzi dla tej strony.”.
 
