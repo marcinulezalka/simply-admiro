@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Pole komend teczki: „+” i przycisk błyskawicy jako jedna szara pigułka, akcje inne niż dodanie w dropdownie błyskawicy (slot `actions`, z prefiksem, np. `sync:`); wiki pustej teczki pod arkuszem (`.ss-folder__wiki`, `x-admiro::wiki-tip scope`).
+- Zadania TODO: stan „do sprawdzenia” (`TaskStatus::Check`, `AccountTasks::submitForCheck()`) z linkami do commitów (kolumna `json_commits` w `account_tasks`, migracja; na liście podpis `repozytorium@skrót`), a lista TODO ma dwa obszary z przełącznikiem: „Niezrealizowane” (otwarte i w toku) oraz „Do sprawdzenia i wdrożone” (do sprawdzenia i ostatnio wykonane).
 - Modal `x-admiro::dialog` (`js/dialog.js`, natywny `<dialog>`, otwierany odnośnikiem `data-ss-dialog-open`, ponownie po błędzie walidacji) i pusty stan teczki `x-admiro::folder-empty` (ikona `folder-open` z Lucide, tytuł, opis, akcja) zamiast „Brak.”; w polu komend teczki „+” z akcjami teczki (slot `add`), a błyskawica stoi w przycisku komendy w miejscu „/”.
 - Zadania TODO jak w systemie ticketowym: `AccountTasks::start()` ustawia stan „w toku”, a lista TODO pokazuje tylko niezrealizowane zadania (otwarte i w toku) — wykonane są ukryte.
 - Aktualizacje słowników po zatwierdzeniu administratora: strefy nie pobierają danych z zewnątrz, tylko proszą o aktualizację (`DictionaryUpdates\DictionaryUpdateRequests`, tabela `dictionary_update_requests`); paczki rejestrują słowniki jako `Contracts\DictionaryUpdater`, a panel admiro ma stronę „Aktualizacje słowników” z „Zatwierdź” (zadanie w kolejce `RunDictionaryUpdate`, wynik albo błąd w prośbie) i „Odrzuć”.
@@ -18,6 +20,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Pole komend teczki: dropdowny „+” i błyskawicy nie nachodzą na siebie — otwarcie jednego zamyka drugi, klik obok zamyka oba; zakładki w treści wstawionej skryptem (odświeżona lista TODO) działają (`ss:content`, `js/tabs.js`).
 - Casty modeli na PHP 8.4: `HasStandardColumns` dokłada już tylko casty kolumn, których model sam nie podaje. PHP 8.4 uruchamia ten trait po `HasAttributes`, więc nadpisywał casty modelu (np. `status` zadania TODO był tekstem zamiast `TaskStatus`, a oznaczenie zadania jako wykonanego kończyło się błędem).
 - Szybkie akcje teczek `x-admiro::folder-actions`: błyskawica stoi na pierwszym miejscu, przed zakładkami, a jej menu „Zapisz” / „Anuluj” rozwija się nad teczką (wcześniej teczka je zakrywała).
 - Komenda `todo:` zapisuje zadanie: menu „+” w layoucie stref nie dostaje już ukrytej kopii pola komend (przez `@include` przechodził do niego adres komend, a skrypt brał puste pole kopii i nic nie wysyłał), a skrypt bierze pole z sekcji przycisku, który wysłał formularz. Kafelek „Wiki” wysuwa nieprzypięty sidebar — reguła stanu otwartego przegrywała specyficznością z regułą ukrycia, więc panel i jego pole „/todo:” zostawały poza ekranem.

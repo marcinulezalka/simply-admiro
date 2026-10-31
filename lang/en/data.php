@@ -170,6 +170,7 @@ return [
         'project' => 'Project',
         'customer' => 'Customer',
         'completed_at' => 'Completed',
+        'json_commits' => 'Commits',
     ],
 
     'legal_document' => [

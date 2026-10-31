@@ -1,13 +1,14 @@
-{{-- Wpis słownika pojęć (Wiki\Wiki) jako alert informacyjny (.ss-wiki-tip, role="note"): ikona pojęcia na kafelku, znacznik z prefiksem (np. wiki-organizacja, krojem mono — także id elementu, więc wpis ma kotwicę), słowo kluczowe, przy wpisie Q&A pytanie (definicja jest odpowiedzią), definicja, przykład w ramce i — gdy wpis ją ma — instrukcja „Jak korzystać”. term: klucz wpisu bez prefiksu (np. organizacja); nieznany klucz — nic. --}}
-@props(['term'])
+{{-- Wpis słownika pojęć (Wiki\Wiki) jako alert informacyjny (.ss-wiki-tip, role="note"): ikona pojęcia na kafelku, znacznik z prefiksem (np. wiki-organizacja, krojem mono — także id elementu, więc wpis ma kotwicę), słowo kluczowe, przy wpisie Q&A pytanie (definicja jest odpowiedzią), definicja, przykład w ramce i — gdy wpis ją ma — instrukcja „Jak korzystać”. term: klucz wpisu bez prefiksu (np. organizacja); nieznany klucz — nic.  scope: ?string — gdy ten sam wpis stoi drugi raz na stronie (np. w sidebarze i w pustej teczce), id dostaje przyrostek `-<scope>`.--}}
+@props(['term', 'scope' => null])
 @php($entry = app(\Simplysmart\Admiro\Wiki\Wiki::class)->entry($term))
 @if ($entry !== null)
-    <aside {{ $attributes->class(['ss-wiki-tip']) }} id="{{ $entry->id() }}" role="note" aria-labelledby="{{ $entry->id() }}-term">
+    @php($anchor = $entry->id() . ($scope === null ? '' : '-' . $scope))
+    <aside {{ $attributes->class(['ss-wiki-tip']) }} id="{{ $anchor }}" role="note" aria-labelledby="{{ $anchor }}-term">
         <x-admiro::icon :name="$entry->icon" class="ss-icon--tile ss-wiki-tip__icon" />
         <div class="ss-wiki-tip__body">
             <p class="ss-wiki-tip__head">
                 <span class="ss-wiki-tip__tag"><x-admiro::icon name="info" class="ss-wiki-tip__tag-icon" />{{ $entry->id() }}</span>
-                <strong class="ss-wiki-tip__term" id="{{ $entry->id() }}-term">{{ $entry->term }}</strong>
+                <strong class="ss-wiki-tip__term" id="{{ $anchor }}-term">{{ $entry->term }}</strong>
             </p>
             @if ($entry->question !== null)
                 <p class="ss-wiki-tip__question"><span class="ss-wiki-tip__qa" aria-hidden="true">Q</span>{{ $entry->question }}</p>

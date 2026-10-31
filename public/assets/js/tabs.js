@@ -3,12 +3,18 @@
  * skryptu, wtedy wszystkie panele są widoczne jeden pod drugim) z przyciskami [data-ss-tab] (role="tab",
  * aria-controls) przełącza panele [data-ss-tab-panel]: wybrany ma aria-selected="true", pozostałe panele dostają
  * hidden. Liczbę zakładek i numer wybranej skrypt podaje w --ss-tab-count i --ss-tab-index listy, a CSS przesuwa po
- * nich wskaźnik (.ss-tabs--slider). Strzałki w lewo i w prawo, Home i End zmieniają zakładkę, a kotwica panelu w adresie
+ * nich wskaźnik (.ss-tabs--slider). Zakładki we wstawionej później treści (zdarzenie `ss:content` na wstawionym
+ * elemencie, np. odświeżona lista TODO z js/command-box.js) też są uruchamiane, każde [data-ss-tabs] raz. Strzałki w lewo i w prawo, Home i End zmieniają zakładkę, a kotwica panelu w adresie
  * albo kliknięty odnośnik `#<id panelu>` (np. „Import” w menu) wybiera jego zakładkę. Osadzany inline
  * z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const init = (root) => {
+        if (root.dataset.ssTabsReady === '1') {
+            return;
+        }
+
+        root.dataset.ssTabsReady = '1';
         const list = root.querySelector('[data-ss-tabs-list]');
         const tabs = list ? [...list.querySelectorAll('[data-ss-tab]')] : [];
 
@@ -78,6 +84,14 @@
     };
 
     const start = () => document.querySelectorAll('[data-ss-tabs]').forEach(init);
+
+    document.addEventListener('ss:content', (event) => {
+        const root = event.target instanceof Element ? event.target : null;
+
+        if (root) {
+            [root, ...root.querySelectorAll('[data-ss-tabs]')].filter((element) => element.matches('[data-ss-tabs]')).forEach(init);
+        }
+    });
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', start);

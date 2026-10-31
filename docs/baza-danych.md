@@ -380,7 +380,7 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
 
 | Tabela | Model | Kolumny |
 | --- | --- | --- |
-| `account_tasks` | `AccountTask` | standardowe (`name` — nazwa zadania, `status` — stan dziedzinowy `Enums\TaskStatus`: `open`, `in_progress`, `done`); `zone` i `account_id` (konto w tabeli kont strefy, bez klucza obcego), `issue` (kolejny numer zgłoszenia konta, unikalny z kontem, nie powtarza się po usunięciu), `title`, `description`, `due_on` (termin), `delay_days` (opóźnienie w dniach), `project`, `customer`, `completed_at` |
+| `account_tasks` | `AccountTask` | standardowe (`name` — nazwa zadania, `status` — stan dziedzinowy `Enums\TaskStatus`: `open`, `in_progress`, `check` — do sprawdzenia, `done`); `zone` i `account_id` (konto w tabeli kont strefy, bez klucza obcego), `issue` (kolejny numer zgłoszenia konta, unikalny z kontem, nie powtarza się po usunięciu), `title`, `description`, `due_on` (termin), `delay_days` (opóźnienie w dniach), `project`, `customer`, `completed_at`; `json_commits` — linki do commitów realizujących zadanie (lista, jeden na repozytorium, `AccountTasks::submitForCheck()`) |
 
 - Zadania zapisuje tylko `Tasks\AccountTasks` (`add()` z komendy `todo:`, `toggleDone()` z listy zadań), czyta
   `Queries\Tasks\AccountTaskList` — zawsze w obrębie strefy i konta (zadanie innego konta → 404).

@@ -9820,7 +9820,6 @@ body:has(#lock:target) .ss-security-lock {
 .ss-command--folder {
     flex: 1 1 18rem;
     max-width: 32rem;
-    padding-left: var(--ss-space-2);
 }
 
 .ss-command--folder .ss-command__list {
@@ -9870,6 +9869,45 @@ body:has(#lock:target) .ss-security-lock {
     .ss-command__zap {
         animation: none;
     }
+}
+
+/* „+” i przycisk komendy pola teczki jako jedna szara pigułka: wspólne tło, przyciski bez własnego tła. */
+.ss-command__group {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-command__group .ss-command__add-toggle,
+.ss-command__group .ss-command__toggle {
+    background: transparent;
+}
+
+.ss-command__group .ss-command__add-toggle:hover,
+.ss-command__group .ss-command__add[open] > .ss-command__add-toggle,
+.ss-command__group .ss-command__toggle:hover,
+.ss-command__group .ss-command__picker[open] > .ss-command__toggle {
+    background: var(--ss-color-border);
+}
+
+.ss-command__group > .ss-command__zap {
+    margin: 0 var(--ss-space-2);
+}
+
+/* Akcje teczki w dropdownie błyskawicy (slot actions): przyciski formularzy w wyglądzie opcji komendy. */
+.ss-command__list form {
+    margin: 0;
+}
+
+button.ss-command__option {
+    width: 100%;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
 }
 
 /* Błyskawica w przycisku komendy pola teczki zamiast „/”. */
@@ -10030,6 +10068,14 @@ body:has(#lock:target) .ss-security-lock {
     overflow-y: auto;
 }
 
+/* Wiki pustej teczki: osobny kontener pod kropkowanym arkuszem (.ss-folder__body), nad stopką teczki. */
+.ss-folder__wiki {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    padding: var(--ss-space-3) var(--ss-space-4) 0;
+}
+
 /**
  * .ss-folder-empty — pusty stan teczki (x-admiro::folder-empty): pośrodku duża ikona na miękkim kole, tytuł, opis
  * i akcja (np. odnośnik otwierający modal dodania).
@@ -10162,6 +10208,43 @@ body:has(#lock:target) .ss-security-lock {
     font-family: var(--ss-font-mono);
 }
 
+/* Dwa obszary listy TODO (x-admiro::app.tasks): niezrealizowane oraz do sprawdzenia i wdrożone, przełączane suwakiem;
+   każdy obszar przewija się sam. */
+.ss-tasks__areas {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    min-height: 0;
+}
+
+.ss-tasks__area {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.ss-tasks__area[hidden] {
+    display: none;
+}
+
+.ss-tasks__tabs .ss-tabs__link {
+    gap: var(--ss-space-1);
+    font-size: 0.75rem;
+}
+
+.ss-tasks__tab-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-tasks__tab-count {
+    font-family: var(--ss-font-mono);
+    color: var(--ss-color-muted);
+}
+
 .ss-tasks__list {
     flex: 1;
     min-height: 0;
@@ -10240,6 +10323,25 @@ body:has(#lock:target) .ss-security-lock {
 
 .ss-task__description {
     color: var(--ss-color-muted);
+}
+
+.ss-task__commits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1) var(--ss-space-3);
+    font-family: var(--ss-font-mono, ui-monospace, monospace);
+    font-size: 0.75rem;
+}
+
+.ss-task__commit {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    color: var(--ss-color-muted);
+}
+
+.ss-task__commit:hover {
+    color: var(--ss-color-text);
 }
 
 .ss-task__meta {

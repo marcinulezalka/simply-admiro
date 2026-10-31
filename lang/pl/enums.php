@@ -26,6 +26,7 @@ return [
     'task_status' => [
         'open' => 'Otwarte',
         'in_progress' => 'W toku',
+        'check' => 'Do sprawdzenia',
         'done' => 'Wykonane',
     ],
 

@@ -22,6 +22,7 @@ use Simplysmart\Admiro\Enums\TaskStatus;
  * dziedzinowy, nie RecordStatus), nazwa (`name`, wpisana po `todo:`), tytuł, opis, termin (`due_on`), opóźnienie
  * w dniach (`delay_days`), projekt, klient i chwila wykonania (`completed_at`). `json_attributes.source_url`
  * (SOURCE_URL) — adres strony, z której zadanie zapisano: informacja dla wykonawcy poprawki, niepokazywana w UI.
+ * `json_commits` (COMMITS, commits()) — linki do commitów realizujących zadanie, wpisane przy przekazaniu do sprawdzenia.
  * Zapis tylko przez Tasks\AccountTasks, odczyt przez Queries\Tasks\AccountTaskList.
  *
  * @property string $zone
@@ -35,10 +36,14 @@ use Simplysmart\Admiro\Enums\TaskStatus;
  * @property string|null $project
  * @property string|null $customer
  * @property Carbon|null $completed_at
+ * @property list<string>|null $json_commits
  */
 final class AccountTask extends DataModel
 {
     public const string TABLE = 'account_tasks';
+
+    /** Kolumna z linkami do commitów, które realizują zadanie (lista adresów, jeden na repozytorium). */
+    public const string COMMITS = 'json_commits';
 
     /** Klucz `json_attributes` z adresem strony, z której zadanie zapisano. */
     public const string SOURCE_URL = 'source_url';
@@ -66,6 +71,16 @@ final class AccountTask extends DataModel
     }
 
     /**
+     * Linki do commitów realizujących zadanie (COMMITS); pusta lista, gdy ich nie ma.
+     *
+     * @return list<string>
+     */
+    public function commits(): array
+    {
+        return array_values(array_filter($this->json_commits ?? [], is_string(...)));
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
@@ -82,6 +97,7 @@ final class AccountTask extends DataModel
             'project' => 'string',
             'customer' => 'string',
             'completed_at' => 'datetime',
+            self::COMMITS => 'array',
         ];
     }
 }

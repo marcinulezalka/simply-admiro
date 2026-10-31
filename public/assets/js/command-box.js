@@ -9,7 +9,7 @@
  * z `Accept: application/json`): na czas zapisu pole ma aria-busy — strzałka Entera zmienia się w loader, a pole
  * i przycisk są zablokowane —, po zapisie pole jest puste z kursorem na kolejne zadanie, lista TODO w panelu
  * powiadomień i w sidebarze ([data-ss-tasks] — każda w swoim zakresie, z `lists` odpowiedzi) zostaje podmieniona na
- * odświeżoną, a komunikat trafia do [data-ss-command-status]. Błąd
+ * odświeżoną (zdarzenie `ss:content` uruchamia w niej zakładki obszarów, js/tabs.js), a komunikat trafia do [data-ss-command-status]. Błąd
  * zapisu albo walidacji wysyła formularz zwykłą drogą (przeładowanie z komunikatem). Bez skryptu zaznaczona zostaje
  * domyślna komenda, a formularz wysyła się zwykłą drogą. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
@@ -118,6 +118,7 @@
                         button.hidden = true;
                     });
                     tasks.replaceWith(fresh);
+                    fresh.dispatchEvent(new CustomEvent('ss:content', { bubbles: true }));
                 }
             });
 

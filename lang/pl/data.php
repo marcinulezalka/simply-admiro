@@ -170,6 +170,7 @@ return [
         'project' => 'Projekt',
         'customer' => 'Klient',
         'completed_at' => 'Wykonano',
+        'json_commits' => 'Commity',
     ],
 
     'legal_document' => [
