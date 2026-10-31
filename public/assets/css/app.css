@@ -4036,7 +4036,7 @@ textarea.ss-input {
     bottom: 20%;
     width: 3px;
     border-radius: var(--ss-radius-pill);
-    background: var(--ss-color-border-strong, var(--ss-color-muted));
+    background: var(--ss-color-border-strong);
     content: "";
 }
 
@@ -10305,7 +10305,7 @@ button.ss-command__option {
 }
 
 /* Przełącznik układu listy w pigułce pola teczki (layouts x-admiro::folder-search, js/folder-layout.js): ikona układu,
-   na który przełącza — siatka przy liście, lista przy siatce. */
+   na który przełącza (data-ss-layout-next) — siatka przy liście, drzewo albo lista przy siatce, lista przy drzewie. */
 .ss-command__layout {
     display: inline-flex;
     flex: none;
@@ -10339,8 +10339,9 @@ button.ss-command__option {
     height: 1rem;
 }
 
-.ss-command__layout[aria-pressed="true"] .ss-command__layout-icon--grid,
-.ss-command__layout[aria-pressed="false"] .ss-command__layout-icon--list {
+.ss-command__layout:not([data-ss-layout-next="grid"]) .ss-command__layout-icon--grid,
+.ss-command__layout:not([data-ss-layout-next="list"]) .ss-command__layout-icon--list,
+.ss-command__layout:not([data-ss-layout-next="tree"]) .ss-command__layout-icon--tree {
     display: none;
 }
 
@@ -10365,6 +10366,86 @@ button.ss-command__option {
 .ss-record-rows[data-ss-layout="grid"] > .ss-folder-empty,
 .ss-record-rows[data-ss-layout="grid"] > .ss-record-row--muted {
     grid-column: 1 / -1;
+}
+
+/* Wiersze teczki w układzie drzewa (tree x-admiro::folder-search): jedna tabela z cienkimi liniami między wierszami,
+   wcięcie poziomu z data-ss-depth="1|2|3" z łącznikiem drzewa, wiersze rodziców tylko dla drzewa (.ss-record-row--tree)
+   i fakty tylko dla drzewa (__fact--tree, np. rodzic wpisu); poza drzewem obie klasy są ukryte. */
+.ss-record-rows:not([data-ss-layout="tree"]) > .ss-record-row--tree,
+.ss-record-rows:not([data-ss-layout="tree"]) .ss-record-row__fact--tree {
+    display: none;
+}
+
+.ss-record-rows[data-ss-layout="tree"] {
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
+.ss-record-rows[data-ss-layout="tree"] > .ss-record-row {
+    flex-wrap: nowrap;
+    border: 0;
+    border-bottom: 1px solid var(--ss-color-border);
+    border-radius: 0;
+}
+
+.ss-record-rows[data-ss-layout="tree"] > .ss-record-row:last-child {
+    border-bottom: 0;
+}
+
+.ss-record-rows[data-ss-layout="tree"] > .ss-record-row--tree:not([data-ss-depth]) {
+    background: var(--ss-color-surface-muted);
+}
+
+.ss-record-rows[data-ss-layout="tree"] .ss-record-row__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ss-record-rows[data-ss-layout="tree"] .ss-record-row__details {
+    display: none;
+}
+
+.ss-record-rows[data-ss-layout="tree"] > [data-ss-depth] > .ss-record-row__main {
+    position: relative;
+}
+
+.ss-record-rows[data-ss-layout="tree"] > [data-ss-depth] > .ss-record-row__main::before {
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-top: -0.75rem;
+    border-bottom: 1px solid var(--ss-color-border-strong);
+    border-left: 1px solid var(--ss-color-border-strong);
+    content: "";
+}
+
+.ss-record-rows[data-ss-layout="tree"] > [data-ss-depth="1"] {
+    padding-left: calc(var(--ss-space-4) + 0.5rem);
+}
+
+.ss-record-rows[data-ss-layout="tree"] > [data-ss-depth="2"] {
+    padding-left: calc(var(--ss-space-4) + 2.25rem);
+}
+
+.ss-record-rows[data-ss-layout="tree"] > [data-ss-depth="3"] {
+    padding-left: calc(var(--ss-space-4) + 4rem);
+}
+
+.ss-record-rows[data-ss-layout="tree"] > .ss-folder-empty,
+.ss-record-rows[data-ss-layout="tree"] > .ss-record-row--muted {
+    border-bottom: 0;
+}
+
+@media (max-width: 47.999rem) {
+    .ss-record-rows[data-ss-layout="tree"] > .ss-record-row {
+        flex-wrap: wrap;
+    }
+
+    .ss-record-rows[data-ss-layout="tree"] .ss-record-row__facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 /* „+” z akcjami teczki (slot add x-admiro::folder-search): okrągły przycisk na początku pola, menu pod nim. */

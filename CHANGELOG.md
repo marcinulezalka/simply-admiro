@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Pole komend teczki `x-admiro::folder-search` z `tree`: trzeci układ „drzewo” po liście i siatce (ikona `sitemap`) — wiersze `.ss-record-rows` jako jedna tabela z wcięciem poziomu (`data-ss-depth`) i łącznikiem drzewa; wiersze rodziców `.ss-record-row--tree` i fakty `.ss-record-row__fact--tree` (np. „Nadrzędna”) widać tylko w drzewie.
 - Szablon karty statystyki pulpitu `x-admiro::stat-card` (`.ss-stat-card`): ikona na kafelku i nazwa (opcjonalnie odnośnik i akcje), w panelu z odcieniem tonu duża liczba z jednostką i pigułką trendu, opis, miernik od niskiego do wysokiego (wypełnienie w ukośne paski) albo słupki z wyróżnionym bieżącym, wariant wypełniony tonem; poziomy wypełnienia z `View\StatLevel` bez stylów inline. Sekcja „Karty statystyk” na stronie design systemu, pulpit demo na nowych kartach, opis w `docs/design-system.md`.
 - Pole komend teczki `x-admiro::folder-search` z `layouts`: w pigułce między „+” a błyskawicą przełącznik układu lista ↔ siatka (`js/folder-layout.js`, wybór zapamiętany w przeglądarce, wiersze `.ss-record-rows` jako karty w siatce).
 - Lista TODO: kliknięcie nazwy zadania otwiera modal edycji nazwy, tytułu i opisu (`account.tasks.update`, `AccountTasks::edit()`); stan i numer zgłoszenia zostają.

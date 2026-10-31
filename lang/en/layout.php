@@ -80,6 +80,8 @@ return [
     'folder_layout' => 'List layout',
     'folder_layout_list' => 'Show as a list',
     'folder_layout_grid' => 'Show as a grid',
+    'folder_layout_tree' => 'Show as a tree',
+    'folder_tree_parent' => 'Parent',
     'sidebar_wiki' => 'Wiki and tips',
     'sidebar_wiki_open' => 'Show wiki and tips',
     'sidebar_wiki_pin' => 'Pin the panel',

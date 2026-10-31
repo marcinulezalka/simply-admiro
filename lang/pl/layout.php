@@ -80,6 +80,8 @@ return [
     'folder_layout' => 'Układ listy',
     'folder_layout_list' => 'Pokaż jako listę',
     'folder_layout_grid' => 'Pokaż jako siatkę',
+    'folder_layout_tree' => 'Pokaż jako drzewo',
+    'folder_tree_parent' => 'Nadrzędna',
     'sidebar_wiki' => 'Wiki i podpowiedzi',
     'sidebar_wiki_open' => 'Pokaż wiki i podpowiedzi',
     'sidebar_wiki_pin' => 'Przypnij panel',
