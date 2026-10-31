@@ -1,4 +1,4 @@
-{{-- Gotowy widok: pulpit modułu (statystyki w kartach, ostatnie rekordy, zadania). $view: DesignSystemView, $invoices: list<DemoInvoice>. --}}
+{{-- Gotowy widok: pulpit modułu (statystyki w kartach x-admiro::stat-card, ostatnie rekordy, zadania). $view: DesignSystemView, $invoices: list<DemoInvoice>. --}}
 @php
     use Simplysmart\Admiro\View\Demo\DemoInvoices;
     use Simplysmart\Admiro\View\Demo\DemoInvoiceStatus;
@@ -10,6 +10,8 @@
         'overdue' => local_number(count($overdue)),
         'month' => local_money(array_sum(array_map(static fn ($invoice): float => $invoice->net, $month)), DemoInvoices::CURRENCY),
     ];
+    $icons = ['open' => 'invoice', 'overdue' => 'calendar', 'month' => 'activity'];
+    $tones = ['open' => 'info', 'overdue' => 'danger', 'month' => 'success'];
 @endphp
 <x-admiro::design-system.shell :view="$view" module="dashboard" :title="text('design_system.demo.greeting')" :meta="text('design_system.demo.today', ['date' => local_date(DemoInvoices::TODAY)])">
     <x-slot:actions>
@@ -18,11 +20,7 @@
 
     <div class="ss-grid ss-grid--3">
         @foreach ($stats as $key => $value)
-            <section class="ss-card ss-stat">
-                <h2 class="ss-stat__label">{{ text('design_system.demo.stats.' . $key) }}</h2>
-                <p class="ss-stat__value">{{ $value }}</p>
-                <p class="ss-stat__note">{{ text('design_system.demo.stat_note.' . $key) }}</p>
-            </section>
+            <x-admiro::stat-card :label="text('design_system.demo.stats.' . $key)" :icon="$icons[$key]" :tone="$tones[$key]" :value="$value" :note="text('design_system.demo.stat_note.' . $key)" />
         @endforeach
     </div>
 

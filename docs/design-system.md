@@ -294,6 +294,32 @@ logowania i strony błędów to podglądy prawdziwych plików produkcyjnych (`ad
 logowanie na pierwszej strefie z logowaniem, z jej ustawieniami, błędami pól i stanami wariantów (`keypadOpen`,
 `recoveryOpen`, `codePending`; `View\DesignSystem\SignInPreviews`).
 
+### Karty statystyk
+
+Statystyki pulpitów i kolumn bocznych pokazujemy w szablonie `x-admiro::stat-card` (`.ss-stat-card`; próbki w sekcji
+„Karty statystyk” strony design systemu). Wygląd: Clean & Soft — jedna liczba na kartę, dużo powietrza, kolor tylko
+jako ton statystyki.
+
+- **Budowa:** karta z większym promieniem (`--ss-radius-card` × 1,5), ramką i bez cienia; u góry kafelek z ikoną
+  w kolorze tonu i nazwa (`label`; z `href` odnośnik ze strzałką), po prawej opcjonalne akcje (slot `actions`, np.
+  okrągły „+”); pod nimi panel — karta w karcie z zagnieżdżonym promieniem i delikatnym odcieniem tonu — z dużą liczbą
+  (`value`, 2,5rem, cyfry tabelaryczne, ciasny odstęp liter), jednostką (`unit`, mniejsza, wyciszona, przy górze
+  liczby) i pigułką trendu (`trend`, np. „+12%”: biała pigułka z tekstem w kolorze tonu), a pod liczbą opis (`note`).
+- **Ton** (`tone`): `accent` (domyślny), `success`, `warning`, `danger`, `info` — koloruje kafelek, odcień panelu,
+  trend, miernik i bieżący słupek; dobieramy go do znaczenia liczby (np. brak przydziału — `warning`, gdy jest
+  co poprawić), nie dla ozdoby.
+- **Miernik** (`meter`: `value`, `max`, podpisy `low`/`high`): pasek od niskiego do wysokiego — wypełniona część
+  w gradiencie tonu w ukośne paski z poświatą i wartością w lewym dolnym rogu, za pionową kreską reszta (wyciszona)
+  z maksimum w prawym; `role="meter"`.
+- **Słupki** (`bars`: `values`, `labels`, `current`, `label`): krótka seria (np. dni tygodnia, działy) — słupki
+  wyciszone, bieżący (domyślnie ostatni) w gradiencie tonu z poświatą; podpis wartości w `title`, całość `role="img"`.
+- **Wypełniona** (`filled`): panel w gradiencie tonu z tekstem w kolorze powierzchni — tylko jedna wyróżniona
+  statystyka na widok (np. prognoza).
+- **Bez stylów inline (CSP):** szerokość wypełnienia i wysokość słupków to `data-ss-level` z `View\StatLevel`
+  (procent co 5), zamieniany w CSS na `--ss-level`.
+- Karty układamy w `.ss-grid` albo jedną pod drugą w wąskiej kolumnie; dodatkowa treść (np. lista) trafia do slotu
+  pod liczbą. Stara klasa `.ss-stat` zostaje tylko dla prostych liczb w `.ss-card`.
+
 ### Pola, maski i awatary
 
 - **Pole** `x-admiro::input`: etykieta nad polem, subtelna ikona w tle po lewej (przygaszona, pełna przy
@@ -529,7 +555,7 @@ i `.ss-avatar`), `.ss-module-nav` (aktywna pozycja przez `aria-current="page"`),
 `x-admiro::pagination` (poprzednia/następna, „Strona X z Y”; przy jednej stronie nic), podpis odręczny
 `x-admiro::signature-pad` (płótno, obraz PNG w ukrytym polu, „Wyczyść”; skrypt raz na stronę), plakietka jako przycisk
 (`button.ss-badge`, np. odebranie roli),
-`.ss-grid` (`--3`, `--wide`), `.ss-stat`, `.ss-list`, `.ss-table`, `.ss-pairs`, `.ss-form-layout`,
+`.ss-grid` (`--3`, `--wide`), `.ss-stat` (proste liczby; statystyki pulpitu — `x-admiro::stat-card`, wyżej), `.ss-list`, `.ss-table`, `.ss-pairs`, `.ss-form-layout`,
 `.ss-form-actions`, `.ss-form-row`, `.ss-fieldset`, `.ss-choices` z `.ss-choice` (wybór jednej opcji jako
 pigułki), `.ss-grid--4`, `.ss-card__title--inset`, `.ss-table--grid`, `.ss-table__sub`, `.ss-icon-button`,
 `.ss-shell`, `.ss-sidebar`, `.ss-tabs` (zakładki sekcji, bieżąca przez `aria-current`), `.ss-card__footer`,

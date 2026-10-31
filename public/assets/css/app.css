@@ -3822,6 +3822,380 @@ textarea.ss-input {
     font-size: 0.75rem;
 }
 
+/*
+ * .ss-stat-card — karta statystyki pulpitu (x-admiro::stat-card). Ton (--accent, --success, --warning, --danger,
+ * --info) ustawia --ss-stat-tone: kafelek ikony, odcień panelu, pigułkę trendu, miernik i bieżący słupek. Karta
+ * z większym promieniem niż zwykła, bez cienia; w niej panel (karta w karcie) z odcieniem tonu i dużą liczbą.
+ * --filled: panel wypełniony gradientem tonu, tekst w kolorze powierzchni (kontrast w obu motywach).
+ * Wypełnienie miernika i słupków: [data-ss-level] → --ss-level (View\StatLevel, co 5%).
+ */
+.ss-stat-card {
+    --ss-stat-tone: var(--ss-color-accent);
+    --ss-stat-radius: calc(var(--ss-radius-card) * 1.5);
+    --ss-stat-panel: color-mix(in srgb, var(--ss-stat-tone) 6%, var(--ss-color-surface));
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    min-width: 0;
+    margin: 0;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-stat-radius);
+    background: var(--ss-color-surface);
+}
+
+.ss-stat-card--success {
+    --ss-stat-tone: var(--ss-color-success);
+}
+
+.ss-stat-card--warning {
+    --ss-stat-tone: var(--ss-color-warning);
+}
+
+.ss-stat-card--danger {
+    --ss-stat-tone: var(--ss-color-danger);
+}
+
+.ss-stat-card--info {
+    --ss-stat-tone: var(--ss-color-info);
+}
+
+.ss-stat-card__head {
+    display: flex;
+    align-items: center;
+    gap: var(--ss-space-2);
+    min-height: 2rem;
+    padding: var(--ss-space-1) var(--ss-space-2) 0;
+}
+
+.ss-stat-card__icon-tile {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid color-mix(in srgb, var(--ss-stat-tone) 18%, transparent);
+    border-radius: var(--ss-radius-control);
+    background: color-mix(in srgb, var(--ss-stat-tone) 10%, var(--ss-color-surface));
+    color: var(--ss-stat-tone);
+}
+
+.ss-stat-card__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ss-stat-card__label {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ss-color-text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ss-stat-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ss-space-1);
+    color: inherit;
+    text-decoration: none;
+}
+
+.ss-stat-card__link:hover .ss-stat-card__link-icon {
+    transform: translateX(2px);
+}
+
+.ss-stat-card__link:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+    border-radius: var(--ss-radius-control);
+}
+
+.ss-stat-card__link-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    color: var(--ss-color-muted);
+    transition: transform 0.15s ease;
+}
+
+.ss-stat-card__actions {
+    display: inline-flex;
+    flex: none;
+    gap: var(--ss-space-1);
+}
+
+.ss-stat-card__panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    padding: var(--ss-space-4);
+    border-radius: calc(var(--ss-stat-radius) - var(--ss-space-2));
+    background:
+        radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--ss-stat-tone) 8%, transparent), transparent 60%),
+        var(--ss-stat-panel);
+}
+
+.ss-stat-card__figure {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--ss-space-1) var(--ss-space-2);
+    margin: 0;
+}
+
+.ss-stat-card__value {
+    color: var(--ss-color-text);
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.ss-stat-card__unit {
+    padding-top: 0.25rem;
+    color: var(--ss-color-muted);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.ss-stat-card__trend {
+    align-self: center;
+    margin-left: auto;
+    padding: 0.125rem var(--ss-space-2);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-raised);
+    color: var(--ss-stat-tone);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.ss-stat-card__note {
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+/* Miernik od niskiego do wysokiego: wypełnienie w ukośne paski z wartością, kreska i reszta z maksimum. */
+.ss-stat-card__meter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    margin-top: var(--ss-space-1);
+}
+
+.ss-stat-card__meter-scale {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.75rem;
+}
+
+.ss-stat-card__meter-track {
+    display: flex;
+    gap: 0.625rem;
+    height: 3rem;
+}
+
+.ss-stat-card__meter-fill,
+.ss-stat-card__meter-rest {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-width: 0;
+    padding: var(--ss-space-1) var(--ss-space-2);
+    border-radius: var(--ss-radius-control);
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.ss-stat-card__meter-fill {
+    flex: 0 0 max(2.75rem, calc(var(--ss-level) - 0.3125rem));
+    background:
+        repeating-linear-gradient(115deg, color-mix(in srgb, var(--ss-color-surface) 16%, transparent) 0 1px, transparent 1px 9px),
+        linear-gradient(135deg, var(--ss-stat-tone), color-mix(in srgb, var(--ss-stat-tone) 72%, var(--ss-color-surface)));
+    box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--ss-stat-tone) 55%, transparent);
+    color: var(--ss-color-surface);
+}
+
+.ss-stat-card__meter-fill::after {
+    position: absolute;
+    top: 20%;
+    right: -0.4375rem;
+    bottom: 20%;
+    width: 3px;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-border-strong, var(--ss-color-muted));
+    content: "";
+}
+
+.ss-stat-card__meter-rest {
+    flex: 1 1 0;
+    justify-content: flex-end;
+    background: color-mix(in srgb, var(--ss-color-muted) 12%, var(--ss-color-surface));
+    color: var(--ss-color-muted);
+}
+
+.ss-stat-card__meter-track[data-ss-level="100"] .ss-stat-card__meter-rest {
+    display: none;
+}
+
+.ss-stat-card__meter-track[data-ss-level="100"] .ss-stat-card__meter-fill {
+    flex: 1 1 auto;
+}
+
+.ss-stat-card__meter-track[data-ss-level="100"] .ss-stat-card__meter-fill::after {
+    display: none;
+}
+
+/* Słupki: wyciszone, bieżący w gradiencie tonu z poświatą. */
+.ss-stat-card__bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.375rem;
+    height: 4rem;
+    margin: var(--ss-space-1) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-stat-card__bar {
+    flex: 1 1 0;
+    min-width: 0.375rem;
+    max-width: 2rem;
+    height: max(0.25rem, var(--ss-level));
+    border-radius: 0.375rem 0.375rem 0.125rem 0.125rem;
+    background: color-mix(in srgb, var(--ss-stat-tone) 14%, var(--ss-color-surface));
+}
+
+.ss-stat-card__bar--current {
+    background: linear-gradient(to top, var(--ss-stat-tone), color-mix(in srgb, var(--ss-stat-tone) 55%, var(--ss-color-surface)));
+    box-shadow: 0 0 14px color-mix(in srgb, var(--ss-stat-tone) 40%, transparent);
+}
+
+/* Panel wypełniony tonem (np. wyróżniona statystyka): tekst w kolorze powierzchni. */
+.ss-stat-card--filled .ss-stat-card__panel {
+    background:
+        radial-gradient(90% 80% at 0% 0%, color-mix(in srgb, var(--ss-color-surface) 22%, transparent), transparent 55%),
+        linear-gradient(150deg, var(--ss-stat-tone), color-mix(in srgb, var(--ss-stat-tone) 80%, var(--ss-color-text)));
+    color: var(--ss-color-surface);
+}
+
+.ss-stat-card--filled .ss-stat-card__value,
+.ss-stat-card--filled .ss-stat-card__unit,
+.ss-stat-card--filled .ss-stat-card__note {
+    color: inherit;
+}
+
+.ss-stat-card--filled .ss-stat-card__unit,
+.ss-stat-card--filled .ss-stat-card__note {
+    opacity: 0.85;
+}
+
+.ss-stat-card--filled .ss-stat-card__bar {
+    background: color-mix(in srgb, var(--ss-color-surface) 28%, transparent);
+}
+
+.ss-stat-card--filled .ss-stat-card__bar--current {
+    background: var(--ss-color-surface);
+}
+
+/* Poziomy wypełnienia (View\StatLevel) bez stylów inline. */
+[data-ss-level="0"] {
+    --ss-level: 0%;
+}
+
+[data-ss-level="5"] {
+    --ss-level: 5%;
+}
+
+[data-ss-level="10"] {
+    --ss-level: 10%;
+}
+
+[data-ss-level="15"] {
+    --ss-level: 15%;
+}
+
+[data-ss-level="20"] {
+    --ss-level: 20%;
+}
+
+[data-ss-level="25"] {
+    --ss-level: 25%;
+}
+
+[data-ss-level="30"] {
+    --ss-level: 30%;
+}
+
+[data-ss-level="35"] {
+    --ss-level: 35%;
+}
+
+[data-ss-level="40"] {
+    --ss-level: 40%;
+}
+
+[data-ss-level="45"] {
+    --ss-level: 45%;
+}
+
+[data-ss-level="50"] {
+    --ss-level: 50%;
+}
+
+[data-ss-level="55"] {
+    --ss-level: 55%;
+}
+
+[data-ss-level="60"] {
+    --ss-level: 60%;
+}
+
+[data-ss-level="65"] {
+    --ss-level: 65%;
+}
+
+[data-ss-level="70"] {
+    --ss-level: 70%;
+}
+
+[data-ss-level="75"] {
+    --ss-level: 75%;
+}
+
+[data-ss-level="80"] {
+    --ss-level: 80%;
+}
+
+[data-ss-level="85"] {
+    --ss-level: 85%;
+}
+
+[data-ss-level="90"] {
+    --ss-level: 90%;
+}
+
+[data-ss-level="95"] {
+    --ss-level: 95%;
+}
+
+[data-ss-level="100"] {
+    --ss-level: 100%;
+}
+
 .ss-list {
     margin: 0;
     padding: 0;

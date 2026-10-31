@@ -3,7 +3,7 @@
     $colors = $tokens->group('color');
     $paletteTokens = $tokens->group('palette');
     $palettes = \Simplysmart\Admiro\Enums\Palette::cases();
-    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'header', 'buttons', 'segmented', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
+    $sections = ['colors', 'palettes', 'typography', 'radius', 'shadow', 'space', 'header', 'buttons', 'segmented', 'stats', 'forms', 'feedback', 'periods', 'surfaces', 'icons', 'brand'];
     $highlight = \Simplysmart\Admiro\View\BrandNames::highlight(...);
 @endphp
 <x-admiro::page :title="text('design_system.title')" :description="text('design_system.lead')" robots="noindex, nofollow" :palettes="$palettes" palette-scope="design-system">
@@ -218,6 +218,22 @@
                             </div>
                         </div>
                     @endforeach
+                </section>
+
+                <section class="ss-card" id="stats" aria-labelledby="stats-title">
+                    <h2 class="ss-ds__section-title" id="stats-title">{{ text('design_system.sections.stats') }}</h2>
+                    <p class="ss-muted">{{ text('design_system.sections.stats_lead') }}</p>
+                    <div class="ss-grid ss-grid--3">
+                        <x-admiro::stat-card :label="text('design_system.sample.stat_noise')" icon="bell" tone="success" value="40" unit="dB" :note="text('design_system.sample.stat_noise_note')" :meter="['value' => 30, 'max' => 120, 'low' => text('design_system.sample.stat_low'), 'high' => text('design_system.sample.stat_high')]" />
+                        <x-admiro::stat-card :label="text('design_system.sample.stat_noise')" icon="bell" tone="warning" value="60" unit="dB" :note="text('design_system.sample.stat_noise_note')" :meter="['value' => 60, 'max' => 120, 'low' => text('design_system.sample.stat_low'), 'high' => text('design_system.sample.stat_high')]" />
+                        <x-admiro::stat-card :label="text('design_system.sample.stat_steps')" icon="activity" tone="success" :value="local_number(20500)" trend="+5 tys." :note="text('design_system.sample.stat_steps_note')">
+                            <x-slot:actions><button class="ss-icon-button" type="button" title="{{ text('design_system.sample.stat_add') }}"><x-admiro::icon name="plus" class="ss-button__icon" /><span class="ss-sr-only">{{ text('design_system.sample.stat_add') }}</span></button></x-slot:actions>
+                        </x-admiro::stat-card>
+                        <x-admiro::stat-card :label="text('design_system.sample.stat_sessions')" icon="calendar" tone="info" :value="local_number(26900)" trend="+18%" :note="text('design_system.sample.stat_sessions_note')" :bars="['values' => [42, 58, 51, 66, 47, 61, 70], 'label' => text('design_system.sample.stat_week')]" href="#stats" />
+                        <x-admiro::stat-card :label="text('design_system.sample.stat_forecast')" icon="activity" tone="success" value="+78%" :note="text('design_system.sample.stat_forecast_note')" filled />
+                        <x-admiro::stat-card :label="text('design_system.sample.stat_sessions')" icon="calendar" tone="danger" value="7" trend="−12%" :bars="['values' => [9, 8, 10, 6, 7, 5, 7], 'current' => 5, 'label' => text('design_system.sample.stat_week')]" />
+                    </div>
+                    <p class="ss-ds__row"><code>x-admiro::stat-card</code> <code>tone</code> <code>trend</code> <code>meter</code> <code>bars</code> <code>filled</code> <code>View\StatLevel</code></p>
                 </section>
 
                 <section class="ss-card" id="forms" aria-labelledby="forms-title">

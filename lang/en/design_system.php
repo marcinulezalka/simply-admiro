@@ -21,6 +21,8 @@ return [
     'dark' => 'Dark',
 
     'sections' => [
+        'stats' => 'Stat cards',
+        'stats_lead' => 'Dashboard stat card (x-admiro::stat-card): icon on a tile and name, in the panel a big number with its unit and a trend pill, a note, and optionally a low-to-high meter or bars with the current one highlighted. The tone (accent, success, warning, danger, info) colours the tile, the panel tint, the trend and the fill; filled fills the panel with the tone for one highlighted statistic.',
         'header' => 'Page header',
         'header_lead' => 'Context header (x-admiro::app.context): an icon tile, a large title and a smaller monospace description below; page actions sit on the right in a framed panel (at most one primary). In a zone the icon comes from the current menu item unless the page gives its own.',
         'colors' => 'Colors',
@@ -45,6 +47,18 @@ return [
     ],
 
     'sample' => [
+        'stat_noise' => 'Noise level',
+        'stat_noise_note' => 'measured over the last minute',
+        'stat_low' => 'Low',
+        'stat_high' => 'High',
+        'stat_steps' => 'Steps',
+        'stat_steps_note' => 'weekly goal: 25K',
+        'stat_week' => 'Last 7 days',
+        'stat_sessions' => 'Sessions',
+        'stat_sessions_note' => 'sessions in the past 7 days',
+        'stat_forecast' => 'Forecast',
+        'stat_forecast_note' => 'revenue growth by the end of the month',
+        'stat_add' => 'Add',
         'header_title' => 'Organizations',
         'header_meta' => '12 organizations · last change 26.10.2026',
         'header_secondary' => 'Export',

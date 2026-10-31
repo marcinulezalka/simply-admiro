@@ -21,6 +21,8 @@ return [
     'dark' => 'Ciemny',
 
     'sections' => [
+        'stats' => 'Karty statystyk',
+        'stats_lead' => 'Karta statystyki pulpitu (x-admiro::stat-card): ikona na kafelku i nazwa, w panelu duża liczba z jednostką i pigułką trendu, opis, a opcjonalnie miernik od niskiego do wysokiego albo słupki z wyróżnionym bieżącym. Ton (accent, success, warning, danger, info) koloruje kafelek, odcień panelu, trend i wypełnienie; filled wypełnia panel tonem dla jednej wyróżnionej statystyki.',
         'header' => 'Nagłówek strony',
         'header_lead' => 'Nagłówek kontekstowy (x-admiro::app.context): ikona w kafelku, duży tytuł i pod nim mniejszy opis krojem mono; gdy strona ma akcje, stoją po prawej w panelu z ramką (najwyżej jedna główna). W strefie ikona dobiera się z bieżącej pozycji menu, chyba że strona poda własną.',
         'colors' => 'Kolory',
@@ -45,6 +47,18 @@ return [
     ],
 
     'sample' => [
+        'stat_noise' => 'Poziom hałasu',
+        'stat_noise_note' => 'pomiar z ostatniej minuty',
+        'stat_low' => 'Niski',
+        'stat_high' => 'Wysoki',
+        'stat_steps' => 'Kroki',
+        'stat_steps_note' => 'cel tygodnia: 25 tys.',
+        'stat_week' => 'Ostatnie 7 dni',
+        'stat_sessions' => 'Sesje',
+        'stat_sessions_note' => 'sesje w ostatnich 7 dniach',
+        'stat_forecast' => 'Prognoza',
+        'stat_forecast_note' => 'wzrost przychodu do końca miesiąca',
+        'stat_add' => 'Dodaj',
         'header_title' => 'Organizacje',
         'header_meta' => '12 organizacji · ostatnia zmiana 26.10.2026',
         'header_secondary' => 'Eksport',
