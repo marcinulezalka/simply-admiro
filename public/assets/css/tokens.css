@@ -75,6 +75,11 @@
     --ss-color-info: light-dark(var(--ss-blue-700), var(--ss-blue-400));
     --ss-color-info-surface: light-dark(var(--ss-blue-50), var(--ss-blue-950));
 
+    /* Wiki i podpowiedzi (.ss-wiki-tip, nagłówek sidebaru wiki): zawsze niebieskie jak w admiro — strefy i palety
+       zmieniają --ss-color-info, ale nie te tokeny. */
+    --ss-color-wiki: light-dark(var(--ss-blue-700), var(--ss-blue-400));
+    --ss-color-wiki-surface: light-dark(var(--ss-blue-50), var(--ss-blue-950));
+
     /* Karta odwrócona (wyróżniona kolorem, np. obok jasnej karty w ramie) */
     --ss-color-surface-inverse: light-dark(var(--ss-neutral-900), var(--ss-gray-100));
     --ss-color-on-inverse: light-dark(var(--ss-white), var(--ss-gray-900));

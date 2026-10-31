@@ -230,6 +230,8 @@ Wariant layoutu stref (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`, 
 
 **Pusty stan teczki** (`x-admiro::folder-empty`, `.ss-folder-empty`): zamiast wiersza „Brak.” pośrodku duża ikona na miękkim kole (domyślnie `folder-open`), tytuł, opis i akcja (np. przycisk otwierający modal dodania); `as="li"` w liście wierszy podmienianej przez wyszukiwanie.
 
+**Kolor wiki**: wpisy `.ss-wiki-tip` i kafelek nagłówka sidebaru wiki używają tokenów `--ss-color-wiki` / `--ss-color-wiki-surface` (niebieskie jak w admiro), których strefy i palety nie zmieniają — w przeciwieństwie do `--ss-color-info`.
+
 **Wiki strony dodaje się wyłącznie w ramach sidebar-wiki**: slot `sidebar-wiki` w `x-admiro::zone.layout` (wpisy słownika `x-admiro::wiki-tip`, podpowiedzi do strony), nie w treści strony. Bez slotu panel pokazuje „Brak podpowiedzi dla tej strony.”.
 
 ## 6. Kolor i dostępność

@@ -2687,7 +2687,8 @@ a.ss-onboarding-picker__name:hover {
 }
 
 /**
- * .ss-wiki-tip — wpis słownika pojęć jako alert informacyjny (x-admiro::wiki-tip): delikatne tło akcentu i ramka,
+ * .ss-wiki-tip — wpis słownika pojęć jako alert informacyjny (x-admiro::wiki-tip): delikatne niebieskie tło i ramka
+ * w tokenach wiki (--ss-color-wiki, --ss-color-wiki-surface — te same w każdej strefie i palecie),
  * ikona pojęcia na kafelku (__icon), znacznik z prefiksem wiki- krojem mono (__tag), słowo kluczowe (__term),
  * pytanie wpisu Q&A (__question, znaczniki __qa Q / A), definicja (__definition) i przykład z etykietą (__example)
  * w jaśniejszej ramce; strona słownika (.ss-wiki) — siatka wpisów nad wyszukiwarką.
@@ -2698,14 +2699,14 @@ a.ss-onboarding-picker__name:hover {
     align-items: flex-start;
     margin: 0;
     padding: var(--ss-space-4);
-    border: 1px solid color-mix(in srgb, var(--ss-color-info) 30%, var(--ss-color-border));
+    border: 1px solid color-mix(in srgb, var(--ss-color-wiki) 30%, var(--ss-color-border));
     border-radius: var(--ss-radius-card);
-    background: color-mix(in srgb, var(--ss-color-info-surface) 70%, var(--ss-color-surface));
+    background: color-mix(in srgb, var(--ss-color-wiki-surface) 70%, var(--ss-color-surface));
 }
 
 .ss-wiki-tip__icon {
     background: var(--ss-color-surface);
-    color: var(--ss-color-info);
+    color: var(--ss-color-wiki);
 }
 
 .ss-wiki-tip__body {
@@ -2728,7 +2729,7 @@ a.ss-onboarding-picker__name:hover {
     display: inline-flex;
     gap: var(--ss-space-1);
     align-items: center;
-    color: var(--ss-color-info);
+    color: var(--ss-color-wiki);
     font-family: var(--ss-font-mono);
     font-size: 0.75rem;
 }
@@ -2758,7 +2759,7 @@ a.ss-onboarding-picker__name:hover {
     justify-content: center;
     margin-right: var(--ss-space-2);
     border-radius: 0.375rem;
-    background: var(--ss-color-info);
+    background: var(--ss-color-wiki);
     color: var(--ss-color-surface);
     font-family: var(--ss-font-mono);
     font-size: 0.6875rem;
@@ -2768,8 +2769,8 @@ a.ss-onboarding-picker__name:hover {
 
 .ss-wiki-tip__qa--answer {
     background: var(--ss-color-surface);
-    color: var(--ss-color-info);
-    box-shadow: inset 0 0 0 1px var(--ss-color-info);
+    color: var(--ss-color-wiki);
+    box-shadow: inset 0 0 0 1px var(--ss-color-wiki);
 }
 
 .ss-wiki-tip__definition {
@@ -2789,7 +2790,7 @@ a.ss-onboarding-picker__name:hover {
     max-width: 60rem;
     margin: 0;
     padding: var(--ss-space-2) var(--ss-space-3);
-    border-left: 2px solid color-mix(in srgb, var(--ss-color-info) 45%, transparent);
+    border-left: 2px solid color-mix(in srgb, var(--ss-color-wiki) 45%, transparent);
     border-radius: 0 var(--ss-radius-control) var(--ss-radius-control) 0;
     background: var(--ss-color-surface);
     color: var(--ss-color-muted);
@@ -6427,6 +6428,12 @@ a.ss-notification:focus-visible {
     align-items: center;
     padding: var(--ss-space-3) var(--ss-space-3) var(--ss-space-3) var(--ss-space-4);
     border-bottom: 1px solid var(--ss-color-border);
+}
+
+/* Kafelek ikony w nagłówku sidebaru w kolorze wiki (jak wpisy .ss-wiki-tip). */
+.ss-sidebar-wiki__head .ss-icon--tile {
+    background: var(--ss-color-wiki-surface);
+    color: var(--ss-color-wiki);
 }
 
 .ss-sidebar-wiki__title {
