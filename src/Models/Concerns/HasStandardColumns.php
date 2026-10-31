@@ -24,9 +24,12 @@ use Simplysmart\Admiro\Enums\RecordStatus;
  * `json_default_settings` (defaultSetting()) oraz scope'y active(), default() i usable(). Kolumna `status` trzyma
  * standardowy stan wiersza (Enums\RecordStatus, nowy wiersz aktywny; zmiana tylko przez
  * Database\RecordStatusTransitions), chyba że model trzyma tam stan dziedzinowy — wtedy nadpisuje
- * usesRecordStatus() na false i sam podaje cast `status`.
+ * usesRecordStatus() na false i sam podaje cast `status`. Casty standardowe uzupełniają tylko kolumny bez castu
+ * modelu: kolejność inicjalizatorów traitów zależy od wersji PHP (8.4 uruchamia ten trait po HasAttributes, 8.5 przed),
+ * więc cast podany przez model (np. enum `status`) wygrywa w obu kolejnościach.
  *
  * @method void mergeCasts(array<string, string> $casts) Metoda modelu Eloquent.
+ * @method array<string, string> getCasts() Metoda modelu Eloquent.
  * @method mixed getAttribute(string $key) Metoda modelu Eloquent.
  */
 trait HasStandardColumns
@@ -40,7 +43,7 @@ trait HasStandardColumns
             $this->attributes += [ColumnNames::STATUS => RecordStatus::Active->value];
         }
 
-        $this->mergeCasts([
+        $this->mergeCasts(array_diff_key([
             ColumnNames::TOKEN => 'string',
             ColumnNames::PARENT_ID => 'integer',
             ColumnNames::NAME => 'string',
@@ -57,7 +60,7 @@ trait HasStandardColumns
             ColumnNames::CREATED_AT => 'datetime',
             ColumnNames::UPDATED_AT => 'datetime',
             ColumnNames::DELETED_AT => 'datetime',
-        ]);
+        ], $this->getCasts()));
     }
 
     /**

@@ -16,6 +16,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Casty modeli na PHP 8.4: `HasStandardColumns` dokłada już tylko casty kolumn, których model sam nie podaje. PHP 8.4 uruchamia ten trait po `HasAttributes`, więc nadpisywał casty modelu (np. `status` zadania TODO był tekstem zamiast `TaskStatus`, a oznaczenie zadania jako wykonanego kończyło się błędem).
 - Szybkie akcje teczek `x-admiro::folder-actions`: błyskawica stoi na pierwszym miejscu, przed zakładkami, a jej menu „Zapisz” / „Anuluj” rozwija się nad teczką (wcześniej teczka je zakrywała).
 - Komenda `todo:` zapisuje zadanie: menu „+” w layoucie stref nie dostaje już ukrytej kopii pola komend (przez `@include` przechodził do niego adres komend, a skrypt brał puste pole kopii i nic nie wysyłał), a skrypt bierze pole z sekcji przycisku, który wysłał formularz. Kafelek „Wiki” wysuwa nieprzypięty sidebar — reguła stanu otwartego przegrywała specyficznością z regułą ukrycia, więc panel i jego pole „/todo:” zostawały poza ekranem.
 - Menu błyskawicy: sekcja z polem komend w kolorze reszty menu, a arkusz z kropkami na całą szerokość, bez bocznych marginesów.
