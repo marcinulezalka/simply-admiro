@@ -31,6 +31,7 @@ return [
     'task_added' => 'Task added to the TODO list.',
     'task_done' => 'Task marked as done.',
     'task_reopened' => 'Task reopened.',
+    'task_updated' => 'Task saved.',
     'appearance_reset_done' => 'The default look of the application is back.',
     'theme_title' => 'Theme',
     'theme_hint' => 'Light, dark or high contrast.',

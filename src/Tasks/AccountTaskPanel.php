@@ -23,7 +23,7 @@ use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
  * Panel zadań TODO zalogowanego konta dla layoutu stref (x-admiro::zone.layout): zadania z adresami przełączenia
- * wykonania i adres zapisu komend.
+ * wykonania i edycji oraz adres zapisu komend.
  */
 final readonly class AccountTaskPanel
 {
@@ -35,7 +35,11 @@ final readonly class AccountTaskPanel
     {
         return new TaskPanel(
             array_map(
-                static fn(AccountTask $task): TaskItem => new TaskItem($task, route($zone->routeName(AccountRoutes::TASKS_TOGGLE), ['task' => $task->token])),
+                static fn(AccountTask $task): TaskItem => new TaskItem(
+                    $task,
+                    route($zone->routeName(AccountRoutes::TASKS_TOGGLE), ['task' => $task->token]),
+                    route($zone->routeName(AccountRoutes::TASKS_UPDATE), ['task' => $task->token]),
+                ),
                 $this->tasks->forPanel($zone->name, AccountTasks::accountId($account)),
             ),
             route($zone->routeName(AccountRoutes::TASKS_STORE)),

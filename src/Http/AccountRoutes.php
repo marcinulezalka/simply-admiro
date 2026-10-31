@@ -103,10 +103,12 @@ final readonly class AccountRoutes
     /** Kotwica „Wyloguj wszędzie”; po wejściu na nią podświetlone są karty blokowania dostępu (urządzenia, wylogowanie). */
     public const string SECTION_LOCK = 'lock';
 
-    /** Zadania TODO konta: komenda z pola komend menu błyskawicy (POST) i przełączenie wykonania zadania (PATCH). */
+    /** Zadania TODO konta: komenda z pola komend menu błyskawicy (POST), przełączenie wykonania zadania (PATCH) i jego edycja (PUT). */
     public const string TASKS_STORE = 'account.tasks.store';
 
     public const string TASKS_TOGGLE = 'account.tasks.toggle';
+
+    public const string TASKS_UPDATE = 'account.tasks.update';
 
     private const string PREFIX = 'account';
 
@@ -128,6 +130,7 @@ final readonly class AccountRoutes
             $this->router->view('appearance', self::APPEARANCE_VIEW)->name(self::APPEARANCE);
             $this->router->post('tasks', [TaskController::class, 'store'])->middleware($throttle)->name(self::TASKS_STORE);
             $this->router->patch('tasks/{task}', [TaskController::class, 'toggle'])->name(self::TASKS_TOGGLE);
+            $this->router->put('tasks/{task}', [TaskController::class, 'update'])->middleware($throttle)->name(self::TASKS_UPDATE);
             $this->router->delete('security/sessions', [SecurityController::class, 'signOutEverywhere'])->middleware($throttle)->name(self::SIGN_OUT_EVERYWHERE);
             $this->router->get('pin', [SecurityController::class, 'section'])->defaults('section', self::SECTION_PIN)->name(self::PIN);
             $this->router->post('pin/code', [PinChangeController::class, 'sendCode'])->middleware($throttle)->name(self::PIN_CODE);

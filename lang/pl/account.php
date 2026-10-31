@@ -31,6 +31,7 @@ return [
     'task_added' => 'Zadanie dodane do listy TODO.',
     'task_done' => 'Zadanie oznaczone jako wykonane.',
     'task_reopened' => 'Zadanie otwarte ponownie.',
+    'task_updated' => 'Zadanie zapisane.',
     'appearance_reset_done' => 'Przywrócono domyślny wygląd aplikacji.',
     'theme_title' => 'Motyw',
     'theme_hint' => 'Jasny, ciemny albo wysoki kontrast.',

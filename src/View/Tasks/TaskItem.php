@@ -16,7 +16,8 @@ namespace Simplysmart\Admiro\View\Tasks;
 use Simplysmart\Admiro\Models\AccountTask;
 
 /**
- * Zadanie na liście TODO panelu powiadomień: zadanie konta, adres przełączenia wykonania (PATCH) i linki do commitów
+ * Zadanie na liście TODO panelu powiadomień: zadanie konta, adres przełączenia wykonania (PATCH), adres
+ * edycji (PUT, modal po kliknięciu nazwy) i linki do commitów
  * z krótkim podpisem `<repozytorium>@<7 znaków skrótu>` (adres w stylu `…/<repozytorium>/commit/<skrót>`; inny adres
  * podpisany jest w całości).
  */
@@ -27,6 +28,7 @@ final readonly class TaskItem
     public function __construct(
         public AccountTask $task,
         public string $toggleUrl,
+        public string $updateUrl,
     ) {}
 
     /**

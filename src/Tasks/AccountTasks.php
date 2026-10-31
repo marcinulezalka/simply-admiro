@@ -57,6 +57,21 @@ final readonly class AccountTasks
     }
 
     /**
+     * Zmiana treści zadania z modalu edycji na liście TODO: nazwa oraz opcjonalny tytuł i opis (pusty tekst = brak);
+     * stan, numer zgłoszenia i adres strony zostają bez zmian.
+     */
+    public function edit(AccountTask $task, string $name, ?string $title, ?string $description): AccountTask
+    {
+        $task->forceFill([
+            ColumnNames::NAME => $name,
+            'title' => $title === '' ? null : $title,
+            'description' => $description === '' ? null : $description,
+        ])->save();
+
+        return $task;
+    }
+
+    /**
      * Rozpoczęcie pracy nad zadaniem: stan „w toku” (Enums\TaskStatus::InProgress), bez chwili wykonania.
      */
     public function start(AccountTask $task): AccountTask

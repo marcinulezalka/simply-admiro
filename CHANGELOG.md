@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Pole komend teczki `x-admiro::folder-search` z `layouts`: w pigułce między „+” a błyskawicą przełącznik układu lista ↔ siatka (`js/folder-layout.js`, wybór zapamiętany w przeglądarce, wiersze `.ss-record-rows` jako karty w siatce).
+- Lista TODO: kliknięcie nazwy zadania otwiera modal edycji nazwy, tytułu i opisu (`account.tasks.update`, `AccountTasks::edit()`); stan i numer zgłoszenia zostają.
 - Pole komend teczki: „+” i przycisk błyskawicy jako jedna szara pigułka, akcje inne niż dodanie w dropdownie błyskawicy (slot `actions`, z prefiksem, np. `sync:`); wiki pustej teczki pod arkuszem (`.ss-folder__wiki`, `x-admiro::wiki-tip scope`).
 - Zadania TODO: stan „do sprawdzenia” (`TaskStatus::Check`, `AccountTasks::submitForCheck()`) z linkami do commitów (kolumna `json_commits` w `account_tasks`, migracja; na liście podpis `repozytorium@skrót`), a lista TODO ma dwa obszary z przełącznikiem: „Niezrealizowane” (otwarte i w toku) oraz „Do sprawdzenia i wdrożone” (do sprawdzenia i ostatnio wykonane).
 - Modal `x-admiro::dialog` (`js/dialog.js`, natywny `<dialog>`, otwierany odnośnikiem `data-ss-dialog-open`, ponownie po błędzie walidacji) i pusty stan teczki `x-admiro::folder-empty` (ikona `folder-open` z Lucide, tytuł, opis, akcja) zamiast „Brak.”; w polu komend teczki „+” z akcjami teczki (slot `add`), a błyskawica stoi w przycisku komendy w miejscu „/”.
@@ -47,6 +49,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Pole komend w menu błyskawicy w stopce (i w sidebarze wiki) ma błyskawicę zamiast znaku „/” przed `todo:`; aktywna błyskawica — najechana albo z otwartym dropdownem, w polu teczki i w szybkich akcjach teczek — jest żółto-czerwona i błyska jak ta w stopce.
 - Komenda `todo:` nazywa się „Dodaj zadanie” (zamiast „Nowe zadanie”).
 - Sidebar wiki i podpowiedzi o 50% szerszy (30rem w kolumnie, do 33rem wysunięty).
 - Wizytówka organizacji: ikona w kafelku po lewej, a podpis i nazwa w kolumnie obok niej, wyrównane do jednej krawędzi.

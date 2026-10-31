@@ -28,6 +28,7 @@ use Simplysmart\Admiro\Tasks\AccountTasks;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * Edycja zadania z modalu na liście TODO (nazwa, tytuł, opis) wraca na poprzednią stronę z komunikatem.
  * Komendy z pola komend menu błyskawicy (`todo:` zapisuje zadanie o wpisanej nazwie i adresie strony z nagłówka
  * `Referer` — Referrer-Policy `same-origin` przekazuje go w całości) i przełączenie wykonania
  * zadania z listy TODO w panelu powiadomień; po każdej zmianie powrót na poprzednią stronę z komunikatem. Komenda
@@ -83,6 +84,26 @@ final readonly class TaskController
         $record = $this->tasks->toggleDone($record);
 
         return $this->redirect->back()->with('status', text($record->status->isDone() ? 'account.task_done' : 'account.task_reopened'));
+    }
+
+    public function update(Request $request, string $task): RedirectResponse
+    {
+        $record = $this->list->find($this->zone->get()->name, AccountTasks::accountId($this->current->require()), $task)
+            ?? throw new NotFoundHttpException();
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $this->tasks->edit($record, self::text($validated['name']), self::text($validated['title'] ?? null), self::text($validated['description'] ?? null));
+
+        return $this->redirect->back()->with('status', text('account.task_updated'));
+    }
+
+    private static function text(mixed $value): string
+    {
+        return is_string($value) ? trim($value) : '';
     }
 
     /**
