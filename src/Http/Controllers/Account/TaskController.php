@@ -22,6 +22,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Simplysmart\Admiro\Contracts\CurrentAccount;
 use Simplysmart\Admiro\Contracts\CurrentZone;
 use Simplysmart\Admiro\Enums\QuickCommand;
+use Simplysmart\Admiro\Http\AccountRoutes;
 use Simplysmart\Admiro\Queries\Tasks\AccountTaskList;
 use Simplysmart\Admiro\Tasks\AccountTaskPanel;
 use Simplysmart\Admiro\Tasks\AccountTasks;
@@ -30,7 +31,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Edycja zadania z modalu na liście TODO (nazwa, tytuł, opis) wraca na poprzednią stronę z komunikatem.
  * Komendy z pola komend menu błyskawicy (`todo:` zapisuje zadanie o wpisanej nazwie i adresie strony z nagłówka
- * `Referer` — Referrer-Policy `same-origin` przekazuje go w całości) i przełączenie wykonania
+ * `Referer` — Referrer-Policy `same-origin` przekazuje go w całości; `wiki:` prowadzi do wyszukiwania na stronie wiki
+ * strefy — skryptem przez `redirect` w JSON-ie) i przełączenie wykonania
  * zadania z listy TODO w panelu powiadomień; po każdej zmianie powrót na poprzednią stronę z komunikatem. Komenda
  * wysłana skryptem (js/command-box.js, `Accept: application/json`) dostaje zamiast przekierowania JSON z komunikatem
  * i odświeżoną listą zadań (x-admiro::app.tasks; `lists` — lista w każdym zakresie: panel powiadomień i sidebar wiki), więc pole zostaje otwarte na kolejne zadanie.
@@ -58,10 +60,15 @@ final readonly class TaskController
 
         $zone = $this->zone->get();
         $account = $this->current->require();
+        $command = QuickCommand::from(is_string($validated['command']) ? $validated['command'] : '');
 
-        match (QuickCommand::from(is_string($validated['command']) ? $validated['command'] : '')) {
-            QuickCommand::Todo => $this->tasks->add($zone, $account, $text, $this->sourceUrl($request)),
-        };
+        if ($command === QuickCommand::Wiki) {
+            $url = route($zone->routeName(AccountRoutes::WIKI), [WikiController::SEARCH_FIELD => $text]);
+
+            return $request->expectsJson() ? new JsonResponse(['redirect' => $url]) : $this->redirect->to($url);
+        }
+
+        $this->tasks->add($zone, $account, $text, $this->sourceUrl($request));
 
         if ($request->expectsJson()) {
             return new JsonResponse([

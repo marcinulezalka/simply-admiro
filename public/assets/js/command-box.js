@@ -9,7 +9,8 @@
  * z `Accept: application/json`): na czas zapisu pole ma aria-busy — strzałka Entera zmienia się w loader, a pole
  * i przycisk są zablokowane —, po zapisie pole jest puste z kursorem na kolejne zadanie, lista TODO w panelu
  * powiadomień i w sidebarze ([data-ss-tasks] — każda w swoim zakresie, z `lists` odpowiedzi) zostaje podmieniona na
- * odświeżoną (zdarzenie `ss:content` uruchamia w niej zakładki obszarów, js/tabs.js), a komunikat trafia do [data-ss-command-status]. Błąd
+ * odświeżoną (zdarzenie `ss:content` uruchamia w niej zakładki obszarów, js/tabs.js), a komunikat trafia do [data-ss-command-status];
+ * odpowiedź z `redirect` (komenda `wiki:`) przechodzi pod ten adres. Błąd
  * zapisu albo walidacji wysyła formularz zwykłą drogą (przeładowanie z komunikatem). Bez skryptu zaznaczona zostaje
  * domyślna komenda, a formularz wysyła się zwykłą drogą. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
@@ -100,6 +101,14 @@
             }
 
             const result = await response.json();
+
+            /* Komenda prowadząca na inną stronę (np. `wiki:` — wyszukiwanie w wiki) zwraca adres zamiast listy zadań. */
+            if (typeof result.redirect === 'string') {
+                window.location.assign(result.redirect);
+
+                return;
+            }
+
             const lists = result.lists && typeof result.lists === 'object' ? result.lists : {};
 
             document.querySelectorAll('[data-ss-tasks]').forEach((tasks) => {

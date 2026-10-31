@@ -35,6 +35,10 @@ return [
             'label' => 'Add task',
             'placeholder' => 'Task name',
         ],
+        'wiki' => [
+            'label' => 'Search the wiki',
+            'placeholder' => 'Term or question',
+        ],
     ],
 
     'dictionary_update_status' => [

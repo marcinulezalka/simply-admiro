@@ -23,6 +23,7 @@ return [
     'lead' => 'Pojęcia systemu w jednym miejscu: definicje, przykłady i odpowiedzi na częste pytania. Każdy wpis ma znacznik wiki-…, do którego można linkować.',
     'search_label' => 'Szukaj w słowniku',
     'search_placeholder' => 'Pojęcie, definicja albo pytanie',
+    'qa' => 'Wpis z pytaniem i odpowiedzią',
     'none' => 'Brak pojęć pasujących do „:term”.',
     'organizacja' => [
         'term' => 'Organizacja',

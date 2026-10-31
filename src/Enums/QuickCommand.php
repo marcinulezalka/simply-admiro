@@ -17,12 +17,15 @@ use Simplysmart\Admiro\Contracts\HasLabel;
 
 /**
  * Komenda systemu wpisywana w polu komend na dole menu błyskawicy (admiro::search.commands, ikona „/”): wybrana
- * komenda (domyślnie pierwsza — `todo:`) i tekst pola trafiają do Http\Controllers\Account\TaskController. Prefiks
+ * komenda (domyślnie pierwsza — `todo:`) i tekst pola trafiają do Http\Controllers\Account\TaskController: `todo:`
+ * zapisuje zadanie, `wiki:` przechodzi do wyszukiwania we wpisach wiki strefy (strona `account.wiki`). Prefiks
  * w polu to `<value>:`, etykieta i opis w `enums.quick_command.<value>`.
  */
 enum QuickCommand: string implements HasLabel
 {
     case Todo = 'todo';
+
+    case Wiki = 'wiki';
 
     /**
      * Komenda zaznaczona, zanim konto wybierze inną.
@@ -44,6 +47,7 @@ enum QuickCommand: string implements HasLabel
     {
         return match ($this) {
             self::Todo => 'check',
+            self::Wiki => 'book-open',
         };
     }
 

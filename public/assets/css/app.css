@@ -2709,6 +2709,27 @@ a.ss-onboarding-picker__name:hover {
     color: var(--ss-color-wiki);
 }
 
+/* Kolumna ikon wpisu: kafelek pojęcia, a we wpisie Q&A pod nim znacznik „Q&A” w kolorze wiki. */
+.ss-wiki-tip__icons {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-wiki-tip__qa-badge {
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-color-wiki);
+    color: var(--ss-color-surface);
+    font-family: var(--ss-font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
 .ss-wiki-tip__body {
     display: flex;
     flex: 1;
@@ -10352,7 +10373,36 @@ button.ss-command__option {
     display: none;
 }
 
-/* Wiersze teczki w układzie siatki: karty obok siebie, fakty jeden pod drugim; pusty stan i komunikaty na całą szerokość. */
+/* Wiersze teczki w układzie listy (lista ze skryptem przełącznika): zwarte wpisy jeden pod drugim w jednej ramce — tylko
+   część główna (ikona, nazwa, druga linia); fakty, akcje i rozwijana edycja tylko w drzewie (wiersz z otwartą edycją
+   zostaje pełny). */
+.ss-record-rows[data-ss-layout="list"] {
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-control);
+    background: var(--ss-color-surface);
+}
+
+.ss-record-rows[data-ss-layout="list"] > .ss-record-row {
+    padding: var(--ss-space-2) var(--ss-space-4);
+    border: 0;
+    border-bottom: 1px solid var(--ss-color-border);
+    border-radius: 0;
+}
+
+.ss-record-rows[data-ss-layout="list"] > .ss-record-row:last-child,
+.ss-record-rows[data-ss-layout="list"] > .ss-folder-empty {
+    border-bottom: 0;
+}
+
+.ss-record-rows[data-ss-layout="list"] > .ss-record-row:not(:has(> .ss-record-row__details[open])) > :is(.ss-record-row__facts, .ss-record-row__side, .ss-record-row__details),
+.ss-record-rows[data-ss-layout="grid"] > .ss-record-row:not(:has(> .ss-record-row__details[open])) > :is(.ss-record-row__side, .ss-record-row__details) {
+    display: none;
+}
+
+/* Wiersze teczki w układzie siatki: każdy wpis jako teczka (karta z zakładką u góry), fakty jeden pod drugim, bez akcji;
+   pusty stan i komunikaty na całą szerokość. */
 .ss-record-rows[data-ss-layout="grid"] {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
@@ -10362,7 +10412,26 @@ button.ss-command__option {
 .ss-record-rows[data-ss-layout="grid"] > .ss-record-row {
     flex-direction: column;
     align-items: stretch;
-    height: 100%;
+    height: calc(100% - 0.75rem);
+}
+
+.ss-record-rows[data-ss-layout="grid"] > .ss-record-row:not(.ss-record-row--muted) {
+    position: relative;
+    margin-top: 0.75rem;
+    border-top-left-radius: 0;
+}
+
+.ss-record-rows[data-ss-layout="grid"] > .ss-record-row:not(.ss-record-row--muted)::before {
+    position: absolute;
+    top: calc(-0.75rem - 1px);
+    left: -1px;
+    width: 45%;
+    height: 0.75rem;
+    border: 1px solid var(--ss-color-border);
+    border-bottom: 0;
+    border-radius: var(--ss-radius-control) var(--ss-radius-control) 0 0;
+    background: var(--ss-color-surface);
+    content: "";
 }
 
 .ss-record-rows[data-ss-layout="grid"] .ss-record-row__facts {
@@ -10375,7 +10444,8 @@ button.ss-command__option {
     grid-column: 1 / -1;
 }
 
-/* Wiersze teczki w układzie drzewa (tree x-admiro::folder-search): jedna tabela z cienkimi liniami między wierszami,
+/* Wiersze teczki w układzie drzewa (tree x-admiro::folder-search): pełne wiersze (fakty, akcje, rozwijana edycja — „co
+   z czego wynika”) w jednej tabeli z cienkimi liniami między wierszami,
    wcięcie poziomu z data-ss-depth="1|2|3" z łącznikiem drzewa, wiersze rodziców tylko dla drzewa (.ss-record-row--tree)
    i fakty tylko dla drzewa (__fact--tree, np. rodzic wpisu); poza drzewem obie klasy są ukryte. */
 .ss-record-rows:not([data-ss-layout="tree"]) > .ss-record-row--tree,
@@ -10392,7 +10462,6 @@ button.ss-command__option {
 }
 
 .ss-record-rows[data-ss-layout="tree"] > .ss-record-row {
-    flex-wrap: nowrap;
     border: 0;
     border-bottom: 1px solid var(--ss-color-border);
     border-radius: 0;
@@ -10408,10 +10477,6 @@ button.ss-command__option {
 
 .ss-record-rows[data-ss-layout="tree"] .ss-record-row__facts {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.ss-record-rows[data-ss-layout="tree"] .ss-record-row__details {
-    display: none;
 }
 
 .ss-record-rows[data-ss-layout="tree"] > [data-ss-depth] > .ss-record-row__main {
@@ -10446,10 +10511,6 @@ button.ss-command__option {
 }
 
 @media (max-width: 47.999rem) {
-    .ss-record-rows[data-ss-layout="tree"] > .ss-record-row {
-        flex-wrap: wrap;
-    }
-
     .ss-record-rows[data-ss-layout="tree"] .ss-record-row__facts {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }

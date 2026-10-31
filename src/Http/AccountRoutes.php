@@ -23,6 +23,7 @@ use Simplysmart\Admiro\Http\Controllers\Account\ScreenLockController;
 use Simplysmart\Admiro\Http\Controllers\Account\SecurityController;
 use Simplysmart\Admiro\Http\Controllers\Account\TaskController;
 use Simplysmart\Admiro\Http\Controllers\Account\TrustedDeviceController;
+use Simplysmart\Admiro\Http\Controllers\Account\WikiController;
 use Simplysmart\Admiro\Http\Controllers\Account\ProfileController;
 use Simplysmart\Admiro\Http\Controllers\Account\RoleSwitchController;
 use Simplysmart\Admiro\Zones\AccessTier;
@@ -110,6 +111,9 @@ final readonly class AccountRoutes
 
     public const string TASKS_UPDATE = 'account.tasks.update';
 
+    /** Wpisy wiki strefy z wyszukiwaniem (`q`; komenda `wiki:` z pola komend). */
+    public const string WIKI = 'account.wiki';
+
     private const string PREFIX = 'account';
 
     public function __construct(
@@ -128,6 +132,7 @@ final readonly class AccountRoutes
             $this->router->get('unlock', [ScreenLockController::class, 'show'])->name(self::UNLOCK);
             $this->router->post('unlock', [ScreenLockController::class, 'unlock'])->middleware($throttle)->name(self::UNLOCK_STORE);
             $this->router->view('appearance', self::APPEARANCE_VIEW)->name(self::APPEARANCE);
+            $this->router->get('wiki', WikiController::class)->name(self::WIKI);
             $this->router->post('tasks', [TaskController::class, 'store'])->middleware($throttle)->name(self::TASKS_STORE);
             $this->router->patch('tasks/{task}', [TaskController::class, 'toggle'])->name(self::TASKS_TOGGLE);
             $this->router->put('tasks/{task}', [TaskController::class, 'update'])->middleware($throttle)->name(self::TASKS_UPDATE);

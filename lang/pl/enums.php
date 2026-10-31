@@ -35,6 +35,10 @@ return [
             'label' => 'Dodaj zadanie',
             'placeholder' => 'Nazwa zadania',
         ],
+        'wiki' => [
+            'label' => 'Szukaj w wiki',
+            'placeholder' => 'Pojęcie albo pytanie',
+        ],
     ],
 
     'dictionary_update_status' => [

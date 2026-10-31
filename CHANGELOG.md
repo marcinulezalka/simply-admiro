@@ -6,6 +6,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Komenda `wiki:` w polu komend błyskawicy i teczki (`QuickCommand::Wiki`): wpisana fraza prowadzi do nowej strony wiki konta w każdej strefie (`account.wiki`, wyszukiwanie po wpisach `Wiki\Wiki`); `js/command-box.js` przechodzi pod adres z `redirect` odpowiedzi.
+- Wpis wiki z pytaniem (Q&A) ma pod ikoną pojęcia znacznik „Q&A” (`.ss-wiki-tip__qa-badge`).
+- Układy teczki z przełącznikiem: lista to zwarte wpisy jeden pod drugim (tylko nazwa i druga linia), siatka to wpisy jako teczki z zakładką bez akcji, a pełne wiersze z faktami, akcjami i edycją są w drzewie; wiersz z otwartą edycją zostaje pełny w każdym układzie.
 - Tokeny wiki `--ss-color-wiki` / `--ss-color-wiki-surface`: wpisy `.ss-wiki-tip` i kafelek nagłówka sidebaru wiki są niebieskie jak w admiro w każdej strefie i palecie (wcześniej brały `--ss-color-info`, który strefy nadpisują).
 - Pole komend teczki `x-admiro::folder-search` z `tree`: trzeci układ „drzewo” po liście i siatce (ikona `sitemap`) — wiersze `.ss-record-rows` jako jedna tabela z wcięciem poziomu (`data-ss-depth`) i łącznikiem drzewa; wiersze rodziców `.ss-record-row--tree` i fakty `.ss-record-row__fact--tree` (np. „Nadrzędna”) widać tylko w drzewie.
 - Szablon karty statystyki pulpitu `x-admiro::stat-card` (`.ss-stat-card`): ikona na kafelku i nazwa (opcjonalnie odnośnik i akcje), w panelu z odcieniem tonu duża liczba z jednostką i pigułką trendu, opis, miernik od niskiego do wysokiego (wypełnienie w ukośne paski) albo słupki z wyróżnionym bieżącym, wariant wypełniony tonem; poziomy wypełnienia z `View\StatLevel` bez stylów inline. Sekcja „Karty statystyk” na stronie design systemu, pulpit demo na nowych kartach, opis w `docs/design-system.md`.

@@ -23,6 +23,7 @@ return [
     'lead' => 'The system’s terms in one place: definitions, examples and answers to common questions. Every entry has a wiki-… tag you can link to.',
     'search_label' => 'Search the glossary',
     'search_placeholder' => 'Term, definition or question',
+    'qa' => 'Entry with a question and answer',
     'none' => 'No terms match “:term”.',
     'organizacja' => [
         'term' => 'Organization',
