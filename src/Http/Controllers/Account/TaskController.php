@@ -28,13 +28,16 @@ use Simplysmart\Admiro\Tasks\AccountTasks;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Komendy z pola komend menu błyskawicy (`todo:` zapisuje zadanie o wpisanej nazwie) i przełączenie wykonania
+ * Komendy z pola komend menu błyskawicy (`todo:` zapisuje zadanie o wpisanej nazwie i adresie strony z nagłówka
+ * `Referer` — Referrer-Policy `same-origin` przekazuje go w całości) i przełączenie wykonania
  * zadania z listy TODO w panelu powiadomień; po każdej zmianie powrót na poprzednią stronę z komunikatem. Komenda
  * wysłana skryptem (js/command-box.js, `Accept: application/json`) dostaje zamiast przekierowania JSON z komunikatem
  * i odświeżoną listą zadań (x-admiro::app.tasks; `lists` — lista w każdym zakresie: panel powiadomień i sidebar wiki), więc pole zostaje otwarte na kolejne zadanie.
  */
 final readonly class TaskController
 {
+    private const int MAX_SOURCE_URL = 2048;
+
     public function __construct(
         private CurrentZone $zone,
         private CurrentAccount $current,
@@ -56,7 +59,7 @@ final readonly class TaskController
         $account = $this->current->require();
 
         match (QuickCommand::from(is_string($validated['command']) ? $validated['command'] : '')) {
-            QuickCommand::Todo => $this->tasks->add($zone, $account, $text),
+            QuickCommand::Todo => $this->tasks->add($zone, $account, $text, $this->sourceUrl($request)),
         };
 
         if ($request->expectsJson()) {
@@ -80,5 +83,15 @@ final readonly class TaskController
         $record = $this->tasks->toggleDone($record);
 
         return $this->redirect->back()->with('status', text($record->status->isDone() ? 'account.task_done' : 'account.task_reopened'));
+    }
+
+    /**
+     * Adres strony, z której wysłano komendę: nagłówek `Referer`, gdy nie jest dłuższy niż MAX_SOURCE_URL.
+     */
+    private function sourceUrl(Request $request): ?string
+    {
+        $url = $request->headers->get('referer');
+
+        return is_string($url) && $url !== '' && strlen($url) <= self::MAX_SOURCE_URL ? $url : null;
     }
 }

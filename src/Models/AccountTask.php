@@ -20,8 +20,9 @@ use Simplysmart\Admiro\Enums\TaskStatus;
  * Zadanie TODO konta strefy (`account_tasks`), jak zgłoszenie w systemie ticketów: konto strefy (`zone`,
  * `account_id`), kolejny numer zgłoszenia w obrębie konta (`issue`), stan (`status`: Enums\TaskStatus — stan
  * dziedzinowy, nie RecordStatus), nazwa (`name`, wpisana po `todo:`), tytuł, opis, termin (`due_on`), opóźnienie
- * w dniach (`delay_days`), projekt, klient i chwila wykonania (`completed_at`). Zapis tylko przez Tasks\AccountTasks,
- * odczyt przez Queries\Tasks\AccountTaskList.
+ * w dniach (`delay_days`), projekt, klient i chwila wykonania (`completed_at`). `json_attributes.source_url`
+ * (SOURCE_URL) — adres strony, z której zadanie zapisano: informacja dla wykonawcy poprawki, niepokazywana w UI.
+ * Zapis tylko przez Tasks\AccountTasks, odczyt przez Queries\Tasks\AccountTaskList.
  *
  * @property string $zone
  * @property int $account_id
@@ -39,6 +40,9 @@ final class AccountTask extends DataModel
 {
     public const string TABLE = 'account_tasks';
 
+    /** Klucz `json_attributes` z adresem strony, z której zadanie zapisano. */
+    public const string SOURCE_URL = 'source_url';
+
     protected $table = self::TABLE;
 
     /**
@@ -49,6 +53,16 @@ final class AccountTask extends DataModel
     public function usesRecordStatus(): bool
     {
         return false;
+    }
+
+    /**
+     * Adres strony, z której zadanie zapisano (SOURCE_URL), albo null, gdy nieznany.
+     */
+    public function sourceUrl(): ?string
+    {
+        $url = ($this->json_attributes ?? [])[self::SOURCE_URL] ?? null;
+
+        return is_string($url) ? $url : null;
     }
 
     /**

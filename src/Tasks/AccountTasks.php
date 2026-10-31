@@ -25,8 +25,8 @@ use Simplysmart\Admiro\Queries\Tasks\AccountTaskList;
 use Simplysmart\Admiro\Zones\ZoneDefinition;
 
 /**
- * Zapis zadań TODO konta strefy: nowe zadanie z komendy `todo:` (otwarte, z kolejnym numerem zgłoszenia konta)
- * i przełączenie wykonania z listy zadań (wykonane ↔ otwarte, z chwilą wykonania).
+ * Zapis zadań TODO konta strefy: nowe zadanie z komendy `todo:` (otwarte, z kolejnym numerem zgłoszenia konta
+ * i adresem strony, z której je zapisano — AccountTask::SOURCE_URL) i przełączenie wykonania z listy zadań (wykonane ↔ otwarte, z chwilą wykonania).
  */
 final readonly class AccountTasks
 {
@@ -35,11 +35,11 @@ final readonly class AccountTasks
         private ConnectionInterface $db,
     ) {}
 
-    public function add(ZoneDefinition $zone, ZoneAccount $account, string $name): AccountTask
+    public function add(ZoneDefinition $zone, ZoneAccount $account, string $name, ?string $sourceUrl = null): AccountTask
     {
         $accountId = self::accountId($account);
 
-        return $this->db->transaction(function () use ($zone, $accountId, $name): AccountTask {
+        return $this->db->transaction(function () use ($zone, $accountId, $name, $sourceUrl): AccountTask {
             $task = new AccountTask();
             $task->forceFill([
                 ColumnNames::NAME => $name,
@@ -48,6 +48,7 @@ final readonly class AccountTasks
                 'account_id' => $accountId,
                 'issue' => $this->tasks->nextIssue($zone->name, $accountId),
                 'status' => TaskStatus::Open,
+                ColumnNames::JSON_ATTRIBUTES => $sourceUrl === null ? null : [AccountTask::SOURCE_URL => $sourceUrl],
             ])->save();
 
             return $task;
