@@ -1,10 +1,12 @@
 /**
  * Pole komend na dole menu błyskawicy ([data-ss-command], admiro::search.commands): wybór komendy z listy pod „/”
  * podmienia prefiks przy ikonie (np. „todo:”) i podpowiedź pola, zamyka listę i ustawia kursor w polu; otwarcie menu
- * błyskawicy też ustawia kursor w polu komend. Wysłanie formularza komend (#ss-command-form) idzie w tle (fetch
+ * błyskawicy też ustawia kursor w polu komend. Wysłanie formularza komend (form[data-ss-command-form]: #ss-command-form
+ * menu błyskawicy i pole „/todo:” sidebaru wiki) idzie w tle (fetch
  * z `Accept: application/json`): na czas zapisu pole ma aria-busy — strzałka Entera zmienia się w loader, a pole
  * i przycisk są zablokowane —, po zapisie pole jest puste z kursorem na kolejne zadanie, lista TODO w panelu
- * powiadomień (.ss-tasks) zostaje podmieniona na odświeżoną, a komunikat trafia do [data-ss-command-status]. Błąd
+ * powiadomień i w sidebarze ([data-ss-tasks] — każda w swoim zakresie, z `lists` odpowiedzi) zostaje podmieniona na
+ * odświeżoną, a komunikat trafia do [data-ss-command-status]. Błąd
  * zapisu albo walidacji wysyła formularz zwykłą drogą (przeładowanie z komunikatem). Bez skryptu zaznaczona zostaje
  * domyślna komenda, a formularz wysyła się zwykłą drogą. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
@@ -38,11 +40,11 @@
     document.addEventListener('submit', async (event) => {
         const form = event.target;
 
-        if (!(form instanceof HTMLFormElement) || form.id !== 'ss-command-form' || form.dataset.ssCommandFallback === '1') {
+        if (!(form instanceof HTMLFormElement) || !form.matches('[data-ss-command-form]') || form.dataset.ssCommandFallback === '1') {
             return;
         }
 
-        const input = document.querySelector('[data-ss-command-input]');
+        const input = form.querySelector('[data-ss-command-input]') ?? document.querySelector(`[data-ss-command-input][form="${form.id}"]`);
         const box = input?.closest('[data-ss-command]');
         const send = box?.querySelector('[data-ss-command-send]');
         const status = box?.querySelector('[data-ss-command-status]');
@@ -82,11 +84,17 @@
             }
 
             const result = await response.json();
-            const tasks = document.querySelector('.ss-tasks');
+            const lists = result.lists && typeof result.lists === 'object' ? result.lists : {};
 
-            if (tasks && typeof result.tasks === 'string') {
+            document.querySelectorAll('[data-ss-tasks]').forEach((tasks) => {
+                const html = lists[tasks.dataset.ssTasks ?? ''];
+
+                if (typeof html !== 'string') {
+                    return;
+                }
+
                 const template = document.createElement('template');
-                template.innerHTML = result.tasks.trim();
+                template.innerHTML = html.trim();
                 const fresh = template.content.firstElementChild;
 
                 if (fresh) {
@@ -95,7 +103,7 @@
                     });
                     tasks.replaceWith(fresh);
                 }
-            }
+            });
 
             if (status) {
                 status.textContent = typeof result.message === 'string' ? result.message : '';

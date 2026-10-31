@@ -1,4 +1,4 @@
-{{-- Wpis słownika pojęć (Wiki\Wiki) jako alert informacyjny (.ss-wiki-tip, role="note"): ikona pojęcia na kafelku, znacznik z prefiksem (np. wiki-organizacja, krojem mono — także id elementu, więc wpis ma kotwicę), słowo kluczowe, przy wpisie Q&A pytanie (definicja jest odpowiedzią), definicja i przykład w ramce. term: klucz wpisu bez prefiksu (np. organizacja); nieznany klucz — nic. --}}
+{{-- Wpis słownika pojęć (Wiki\Wiki) jako alert informacyjny (.ss-wiki-tip, role="note"): ikona pojęcia na kafelku, znacznik z prefiksem (np. wiki-organizacja, krojem mono — także id elementu, więc wpis ma kotwicę), słowo kluczowe, przy wpisie Q&A pytanie (definicja jest odpowiedzią), definicja, przykład w ramce i — gdy wpis ją ma — instrukcja „Jak korzystać”. term: klucz wpisu bez prefiksu (np. organizacja); nieznany klucz — nic. --}}
 @props(['term'])
 @php($entry = app(\Simplysmart\Admiro\Wiki\Wiki::class)->entry($term))
 @if ($entry !== null)
@@ -13,6 +13,9 @@
                 <p class="ss-wiki-tip__question"><span class="ss-wiki-tip__qa" aria-hidden="true">Q</span>{{ $entry->question }}</p>
             @endif
             <p class="ss-wiki-tip__definition">@if ($entry->question !== null)<span class="ss-wiki-tip__qa ss-wiki-tip__qa--answer" aria-hidden="true">A</span>@endif{{ $entry->definition }}</p>
+            @if ($entry->usage !== null)
+                <p class="ss-wiki-tip__usage"><span class="ss-wiki-tip__example-label">{{ text('wiki.usage') }}</span>{{ $entry->usage }}</p>
+            @endif
             @if ($entry->example !== null)
                 <p class="ss-wiki-tip__example"><span class="ss-wiki-tip__example-label">{{ text('wiki.example') }}</span>{{ $entry->example }}</p>
             @endif

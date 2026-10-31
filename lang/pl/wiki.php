@@ -18,6 +18,7 @@ declare(strict_types=1);
 return [
     'label' => 'Wiki',
     'example' => 'Przykład',
+    'usage' => 'Jak korzystać',
     'title' => 'Wiki — słownik pojęć',
     'lead' => 'Pojęcia systemu w jednym miejscu: definicje, przykłady i odpowiedzi na częste pytania. Każdy wpis ma znacznik wiki-…, do którego można linkować.',
     'search_label' => 'Szukaj w słowniku',

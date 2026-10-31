@@ -16,7 +16,7 @@ namespace Simplysmart\Admiro\Wiki;
 /**
  * Słownik pojęć (singleton): wpisy z ikoną i tekstami `<przestrzeń>wiki.<klucz>.term|definition|example` (kaskada
  * tekstów: paczka strefy, admiro, aplikacja — więc paczka albo aplikacja może podać własne ujęcie pojęcia; opcjonalnie
- * `.question` — wpis Q&A). Core
+ * `.question` — wpis Q&A, i `.usage` — „Jak korzystać”). Core
  * rejestruje pojęcia wspólne (organizacja, strefa, departament, właściciel, organizacja operatora); paczka dopisuje
  * swoje w providerze (add(), z przestrzenią tekstów paczki). Wpisy pokazuje x-admiro::wiki-tip (porady, Q&A).
  */
@@ -57,7 +57,7 @@ final class Wiki
             return $value !== $textKey ? $value : null;
         };
 
-        return new WikiEntry($key, $entry['icon'], $text('term'), $text('definition'), $optional('example'), $optional('question'));
+        return new WikiEntry($key, $entry['icon'], $text('term'), $text('definition'), $optional('example'), $optional('question'), $optional('usage'));
     }
 
     /**

@@ -69,6 +69,8 @@ return [
     'zoom_in' => 'Powiększ',
     'close' => 'Zamknij',
     'columns_left' => 'Menu strony',
+    'wiki' => 'Wiki',
+    'folder_actions' => 'Szybkie akcje',
     'sidebar_wiki' => 'Wiki i podpowiedzi',
     'sidebar_wiki_open' => 'Pokaż wiki i podpowiedzi',
     'sidebar_wiki_pin' => 'Przypnij panel',

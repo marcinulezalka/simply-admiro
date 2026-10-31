@@ -69,6 +69,8 @@ return [
     'zoom_in' => 'Zoom in',
     'close' => 'Close',
     'columns_left' => 'Page menu',
+    'wiki' => 'Wiki',
+    'folder_actions' => 'Quick actions',
     'sidebar_wiki' => 'Wiki and tips',
     'sidebar_wiki_open' => 'Show wiki and tips',
     'sidebar_wiki_pin' => 'Pin the panel',

@@ -1,9 +1,10 @@
 /**
- * Sidebar wiki i podpowiedzi layoutu stref z kolumnami (x-admiro::app.sidebar-wiki, [data-ss-sidebar-wiki]): przycisk
- * pinezki [data-ss-sidebar-wiki-pin] przypina panel jako stałą prawą kolumnę (stan w localStorage, aria-pressed; tylko
- * na szerokim ekranie), a nieprzypięty panel jest ukryty za wąską zakładką przy prawej krawędzi
- * [data-ss-sidebar-wiki-open], która wysuwa go nad treść; ×, Esc i klik obok chowają go z powrotem. Bez skryptu
- * panel stoi przypięty, bez przycisków. Osadzany inline z nonce CSP (x-admiro::scripts).
+ * Sidebar wiki i podpowiedzi layoutu stref z kolumnami (x-admiro::app.sidebar-wiki, [data-ss-sidebar-wiki]): otwiera go
+ * kafelek „Wiki” w narzędziach panelu kalendarza ([data-ss-sidebar-wiki-open], pokazywany tylko na stronie z sidebarem;
+ * klik zamyka panel kalendarza) — panel wysuwa się z prawej nad treść, a ×, Esc i klik obok chowają go z powrotem.
+ * Pinezka [data-ss-sidebar-wiki-pin] przypina panel jako stałą prawą kolumnę (stan w localStorage, aria-pressed; tylko
+ * na szerokim ekranie), wtedy kafelek tylko przenosi fokus do treści panelu. Bez skryptu panel stoi przypięty, bez
+ * przycisków. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const STORAGE_KEY = 'ss-sidebar-wiki-pinned';
@@ -27,42 +28,59 @@
 
     const init = (sidebar) => {
         const panel = sidebar.querySelector('[data-ss-sidebar-wiki-panel]');
-        const opener = sidebar.querySelector('[data-ss-sidebar-wiki-open]');
+        const body = sidebar.querySelector('.ss-sidebar-wiki__body');
         const pin = sidebar.querySelector('[data-ss-sidebar-wiki-pin]');
         const close = sidebar.querySelector('[data-ss-sidebar-wiki-close]');
+        const openers = [...document.querySelectorAll('[data-ss-sidebar-wiki-open]')];
         let pinned = readPinned();
         let open = false;
 
+        const docked = () => pinned && desktop.matches;
+
         const sync = () => {
-            const docked = pinned && desktop.matches;
-            sidebar.classList.toggle('ss-sidebar-wiki--pinned', docked);
-            sidebar.classList.toggle('ss-sidebar-wiki--open', !docked && open);
+            sidebar.classList.toggle('ss-sidebar-wiki--pinned', docked());
+            sidebar.classList.toggle('ss-sidebar-wiki--open', !docked() && open);
             pin?.setAttribute('aria-pressed', String(pinned));
-            opener?.setAttribute('aria-expanded', String(!docked && open));
+            openers.forEach((opener) => opener.setAttribute('aria-expanded', String(docked() || open)));
 
             if (panel) {
-                panel.inert = !docked && !open;
+                panel.inert = !docked() && !open;
             }
         };
 
         const show = (visible) => {
             open = visible;
             sync();
-            (visible ? close : opener)?.focus();
+
+            if (visible) {
+                close?.focus();
+            }
         };
 
         sidebar.classList.add('ss-sidebar-wiki--js');
-        [opener, pin, close].forEach((button) => {
+        [pin, close, ...openers].forEach((button) => {
             if (button) {
                 button.hidden = false;
             }
         });
 
-        opener?.addEventListener('click', () => show(!open));
+        openers.forEach((opener) => opener.addEventListener('click', () => {
+            const dropdown = opener.closest('details');
+
+            if (dropdown instanceof HTMLDetailsElement) {
+                dropdown.open = false;
+            }
+
+            if (docked()) {
+                body?.focus();
+            } else {
+                show(!open);
+            }
+        }));
         close?.addEventListener('click', () => show(false));
         pin?.addEventListener('click', () => {
             pinned = !pinned;
-            open = false;
+            open = !pinned;
             writePinned(pinned);
             sync();
         });
@@ -72,7 +90,9 @@
             }
         });
         document.addEventListener('click', (event) => {
-            if (open && event.target instanceof Node && !sidebar.contains(event.target)) {
+            const target = event.target;
+
+            if (open && target instanceof Element && !sidebar.contains(target) && !target.closest('[data-ss-sidebar-wiki-open]')) {
                 open = false;
                 sync();
             }

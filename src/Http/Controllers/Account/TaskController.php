@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Komendy z pola komend menu błyskawicy (`todo:` zapisuje zadanie o wpisanej nazwie) i przełączenie wykonania
  * zadania z listy TODO w panelu powiadomień; po każdej zmianie powrót na poprzednią stronę z komunikatem. Komenda
  * wysłana skryptem (js/command-box.js, `Accept: application/json`) dostaje zamiast przekierowania JSON z komunikatem
- * i odświeżoną listą zadań (x-admiro::app.tasks), więc pole zostaje otwarte na kolejne zadanie.
+ * i odświeżoną listą zadań (x-admiro::app.tasks; `lists` — lista w każdym zakresie: panel powiadomień i sidebar wiki), więc pole zostaje otwarte na kolejne zadanie.
  */
 final readonly class TaskController
 {
@@ -62,7 +62,11 @@ final readonly class TaskController
         if ($request->expectsJson()) {
             return new JsonResponse([
                 'message' => text('account.task_added'),
-                'tasks' => BladeCompiler::render('<x-admiro::app.tasks :tasks="$tasks" />', ['tasks' => $this->panel->for($zone, $account)]),
+                'tasks' => $panel = BladeCompiler::render('<x-admiro::app.tasks :tasks="$tasks" />', ['tasks' => $tasks = $this->panel->for($zone, $account)]),
+                'lists' => [
+                    'panel' => $panel,
+                    'sidebar' => BladeCompiler::render('<x-admiro::app.tasks :tasks="$tasks" scope="sidebar" />', ['tasks' => $tasks]),
+                ],
             ]);
         }
 

@@ -6,6 +6,15 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Sidebar wiki: nagłówek z ikoną na kafelku jak w panelu powiadomień (nowa ikona `book-open`, Lucide), a pod wiki zadania TODO konta — pole „/todo:” zapisujące zadanie w tle i lista z polem wykonania; lista jest przypisana do konta, które ją zapisuje, i odświeża się w panelu powiadomień i w sidebarze naraz.
+- Kafelek „Wiki” w narzędziach panelu kalendarza (obok ustawień) otwiera prawy sidebar wiki; zamiast pionowej zakładki przy prawej krawędzi — nieprzypięty sidebar nie zajmuje kolumny, a pinezka obok × przypina go na stałe.
+- Szybkie akcje teczek `x-admiro::folder-actions`: ikona błyskawicy za zakładkami teczek z „Zapisz” (formularz wybranej teczki) i „Anuluj”.
+- Wpisy wiki mogą mieć instrukcję „Jak korzystać” (`wiki.<klucz>.usage`).
+
+### Fixed
+
+- Menu błyskawicy: sekcja z polem komend w kolorze reszty menu, a arkusz z kropkami na całą szerokość, bez bocznych marginesów.
+
 - Nowy wariant layoutu stref z kolumnami `Enums\AppLayout::Columns` (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`): nagłówek i stopka jak w layoucie stref, a treść w kolumnach (`x-admiro::app.columns`) — po lewej menu strony w pudełku na wysokość okna z własnym przewijaniem, także palcem na ekranie dotykowym (slot `left` — pusty daje pusty kontener —, bez niego na stronach ustawień kategorie ustawień — wydzielony komponent `x-admiro::app.settings-nav`), na środku treść, po prawej sidebar wiki i podpowiedzi (`x-admiro::app.sidebar-wiki`, `js/sidebar-wiki.js`, slot `sidebar-wiki` — jedyne miejsce na wiki strony), który pinezka przypina jako stałą kolumnę (stan w przeglądarce), a nieprzypięty wysuwa się z wąskiej zakładki przy prawej krawędzi; ikona `pin` (Lucide).
 - Zadania TODO konta w layoucie stref: w dolnej sekcji menu błyskawicy (jasny pasek od lewej do prawej krawędzi teczki, pod kartką w kropki) subtelne pole komend z delikatną szarą obwódką i wyciszonym przyciskiem Enter wewnątrz, wysyłane w tle (na czas zapisu loader zamiast strzałki Entera, potem puste pole na kolejne zadanie i odświeżona lista TODO; `TaskController::store()` odpowiada na żądanie JSON komunikatem i listą zadań) — „/” z listą komend systemu (`Enums\QuickCommand`, domyślnie `todo:`), po której wpisuje się od razu nazwę zadania; zadania jak zgłoszenia (numer, stan, nazwa, tytuł, opis, termin, opóźnienie, projekt, klient — tabela `account_tasks`, `Tasks\AccountTasks`) w panelu powiadomień pod zakładkami (podział 60% / 40% wysokości), z polem wyboru oznaczającym wykonanie (i ponowne otwarcie).
 - Karta obracana `x-admiro::flip-card` (js/flip-card.js; ikona `rotate-left` z REICON, MIT — licencja w `public/assets/img/icons/LICENSE-reicon.txt`): przycisk w prawym górnym rogu obraca kartę w 3D na odwrót, zjechanie kursorem, Esc albo „Wróć” obracają ją z powrotem (zakryta strona znika w połowie obrotu, więc teksty obu stron nie nachodzą na siebie); lista kontekstów konta jako osobny komponent `x-admiro::app.context-list` (także w przełączniku kontekstu).

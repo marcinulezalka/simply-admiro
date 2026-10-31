@@ -1689,6 +1689,87 @@ a.ss-onboarding-organizations__missing:hover {
     padding-right: 48px;
 }
 
+.ss-folders__tabs[hidden] + .ss-folder-actions {
+    margin-bottom: 0;
+}
+
+/* Szybkie akcje teczek (x-admiro::folder-actions) zaraz za zakładkami: teczki z nimi układają pierwszy rząd z zakładek
+   i błyskawicy, a każda teczka zajmuje cały kolejny rząd. Menu „Zapisz” / „Anuluj” rozwija się pod ikoną. */
+.ss-folders:has(> .ss-folder-actions) {
+    flex-flow: row wrap;
+    align-items: flex-end;
+    column-gap: 0;
+}
+
+.ss-folders:has(> .ss-folder-actions) > .ss-folder {
+    flex: 1 1 100%;
+}
+
+.ss-folders:has(> .ss-folder-actions) > .ss-folders__tabs {
+    padding-right: 0;
+}
+
+.ss-folder-actions {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    margin-bottom: calc(-1 * var(--ss-space-3));
+}
+
+.ss-folder-actions__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 44px;
+    border-radius: var(--ss-folder-radius, 1.5rem) var(--ss-folder-radius, 1.5rem) 0 0;
+    color: var(--ss-color-muted);
+    list-style: none;
+    cursor: pointer;
+}
+
+.ss-folder-actions__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.ss-folder-actions__toggle:hover,
+.ss-folder-actions[open] > .ss-folder-actions__toggle {
+    background: var(--ss-folder-back-inactive, var(--ss-color-surface-muted));
+    color: var(--ss-color-text);
+}
+
+.ss-folder-actions__toggle:focus-visible {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: -2px;
+}
+
+.ss-folder-actions__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.ss-folder-actions__panel {
+    position: absolute;
+    top: calc(100% + var(--ss-space-1));
+    left: 0;
+    z-index: 45;
+    min-width: 12rem;
+    padding: var(--ss-space-2);
+    border: 1px solid var(--ss-color-border);
+    border-radius: var(--ss-radius-card);
+    background: var(--ss-color-surface);
+    box-shadow: var(--ss-shadow-overlay);
+}
+
+.ss-folder-actions__panel .ss-account-menu__link {
+    width: 100%;
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
 .ss-folders__tabs[hidden] {
     display: none;
 }
@@ -2699,6 +2780,12 @@ a.ss-onboarding-picker__name:hover {
     margin: 0;
     font-size: 0.875rem;
     line-height: 1.6;
+}
+
+.ss-wiki-tip__usage {
+    max-width: 60rem;
+    margin: 0;
+    font-size: 0.875rem;
 }
 
 .ss-wiki-tip__example {
@@ -5933,9 +6020,10 @@ a.ss-notification:focus-visible {
 
 /**
  * .ss-sidebar-wiki — prawy sidebar wiki i podpowiedzi (x-admiro::app.sidebar-wiki, js/sidebar-wiki.js): nagłówek
- * (__head: tytuł z ikoną, pinezka __pin i × __close) nad przewijaną treścią (__body; pusty — __empty). Bez skryptu
- * panel stoi w prawej kolumnie; ze skryptem (--js) nieprzypięty panel chowa się za wąską pionową zakładką (__rail)
- * przy prawej krawędzi i wysuwa nad treść (--open), a przypięty (--pinned, od 64rem) stoi w kolumnie bez zakładki i ×.
+ * (__head: ikona na kafelku i tytuł jak w panelu powiadomień, pinezka __pin i × __close) nad przewijaną treścią
+ * (__body; pusty — __empty) i zadaniami TODO konta (__tasks: pole „/todo:” i lista, ok. 40% wysokości panelu). Bez
+ * skryptu panel stoi w prawej kolumnie; ze skryptem (--js) nieprzypięty panel nie zajmuje kolumny (kafelek „Wiki”
+ * w panelu kalendarza wysuwa go z prawej nad treść, --open), a przypięty (--pinned, od 64rem) stoi w kolumnie bez ×.
  */
 .ss-sidebar-wiki {
     position: sticky;
@@ -5971,18 +6059,45 @@ a.ss-notification:focus-visible {
 }
 
 .ss-sidebar-wiki__title {
-    display: flex;
     flex: 1;
-    gap: var(--ss-space-2);
-    align-items: center;
     min-width: 0;
     margin: 0;
+    font-size: 1rem;
     font-weight: 600;
 }
 
-.ss-sidebar-wiki__title-icon {
-    flex: none;
-    color: var(--ss-color-muted);
+/* Nieprzypięty sidebar ze skryptem nie zajmuje kolumny siatki: panel jest wysuwany (fixed), a ścieżka znika. */
+.ss-sidebar-wiki--js:not(.ss-sidebar-wiki--pinned) {
+    display: contents;
+}
+
+.ss-columns:has(> .ss-sidebar-wiki--js:not(.ss-sidebar-wiki--pinned)) {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 64rem) {
+    .ss-columns--with-left:has(> .ss-sidebar-wiki--js:not(.ss-sidebar-wiki--pinned)) {
+        grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
+    }
+}
+
+/* Zadania TODO konta pod wiki: pole „/todo:” i lista z własnym przewijaniem, ok. 40% wysokości panelu. */
+.ss-sidebar-wiki__tasks {
+    display: flex;
+    flex: 0 1 40%;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+    min-height: 0;
+    padding: var(--ss-space-3) var(--ss-space-4) var(--ss-space-4);
+    border-top: 1px solid var(--ss-color-border);
+}
+
+.ss-sidebar-wiki__body {
+    flex: 1 1 60%;
+}
+
+.ss-command__toggle--static {
+    cursor: default;
 }
 
 .ss-sidebar-wiki__pin[aria-pressed="true"] {
@@ -6001,43 +6116,6 @@ a.ss-notification:focus-visible {
 .ss-sidebar-wiki__empty {
     margin: 0;
     color: var(--ss-color-muted);
-}
-
-.ss-sidebar-wiki__rail {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ss-space-2);
-    align-items: center;
-    width: 2.5rem;
-    padding: var(--ss-space-3) 0;
-    border: 1px solid var(--ss-color-border);
-    border-radius: var(--ss-radius-button);
-    background: var(--ss-color-surface);
-    box-shadow: var(--ss-shadow-soft);
-    color: var(--ss-color-text);
-    font: inherit;
-    cursor: pointer;
-}
-
-.ss-sidebar-wiki__rail:hover {
-    background: var(--ss-color-surface-muted);
-}
-
-.ss-sidebar-wiki__rail:focus-visible {
-    outline: 2px solid var(--ss-color-accent);
-    outline-offset: 2px;
-}
-
-.ss-sidebar-wiki__rail-icon {
-    flex: none;
-}
-
-.ss-sidebar-wiki__rail-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
 }
 
 .ss-sidebar-wiki--js:not(.ss-sidebar-wiki--pinned) .ss-sidebar-wiki__panel {
@@ -6060,7 +6138,6 @@ a.ss-notification:focus-visible {
     transition: transform 0.25s ease;
 }
 
-.ss-sidebar-wiki--pinned .ss-sidebar-wiki__rail,
 .ss-sidebar-wiki--pinned .ss-sidebar-wiki__close {
     display: none;
 }
@@ -8898,7 +8975,15 @@ button.ss-context__back {
     display: none;
 }
 
+button.ss-quick-tile {
+    width: 100%;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
 a.ss-quick-tile,
+button.ss-quick-tile,
 .ss-quick-tile__toggle {
     display: flex;
     gap: var(--ss-space-2);
@@ -8916,12 +9001,14 @@ a.ss-quick-tile,
 }
 
 a.ss-quick-tile:hover,
+button.ss-quick-tile:hover,
 .ss-quick-tile__toggle:hover,
 .ss-quick-tile--menu[open] {
     border-color: var(--ss-color-border-strong);
 }
 
 a.ss-quick-tile:focus-visible,
+button.ss-quick-tile:focus-visible,
 .ss-quick-tile__toggle:focus-visible {
     outline: 2px solid var(--ss-color-accent);
     outline-offset: 2px;
@@ -9255,11 +9342,15 @@ a.ss-org-item:focus-visible {
     transform: scaleY(-1);
 }
 
+/* Arkusz z siatką kropek na całą szerokość tła teczki: bez wcięcia __body po bokach, bez bocznych obwódek i zaokrągleń. */
 .ss-search__folder-sheet {
     min-height: 5rem;
+    margin: 0 calc(-1 * var(--ss-space-3));
     padding: var(--ss-space-3);
     border: 1px solid var(--ss-folder-edge, var(--ss-color-border));
-    border-radius: var(--ss-radius-card);
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
     background-color: var(--ss-workspace-bg);
     background-image: var(--ss-workspace-dots);
     background-size: 20px 20px;
@@ -9269,14 +9360,11 @@ a.ss-org-item:focus-visible {
     background-image: none;
 }
 
-/* Dolna sekcja teczki z polem komend (admiro::search.commands): jasny pasek od lewej do prawej krawędzi tła teczki
-   (bez wcięcia __body), za cienką linią; lewy dolny róg prosty, bo tam tło schodzi wypustką do przycisku. */
+/* Dolna sekcja teczki z polem komend (admiro::search.commands): w kolorze tła teczki, jak reszta menu, pod arkuszem
+   z kropkami. */
 .ss-search__folder-foot {
-    margin: var(--ss-space-1) calc(-1 * var(--ss-space-3)) calc(-1 * var(--ss-space-3));
-    padding: var(--ss-space-3);
-    border-top: 1px solid var(--ss-folder-edge, var(--ss-color-border));
-    border-radius: 0 0 var(--ss-folder-radius, 1.5rem) 0;
-    background: var(--ss-color-surface);
+    padding-top: var(--ss-space-1);
+    background: var(--ss-folder-back, var(--ss-color-surface-muted));
 }
 
 /* Karta obracana (x-admiro::flip-card): przód i tył w jednej komórce siatki (wysokość większej), obrót w 3D wokół osi

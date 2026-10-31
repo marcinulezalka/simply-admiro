@@ -34,7 +34,7 @@
     @endif
 </form>
 @if ($compose && $search->findActions !== null && $commandUrl !== null)
-    <form class="ss-command__form" id="ss-command-form" method="POST" action="{{ $commandUrl }}" hidden>
+    <form class="ss-command__form" id="ss-command-form" method="POST" action="{{ $commandUrl }}" hidden data-ss-command-form>
         @csrf
     </form>
 @endif

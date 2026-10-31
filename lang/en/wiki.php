@@ -18,6 +18,7 @@ declare(strict_types=1);
 return [
     'label' => 'Wiki',
     'example' => 'Example',
+    'usage' => 'How to use',
     'title' => 'Wiki — glossary',
     'lead' => 'The system’s terms in one place: definitions, examples and answers to common questions. Every entry has a wiki-… tag you can link to.',
     'search_label' => 'Search the glossary',
