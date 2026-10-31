@@ -18,6 +18,7 @@ use Simplysmart\Admiro\Panel\Http\Controllers\AccountActionController;
 use Simplysmart\Admiro\Panel\Http\Controllers\AdministratorController;
 use Simplysmart\Admiro\Panel\Http\Controllers\AuditController;
 use Simplysmart\Admiro\Panel\Http\Controllers\DictionaryController;
+use Simplysmart\Admiro\Panel\Http\Controllers\DictionaryUpdateController;
 use Simplysmart\Admiro\Panel\Http\Controllers\ExchangeRateController;
 use Simplysmart\Admiro\Panel\Http\Controllers\HolidayController;
 use Simplysmart\Admiro\Panel\Http\Controllers\LegalDocumentController;
@@ -87,10 +88,13 @@ Route::middleware(ZonePermission::middleware(Permission::SettingsView))->group(s
     Route::get('exchange-rates', [ExchangeRateController::class, 'index'])->name('exchange-rates.index');
     Route::get('legal-documents/{document}', [LegalDocumentController::class, 'index'])->name('legal-documents.index');
     Route::get('holidays', [HolidayController::class, 'index'])->name('holidays.index');
+    Route::get('dictionary-updates', [DictionaryUpdateController::class, 'index'])->name('dictionary-updates.index');
 });
 
 Route::middleware([ZonePermission::middleware(Permission::SettingsManage), 'throttle:admiro.sign-in'])->group(static function (): void {
     Route::post('dictionaries/{dictionary}/{code}/toggle', [DictionaryController::class, 'toggle'])->name('dictionaries.toggle');
+    Route::post('dictionary-updates/{dictionaryRequest}/approve', [DictionaryUpdateController::class, 'approve'])->name('dictionary-updates.approve');
+    Route::post('dictionary-updates/{dictionaryRequest}/reject', [DictionaryUpdateController::class, 'reject'])->name('dictionary-updates.reject');
     Route::post('tax-rates/{country}', [TaxRateController::class, 'store'])->name('tax-rates.store');
     Route::put('tax-rates/{country}/{rate}', [TaxRateController::class, 'end'])->name('tax-rates.end');
     Route::post('exchange-rates/sync', [ExchangeRateController::class, 'sync'])->name('exchange-rates.sync');

@@ -39,6 +39,7 @@ use Simplysmart\Admiro\Providers\CookiesServiceProvider;
 use Simplysmart\Admiro\Providers\CoreRoutesServiceProvider;
 use Simplysmart\Admiro\Providers\DesignSystemServiceProvider;
 use Simplysmart\Admiro\Providers\ExchangeRatesServiceProvider;
+use Simplysmart\Admiro\Providers\DictionaryUpdatesServiceProvider;
 use Simplysmart\Admiro\Providers\HolidaysServiceProvider;
 use Simplysmart\Admiro\Providers\LegalServiceProvider;
 use Simplysmart\Admiro\Providers\PermissionsServiceProvider;
@@ -84,6 +85,7 @@ final class AdmiroServiceProvider extends ServiceProvider
         CookiesServiceProvider::class,
         LegalServiceProvider::class,
         HolidaysServiceProvider::class,
+        DictionaryUpdatesServiceProvider::class,
     ];
 
     /**

@@ -36,6 +36,14 @@ return [
         ],
     ],
 
+    'dictionary_update_status' => [
+        'pending' => 'Waiting for an administrator',
+        'approved' => 'Approved, queued',
+        'done' => 'Done',
+        'failed' => 'Failed',
+        'rejected' => 'Rejected',
+    ],
+
     'record_status' => [
         'draft' => 'Draft',
         'pending' => 'Pending',

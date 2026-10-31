@@ -388,6 +388,16 @@ są w Core; ekrany konfiguracji powstają w strefie administratorów `admiro`.
   pod powiadomieniami w panelu bocznym (`Tasks\AccountTaskPanel`, `x-admiro::app.tasks`) przełącza wykonanie
   (`account.tasks.toggle`): otwarte od najstarszego numeru, pod nimi 5 ostatnio wykonanych.
 
+## 14d. Prośby o aktualizację słowników
+
+| Tabela | Model | Kolumny |
+| --- | --- | --- |
+| `dictionary_update_requests` | `DictionaryUpdateRequest` | standardowe (`name` — nazwa słownika w chwili prośby, `status` — stan dziedzinowy `Enums\DictionaryUpdateStatus`: `pending`, `approved`, `done`, `failed`, `rejected`); `dictionary` (klucz `Contracts\DictionaryUpdater`), `zone` i `account_id` (proszący, bez klucza obcego), `organization_id`, `decided_by` (konto administratora), `decided_at`, `completed_at`, `result` (podsumowanie albo błąd) |
+
+- Strefy nie pobierają danych z zewnątrz: synchronizują słowniki z plików administratora, a o aktualizację proszą przez
+  `DictionaryUpdates\DictionaryUpdateRequests` (jedna otwarta prośba na słownik). Administrator zatwierdza albo odrzuca
+  w panelu (`dictionary-updates.index`); zatwierdzenie wstawia `DictionaryUpdates\RunDictionaryUpdate` do kolejki.
+
 ## 15. Organizacje i uprawnienia
 
 Uprawnienia stref działają na `spatie/laravel-permission` z włączonymi zespołami. Zespołem jest

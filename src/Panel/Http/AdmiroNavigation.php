@@ -105,6 +105,7 @@ final readonly class AdmiroNavigation implements ZoneNavigation, ZoneSitemap, Zo
                 $this->itemIf(Permission::SettingsView, 'dictionaries.index', 'admiro::admin.dictionaries_title', 'dictionaries', 'dictionaries.*', ['dictionary' => 'countries']),
                 $this->itemIf(Permission::SettingsView, 'exchange-rates.index', 'admiro::admin.exchange_rates_title', 'credit-card', 'exchange-rates.*'),
                 $this->itemIf(Permission::SettingsView, 'holidays.index', 'admiro::admin.holidays_title', 'calendar', 'holidays.*'),
+                $this->itemIf(Permission::SettingsView, 'dictionary-updates.index', 'admiro::admin.dictionary_updates.title', 'refresh', 'dictionary-updates.*'),
             )),
         ]);
     }

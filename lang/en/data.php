@@ -143,6 +143,20 @@ return [
         'table_number' => 'NBP table number',
     ],
 
+    'dictionary_update_request' => [
+        'name' => 'Dictionary',
+        'dictionary' => 'Dictionary key',
+        'status' => 'State',
+        'zone' => 'Zone',
+        'account_id' => 'Account',
+        'organization_id' => 'Organization',
+        'decided_by' => 'Decided by',
+        'decided_at' => 'Decision',
+        'completed_at' => 'Completed',
+        'result' => 'Result',
+        'created_at' => 'Requested on',
+    ],
+
     'account_task' => [
         'name' => 'Name',
         'status' => 'Status',

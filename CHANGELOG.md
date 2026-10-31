@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Aktualizacje słowników po zatwierdzeniu administratora: strefy nie pobierają danych z zewnątrz, tylko proszą o aktualizację (`DictionaryUpdates\DictionaryUpdateRequests`, tabela `dictionary_update_requests`); paczki rejestrują słowniki jako `Contracts\DictionaryUpdater`, a panel admiro ma stronę „Aktualizacje słowników” z „Zatwierdź” (zadanie w kolejce `RunDictionaryUpdate`, wynik albo błąd w prośbie) i „Odrzuć”.
 - Sidebar wiki: nagłówek z ikoną na kafelku jak w panelu powiadomień (nowa ikona `book-open`, Lucide), a pod wiki zadania TODO konta — pole „/todo:” zapisujące zadanie w tle i lista z polem wykonania; lista jest przypisana do konta, które ją zapisuje, i odświeża się w panelu powiadomień i w sidebarze naraz.
 - Kafelek „Wiki” w narzędziach panelu kalendarza (obok ustawień) otwiera prawy sidebar wiki; zamiast pionowej zakładki przy prawej krawędzi — nieprzypięty sidebar nie zajmuje kolumny, a pinezka obok × przypina go na stałe.
 - Szybkie akcje teczek `x-admiro::folder-actions`: ikona błyskawicy za zakładkami teczek z „Zapisz” (formularz wybranej teczki) i „Anuluj”.

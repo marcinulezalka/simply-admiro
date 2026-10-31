@@ -143,6 +143,20 @@ return [
         'table_number' => 'Numer tabeli NBP',
     ],
 
+    'dictionary_update_request' => [
+        'name' => 'Słownik',
+        'dictionary' => 'Klucz słownika',
+        'status' => 'Stan',
+        'zone' => 'Strefa',
+        'account_id' => 'Konto',
+        'organization_id' => 'Organizacja',
+        'decided_by' => 'Zdecydował',
+        'decided_at' => 'Decyzja',
+        'completed_at' => 'Wykonano',
+        'result' => 'Wynik',
+        'created_at' => 'Prośba z dnia',
+    ],
+
     'account_task' => [
         'name' => 'Nazwa',
         'status' => 'Status',

@@ -36,6 +36,14 @@ return [
         ],
     ],
 
+    'dictionary_update_status' => [
+        'pending' => 'Czeka na administratora',
+        'approved' => 'Zatwierdzona, w kolejce',
+        'done' => 'Wykonana',
+        'failed' => 'Nieudana',
+        'rejected' => 'Odrzucona',
+    ],
+
     'record_status' => [
         'draft' => 'Szkic',
         'pending' => 'Oczekuje',
