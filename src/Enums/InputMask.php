@@ -15,7 +15,7 @@ namespace Simplysmart\Admiro\Enums;
 
 /**
  * Maska popularnych pól (x-admiro::input, js/input-mask.js): wzór (`9` cyfra, `A` litera, pozostałe znaki
- * wstawiane same), klawiatura, ikona i przykład. Formaty polskie; wzór jest też podany w podpowiedzi pola.
+ * wstawiane same), klawiatura, ikona i przykład. Formaty polskie; wzór narzuca maska w polu, bez przypisu z formatem pod nim.
  */
 enum InputMask: string
 {

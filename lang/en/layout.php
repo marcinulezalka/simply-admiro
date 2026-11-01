@@ -111,7 +111,6 @@ return [
         'warning' => 'Warning',
         'danger' => 'Error',
     ],
-    'mask_format' => 'Format: :format',
     'switch_context' => 'Switch context',
     'account_units' => 'Your units',
     'flip_card' => 'Flip the card',
@@ -180,6 +179,12 @@ return [
         'blue' => 'Blue',
         'emerald' => 'Emerald',
         'violet' => 'Violet',
+    ],
+
+    'autosave' => [
+        'saving' => 'Saving…',
+        'saved' => 'Saved',
+        'error' => 'Could not save — check the fields',
     ],
 
     'organization_form' => [

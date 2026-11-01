@@ -111,7 +111,6 @@ return [
         'warning' => 'Uwaga',
         'danger' => 'Błąd',
     ],
-    'mask_format' => 'Format: :format',
     'switch_context' => 'Przełącz kontekst',
     'account_units' => 'Twoje jednostki',
     'flip_card' => 'Odwróć kartę',
@@ -180,6 +179,12 @@ return [
         'blue' => 'Niebieska',
         'emerald' => 'Szmaragdowa',
         'violet' => 'Fioletowa',
+    ],
+
+    'autosave' => [
+        'saving' => 'Zapisywanie…',
+        'saved' => 'Zapisano',
+        'error' => 'Nie udało się zapisać — sprawdź pola',
     ],
 
     'organization_form' => [

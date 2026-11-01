@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Autozapis formularza (`js/autosave.js`, `form[data-ss-autosave]`): zmiana pola wysyła formularz w tle (JSON), stan „Zapisywanie…” / „Zapisano” / błąd w `.ss-autosave` (teksty `layout.autosave.*`), błędy walidacji pod polami; przycisk zapasowy `[data-ss-autosave-fallback]` tylko bez skryptu.
+- Lista wyboru kraju z flagą jako ikoną w polu `x-admiro::flag-select` (`js/flag-select.js`): strona niesie tylko kody flag, a obrazek flagi przychodzi z nowej trasy `admiro.flags.show` (`flags/{flag}.svg`, `Http\Controllers\FlagController`, długi cache).
 - Linki ze strzałką na prawo od zakładek teczek (`.ss-folders__links`, `.ss-folders__link`): osobny `<nav>` po rzędzie zakładek, poza `role="tablist"`; bez skryptu stoi nad teczkami.
 - Przełącznik układu teczki (`layouts` w `x-admiro::folder-search`) jako dropdown jak „+”: ikona przycisku pokazuje bieżący układ, a menu wybiera listę, siatkę albo (z `tree`) drzewo; wybrany z akcentem.
 - Komenda `wiki:` w polu komend błyskawicy i teczki (`QuickCommand::Wiki`): wpisana fraza prowadzi do nowej strony wiki konta w każdej strefie (`account.wiki`, wyszukiwanie po wpisach `Wiki\Wiki`); `js/command-box.js` przechodzi pod adres z `redirect` odpowiedzi.
@@ -57,6 +59,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Formularz danych organizacji `x-admiro::organization.fields`: karty w kolejności dane organizacji → dane adresowe → dane kontaktowe, nagłówek każdej karty z ikoną (`.ss-card__title--icon`), każde pole w osobnym wierszu; flaga kraju jako ikona w polu kraju adresu, a każdy telefon w osobnym wierszu: prefiks z flagą (sam numer kierunkowy, np. `+48`) i numer.
+- Pole z maską `x-admiro::input` nie dodaje już przypisu z formatem pod polem (format narzuca maska; usunięty tekst `layout.mask_format`).
+- Zakładki teczek mogą być odnośnikami do osobnych stron: `.ss-folders__tabs` jako `<nav>` z `<a class="ss-folder__tab">`, bieżąca z `aria-current="page"` (wygląd jak wybranej zakładki, bez skryptu `js/tabs.js`).
 - Pole komend w menu błyskawicy w stopce (i w sidebarze wiki) ma błyskawicę zamiast znaku „/” przed `todo:`; aktywna błyskawica — najechana albo z otwartym dropdownem, w polu teczki i w szybkich akcjach teczek — jest żółto-czerwona i błyska jak ta w stopce.
 - Komenda `todo:` nazywa się „Dodaj zadanie” (zamiast „Nowe zadanie”).
 - Sidebar wiki i podpowiedzi o 50% szerszy (30rem w kolumnie, do 33rem wysunięty).

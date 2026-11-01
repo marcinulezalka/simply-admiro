@@ -224,6 +224,10 @@ Wariant layoutu stref (`app_layout` = `columns` albo `Contracts\ZoneAppLayout`, 
 
 **Szybkie akcje teczek** (`x-admiro::folder-actions`, `js/folder-actions.js`): sama ikona błyskawicy na pierwszym miejscu, przed zakładkami `.ss-folders`, jako dropdown (rozwinięte menu leży nad teczką) z „Zapisz” (wysyła formularz wybranej teczki oznaczony `form[data-ss-folder-form]`) i „Anuluj” (odnośnik `cancelUrl`, powrót bez zmian).
 
+**Zakładki jako osobne strony**: gdy zakładki oznaczają relacje między widokami, każda ma własną trasę —
+`.ss-folders__tabs` to wtedy `<nav>` z odnośnikami `<a class="ss-folder__tab">` (bieżąca z `aria-current="page"`,
+wygląd wybranej zakładki), bez `data-ss-tabs` i bez `js/tabs.js`, a strona rysuje tylko teczkę bieżącej zakładki.
+
 **Linki przy zakładkach teczek** (`.ss-folders__links`): `<nav>` zaraz po `.ss-folders__tabs` z odnośnikami `.ss-folders__link` (tekst i ikona `arrow-right`) — przypięty do prawej strony rzędu zakładek, poza `role="tablist"`, np. do stron tematycznych modułu.
 
 **Pole komend w pasku teczki** (`x-admiro::folder-search`, `js/live-search.js`, `js/command-box.js`): w `.ss-folder__toolbar` każdej teczki białe pole jak pole komend menu błyskawicy (`.ss-command--folder`): na początku „+” z dropdownem akcji teczki (slot `add`, np. „Dodaj gabinet” otwierający modal), z `layouts` dropdown układu — ikona pokazuje bieżący układ, menu wybiera listę albo siatkę, z `tree` także drzewo (`js/folder-layout.js`: `data-ss-layout` na elemencie wyników, wybór w `localStorage`; lista to zwarte wpisy w jednej ramce — tylko część główna wiersza —, siatka to wpisy jako teczki z zakładką bez akcji, a drzewo to pełne wiersze z faktami, akcjami i edycją w tabeli z wcięciem `data-ss-depth`; wiersze rodziców `.ss-record-row--tree` i fakty `.ss-record-row__fact--tree` są widoczne tylko w drzewie; wiersz z otwartą edycją zostaje pełny w każdym układzie), przycisk komendy z błyskawicą w miejscu „/” (co 12 s drży jak piorun, bez animacji przy `prefers-reduced-motion`; najechana albo z otwartą listą — także błyskawica szybkich akcji teczek — żółto-czerwona jak w stopce) i wybraną komendą, pole i wyciszony Enter. Domyślna komenda `szukaj:` to formularz GET (`action`, ukryte `params`, parametr `name`) podmieniający na żywo tylko element wyników o id `results`; z `commandUrl` przycisk rozwija też komendy `Enums\QuickCommand` (np. `todo:`), a wybór przepina pole do formularza komend (atrybuty `form`, zapis w tle).
@@ -394,8 +398,19 @@ jako ton statystyki.
   rozwija formularz zapasowego adresu i ukrywa kroki bez zapasowego adresu, zwinięcie przywraca kroki; otwarty od razu,
   gdy czeka kod albo są błędy. Przyciski standardowe, „Wróć do logowania” drugorzędny.
 - **Maski** `Enums\InputMask` (telefon, kod pocztowy, NIP, PESEL, numer rachunku): wzór (`9` cyfra, `A` litera),
-  klawiatura numeryczna, ikona, przykład w placeholderze i format w podpowiedzi. `js/input-mask.js` formatuje
-  w trakcie pisania i przy wklejaniu; bez skryptu pole przyjmuje tekst, a format podaje podpowiedź.
+  klawiatura numeryczna, ikona i przykład w placeholderze, bez przypisu z formatem pod polem (format narzuca maska).
+  `js/input-mask.js` formatuje w trakcie pisania i przy wklejaniu; bez skryptu pole przyjmuje tekst, a format pokazuje
+  przykład w placeholderze.
+- **Kraj z flagą** `x-admiro::flag-select`: lista wyboru z flagą wybranej opcji jako ikoną w polu (kraj adresu,
+  prefiks telefonu). Strona niesie tylko kody flag i szablon adresu; obrazek SVG przychodzi z trasy
+  `admiro.flags.show` (długi cache), a `js/flag-select.js` podmienia go po zmianie wyboru.
+- **Formularz danych organizacji** `x-admiro::organization.fields`: karty dane organizacji → dane adresowe → dane
+  kontaktowe, nagłówek z ikoną (`.ss-card__title--icon`), każde pole w osobnym wierszu, każdy telefon w wierszu
+  „prefiks z flagą + numer”.
+- **Autozapis** `form[data-ss-autosave]` (`js/autosave.js`): zmiana pola wysyła formularz w tle z
+  `Accept: application/json` (kontroler odpowiada JSON-em, walidacja — 422 z `errors`), stan w `.ss-autosave`
+  (`data-ss-autosave-status`, teksty `layout.autosave.*`), błędy pod polami; bez przycisku „Zapisz” — przycisk
+  `[data-ss-autosave-fallback]` widać tylko bez skryptu.
 - **Awatar** `x-admiro::avatar`: zdjęcie albo inicjały (`View\Initials`: pierwsza i ostatnia część zaczynająca
   się wielką literą, bez „dr” itp.), rozmiary `sm`, `md`, `lg`, `accent` dla bieżącego użytkownika. Jest
   dekoracyjny — nazwę podaje tekst obok (`.ss-person`). Pokazujemy go wszędzie, gdzie prezentujemy osoby.

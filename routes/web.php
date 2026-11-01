@@ -13,14 +13,16 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use Simplysmart\Admiro\Http\Controllers\CookieController;
+use Simplysmart\Admiro\Http\Controllers\FlagController;
 use Simplysmart\Admiro\Http\Controllers\LegalDocumentController;
 use Simplysmart\Admiro\Providers\CookiesServiceProvider;
 
 /*
  * Trasy Core (nazwy z prefiksem `admiro.`, prefiks {locale} i middleware z Providers\CoreRoutesServiceProvider).
- * Strefa administratorów ma ten sam prefiks nazw: jej trasy nie mogą się nazywać `cookies.*` ani `legal.*`.
+ * Strefa administratorów ma ten sam prefiks nazw: jej trasy nie mogą się nazywać `cookies.*`, `legal.*` ani `flags.*`.
  */
 Route::get('cookies', [CookieController::class, 'policy'])->name('cookies.policy');
 Route::get('polityka-prywatnosci', [LegalDocumentController::class, 'privacy'])->name('legal.privacy');
 Route::get('rodo', [LegalDocumentController::class, 'gdpr'])->name('legal.gdpr');
 Route::post('cookies/consent', [CookieController::class, 'consent'])->middleware('throttle:' . CookiesServiceProvider::THROTTLE)->name('cookies.consent');
+Route::get('flags/{flag}.svg', FlagController::class)->where('flag', FlagController::PATTERN)->name('flags.show');

@@ -1866,6 +1866,12 @@ a.ss-onboarding-organizations__missing:hover {
     opacity: 0.7;
 }
 
+/* Zakładka-odnośnik (.ss-folders__tabs jako <nav>, każda zakładka to osobna strona): bieżąca z aria-current="page". */
+a.ss-folder__tab {
+    text-decoration: none;
+}
+
+.ss-folder__tab[aria-current="page"],
 .ss-folder__tab[aria-selected="true"] {
     z-index: 2;
     background: var(--ss-folder-back);
@@ -3859,6 +3865,20 @@ textarea.ss-input {
     margin: 0 0 var(--ss-space-4);
     font-size: 1rem;
     font-weight: 600;
+}
+
+/* Nagłówek karty z ikoną przed nazwą (np. karty x-admiro::organization.fields). */
+.ss-card__title--icon {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+}
+
+.ss-card__title-icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--ss-color-muted);
 }
 
 .ss-card__lead {
@@ -6729,6 +6749,45 @@ a.ss-notification:focus-visible {
 .ss-phone__prefix {
     flex: none;
     width: auto;
+}
+
+.ss-phone > .ss-flag-select {
+    flex: none;
+}
+
+/**
+ * .ss-flag-select — lista wyboru kraju z flagą wybranej opcji jako ikoną w polu (x-admiro::flag-select, js/flag-select.js):
+ * obrazek flagi (4:3) w miejscu ikony .ss-input-wrap__icon, w pełnych kolorach.
+ */
+.ss-flag-select__flag {
+    width: 1.333rem;
+    height: 1rem;
+    opacity: 1;
+}
+
+.ss-flag-select__flag[hidden] {
+    display: none;
+}
+
+/**
+ * .ss-autosave — stan zapisu formularza zapisywanego automatycznie (js/autosave.js, form[data-ss-autosave]): mały napis
+ * „Zapisywanie…” / „Zapisano” / błąd (data-state) z ikoną, bez przycisku „Zapisz”.
+ */
+.ss-autosave {
+    display: inline-flex;
+    gap: var(--ss-space-1);
+    align-items: center;
+    min-height: 1.25rem;
+    color: var(--ss-color-muted);
+    font-size: 0.8125rem;
+}
+
+.ss-autosave[data-state="saved"] {
+    color: var(--ss-color-success);
+}
+
+.ss-autosave[data-state="error"] {
+    color: var(--ss-color-danger);
 }
 
 .ss-phone__number {
