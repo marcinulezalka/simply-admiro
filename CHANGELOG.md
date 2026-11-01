@@ -6,8 +6,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
-- Karta w wyglądzie teczki `x-admiro::folder-card`: nagłówek z ikoną na wypustce-zakładce, treść w ciele teczki, opcjonalna stopka; z `editable` karta formularza ma dwa stany (`js/edit-card.js`): podgląd z polami tylko do odczytu i „Edytuj”, potem edycja z „Zapisz” i „Anuluj” (przywraca wartości); zapis wysyła cały formularz jednym wpisem historii, a karta z błędem walidacji otwiera się w edycji.
-- Globalne atrybuty rekordów danych (`Attributes\CustomAttributes`, `json_attributes.custom`): edytor `x-admiro::attributes-editor` (`js/attributes-editor.js`) z „Dodaj atrybut”, wierszami grupa – nazwa – wartość, usuwaniem i zmianą kolejności przeciąganiem (także strzałkami na uchwycie); zapis przez model z historią, pozostałe klucze `json_attributes` zostają.
+- `Enums\InputMask::format()`: wartość w układzie maski do prezentacji (np. NIP `123-456-32-18`).
+- Karta w wyglądzie teczki `x-admiro::folder-card`: nagłówek z ikoną na wypustce-zakładce, treść w ciele teczki, opcjonalna stopka i druga zakładka (`extraTitle`, slot `extra`, `js/folder-card.js`); z `editable` karta formularza ma dwa stany (`js/edit-card.js`): podgląd prezentacyjny (`.ss-folder-card__preview`, `.ss-preview`) z samym „Edytuj”, potem formularz (`.ss-folder-card__form`) z „Zapisz” i „Anuluj” (przywraca wartości); zapis wysyła cały formularz jednym wpisem historii, a karta z błędem walidacji otwiera się w edycji.
+- Pola dodatkowe rekordów danych (`Attributes\CustomAttributes`, `json_attributes.custom.<sekcja>`, pole `custom_attributes[<sekcja>][i][…]`): edytor `x-admiro::attributes-editor` (`js/attributes-editor.js`) z podglądem, „Dodaj pole”, wierszami grupa – nazwa – wartość (sekcja bez pól zawsze z pierwszym pustym wierszem), usuwaniem i zmianą kolejności przeciąganiem (także strzałkami na uchwycie); zapis sekcji przez model z historią, pozostałe sekcje i klucze `json_attributes` zostają; `x-admiro::organization.fields` z `customFields` ma przy każdej karcie zakładkę „Pola dodatkowe”.
 - Ikony `pencil` i `accessibility` (Lucide).
 - Autozapis formularza (`js/autosave.js`, `form[data-ss-autosave]`): zmiana pola wysyła formularz w tle (JSON), stan „Zapisywanie…” / „Zapisano” / błąd w `.ss-autosave` (teksty `layout.autosave.*`), błędy walidacji pod polami; przycisk zapasowy `[data-ss-autosave-fallback]` tylko bez skryptu.
 - Lista wyboru kraju z flagą jako ikoną w polu `x-admiro::flag-select` (`js/flag-select.js`): strona niesie tylko kody flag, a obrazek flagi przychodzi z nowej trasy `admiro.flags.show` (`flags/{flag}.svg`, `Http\Controllers\FlagController`, długi cache).
@@ -35,6 +36,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- W podglądzie karty w dwóch stanach widać tylko „Edytuj”: przyciski z atrybutem `hidden` („Zapisz”, „Anuluj”) nie przebijały się przez `display` z `.ss-button` / `.ss-icon-button`.
 - Pole komend teczki: dropdowny „+” i błyskawicy nie nachodzą na siebie — otwarcie jednego zamyka drugi, klik obok zamyka oba; zakładki w treści wstawionej skryptem (odświeżona lista TODO) działają (`ss:content`, `js/tabs.js`).
 - Casty modeli na PHP 8.4: `HasStandardColumns` dokłada już tylko casty kolumn, których model sam nie podaje. PHP 8.4 uruchamia ten trait po `HasAttributes`, więc nadpisywał casty modelu (np. `status` zadania TODO był tekstem zamiast `TaskStatus`, a oznaczenie zadania jako wykonanego kończyło się błędem).
 - Szybkie akcje teczek `x-admiro::folder-actions`: błyskawica stoi na pierwszym miejscu, przed zakładkami, a jej menu „Zapisz” / „Anuluj” rozwija się nad teczką (wcześniej teczka je zakrywała).
@@ -62,6 +64,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Podgląd kart `x-admiro::organization.fields` (tryb tylko do odczytu i karty `editable` przed „Edytuj”) prezentuje dane bez etykiet: nazwa, pod nią w jednym wierszu tylko wypełnione NIP, REGON i KRS, adres w dwóch wierszach z krajem, telefony z prefiksem i e-maile; bez danych — „Brak danych”.
 - Toasty po akcji pokazują się w prawym dolnym rogu ekranu (na wąskim ekranie nadal wyśrodkowane), a potem w zakładce komunikatów systemowych panelu powiadomień.
 - Lista zadań TODO konta stoi w panelu kalendarza — pod miesiącem i podglądem dnia, nad kafelkami — zamiast w dolnej części panelu powiadomień.
 - Kafelki „Tryb kolorów”, „Rozmiar tekstu” i „Powiększenie” w panelu kalendarza połączone w jeden kafelek „Dostępność” (ikona `accessibility`) z podpisanymi grupami; tekst `layout.zoom` usunięty.

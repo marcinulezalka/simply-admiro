@@ -75,6 +75,23 @@ enum InputMask: string
     }
 
     /**
+     * Wartość w układzie wzoru do prezentacji (np. NIP `1234563218` → `123-456-32-18`): cyfry wartości w miejscach `9`,
+     * separatory wzoru między nimi; wartość z inną liczbą cyfr — bez zmian.
+     */
+    public function format(string $value): string
+    {
+        $digits = str_split((string) preg_replace('/\D/', '', $value));
+
+        if (count($digits) !== substr_count($this->pattern(), '9')) {
+            return $value;
+        }
+
+        return (string) preg_replace_callback('/9/', static function () use (&$digits): string {
+            return (string) array_shift($digits);
+        }, $this->pattern());
+    }
+
+    /**
      * Czy wartość ma wszystkie cyfry wzoru (separatory dowolne), np. do walidacji NIP-u albo kodu pocztowego.
      */
     public function isComplete(string $value): bool

@@ -3,8 +3,8 @@
  * z <template data-ss-attributes-template> i ustawia fokus na jego nazwie, „Usuń” usuwa wiersz, a uchwyt
  * [data-ss-attributes-handle] przeciąga wiersz w nowe miejsce listy (HTML drag & drop; strzałki w górę/dół na uchwycie
  * przesuwają go z klawiatury). Po każdej zmianie nazwy pól wierszy dostają kolejne numery (`<pole>[i][…]`), więc
- * kolejność listy jest kolejnością zapisu. Pusty wiersz dla wersji bez skryptu jest usuwany, a przyciski i uchwyty
- * odsłaniane. Osadzany inline z nonce CSP (x-admiro::scripts).
+ * kolejność listy jest kolejnością zapisu. Pusty wiersz zostaje tylko wtedy, gdy sekcja nie ma jeszcze pól (pierwszy
+ * wiersz formularza), a przyciski i uchwyty są odsłaniane. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
 (() => {
     const renumber = (editor) => {
@@ -31,7 +31,9 @@
 
     const start = () => {
         document.querySelectorAll('[data-ss-attributes]').forEach((editor) => {
-            editor.querySelectorAll('[data-ss-attributes-blank]').forEach((row) => row.remove());
+            if (editor.querySelector('[data-ss-attributes-list] > [data-ss-attributes-row]:not([data-ss-attributes-blank])')) {
+                editor.querySelectorAll('[data-ss-attributes-blank]').forEach((row) => row.remove());
+            }
             editor.querySelectorAll('[data-ss-attributes-add]').forEach((button) => {
                 button.hidden = false;
             });

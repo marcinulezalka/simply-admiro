@@ -182,13 +182,14 @@ return [
     ],
 
     'attributes' => [
-        'title' => 'Attributes',
-        'add' => 'Add attribute',
+        'title' => 'Additional fields',
+        'add' => 'Add field',
         'group' => 'Group',
         'name' => 'Name',
         'value' => 'Value',
-        'remove' => 'Remove attribute',
+        'remove' => 'Remove field',
         'move' => 'Drag to reorder',
+        'empty' => 'No additional fields',
     ],
 
     'autosave' => [
@@ -198,6 +199,7 @@ return [
     ],
 
     'organization_form' => [
+        'empty' => 'No data',
         'details' => 'Organization details',
         'contact' => 'Contact details',
         'address' => 'Address',

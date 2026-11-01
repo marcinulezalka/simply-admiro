@@ -182,13 +182,14 @@ return [
     ],
 
     'attributes' => [
-        'title' => 'Atrybuty',
-        'add' => 'Dodaj atrybut',
+        'title' => 'Pola dodatkowe',
+        'add' => 'Dodaj pole',
         'group' => 'Grupa',
         'name' => 'Nazwa',
         'value' => 'Wartość',
-        'remove' => 'Usuń atrybut',
+        'remove' => 'Usuń pole',
         'move' => 'Przeciągnij, aby zmienić kolejność',
+        'empty' => 'Brak pól dodatkowych',
     ],
 
     'autosave' => [
@@ -198,6 +199,7 @@ return [
     ],
 
     'organization_form' => [
+        'empty' => 'Brak danych',
         'details' => 'Dane organizacji',
         'contact' => 'Dane kontaktowe',
         'address' => 'Dane adresowe',

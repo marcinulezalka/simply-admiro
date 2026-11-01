@@ -405,18 +405,25 @@ jako ton statystyki.
   prefiks telefonu). Strona niesie tylko kody flag i szablon adresu; obrazek SVG przychodzi z trasy
   `admiro.flags.show` (długi cache), a `js/flag-select.js` podmienia go po zmianie wyboru.
 - **Karta-teczka** `x-admiro::folder-card`: karta w wyglądzie teczki — nagłówek z ikoną na wypustce-zakładce
-  (`.ss-folder__tab--title`, nie przełącza widoku), treść w ciele teczki, opcjonalna stopka (slot `footer`). Z `editable`
-  karta formularza ma dwa stany (`js/edit-card.js`, `[data-ss-edit-card]`): podgląd — pola tylko do odczytu w wyglądzie
-  tekstu i „Edytuj” — oraz edycja z „Zapisz” i „Anuluj” (przywraca wartości karty). Zapis wysyła cały formularz (pola
+  (`.ss-folder__tab--title`, nie przełącza widoku), treść w ciele teczki, opcjonalna stopka (slot `footer`); z `extraTitle`
+  i slotem `extra` druga wypustka (np. „Pola dodatkowe”) przełącza dwie części ciała teczki (`js/folder-card.js`, bez skryptu
+  obie widoczne). Z `editable` karta formularza ma dwa stany (`js/edit-card.js`, `[data-ss-edit-card]`): podgląd — dane
+  w formie prezentacyjnej (`.ss-folder-card__preview`, `.ss-preview`: bez etykiet, tytuł, wiersze, fakty w jednym wierszu,
+  tylko wypełnione) i sam przycisk „Edytuj” — oraz edycja — pola (`.ss-folder-card__form`) z „Zapisz” i „Anuluj” (przywraca
+  wartości karty). Przyciski z atrybutem `hidden` zawsze znikają (`.ss-button[hidden]`, `.ss-icon-button[hidden]`). Zapis wysyła cały formularz (pola
   wszystkich kart, jeden wpis historii rekordu); karta z błędem walidacji (`editing`) otwiera się od razu w edycji, a bez
   skryptu karta zostaje zwykłym formularzem z „Zapisz”.
-- **Atrybuty rekordu** `x-admiro::attributes-editor` (`Attributes\CustomAttributes`, `json_attributes.custom`,
-  `js/attributes-editor.js`): „Dodaj atrybut” dopisuje wiersz grupa – nazwa – wartość z uchwytem przeciągania (kolejność,
-  także strzałkami na uchwycie) i „Usuń”; wiersz bez nazwy nie jest zapisywany. Edytor leży w formularzu (np. karta-teczka
-  `editable`); bez skryptu lista ma jeden pusty wiersz na nowy atrybut.
+- **Pola dodatkowe** `x-admiro::attributes-editor` (`Attributes\CustomAttributes`, `json_attributes.custom.<sekcja>`,
+  `js/attributes-editor.js`): podgląd „grupa · nazwa — wartość” i edytor — „Dodaj pole” dopisuje wiersz grupa – nazwa –
+  wartość z uchwytem przeciągania (kolejność, także strzałkami na uchwycie) i „Usuń”; wiersz bez nazwy nie jest
+  zapisywany, a sekcja bez pól zawsze ma pierwszy pusty wiersz. Edytor leży w formularzu, zwykle w zakładce „Pola
+  dodatkowe” karty-teczki.
 - **Formularz danych organizacji** `x-admiro::organization.fields`: karty-teczki dane organizacji → dane adresowe → dane
   kontaktowe, nagłówek z ikoną na wypustce, każde pole w osobnym wierszu, każdy telefon w wierszu „prefiks z flagą +
-  numer”; z `editable` karty w dwóch stanach (podgląd i edycja).
+  numer”; z `editable` karty w dwóch stanach (podgląd prezentacyjny — nazwa, pod nią NIP, REGON, KRS w jednym wierszu,
+  adres w dwóch wierszach z flagą kraju, telefony z prefiksem — i edycja), z `disabled` sam podgląd, z `customFields`
+  przy każdej karcie zakładka „Pola dodatkowe” (sekcje `default`, `address`, `contact`). Wartości z maską pokazuje
+  `Enums\InputMask::format()` (np. NIP `123-456-32-18`).
 - **Autozapis** `form[data-ss-autosave]` (`js/autosave.js`, dla formularzy bez kart w dwóch stanach): zmiana pola wysyła formularz w tle z
   `Accept: application/json` (kontroler odpowiada JSON-em, walidacja — 422 z `errors`), stan w `.ss-autosave`
   (`data-ss-autosave-status`, teksty `layout.autosave.*`), błędy pod polami; bez przycisku „Zapisz” — przycisk

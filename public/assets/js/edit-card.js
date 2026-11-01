@@ -1,6 +1,7 @@
 /**
  * Karty formularza w dwóch stanach (x-admiro::folder-card editable, [data-ss-edit-card]): po załadowaniu karta przechodzi
- * w podgląd (data-state="view": fieldset[data-ss-edit-fields] wyłączone, widać tylko „Edytuj”), chyba że serwer otworzył ją
+ * w podgląd (data-state="view": dane w formie prezentacyjnej .ss-folder-card__preview, pola .ss-folder-card__form
+ * schowane, fieldset[data-ss-edit-fields] wyłączone, widać tylko „Edytuj”), chyba że serwer otworzył ją
  * w edycji (data-ss-edit-open, np. po błędzie walidacji). „Edytuj” zapamiętuje wartości pól karty i włącza je (data-state=
  * "edit": „Zapisz” i „Anuluj”), „Anuluj” przywraca zapamiętane wartości i wraca do podglądu. Przed wysłaniem formularza
  * pola wszystkich kart są włączane, bo pola wyłączone nie trafiają do zapisu — zapis obejmuje cały rekord. Bez skryptu

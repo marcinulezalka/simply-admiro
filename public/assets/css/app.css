@@ -1894,20 +1894,85 @@ a.ss-folder__tab {
     cursor: default;
 }
 
-/* Podgląd karty formularza (js/edit-card.js, data-state="view"): pola jak tekst — bez ramki, tła i strzałki listy,
-   z zachowaną ikoną; edycja przywraca wygląd pól. */
-[data-ss-edit-card][data-state="view"] .ss-input:disabled {
-    border-color: transparent;
-    background-color: transparent;
-    color: var(--ss-color-text);
-    opacity: 1;
-    -webkit-text-fill-color: var(--ss-color-text);
-    appearance: none;
-    cursor: default;
+/* Karta formularza w dwóch stanach (js/edit-card.js): w podglądzie (data-state="view") widać tylko dane w formie
+   prezentacyjnej (.ss-folder-card__preview), w edycji — tylko pola (.ss-folder-card__form); bez skryptu karta jest
+   w edycji. Ukryta część karty z zakładkami (js/folder-card.js) znika mimo display. */
+[data-ss-edit-card][data-state="view"] .ss-folder-card__form,
+[data-ss-edit-card][data-state="edit"] .ss-folder-card__preview,
+.ss-folder-card__pane[hidden] {
+    display: none;
 }
 
-[data-ss-edit-card][data-state="view"] .ss-input:disabled::placeholder {
-    color: transparent;
+.ss-folder-card__pane {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+/* Dane w formie prezentacyjnej (podgląd karty): tytuł, wiersze bez etykiet, fakty w jednym wierszu po kropce. */
+.ss-preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    margin: 0;
+}
+
+.ss-preview__title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+}
+
+.ss-preview__line {
+    margin: 0;
+}
+
+.ss-preview__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ss-space-1) var(--ss-space-3);
+    margin: 0;
+    padding: 0;
+    color: var(--ss-color-muted);
+    font-size: 0.875rem;
+    list-style: none;
+}
+
+.ss-preview__fact-label {
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+}
+
+.ss-preview__icon-line {
+    display: flex;
+    gap: var(--ss-space-2);
+    align-items: center;
+    margin: 0;
+}
+
+.ss-preview__icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--ss-color-muted);
+}
+
+.ss-attributes__preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin: 0;
+}
+
+.ss-attributes__preview-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--ss-space-3);
+}
+
+.ss-attributes__preview-row dd {
+    margin: 0;
 }
 
 /* Edytor atrybutów rekordu (x-admiro::attributes-editor, js/attributes-editor.js): wiersz uchwyt | grupa | nazwa |
@@ -1949,8 +2014,7 @@ a.ss-folder__tab {
 .ss-attributes__handle[hidden],
 .ss-attributes__remove[hidden],
 [data-ss-edit-card][data-state="view"] .ss-attributes__handle,
-[data-ss-edit-card][data-state="view"] .ss-attributes__remove,
-[data-ss-edit-card][data-state="view"] .ss-attributes__add {
+[data-ss-edit-card][data-state="view"] .ss-attributes__remove {
     display: none;
 }
 
@@ -2715,6 +2779,13 @@ a.ss-onboarding-picker__name:hover {
  * tekst 16px; .ss-button--sm — 36px, 12px, ikona 16px, odstęp 6px, tekst 14px (gęste miejsca: tabele, karty);
  * .ss-button--lg — 56px, 20px, ikona 24px, odstęp 8px, tekst 18px (jedna duża akcja ekranu).
  */
+/* Przycisk z atrybutem hidden znika mimo display z .ss-button / .ss-icon-button (np. „Zapisz” i „Anuluj” w podglądzie
+   karty x-admiro::folder-card, js/edit-card.js). */
+.ss-button[hidden],
+.ss-icon-button[hidden] {
+    display: none;
+}
+
 .ss-button {
     --ss-button-height: 2.5rem;
     --ss-button-padding: 1rem;
@@ -9541,10 +9612,6 @@ button.ss-context__back {
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
-}
-
-.ss-side-panels__header .ss-icon-button[hidden] {
-    display: none;
 }
 
 /* Narzędzia wyglądu w panelu kalendarza layoutu stref: bez tła pod spodem i bez kreski nad nimi, kafelki po dwa
