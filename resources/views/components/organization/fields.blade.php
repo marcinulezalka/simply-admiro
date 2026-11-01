@@ -14,8 +14,10 @@
 
         return ['column' => $column, 'prefix' => $prefix, 'country' => old($prefix, $split['country']), 'number' => old($column, $split['number'])];
     }, \Simplysmart\Admiro\Models\Organization::PHONES);
-    $flags = $countries->mapWithKeys(static fn ($country): array => [$country->alpha_code_2 => $country->flag_icon])->all();
-    $dialFlags = $countries->filter(static fn ($country): bool => filled($country->dial_code))->mapWithKeys(static fn ($country): array => [$country->alpha_code_2 => $country->flag_icon])->all();
+    $dialCountries = $countries->filter(static fn ($country): bool => filled($country->dial_code));
+    $flagsOf = static fn ($list): array => $list->mapWithKeys(static fn ($country): array => [$country->alpha_code_2 => $country->flag_icon])->all();
+    $flags = $flagsOf($countries);
+    $dialFlags = $flagsOf($dialCountries);
     $selectedCountry = old('country_code', $countryCode);
 @endphp
 <section class="ss-card" aria-labelledby="organization-details-title">
@@ -55,10 +57,8 @@
         @foreach ($phones as $phone)
             <div class="ss-phone">
                 <x-admiro::flag-select :flags="$dialFlags" :selected="$phone['country']" class="ss-phone__prefix" :id="$phone['prefix']" :name="$phone['prefix']" :aria-label="$label($phone['column']) . ' — ' . text('layout.organization_form.phone_prefix')">
-                    @foreach ($countries as $country)
-                        @if (filled($country->dial_code))
-                            <option value="{{ $country->alpha_code_2 }}" @selected($phone['country'] === $country->alpha_code_2)>{{ $contactCountries->dialCode($country->alpha_code_2) }}</option>
-                        @endif
+                    @foreach ($dialCountries as $country)
+                        <option value="{{ $country->alpha_code_2 }}" @selected($phone['country'] === $country->alpha_code_2)>{{ $contactCountries->dialCode($country->alpha_code_2) }}</option>
                     @endforeach
                 </x-admiro::flag-select>
                 <x-admiro::input :id="$phone['column']" :name="$phone['column']" type="tel" field-class="ss-phone__number" :label="$label($phone['column'])" :icon="$phone['column'] === \Simplysmart\Admiro\Models\Organization::MOBILE_PHONE ? 'smartphone' : 'phone'" :value="$phone['number']" :error="$errors->first($phone['column'])" inputmode="tel" autocomplete="tel-national" maxlength="24" />

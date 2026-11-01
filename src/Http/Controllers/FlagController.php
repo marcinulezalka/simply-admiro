@@ -16,6 +16,7 @@ namespace Simplysmart\Admiro\Http\Controllers;
 use BladeUI\Icons\Exceptions\SvgNotFound;
 use BladeUI\Icons\Factory;
 use Illuminate\Http\Response;
+use Simplysmart\Admiro\View\FlagIcons;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,7 +38,7 @@ final readonly class FlagController
     public function __invoke(Factory $icons, string $flag): Response
     {
         try {
-            $svg = $icons->svg('flag-flat-country-' . $flag)->contents();
+            $svg = $icons->svg(FlagIcons::name($flag))->contents();
         } catch (SvgNotFound) {
             throw new NotFoundHttpException();
         }

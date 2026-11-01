@@ -48,6 +48,7 @@ use Simplysmart\Admiro\Providers\SignInServiceProvider;
 use Simplysmart\Admiro\Providers\ZonesServiceProvider;
 use Simplysmart\Admiro\Translation\CascadeTextTranslator;
 use Simplysmart\Admiro\Translation\CoreTranslationPath;
+use Simplysmart\Admiro\View\FlagIcons;
 
 /**
  * Punkt integracji rdzenia z aplikacją Laravel (auto-discovery przez extra.laravel.providers, przed strefą
@@ -102,8 +103,6 @@ final class AdmiroServiceProvider extends ServiceProvider
     private const string FLAG_FALLBACK_KEY = 'blade-flags.fallback';
 
     private const string BLADE_FLAGS_FALLBACK = 'country-xx';
-
-    private const string FLAT_FLAG_FALLBACK = 'flat-country-xx';
 
     /**
      * Łączy konfigurację Core, uzupełnia nią konfigurację poczty i logów frameworka, dokłada polskie tłumaczenia
@@ -173,7 +172,7 @@ final class AdmiroServiceProvider extends ServiceProvider
     private function useFlatFlagFallback(Repository $config): void
     {
         if ($config->get(self::FLAG_FALLBACK_KEY, self::BLADE_FLAGS_FALLBACK) === self::BLADE_FLAGS_FALLBACK) {
-            $config->set(self::FLAG_FALLBACK_KEY, self::FLAT_FLAG_FALLBACK);
+            $config->set(self::FLAG_FALLBACK_KEY, FlagIcons::FALLBACK);
         }
     }
 }
