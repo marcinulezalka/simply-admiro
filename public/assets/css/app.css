@@ -1883,6 +1883,91 @@ a.ss-folder__tab {
     outline-offset: -4px;
 }
 
+/* Karta w wyglądzie teczki (x-admiro::folder-card): jedna teczka z nagłówkiem na wypustce, która nie przełącza widoku. */
+.ss-folder__tab--title {
+    z-index: 2;
+    gap: 0;
+    background: var(--ss-folder-back);
+    color: var(--ss-color-text);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: default;
+}
+
+/* Podgląd karty formularza (js/edit-card.js, data-state="view"): pola jak tekst — bez ramki, tła i strzałki listy,
+   z zachowaną ikoną; edycja przywraca wygląd pól. */
+[data-ss-edit-card][data-state="view"] .ss-input:disabled {
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--ss-color-text);
+    opacity: 1;
+    -webkit-text-fill-color: var(--ss-color-text);
+    appearance: none;
+    cursor: default;
+}
+
+[data-ss-edit-card][data-state="view"] .ss-input:disabled::placeholder {
+    color: transparent;
+}
+
+/* Edytor atrybutów rekordu (x-admiro::attributes-editor, js/attributes-editor.js): wiersz uchwyt | grupa | nazwa |
+   wartość (szersza) | usuń; przeciągany wiersz przygaszony; w podglądzie karty bez uchwytów i przycisków. */
+.ss-attributes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-3);
+}
+
+.ss-attributes__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ss-attributes__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr) auto;
+    gap: var(--ss-space-2);
+    align-items: end;
+}
+
+.ss-attributes__row--dragging {
+    opacity: 0.5;
+}
+
+.ss-attributes__handle {
+    display: inline-flex;
+    align-self: center;
+    padding: var(--ss-space-1);
+    color: var(--ss-color-muted);
+    cursor: grab;
+}
+
+.ss-attributes__handle[hidden],
+.ss-attributes__remove[hidden],
+[data-ss-edit-card][data-state="view"] .ss-attributes__handle,
+[data-ss-edit-card][data-state="view"] .ss-attributes__remove,
+[data-ss-edit-card][data-state="view"] .ss-attributes__add {
+    display: none;
+}
+
+.ss-attributes__add {
+    margin: 0;
+}
+
+@media (max-width: 40rem) {
+    .ss-attributes__row {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .ss-attributes__field--value {
+        grid-column: 2 / -1;
+    }
+}
+
 .ss-folder {
     position: relative;
     z-index: 2;
@@ -5707,8 +5792,9 @@ button.ss-tabs__link {
 }
 
 /**
- * .ss-toasts — toasty (x-admiro::toasts) na dole ekranu, wyśrodkowane, nad treścią (z odstępem od paska
- * systemowego telefonu); kontener nie przechwytuje kliknięć poza toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
+ * .ss-toasts — toasty (x-admiro::toasts) w prawym dolnym rogu ekranu, nad treścią (z odstępem od paska
+ * systemowego telefonu; na wąskim ekranie wyśrodkowane na całą szerokość), a potem w zakładce komunikatów systemowych
+ * panelu powiadomień; kontener nie przechwytuje kliknięć poza toastami. .ss-toast--<typ> ustawia kolor stanu (--ss-toast-color, --ss-toast-surface) dla ramki, paska i ikony;
  * znaczenie niosą też ikona i nazwa typu.
  */
 .ss-toasts {
@@ -5718,10 +5804,16 @@ button.ss-tabs__link {
     display: flex;
     flex-direction: column;
     gap: var(--ss-space-3);
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-end;
     padding: var(--ss-space-4) var(--ss-space-4) calc(var(--ss-space-6) + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
+}
+
+@media (max-width: 40rem) {
+    .ss-toasts {
+        align-items: center;
+    }
 }
 
 .ss-toast {
@@ -9568,6 +9660,25 @@ button.ss-quick-tile:focus-visible,
     padding: 0 var(--ss-space-2) var(--ss-space-2);
 }
 
+/* Kafelek „Dostępność”: podpis grupy na cały rząd, a grupa rozmiaru tekstu wpasowana w siatkę menu. */
+.ss-quick-tile__menu-label {
+    grid-column: 1 / -1;
+    padding: var(--ss-space-1) var(--ss-space-1) 0;
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ss-quick-tile__menu-group {
+    display: contents;
+}
+
+.ss-quick-tile__menu-group[hidden] {
+    display: none;
+}
+
 .ss-quick-tile__option {
     display: flex;
     gap: var(--ss-space-2);
@@ -10850,31 +10961,16 @@ button.ss-command__option {
     }
 }
 
-/* Panel powiadomień z zadaniami TODO (x-admiro::app.side-panels z tasks): podział w pionie — powiadomienia ok. 60%,
-   lista zadań ok. 40% wysokości, każda część przewija się osobno. */
-.ss-side-panels__split {
+/* Lista zadań TODO w panelu kalendarza (x-admiro::app.side-panels z tasks): pod miesiącem i podglądem dnia, nad
+   narzędziami wyglądu; zajmuje resztę wysokości panelu i przewija się osobno. */
+.ss-side-panels__tasks {
     display: flex;
-    flex: 1;
+    flex: 1 1 0;
     flex-direction: column;
-    gap: var(--ss-space-3);
-    min-height: 0;
-}
-
-.ss-side-panels__split-top {
-    display: flex;
-    flex: 3 1 0;
-    flex-direction: column;
-    min-height: 0;
-    overflow-y: auto;
-}
-
-.ss-side-panels__split-bottom {
-    display: flex;
-    flex: 2 1 0;
-    flex-direction: column;
-    min-height: 0;
+    min-height: 8rem;
     padding-top: var(--ss-space-3);
     border-top: 1px solid var(--ss-color-border);
+    overflow-y: auto;
 }
 
 /* Lista zadań TODO (x-admiro::app.tasks): pole wykonania, numer zgłoszenia mono, nazwa, plakietka stanu, pod nimi

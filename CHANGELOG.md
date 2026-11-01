@@ -6,6 +6,9 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Karta w wyglądzie teczki `x-admiro::folder-card`: nagłówek z ikoną na wypustce-zakładce, treść w ciele teczki, opcjonalna stopka; z `editable` karta formularza ma dwa stany (`js/edit-card.js`): podgląd z polami tylko do odczytu i „Edytuj”, potem edycja z „Zapisz” i „Anuluj” (przywraca wartości); zapis wysyła cały formularz jednym wpisem historii, a karta z błędem walidacji otwiera się w edycji.
+- Globalne atrybuty rekordów danych (`Attributes\CustomAttributes`, `json_attributes.custom`): edytor `x-admiro::attributes-editor` (`js/attributes-editor.js`) z „Dodaj atrybut”, wierszami grupa – nazwa – wartość, usuwaniem i zmianą kolejności przeciąganiem (także strzałkami na uchwycie); zapis przez model z historią, pozostałe klucze `json_attributes` zostają.
+- Ikony `pencil` i `accessibility` (Lucide).
 - Autozapis formularza (`js/autosave.js`, `form[data-ss-autosave]`): zmiana pola wysyła formularz w tle (JSON), stan „Zapisywanie…” / „Zapisano” / błąd w `.ss-autosave` (teksty `layout.autosave.*`), błędy walidacji pod polami; przycisk zapasowy `[data-ss-autosave-fallback]` tylko bez skryptu.
 - Lista wyboru kraju z flagą jako ikoną w polu `x-admiro::flag-select` (`js/flag-select.js`): strona niesie tylko kody flag, a obrazek flagi przychodzi z nowej trasy `admiro.flags.show` (`flags/{flag}.svg`, `Http\Controllers\FlagController`, długi cache).
 - Linki ze strzałką na prawo od zakładek teczek (`.ss-folders__links`, `.ss-folders__link`): osobny `<nav>` po rzędzie zakładek, poza `role="tablist"`; bez skryptu stoi nad teczkami.
@@ -59,6 +62,10 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Toasty po akcji pokazują się w prawym dolnym rogu ekranu (na wąskim ekranie nadal wyśrodkowane), a potem w zakładce komunikatów systemowych panelu powiadomień.
+- Lista zadań TODO konta stoi w panelu kalendarza — pod miesiącem i podglądem dnia, nad kafelkami — zamiast w dolnej części panelu powiadomień.
+- Kafelki „Tryb kolorów”, „Rozmiar tekstu” i „Powiększenie” w panelu kalendarza połączone w jeden kafelek „Dostępność” (ikona `accessibility`) z podpisanymi grupami; tekst `layout.zoom` usunięty.
+- Karty `x-admiro::organization.fields` w wyglądzie teczki (nagłówek na wypustce) zamiast białych kart z nagłówkiem.
 - Formularz danych organizacji `x-admiro::organization.fields`: karty w kolejności dane organizacji → dane adresowe → dane kontaktowe, nagłówek każdej karty z ikoną (`.ss-card__title--icon`), każde pole w osobnym wierszu; flaga kraju jako ikona w polu kraju adresu, a każdy telefon w osobnym wierszu: prefiks z flagą (sam numer kierunkowy, np. `+48`) i numer.
 - Pole z maską `x-admiro::input` nie dodaje już przypisu z formatem pod polem (format narzuca maska; usunięty tekst `layout.mask_format`).
 - Zakładki teczek mogą być odnośnikami do osobnych stron: `.ss-folders__tabs` jako `<nav>` z `<a class="ss-folder__tab">`, bieżąca z `aria-current="page"` (wygląd jak wybranej zakładki, bez skryptu `js/tabs.js`).

@@ -68,9 +68,9 @@ return [
     'system_messages' => 'System',
     'system_messages_empty' => 'No system messages on this page.',
     'appearance_tools' => 'Appearance',
+    'accessibility' => 'Accessibility',
     'color_modes' => 'Color modes',
     'resize_zoom' => 'Size and zoom',
-    'zoom' => 'Zoom',
     'zoom_out' => 'Zoom out',
     'zoom_in' => 'Zoom in',
     'close' => 'Close',
@@ -179,6 +179,16 @@ return [
         'blue' => 'Blue',
         'emerald' => 'Emerald',
         'violet' => 'Violet',
+    ],
+
+    'attributes' => [
+        'title' => 'Attributes',
+        'add' => 'Add attribute',
+        'group' => 'Group',
+        'name' => 'Name',
+        'value' => 'Value',
+        'remove' => 'Remove attribute',
+        'move' => 'Drag to reorder',
     ],
 
     'autosave' => [

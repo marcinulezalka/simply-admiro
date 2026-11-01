@@ -206,7 +206,7 @@ Strefy (poza strefą administratorów, która zostaje na Workspace) po zalogowan
 | **Treść** | slot strony na tle płótna (logo strefy); widok w przygotowaniu (`Contracts\ZonePageProgress::pageInProgress()`) dostaje na środku napis „TEMP” (`.ss-temp-mark`) |
 | **Stopka — lewo** | awatar, nazwa i identyfikator konta; menu tylko z „Mój profil” (`ZoneSettingsMenu::profileItem()`) i „Wyloguj”, a obok w drugiej kolumnie „Twoje jednostki” — lista jednostek konta za cienką linią, na jednolitym tle menu: każda subtelnie jak przycisk zegara (ikona rodzaju, nazwa, rodzaj i NIP) jako odnośnik do danych jednostki (`Contracts\ZoneUnitLinks`, domyślnie pulpit jednostki), bieżąca z obwódką (`ZoneContexts::units()`, `x-admiro::organization.item`) |
 | **Stopka — środek** | wyszukiwarka: „+” (szybkie dodawanie, `SearchBox::$actions`, akcja główna na górze z separatorem — `$primaryAction`), błyskawica (szybkie akcje bez dodawania, `SearchBox::$findActions`; `[]` = pusty dropdown; menu jak jasna teczka `admiro::search.folder`, w layoucie stref także „+” — u góry zakładka z ikoną i tytułem, odnośniki (ikona i tekst) na tle, pod nimi kartka w kropki, a tło wypustką z falą obejmuje od dołu przycisk; pod kartką błyskawicy dolna sekcja — jasny pasek od lewej do prawej krawędzi teczki — z polem komend systemu `admiro::search.commands`: subtelne pole z delikatną szarą obwódką i wyciszonym przyciskiem Enter wewnątrz, wysyłane w tle: na czas zapisu loader zamiast strzałki Entera, potem puste pole na kolejne zadanie i odświeżona lista TODO — błyskawica (jak w polu teczki; po otwarciu listy żółto-czerwona) z wybraną komendą `Enums\QuickCommand`, domyślnie `todo:`, lista komend pod nim, pole i Enter; `todo:` zapisuje zadanie konta), pole, suwaki z multiwyborem zakresów (`SearchBox::$scopes`), Enter |
-| **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`), przycisk „Zablokuj ekran” (ikona lock-screen, Qlementine; jak Win+L: konto zostaje zalogowane, powrót PIN-em — Auth\ScreenLock) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole, bez tła pod spodem i bez kreski, kafelki po dwa w rzędzie jak szybkie ustawienia systemu — ikona i podpis na przygaszonym tle przycisku, delikatna ramka: ustawienia, a tryb kolorów, rozmiar tekstu i powiększenie jako kafelki rozwijane z listą trybów, każdy z ikoną i nazwą), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy — podzielone w pionie: zakładki powiadomień ok. 60% wysokości, pod nimi lista zadań TODO konta ok. 40% (`x-admiro::app.tasks`: numer zgłoszenia, nazwa, stan, tytuł, opis, projekt, klient, termin, opóźnienie; pole wyboru oznacza wykonanie); każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
+| **Stopka — prawo** | przełącznik kontekstu z rolami wciętymi pod organizacją (`tree`), przycisk „Zablokuj ekran” (ikona lock-screen, Qlementine; jak Win+L: konto zostaje zalogowane, powrót PIN-em — Auth\ScreenLock) i data otwierająca dwa panele boczne jak harmonijka (`x-admiro::app.side-panels`): kalendarz przy krawędzi okna (na dole, bez tła pod spodem i bez kreski, kafelki po dwa w rzędzie jak szybkie ustawienia systemu — ikona i podpis na przygaszonym tle przycisku, delikatna ramka: ustawienia, a „Dostępność” — jeden kafelek rozwijany z podpisanymi grupami trybu kolorów oraz rozmiaru tekstu z powiększeniem, każdy tryb z ikoną i nazwą; pod miesiącem i podglądem dnia, nad kafelkami, lista zadań TODO konta przewijana osobno), z jego krawędzi powiadomienia, wsunięte pod kalendarz bez przerwy (zakładki powiadomień i komunikatów systemowych; lista zadań TODO konta — `x-admiro::app.tasks`: numer zgłoszenia, nazwa, stan, tytuł, opis, projekt, klient, termin, opóźnienie; pole wyboru oznacza wykonanie — stoi w panelu kalendarza); każdy panel zamyka się osobno, a po zamknięciu kalendarza powiadomienia przesuwają się do krawędzi okna |
 
 Karta obracana `x-admiro::flip-card` (np. wizytówka i karta postępu na pulpicie strefy): przycisk w prawym górnym rogu obraca kartę na odwrót z dodatkową treścią (np. konteksty konta `x-admiro::app.context-list`), a opcjonalny drugi odwrót (slot `alternate`, przycisk z ikoną flagi obok — np. dane kontaktowe `x-admiro::organization.contact`) ma własny przycisk, zjechanie kursorem, Esc albo „Wróć” — z powrotem.
 
@@ -404,10 +404,20 @@ jako ton statystyki.
 - **Kraj z flagą** `x-admiro::flag-select`: lista wyboru z flagą wybranej opcji jako ikoną w polu (kraj adresu,
   prefiks telefonu). Strona niesie tylko kody flag i szablon adresu; obrazek SVG przychodzi z trasy
   `admiro.flags.show` (długi cache), a `js/flag-select.js` podmienia go po zmianie wyboru.
-- **Formularz danych organizacji** `x-admiro::organization.fields`: karty dane organizacji → dane adresowe → dane
-  kontaktowe, nagłówek z ikoną (`.ss-card__title--icon`), każde pole w osobnym wierszu, każdy telefon w wierszu
-  „prefiks z flagą + numer”.
-- **Autozapis** `form[data-ss-autosave]` (`js/autosave.js`): zmiana pola wysyła formularz w tle z
+- **Karta-teczka** `x-admiro::folder-card`: karta w wyglądzie teczki — nagłówek z ikoną na wypustce-zakładce
+  (`.ss-folder__tab--title`, nie przełącza widoku), treść w ciele teczki, opcjonalna stopka (slot `footer`). Z `editable`
+  karta formularza ma dwa stany (`js/edit-card.js`, `[data-ss-edit-card]`): podgląd — pola tylko do odczytu w wyglądzie
+  tekstu i „Edytuj” — oraz edycja z „Zapisz” i „Anuluj” (przywraca wartości karty). Zapis wysyła cały formularz (pola
+  wszystkich kart, jeden wpis historii rekordu); karta z błędem walidacji (`editing`) otwiera się od razu w edycji, a bez
+  skryptu karta zostaje zwykłym formularzem z „Zapisz”.
+- **Atrybuty rekordu** `x-admiro::attributes-editor` (`Attributes\CustomAttributes`, `json_attributes.custom`,
+  `js/attributes-editor.js`): „Dodaj atrybut” dopisuje wiersz grupa – nazwa – wartość z uchwytem przeciągania (kolejność,
+  także strzałkami na uchwycie) i „Usuń”; wiersz bez nazwy nie jest zapisywany. Edytor leży w formularzu (np. karta-teczka
+  `editable`); bez skryptu lista ma jeden pusty wiersz na nowy atrybut.
+- **Formularz danych organizacji** `x-admiro::organization.fields`: karty-teczki dane organizacji → dane adresowe → dane
+  kontaktowe, nagłówek z ikoną na wypustce, każde pole w osobnym wierszu, każdy telefon w wierszu „prefiks z flagą +
+  numer”; z `editable` karty w dwóch stanach (podgląd i edycja).
+- **Autozapis** `form[data-ss-autosave]` (`js/autosave.js`, dla formularzy bez kart w dwóch stanach): zmiana pola wysyła formularz w tle z
   `Accept: application/json` (kontroler odpowiada JSON-em, walidacja — 422 z `errors`), stan w `.ss-autosave`
   (`data-ss-autosave-status`, teksty `layout.autosave.*`), błędy pod polami; bez przycisku „Zapisz” — przycisk
   `[data-ss-autosave-fallback]` widać tylko bez skryptu.
@@ -437,8 +447,8 @@ jako ton statystyki.
 
 ### Toasty i powiadomienia
 
-- **Toasty** (`x-admiro::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji na dole
-  ekranu, wyśrodkowane. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
+- **Toasty** (`x-admiro::toasts`, typy `Enums\ToastType`, obiekt `View\Toast`): alerty po akcji w prawym
+  dolnym rogu ekranu (na wąskim ekranie wyśrodkowane), potem w zakładce komunikatów systemowych panelu powiadomień. Kolor mówi, czego dotyczy komunikat (tabela stanów wyżej), a zawsze towarzyszą mu ikona typu i nazwa
   (tytuł albo prefiks dla czytników). Błąd (`danger`) ma `role="alert"` i zostaje do zamknięcia; pozostałe mają
   `role="status"` i znikają po 6 s (`js/toasts.js`; pauza przy najechaniu i fokusie). Toast może mieć jedną
   akcję (link, np. „Zobacz”, „Cofnij”). Layouty aplikacji, logowania i strony publicznej strefy pokazują toasty

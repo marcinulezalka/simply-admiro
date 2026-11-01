@@ -1,5 +1,5 @@
-{{-- Pola danych organizacji (Organizations\OrganizationForm) w trzech kartach w kolejności: dane organizacji (nazwa, nazwa skrócona, NIP z maską, REGON, KRS; slot na dodatkowe pola, np. organizację nadrzędną), dane adresowe z krajem (flaga kraju jako ikona w polu, x-admiro::flag-select; w nowym wpisie kraj domyślny aplikacji; Organizations\ContactCountries) i dane kontaktowe (telefon stacjonarny i komórkowy — każdy w osobnym wierszu: prefiks kraju z flagą z listy aktywnych krajów i numer, .ss-phone; e-mail, e-mail do rozliczeń). Nagłówek każdej karty z ikoną; każde pole w osobnym wierszu; bez przypisów z formatem (format narzuca maska pola). Bez przycisku i znacznika <form>. organization: ?Organization (null = nowa); disabled: bool (tylko do odczytu); Etykiety z text_data(Organization), wartości z old() albo z organizacji. --}}
-@props(['organization' => null, 'disabled' => false])
+{{-- Pola danych organizacji (Organizations\OrganizationForm) w trzech kartach w kolejności: dane organizacji (nazwa, nazwa skrócona, NIP z maską, REGON, KRS; slot na dodatkowe pola, np. organizację nadrzędną), dane adresowe z krajem (flaga kraju jako ikona w polu, x-admiro::flag-select; w nowym wpisie kraj domyślny aplikacji; Organizations\ContactCountries) i dane kontaktowe (telefon stacjonarny i komórkowy — każdy w osobnym wierszu: prefiks kraju z flagą z listy aktywnych krajów i numer, .ss-phone; e-mail, e-mail do rozliczeń). Karty w wyglądzie teczki (x-admiro::folder-card: nagłówek z ikoną na wypustce); każde pole w osobnym wierszu; bez przypisów z formatem (format narzuca maska pola). Bez przycisku i znacznika <form>. organization: ?Organization (null = nowa); disabled: bool (tylko do odczytu); editable: bool (karty w dwóch stanach — podgląd z „Edytuj”, edycja z „Zapisz” i „Anuluj”, js/edit-card.js; karta z błędem walidacji otwiera się w edycji); Etykiety z text_data(Organization), wartości z old() albo z organizacji. --}}
+@props(['organization' => null, 'disabled' => false, 'editable' => false])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
     $value = static fn (string $field): mixed => old($field, $organization?->getAttribute($field));
@@ -20,9 +20,8 @@
     $dialFlags = $flagsOf($dialCountries);
     $selectedCountry = old('country_code', $countryCode);
 @endphp
-<section class="ss-card" aria-labelledby="organization-details-title">
-    <h2 class="ss-card__title ss-card__title--icon" id="organization-details-title"><x-admiro::icon name="building" class="ss-card__title-icon" />{{ text('layout.organization_form.details') }}</h2>
-    <fieldset class="ss-form ss-fieldset" @disabled($disabled)>
+<x-admiro::folder-card id="organization-details" icon="building" :title="text('layout.organization_form.details')" :editable="$editable && ! $disabled" :editing="$errors->hasAny(['name', 'short_name', 'nip', 'regon', 'krs'])">
+    <fieldset class="ss-form ss-fieldset" @disabled($disabled) data-ss-edit-fields>
         <x-admiro::input id="name" name="name" :label="$label('name')" icon="building" :value="$value('name')" :placeholder="text('placeholders.company')" :error="$errors->first('name')" required maxlength="255" />
         <x-admiro::input id="short_name" name="short_name" :label="$label('short_name')" :hint="text('layout.organization_form.short_name_hint')" :value="$value('short_name')" :error="$errors->first('short_name')" :maxlength="\Simplysmart\Admiro\Models\Organization::SHORT_NAME_MAX_LENGTH" />
         <x-admiro::input id="nip" name="nip" :label="$label('nip')" :mask="\Simplysmart\Admiro\Enums\InputMask::TaxId" :value="$value('nip')" :error="$errors->first('nip')" autocomplete="off" />
@@ -30,11 +29,10 @@
         <x-admiro::input id="krs" name="krs" :label="$label('krs')" :value="$value('krs')" :error="$errors->first('krs')" :maxlength="$length['krs']" inputmode="numeric" autocomplete="off" />
         {{ $slot }}
     </fieldset>
-</section>
+</x-admiro::folder-card>
 
-<section class="ss-card" aria-labelledby="organization-address-title">
-    <h2 class="ss-card__title ss-card__title--icon" id="organization-address-title"><x-admiro::icon name="map-pin" class="ss-card__title-icon" />{{ text('layout.organization_form.address') }}</h2>
-    <fieldset class="ss-form ss-fieldset" @disabled($disabled)>
+<x-admiro::folder-card id="organization-address" icon="map-pin" :title="text('layout.organization_form.address')" :editable="$editable && ! $disabled" :editing="$errors->hasAny(['street', 'postal_code', 'city', 'country_code'])">
+    <fieldset class="ss-form ss-fieldset" @disabled($disabled) data-ss-edit-fields>
         <x-admiro::input id="street" name="street" :label="$label('street')" icon="map-pin" :value="$value('street')" :error="$errors->first('street')" :maxlength="$length['street']" />
         <x-admiro::input id="postal_code" name="postal_code" :label="$label('postal_code')" :mask="\Simplysmart\Admiro\Enums\InputMask::PostalCode" :value="$value('postal_code')" :error="$errors->first('postal_code')" />
         <x-admiro::input id="city" name="city" :label="$label('city')" :value="$value('city')" :error="$errors->first('city')" :maxlength="$length['city']" />
@@ -49,11 +47,10 @@
             @error('country_code') <p class="ss-field__error" role="alert">{{ $message }}</p> @enderror
         </div>
     </fieldset>
-</section>
+</x-admiro::folder-card>
 
-<section class="ss-card" aria-labelledby="organization-contact-title">
-    <h2 class="ss-card__title ss-card__title--icon" id="organization-contact-title"><x-admiro::icon name="phone" class="ss-card__title-icon" />{{ text('layout.organization_form.contact') }}</h2>
-    <fieldset class="ss-form ss-fieldset" @disabled($disabled)>
+<x-admiro::folder-card id="organization-contact" icon="phone" :title="text('layout.organization_form.contact')" :editable="$editable && ! $disabled" :editing="$errors->hasAny(['email', 'billing_email', ...array_column($phones, 'column'), ...array_column($phones, 'prefix')])">
+    <fieldset class="ss-form ss-fieldset" @disabled($disabled) data-ss-edit-fields>
         @foreach ($phones as $phone)
             <div class="ss-phone">
                 <x-admiro::flag-select :flags="$dialFlags" :selected="$phone['country']" class="ss-phone__prefix" :id="$phone['prefix']" :name="$phone['prefix']" :aria-label="$label($phone['column']) . ' — ' . text('layout.organization_form.phone_prefix')">
@@ -67,4 +64,4 @@
         <x-admiro::input id="email" name="email" type="email" :label="$label('email')" icon="mail" :value="$value('email')" :placeholder="text('placeholders.email')" :error="$errors->first('email')" :maxlength="$length['email']" />
         <x-admiro::input id="billing_email" name="billing_email" type="email" :label="$label('billing_email')" icon="mail" :hint="text('layout.organization_form.billing_email_hint')" :value="$value('billing_email')" :placeholder="text('placeholders.email')" :error="$errors->first('billing_email')" :maxlength="$length['billing_email']" />
     </fieldset>
-</section>
+</x-admiro::folder-card>
