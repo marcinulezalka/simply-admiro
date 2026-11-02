@@ -25,7 +25,8 @@ use Simplysmart\Admiro\Models\Relations\LocatedInCountry;
  * ją jawnie jako bieżącą organizację spatie (domyślnej nie ma). Dane firmy są opcjonalne: nazwa skrócona (druga linia
  * pod imieniem i nazwiskiem w menu, shortName()), NIP (10 cyfr, Rules\Nip; oddział może mieć NIP firmy), REGON, KRS,
  * adres z krajem (`country_code`, kod alpha-2 słownika krajów, relacja country()), telefon stacjonarny i komórkowy (z prefiksem
- * kraju, np. `+48 22 100 20 30`), e-mail i e-mail do rozliczeń (przy zakładaniu bez niego — e-mail organizacji).
+ * kraju, np. `+48 22 100 20 30`), e-mail i e-mail do rozliczeń (przy zakładaniu bez niego — e-mail organizacji) oraz kolor
+ * (`color`, `#rrggbb`) do grafik i zestawień — bez zapisanego color() daje stały kolor z palety COLOR_PALETTE według id.
  *
  * Departament (`is_department`, isDepartment()) to wewnętrzna agregacja: dział jednostki nadrzędnej (organizacji bez
  * flagi), z własnymi członkami i rolami, ale bez własnych danych — dane trzyma jego jednostka
@@ -34,6 +35,7 @@ use Simplysmart\Admiro\Models\Relations\LocatedInCountry;
  * @property bool $is_department
  * @property-read Organization|null $parent
  * @property ?string $short_name
+ * @property ?string $color
  * @property ?string $nip
  * @property ?string $regon
  * @property ?string $krs
@@ -82,6 +84,16 @@ final class Organization extends DataModel
 
     public const string MOBILE_PHONE = 'mobile_phone';
 
+    /** Kolor organizacji w grafikach i zestawieniach (`#rrggbb`, color()). */
+    public const string COLOR = 'color';
+
+    /**
+     * Kolory domyślne organizacji bez zapisanego koloru (wybór według id, color()): dobrze rozróżnialne odcienie.
+     *
+     * @var list<string>
+     */
+    public const array COLOR_PALETTE = ['#2563eb', '#16a34a', '#dc2626', '#9333ea', '#ea580c', '#0891b2', '#ca8a04', '#db2777', '#4f46e5', '#0d9488'];
+
     public const string EMAIL = 'email';
 
     public const string BILLING_EMAIL = 'billing_email';
@@ -103,6 +115,7 @@ final class Organization extends DataModel
         self::POSTAL_CODE => 10,
         self::CITY => 100,
         self::COUNTRY_CODE => 2,
+        self::COLOR => 7,
     ];
 
     /**
@@ -119,6 +132,17 @@ final class Organization extends DataModel
     public function isDepartment(): bool
     {
         return $this->getAttribute(self::IS_DEPARTMENT) === true;
+    }
+
+    /**
+     * Kolor organizacji (`#rrggbb`): zapisany, a bez niego stały kolor z COLOR_PALETTE według id.
+     */
+    public function color(): string
+    {
+        $color = $this->getAttribute(self::COLOR);
+        $id = $this->getKey();
+
+        return is_string($color) && $color !== '' ? $color : self::COLOR_PALETTE[(is_int($id) ? $id : 0) % count(self::COLOR_PALETTE)];
     }
 
     /**

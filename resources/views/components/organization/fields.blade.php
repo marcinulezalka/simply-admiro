@@ -1,4 +1,4 @@
-{{-- Pola danych organizacji (Organizations\OrganizationForm) w trzech kartach w kolejności: dane organizacji (nazwa, nazwa skrócona, NIP z maską, REGON, KRS; slot na dodatkowe pola, np. organizację nadrzędną), dane adresowe z krajem (flaga kraju jako ikona w polu, x-admiro::flag-select; w nowym wpisie kraj domyślny aplikacji; Organizations\ContactCountries) i dane kontaktowe (telefon stacjonarny i komórkowy — każdy w osobnym wierszu: prefiks kraju z flagą z listy aktywnych krajów i numer, .ss-phone; e-mail, e-mail do rozliczeń). Karty w wyglądzie teczki (x-admiro::folder-card: nagłówek z ikoną na wypustce) z podglądem w formie prezentacyjnej (bez etykiet: nazwa, pod nią w jednym wierszu tylko wypełnione NIP, REGON, KRS; adres w dwóch wierszach z krajem; telefony z prefiksem i adresy e-mail z ikonami; bez danych — „Brak danych”); każde pole w osobnym wierszu; bez przypisów z formatem (format narzuca maska pola). Bez przycisku i znacznika <form>. organization: ?Organization (null = nowa); disabled: bool (tylko do odczytu: sam podgląd, a slot w wyłączonym fieldset); editable: bool (karty w dwóch stanach — podgląd z „Edytuj”, edycja z „Zapisz” i „Anuluj”, js/edit-card.js; karta z błędem walidacji otwiera się w edycji); customFields: bool (przy każdej karcie zakładka „Pola dodatkowe” — x-admiro::attributes-editor, sekcje CustomAttributes: dane organizacji — DEFAULT_SECTION, adres — `address`, kontakt — `contact`); Etykiety z text_data(Organization), wartości z old() albo z organizacji. --}}
+{{-- Pola danych organizacji (Organizations\OrganizationForm) w trzech kartach w kolejności: dane organizacji (nazwa, nazwa skrócona, NIP z maską, REGON, KRS, kolor — próbnik `type="color"` z Organization::color(), w podglądzie kropka SVG z atrybutem fill, bez stylów inline; slot na dodatkowe pola, np. organizację nadrzędną), dane adresowe z krajem (flaga kraju jako ikona w polu, x-admiro::flag-select; w nowym wpisie kraj domyślny aplikacji; Organizations\ContactCountries) i dane kontaktowe (telefon stacjonarny i komórkowy — każdy w osobnym wierszu: prefiks kraju z flagą z listy aktywnych krajów i numer, .ss-phone; e-mail, e-mail do rozliczeń). Karty w wyglądzie teczki (x-admiro::folder-card: nagłówek z ikoną na wypustce) z podglądem w formie prezentacyjnej (bez etykiet: nazwa, pod nią w jednym wierszu tylko wypełnione NIP, REGON, KRS; adres w dwóch wierszach z krajem; telefony z prefiksem i adresy e-mail z ikonami; bez danych — „Brak danych”); każde pole w osobnym wierszu; bez przypisów z formatem (format narzuca maska pola). Bez przycisku i znacznika <form>. organization: ?Organization (null = nowa); disabled: bool (tylko do odczytu: sam podgląd, a slot w wyłączonym fieldset); editable: bool (karty w dwóch stanach — podgląd z „Edytuj”, edycja z „Zapisz” i „Anuluj”, js/edit-card.js; karta z błędem walidacji otwiera się w edycji); customFields: bool (przy każdej karcie zakładka „Pola dodatkowe” — x-admiro::attributes-editor, sekcje CustomAttributes: dane organizacji — DEFAULT_SECTION, adres — `address`, kontakt — `contact`); Etykiety z text_data(Organization), wartości z old() albo z organizacji. --}}
 @props(['organization' => null, 'disabled' => false, 'editable' => false, 'customFields' => false])
 @php
     $model = \Simplysmart\Admiro\Models\Organization::class;
@@ -21,6 +21,7 @@
     $dialFlags = $flagsOf($dialCountries);
     $selectedCountry = old('country_code', $countryCode);
     $cardEditable = $editable && ! $disabled;
+    $color = old('color', $organization?->color() ?? \Simplysmart\Admiro\Models\Organization::COLOR_PALETTE[0]);
     $withPreview = $editable || $disabled;
     $facts = array_filter(['nip' => $stored('nip') !== null ? \Simplysmart\Admiro\Enums\InputMask::TaxId->format($stored('nip')) : null, 'regon' => $stored('regon'), 'krs' => $stored('krs')]);
     $country = $countries->firstWhere('alpha_code_2', $organization?->getAttribute('country_code'));
@@ -28,7 +29,7 @@
     $sections = ['details' => \Simplysmart\Admiro\Attributes\CustomAttributes::DEFAULT_SECTION, 'address' => 'address', 'contact' => 'contact'];
     $extraTitle = $customFields ? text('layout.attributes.title') : null;
 @endphp
-<x-admiro::folder-card id="organization-details" icon="building" :title="text('layout.organization_form.details')" :extra-title="$extraTitle" :editable="$cardEditable" :editing="$errors->hasAny(['name', 'short_name', 'nip', 'regon', 'krs', \Simplysmart\Admiro\Attributes\CustomAttributes::FIELD . '.' . $sections['details'] . '.*'])">
+<x-admiro::folder-card id="organization-details" icon="building" :title="text('layout.organization_form.details')" :extra-title="$extraTitle" :editable="$cardEditable" :editing="$errors->hasAny(['name', 'short_name', 'nip', 'regon', 'krs', 'color', \Simplysmart\Admiro\Attributes\CustomAttributes::FIELD . '.' . $sections['details'] . '.*'])">
     @if ($withPreview)
         <div class="ss-folder-card__preview ss-preview">
             <p class="ss-preview__title">{{ $stored('name') ?? '—' }}</p>
@@ -42,6 +43,7 @@
                     @endforeach
                 </ul>
             @endif
+            <p class="ss-preview__line"><svg class="ss-color-swatch" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="6" fill="{{ $color }}" /></svg> <span class="ss-preview__fact-label">{{ $label('color') }}</span> {{ $color }}</p>
         </div>
     @endif
     @if ($disabled)
@@ -55,6 +57,7 @@
         <x-admiro::input id="nip" name="nip" :label="$label('nip')" :mask="\Simplysmart\Admiro\Enums\InputMask::TaxId" :value="$value('nip')" :error="$errors->first('nip')" autocomplete="off" />
         <x-admiro::input id="regon" name="regon" :label="$label('regon')" :value="$value('regon')" :error="$errors->first('regon')" :maxlength="$length['regon']" inputmode="numeric" autocomplete="off" />
         <x-admiro::input id="krs" name="krs" :label="$label('krs')" :value="$value('krs')" :error="$errors->first('krs')" :maxlength="$length['krs']" inputmode="numeric" autocomplete="off" />
+        <x-admiro::input id="color" name="color" type="color" :label="$label('color')" icon="palette" :value="$color" :error="$errors->first('color')" />
         {{ $slot }}
     </fieldset>
     @endif

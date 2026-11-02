@@ -6910,6 +6910,23 @@ a.ss-notification:focus-visible {
 }
 
 /**
+ * .ss-color-swatch — kropka koloru rekordu (np. kolor organizacji w podglądzie karty): SVG z kołem w atrybucie fill,
+ * bo CSP nie pozwala na style inline.
+ */
+.ss-color-swatch {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    vertical-align: -0.05em;
+}
+
+/* Próbnik koloru w polu formularza: pole w wysokości innych pól, bez wewnętrznego odstępu przeglądarki. */
+.ss-input[type="color"] {
+    padding-block: 0.25rem;
+    cursor: pointer;
+}
+
+/**
  * .ss-phone — telefon z prefiksem kraju (x-admiro::organization.fields): wąska lista prefiksów (__prefix) przy dolnej
  * krawędzi pola numeru (__number), które wypełnia resztę wiersza.
  */

@@ -59,6 +59,7 @@ final readonly class OrganizationForm
             if ($value !== null) {
                 $details[$column] = match (true) {
                     $column === Organization::NIP => Nip::normalize($value),
+                    $column === Organization::COLOR => strtolower($value),
                     in_array($column, Organization::PHONES, true) => $this->countries->compose(self::filled($validated[ContactCountries::prefixField($column)] ?? null), $value),
                     default => $value,
                 };
@@ -93,6 +94,7 @@ final readonly class OrganizationForm
                 Organization::EMAIL, Organization::BILLING_EMAIL => ['email:rfc', 'max:' . $length],
                 Organization::PHONE, Organization::MOBILE_PHONE => ['regex:/^\+?[0-9][0-9 ()-]*$/', 'max:' . self::PHONE_NUMBER_MAX_LENGTH],
                 Organization::COUNTRY_CODE => [Rule::in($codes)],
+                Organization::COLOR => ['regex:/^#[0-9a-fA-F]{6}$/'],
                 default => ['max:' . $length],
             }];
         }

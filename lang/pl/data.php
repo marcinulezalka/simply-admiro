@@ -97,6 +97,7 @@ return [
         'postal_code' => 'Kod pocztowy',
         'city' => 'Miejscowość',
         'country_code' => 'Kraj',
+        'color' => 'Kolor',
         'phone' => 'Telefon stacjonarny',
         'mobile_phone' => 'Telefon komórkowy',
         'email' => 'E-mail',

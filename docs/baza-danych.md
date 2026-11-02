@@ -423,6 +423,7 @@ i kolumn są w `Permissions\PermissionTables`.
   roli odrzuca baza (`organization_id` NOT NULL), a sprawdzenie uprawnienia daje `false`.
 - **Nazwa skrócona** (`short_name`, opcjonalna, do `Organization::SHORT_NAME_MAX_LENGTH` = 100 znaków; do 2026-11-02 — 40): druga linia
   pod imieniem i nazwiskiem w menu aplikacji; `Organization::shortName()` daje ją, a bez niej pełną nazwę.
+- **Kolor** (`color`, opcjonalny, `#rrggbb`, zapisywany małymi literami; walidacja `OrganizationForm`): kolor organizacji w grafikach i zestawieniach, wybierany próbnikiem w karcie danych `x-admiro::organization.fields`. Czytaj go przez `Organization::color()` — bez zapisanego koloru zwraca stały kolor z `Organization::COLOR_PALETTE` według id, więc każda organizacja ma kolor.
 - **Dane firmy** (opcjonalne, długości w `Organization::DETAIL_LENGTHS`): `nip` (10 cyfr, `Rules\Nip`, nieunikalny —
   oddział może mieć NIP firmy), `regon`, `krs`, `phone` (telefon stacjonarny) i `mobile_phone` (komórkowy) — oba
   zapisywane z prefiksem kraju (`+48 22 100 20 30`; `Organization::PHONES`), `email`, `billing_email` (e-mail do
