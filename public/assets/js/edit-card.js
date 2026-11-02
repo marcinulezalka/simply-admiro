@@ -3,7 +3,7 @@
  * w podgląd (data-state="view": dane w formie prezentacyjnej .ss-folder-card__preview, pola .ss-folder-card__form
  * schowane, fieldset[data-ss-edit-fields] wyłączone, widać tylko „Edytuj”), chyba że serwer otworzył ją
  * w edycji (data-ss-edit-open, np. po błędzie walidacji). „Edytuj” zapamiętuje wartości pól karty i włącza je (data-state=
- * "edit": „Zapisz” i „Anuluj”), „Anuluj” przywraca zapamiętane wartości i wraca do podglądu. Przed wysłaniem formularza
+ * "edit": „Zapisz” i „Anuluj”), „Anuluj” przywraca zapamiętane wartości (zdarzenie change tylko dla pól, które się zmieniły — np. autozapisowy przełącznik w karcie się nie wysyła) i wraca do podglądu. Przed wysłaniem formularza
  * pola wszystkich kart są włączane, bo pola wyłączone nie trafiają do zapisu — zapis obejmuje cały rekord. Bez skryptu
  * karta zostaje zwykłym formularzem z „Zapisz”. Osadzany inline z nonce CSP (x-admiro::scripts).
  */
@@ -19,6 +19,12 @@
 
     const restore = (card) => {
         (saved.get(card) ?? []).forEach(([control, value]) => {
+            const current = typeof value === 'boolean' ? control.checked : control.value;
+
+            if (current === value) {
+                return;
+            }
+
             if (typeof value === 'boolean') {
                 control.checked = value;
             } else {

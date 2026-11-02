@@ -21,6 +21,7 @@ use Simplysmart\Admiro\Contracts\CurrentRole;
 use Simplysmart\Admiro\Models\Permissions\PermissionDenial;
 use Simplysmart\Admiro\Models\Relations\HasPermissionDenials;
 use Spatie\Permission\Contracts\Permission;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
@@ -59,6 +60,23 @@ trait HasZonePermissions
         $permission = $this->filterPermission($permission, $guardName);
 
         return ! $this->isOutsideActiveRole($permission) && ! $this->isPermissionDenied($permission);
+    }
+
+    /**
+     * Uprawnienie z sumy ról konta (i bezpośrednie) w bieżącej organizacji, bez zawężenia do aktywnej roli — np. czy
+     * osoba personelu jest lekarzem niezależnie od roli, w której jest zalogowana; odmowa nadal wygrywa, a nieznane
+     * uprawnienie to brak dostępu (jak Contracts\ZonePermissionChecker).
+     *
+     * @param string|int|Permission|BackedEnum $permission
+     */
+    public function hasPermissionInAnyRole($permission, ?string $guardName = null): bool
+    {
+        try {
+            return $this->hasPermissionFromRoles($permission, $guardName)
+                && ! $this->isPermissionDenied($this->filterPermission($permission, $guardName));
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 
     /**

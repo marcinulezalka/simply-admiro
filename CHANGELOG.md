@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Karta „Marka” w innym formularzu: `x-admiro::organization.brand` z `detached` (pola i przyciski wskazują atrybutem `form` formularze `x-admiro::organization.brand-forms`, wstawiane poza tamtym formularzem) oraz slot `afterDetails` w `x-admiro::organization.fields` między kartą danych a kartą adresową.
+- `hasPermissionInAnyRole()` kont stref: uprawnienie z sumy ról konta w bieżącej organizacji, bez zawężenia do aktywnej roli (odmowa nadal wygrywa), np. czy osoba personelu jest w ogóle lekarzem.
 - Karta „Marka” `x-admiro::organization.brand`: logo, sygnet i favicon organizacji ze strefami upuszczania plików (wysyłka od razu po upuszczeniu albo wyborze, podgląd, usunięcie); adresy daje strefa — panel admiro korzysta z niej przy edycji organizacji. `js/file-drop.js` podświetla każdą strefę `[data-ss-file-drop-zone]`.
 - Ikona organizacji: `Organization::ICONS`, `Organization::icon()` (`json_attributes.icon`) i wybór `x-admiro::organization.icon-picker` (pigułki `.ss-choice--icon`); ikona `image` (Lucide).
 - Kolor organizacji (`organizations.color`, `#rrggbb`): próbnik w karcie danych `x-admiro::organization.fields`, kropka koloru w podglądzie (`.ss-color-swatch`, SVG bez stylów inline) i `Organization::color()` — bez zapisanego koloru stały kolor z palety `Organization::COLOR_PALETTE` według id; ikona `palette` (Lucide).
@@ -39,6 +41,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Ikona w komunikacie `.ss-notice` ma rozmiar tekstu zamiast 2.5rem.
+- Autozapis formularza (`form[data-ss-autosubmit]`) działa też dla pól powiązanych z formularzem atrybutem `form`, a „Anuluj” w karcie dwustanowej nie wysyła zdarzenia zmiany dla niezmienionych pól (np. przełącznik z autozapisem w karcie nie przeładowuje strony).
 - Ekran zablokowanego konta: „Wyloguj” wygląda jak link pomocniczy kroku PIN, wyśrodkowany pod „Odblokuj”, a nie jak szary przycisk przeglądarki (`button.ss-link` bez stylów przycisku).
 - W podglądzie karty w dwóch stanach widać tylko „Edytuj”: przyciski z atrybutem `hidden` („Zapisz”, „Anuluj”) nie przebijały się przez `display` z `.ss-button` / `.ss-icon-button`.
 - Pole komend teczki: dropdowny „+” i błyskawicy nie nachodzą na siebie — otwarcie jednego zamyka drugi, klik obok zamyka oba; zakładki w treści wstawionej skryptem (odświeżona lista TODO) działają (`ss:content`, `js/tabs.js`).

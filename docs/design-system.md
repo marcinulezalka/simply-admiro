@@ -555,7 +555,7 @@ strefy z ikoną `settings`, np. ustawienia globalne; bez niego ustawienia konta)
 „Szukaj w” — `SearchScope`, checkboksy `in[]` w menu przy polu — i podpowiedzi w trakcie pisania z `suggestUrl`:
 fragment HTML z widoku `admiro::search.suggestions` z grupami `SearchResultGroup` i wynikami `SearchResult` z flagami
 albo ikoną, lista `role="listbox"` obsługiwana strzałkami, Enter i Esc, `js/global-search.js`); formularze
-`data-ss-autosubmit` wysyłają się po zmianie pola, np. przełącznik włącz/wyłącz w wierszu tabeli (`js/autosubmit.js`,
+`data-ss-autosubmit` wysyłają się po zmianie pola, np. przełącznik włącz/wyłącz w wierszu tabeli — także pole powiązane z takim formularzem atrybutem `form`, gdy leży w innym formularzu (`js/autosubmit.js`,
 bez skryptu zostaje przycisk `data-ss-autosubmit-fallback`); tło treści powłoki (`--ss-color-canvas`) jest w jasnym
 motywie bardzo delikatnie szare, a nawigacja biała; konto z menu pod awatarem (`account.items`, `<details>`, działa bez skryptu; skrypt zamyka je kliknięciem obok
 i Esc); nagłówek kontekstowy
