@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Models;
 
+use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Models\Dictionaries\Country;
 use Simplysmart\Admiro\Models\Relations\BelongsToParentOrganization;
 use Simplysmart\Admiro\Models\Relations\LocatedInCountry;
@@ -84,6 +85,16 @@ final class Organization extends DataModel
 
     public const string MOBILE_PHONE = 'mobile_phone';
 
+    /** Klucz `json_attributes` z ikoną organizacji wybraną przy dodaniu (icon()). */
+    public const string ICON_ATTRIBUTE = 'icon';
+
+    /**
+     * Ikony do wyboru dla organizacji (nazwy ikon Core, x-admiro::icon); pierwsza jest domyślna.
+     *
+     * @var list<string>
+     */
+    public const array ICONS = ['building', 'users', 'heart', 'activity', 'invoice', 'settings', 'clipboard', 'cpu', 'shield-check', 'book-open', 'home', 'grid'];
+
     /** Kolor organizacji w grafikach i zestawieniach (`#rrggbb`, color()). */
     public const string COLOR = 'color';
 
@@ -132,6 +143,17 @@ final class Organization extends DataModel
     public function isDepartment(): bool
     {
         return $this->getAttribute(self::IS_DEPARTMENT) === true;
+    }
+
+    /**
+     * Ikona organizacji z ICONS zapisana w `json_attributes.icon`, a bez niej (albo spoza listy) $fallback.
+     */
+    public function icon(string $fallback = self::ICONS[0]): string
+    {
+        $attributes = $this->getAttribute(ColumnNames::JSON_ATTRIBUTES);
+        $icon = is_array($attributes) ? ($attributes[self::ICON_ATTRIBUTE] ?? null) : null;
+
+        return is_string($icon) && in_array($icon, self::ICONS, true) ? $icon : $fallback;
     }
 
     /**

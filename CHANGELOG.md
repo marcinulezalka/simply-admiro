@@ -6,6 +6,8 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Karta „Marka” `x-admiro::organization.brand`: logo, sygnet i favicon organizacji ze strefami upuszczania plików (wysyłka od razu po upuszczeniu albo wyborze, podgląd, usunięcie); adresy daje strefa — panel admiro korzysta z niej przy edycji organizacji. `js/file-drop.js` podświetla każdą strefę `[data-ss-file-drop-zone]`.
+- Ikona organizacji: `Organization::ICONS`, `Organization::icon()` (`json_attributes.icon`) i wybór `x-admiro::organization.icon-picker` (pigułki `.ss-choice--icon`); ikona `image` (Lucide).
 - Kolor organizacji (`organizations.color`, `#rrggbb`): próbnik w karcie danych `x-admiro::organization.fields`, kropka koloru w podglądzie (`.ss-color-swatch`, SVG bez stylów inline) i `Organization::color()` — bez zapisanego koloru stały kolor z palety `Organization::COLOR_PALETTE` według id; ikona `palette` (Lucide).
 - `Enums\InputMask::format()`: wartość w układzie maski do prezentacji (np. NIP `123-456-32-18`).
 - Karta w wyglądzie teczki `x-admiro::folder-card`: nagłówek z ikoną na wypustce-zakładce, treść w ciele teczki, opcjonalna stopka i druga zakładka (`extraTitle`, slot `extra`, `js/folder-card.js`); z `editable` karta formularza ma dwa stany (`js/edit-card.js`): podgląd prezentacyjny (`.ss-folder-card__preview`, `.ss-preview`) z samym „Edytuj”, potem formularz (`.ss-folder-card__form`) z „Zapisz” i „Anuluj” (przywraca wartości); zapis wysyła cały formularz jednym wpisem historii, a karta z błędem walidacji otwiera się w edycji.

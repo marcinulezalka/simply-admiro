@@ -5356,6 +5356,21 @@ summary.ss-sidebar__identity:focus-visible {
     cursor: pointer;
 }
 
+/* .ss-choice--icon — pigułka z samą ikoną (np. ikona organizacji, x-admiro::organization.icon-picker): kwadrat 2.5rem. */
+.ss-choice--icon > span {
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border-radius: var(--ss-radius-control);
+}
+
+.ss-choice__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
 .ss-choice input:checked + span {
     border-color: var(--ss-color-accent);
     background: var(--ss-color-accent);
@@ -6907,6 +6922,84 @@ a.ss-notification:focus-visible {
     .ss-record-row__facts {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+/**
+ * .ss-brand-assets — pliki marki organizacji (x-admiro::organization.brand) w siatce: każdy (.ss-brand-asset) z etykietą,
+ * podglądem i strefą upuszczania .ss-drop-zone — przerywana ramka, ikona i opis; pole pliku (__input) przykrywa strefę
+ * przezroczyście, więc przyjmuje upuszczenie i kliknięcie; podświetlenie przy najechaniu i przeciąganiu (.is-drop-target,
+ * js/file-drop.js).
+ */
+.ss-brand-assets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--ss-space-4);
+}
+
+.ss-brand-asset {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-items: flex-start;
+}
+
+.ss-brand-asset form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-2);
+    align-self: stretch;
+    margin: 0;
+}
+
+.ss-drop-zone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-space-1);
+    align-items: center;
+    justify-content: center;
+    min-height: 7rem;
+    padding: var(--ss-space-4) var(--ss-space-3);
+    border: 1px dashed var(--ss-color-border-strong);
+    border-radius: var(--ss-radius-control);
+    color: var(--ss-color-muted);
+    text-align: center;
+    cursor: pointer;
+}
+
+.ss-drop-zone:hover,
+.ss-drop-zone.is-drop-target {
+    border-color: var(--ss-color-accent);
+    background: color-mix(in srgb, var(--ss-color-accent) 4%, transparent);
+}
+
+.ss-drop-zone:has(:focus-visible) {
+    outline: 2px solid var(--ss-color-accent);
+    outline-offset: 2px;
+}
+
+.ss-drop-zone__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ss-drop-zone__text {
+    color: var(--ss-color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.ss-drop-zone__hint {
+    font-size: 0.75rem;
+}
+
+.ss-drop-zone__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 /**

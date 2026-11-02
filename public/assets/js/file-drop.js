@@ -1,7 +1,8 @@
 /**
- * Strefa upuszczania plików (form[data-ss-file-drop]): pole pliku przykrywa strefę [data-ss-file-drop-zone], więc
- * przeglądarka sama przyjmuje upuszczone pliki (także bez skryptu); skrypt podświetla strefę przy przeciąganiu
- * (.is-drop-target) i sprawdza wybrane pliki przed importem: każdy musi być JSON-em tłumaczeń — dokumentem z kodem
+ * Strefy upuszczania plików: pole pliku przykrywa strefę [data-ss-file-drop-zone], więc przeglądarka sama przyjmuje
+ * upuszczone pliki (także bez skryptu); skrypt podświetla każdą strefę przy przeciąganiu (.is-drop-target), np. pliki
+ * marki x-admiro::organization.brand. W formularzu importu tłumaczeń (form[data-ss-file-drop]) sprawdza też wybrane
+ * pliki przed importem: każdy musi być JSON-em tłumaczeń — dokumentem z kodem
  * języka (`language`) i obiektem `texts` albo eksportem z listą takich dokumentów (`languages`) — a plików nie może być
  * więcej niż data-ss-file-drop-max. Wynik trafia do listy [data-ss-file-drop-list] (nazwa z dopiskiem
  * data-ss-file-drop-valid albo -invalid, stan w data-state), a przycisk przesłania [data-ss-file-drop-submit]
@@ -11,7 +12,7 @@
 (() => {
     const OVER = 'is-drop-target';
 
-    const zoneOf = (target) => (target instanceof Element ? target.closest('[data-ss-file-drop] [data-ss-file-drop-zone]') : null);
+    const zoneOf = (target) => (target instanceof Element ? target.closest('[data-ss-file-drop-zone]') : null);
 
     ['dragenter', 'dragover'].forEach((type) => {
         document.addEventListener(type, (event) => zoneOf(event.target)?.classList.add(OVER));
