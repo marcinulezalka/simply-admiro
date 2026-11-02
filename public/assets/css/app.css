@@ -2887,6 +2887,17 @@ a.ss-onboarding-picker__name:hover {
     text-decoration: underline;
 }
 
+/* .ss-link na przycisku (np. „Wyloguj” wysyłające formularz POST) wygląda jak odnośnik: bez tła, ramki i odstępów
+   przycisku przeglądarki. */
+button.ss-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+
 .ss-input:focus-visible,
 .ss-button:focus-visible,
 .ss-link:focus-visible {

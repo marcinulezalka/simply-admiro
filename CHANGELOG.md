@@ -36,6 +36,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Fixed
 
+- Ekran zablokowanego konta: „Wyloguj” wygląda jak link pomocniczy kroku PIN, wyśrodkowany pod „Odblokuj”, a nie jak szary przycisk przeglądarki (`button.ss-link` bez stylów przycisku).
 - W podglądzie karty w dwóch stanach widać tylko „Edytuj”: przyciski z atrybutem `hidden` („Zapisz”, „Anuluj”) nie przebijały się przez `display` z `.ss-button` / `.ss-icon-button`.
 - Pole komend teczki: dropdowny „+” i błyskawicy nie nachodzą na siebie — otwarcie jednego zamyka drugi, klik obok zamyka oba; zakładki w treści wstawionej skryptem (odświeżona lista TODO) działają (`ss:content`, `js/tabs.js`).
 - Casty modeli na PHP 8.4: `HasStandardColumns` dokłada już tylko casty kolumn, których model sam nie podaje. PHP 8.4 uruchamia ten trait po `HasAttributes`, więc nadpisywał casty modelu (np. `status` zadania TODO był tekstem zamiast `TaskStatus`, a oznaczenie zadania jako wykonanego kończyło się błędem).
