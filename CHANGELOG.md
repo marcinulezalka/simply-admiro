@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Lista wierszy z kolumnami: `.ss-record-rows--columns` z wierszem nagłówka `x-admiro::record-head` — w układzie listy wiersze pokazują fakty jako kolumny pod nagłówkiem (w siatce nagłówek jest ukryty).
 - Ikona krzyża medycznego (`cross`) na liście ikon organizacji; typ jednostki „Poradnia” ma ją zamiast serca (migracja zmienia typ, jeśli administrator nie wybrał innej ikony).
 - Klasa `.ss-number`: liczby, godziny i identyfikatory krojem mono z cyframi tej samej szerokości. Liczniki w stopkach teczek i NIP, REGON, KRS w podglądzie danych organizacji są nią pokazane.
 - Słownik typów jednostek organizacyjnych (`organization_unit_types`: placówka, filia, poradnia, oddział, departament, pracownia, zakład, dział administracyjny, dział wewnętrzny — z prefiksem numeru, ikoną, znacznikiem struktury wewnętrznej i domyślną widocznością w publicznym grafiku) zarządzany w panelu administratorów („Typy jednostek”), typ jednostki w organizacjach (`unit_type_id`) i lista aktywnych typów dla stref.

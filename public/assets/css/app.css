@@ -10818,6 +10818,46 @@ button.ss-command__option {
     display: none;
 }
 
+/* .ss-record-rows--columns — lista z kolumnami: w układzie listy wiersze pokazują też fakty jako kolumny (etykiety faktów
+   tylko dla czytników ekranu), a nad nimi stoi wiersz nagłówka .ss-record-row--head (x-admiro::record-head) z etykietami
+   kolumn; w siatce i bez skryptu układu nagłówek jest ukryty, a wiersze mają etykiety jak zwykle. */
+.ss-record-rows--columns[data-ss-layout="list"] > .ss-record-row:not(:has(> .ss-record-row__details[open])) > .ss-record-row__facts {
+    display: grid;
+}
+
+.ss-record-rows--columns[data-ss-layout="list"] .ss-record-row__fact dt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.ss-record-rows--columns[data-ss-layout="list"] .ss-record-row__fact dd {
+    margin-top: 0;
+}
+
+.ss-record-rows--columns:not([data-ss-layout="list"]) > .ss-record-row--head {
+    display: none;
+}
+
+.ss-record-rows[data-ss-layout="list"] > .ss-record-row--head {
+    padding-block: var(--ss-space-1);
+    background: var(--ss-color-surface-muted);
+    color: var(--ss-color-muted);
+    font-family: var(--ss-font-mono);
+    font-size: 0.75rem;
+}
+
+.ss-record-row--head .ss-record-row__main {
+    padding-left: calc(2.5rem + var(--ss-space-3));
+}
+
+.ss-record-row__spacer {
+    visibility: hidden;
+}
+
 /* Wiersze teczki w układzie siatki: każdy wpis jako teczka (karta z zakładką u góry), fakty jeden pod drugim, z akcji tylko główna;
    pusty stan i komunikaty na całą szerokość. */
 .ss-record-rows[data-ss-layout="grid"] {
