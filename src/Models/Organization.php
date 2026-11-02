@@ -100,7 +100,7 @@ final class Organization extends DataModel
      *
      * @var list<string>
      */
-    public const array ICONS = ['building', 'users', 'heart', 'activity', 'invoice', 'settings', 'clipboard', 'cpu', 'shield-check', 'book-open', 'home', 'grid'];
+    public const array ICONS = ['building', 'users', 'cross', 'heart', 'activity', 'invoice', 'settings', 'clipboard', 'cpu', 'shield-check', 'book-open', 'home', 'grid'];
 
     /** Kolor organizacji w grafikach i zestawieniach (`#rrggbb`, color()). */
     public const string COLOR = 'color';

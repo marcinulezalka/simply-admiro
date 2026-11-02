@@ -202,6 +202,7 @@ return [
         'label' => 'Ikona',
         'building' => 'Budynek',
         'users' => 'Zespół',
+        'cross' => 'Krzyż medyczny',
         'heart' => 'Serce',
         'activity' => 'Aktywność',
         'invoice' => 'Faktura',

@@ -33,7 +33,7 @@ final class OrganizationUnitTypeSeeder extends Seeder
     public const array DEFAULTS = [
         'placowka' => ['Placówka', 'PLA-', 'building', false],
         'filia' => ['Filia', 'FIL-', 'home', false],
-        'poradnia' => ['Poradnia', 'POR-', 'heart', false],
+        'poradnia' => ['Poradnia', 'POR-', 'cross', false],
         'oddzial' => ['Oddział', 'ODD-', 'activity', false],
         'departament' => ['Departament', 'DEP-', 'grid', false],
         'pracownia' => ['Pracownia', 'PRA-', 'cpu', false],

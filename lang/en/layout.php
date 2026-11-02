@@ -202,6 +202,7 @@ return [
         'label' => 'Icon',
         'building' => 'Building',
         'users' => 'Team',
+        'cross' => 'Medical cross',
         'heart' => 'Heart',
         'activity' => 'Activity',
         'invoice' => 'Invoice',
