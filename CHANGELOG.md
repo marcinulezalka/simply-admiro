@@ -6,6 +6,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Added
 
+- Słownik typów jednostek organizacyjnych (`organization_unit_types`: placówka, filia, poradnia, oddział, departament, pracownia, zakład, dział administracyjny, dział wewnętrzny — z prefiksem numeru, ikoną, znacznikiem struktury wewnętrznej i domyślną widocznością w publicznym grafiku) zarządzany w panelu administratorów („Typy jednostek”), typ jednostki w organizacjach (`unit_type_id`) i lista aktywnych typów dla stref.
 - Karta „Marka” w innym formularzu: `x-admiro::organization.brand` z `detached` (pola i przyciski wskazują atrybutem `form` formularze `x-admiro::organization.brand-forms`, wstawiane poza tamtym formularzem) oraz slot `afterDetails` w `x-admiro::organization.fields` między kartą danych a kartą adresową.
 - `hasPermissionInAnyRole()` kont stref: uprawnienie z sumy ról konta w bieżącej organizacji, bez zawężenia do aktywnej roli (odmowa nadal wygrywa), np. czy osoba personelu jest w ogóle lekarzem.
 - Karta „Marka” `x-admiro::organization.brand`: logo, sygnet i favicon organizacji ze strefami upuszczania plików (wysyłka od razu po upuszczeniu albo wyborze, podgląd, usunięcie); adresy daje strefa — panel admiro korzysta z niej przy edycji organizacji. `js/file-drop.js` podświetla każdą strefę `[data-ss-file-drop-zone]`.

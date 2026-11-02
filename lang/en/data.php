@@ -85,7 +85,17 @@ return [
         'note' => 'Note',
     ],
 
+    'organization_unit_type' => [
+        'name' => 'Type name',
+        'code' => 'Code',
+        'number_prefix' => 'Number prefix',
+        'icon' => 'Icon',
+        'is_internal' => 'Internal structure',
+        'is_public' => 'In the public schedule',
+        'is_active' => 'Active',
+    ],
     'organization' => [
+        'unit_type_id' => 'Unit type',
         'short_name' => 'Short name',
         'name' => 'Organization name',
         'parent_id' => 'Parent organization',

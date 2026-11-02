@@ -85,7 +85,17 @@ return [
         'note' => 'Uwagi',
     ],
 
+    'organization_unit_type' => [
+        'name' => 'Nazwa typu',
+        'code' => 'Kod',
+        'number_prefix' => 'Prefiks numeru',
+        'icon' => 'Ikona',
+        'is_internal' => 'Struktura wewnętrzna',
+        'is_public' => 'W publicznym grafiku',
+        'is_active' => 'Aktywny',
+    ],
     'organization' => [
+        'unit_type_id' => 'Typ jednostki',
         'short_name' => 'Nazwa skrócona',
         'name' => 'Nazwa organizacji',
         'parent_id' => 'Organizacja nadrzędna',

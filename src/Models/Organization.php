@@ -16,6 +16,7 @@ namespace Simplysmart\Admiro\Models;
 use Simplysmart\Admiro\Database\ColumnNames;
 use Simplysmart\Admiro\Models\Dictionaries\Country;
 use Simplysmart\Admiro\Models\Relations\BelongsToParentOrganization;
+use Simplysmart\Admiro\Models\Relations\BelongsToUnitType;
 use Simplysmart\Admiro\Models\Relations\LocatedInCountry;
 
 /**
@@ -49,10 +50,13 @@ use Simplysmart\Admiro\Models\Relations\LocatedInCountry;
  * @property ?string $mobile_phone
  * @property ?string $email
  * @property ?string $billing_email
+ * @property ?int $unit_type_id
+ * @property-read OrganizationUnitType|null $unitType
  */
 final class Organization extends DataModel
 {
     use BelongsToParentOrganization;
+    use BelongsToUnitType;
     use LocatedInCountry;
 
     public const string TABLE = 'organizations';
@@ -63,6 +67,9 @@ final class Organization extends DataModel
     public const string SHORT_NAME = 'short_name';
 
     public const string IS_DEPARTMENT = 'is_department';
+
+    /** Typ jednostki ze słownika OrganizationUnitType (np. poradnia, filia, dział administracyjny); null — bez typu. */
+    public const string UNIT_TYPE_ID = 'unit_type_id';
 
     /** Najdłuższa nazwa skrócona (kolumna `short_name`, walidacja OrganizationForm i maxlength pola). */
     public const int SHORT_NAME_MAX_LENGTH = 100;
@@ -199,6 +206,6 @@ final class Organization extends DataModel
      */
     protected function casts(): array
     {
-        return [self::SHORT_NAME => 'string', self::IS_DEPARTMENT => 'boolean', ...array_fill_keys(array_keys(self::DETAIL_LENGTHS), 'string')];
+        return [self::SHORT_NAME => 'string', self::IS_DEPARTMENT => 'boolean', self::UNIT_TYPE_ID => 'integer', ...array_fill_keys(array_keys(self::DETAIL_LENGTHS), 'string')];
     }
 }

@@ -60,7 +60,7 @@ final readonly class OrganizationUnits
     }
 
     /**
-     * Aktywne departamenty jednostki, po nazwie.
+     * Aktywne departamenty jednostki z typem jednostki (relacja `unitType`), po nazwie.
      *
      * @return Collection<int, Organization>
      */
@@ -68,6 +68,7 @@ final readonly class OrganizationUnits
     {
         $query = $this->departmentQuery($unit);
         $query->where(ColumnNames::IS_ACTIVE, true);
+        $query->with('unitType');
         $query->orderBy(ColumnNames::NAME);
 
         return $query->get();

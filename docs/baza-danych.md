@@ -407,7 +407,8 @@ i kolumn są w `Permissions\PermissionTables`.
 
 | Tabela | Model | Standard | Kolumny domenowe |
 | --- | --- | --- | --- |
-| `organizations` | `Models\Organization` | pełny, drzewo przez `parent_id` | `is_department`, nazwa skrócona, dane firmy |
+| `organizations` | `Models\Organization` | pełny, drzewo przez `parent_id` | `is_department`, `unit_type_id`, nazwa skrócona, dane firmy |
+| `organization_unit_types` | `Models\OrganizationUnitType` | pełny | `code` (unikalny), `number_prefix`, `icon`, `is_internal`, `is_public` |
 | `permissions` | `Models\Permissions\Permission` | pełny | `guard_name` |
 | `roles` | `Models\Permissions\Role` | pełny | `organization_id` (null = rola globalna), `guard_name` |
 | `model_has_roles`, `model_has_permissions` | — (spatie) | łącząca | `role_id`/`permission_id`, `model_type`, `model_id`, `organization_id` |
@@ -415,6 +416,13 @@ i kolumn są w `Permissions\PermissionTables`.
 | `permission_denials` | `Models\Permissions\PermissionDenial` | łącząca | `permission_id`, `model_type`, `model_id`, `organization_id` |
 | `organization_members` | `Models\Permissions\OrganizationMember` | łącząca | `organization_id`, `model_type`, `model_id` |
 
+- **Typy jednostek:** słownik `organization_unit_types` (placówka, filia, poradnia, oddział, departament,
+  pracownia, zakład, dział administracyjny, dział wewnętrzny — domyślne w slotach 1–999 z
+  `Database\Seeders\OrganizationUnitTypeSeeder`, uruchamianego przez migrację) zarządza strefa administratorów
+  (`unit-types.*`), a strefy czytają aktywne typy przez `Queries\Organizations\OrganizationUnitTypeList`. Typ jednostki
+  ustawia tylko `Organizations\OrganizationUnitTypeManagement::assign()`; `is_internal` — struktura wewnętrzna,
+  `is_public` — domyślna widoczność nowej jednostki w publicznym grafiku, `number_prefix` — prefiks numeru jednostki
+  w widoku (`OrganizationUnitType::displayNumber()`). Usunięcie typu zostawia jednostkę bez typu (`nullOnDelete`).
 - **Zakres:** definicja roli jest globalna dla guardu strefy. Przypisanie to konto + rola + organizacja,
   a sprawdzenie patrzy tylko na bieżącą organizację spatie (`PermissionRegistrar::setPermissionsTeamId()`).
   Rola z `organization_id` to własna rola jednej organizacji. `Role::create()` spatie wpisuje bieżącą
