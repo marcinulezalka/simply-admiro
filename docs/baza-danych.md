@@ -421,7 +421,7 @@ i kolumn są w `Permissions\PermissionTables`.
   organizację, więc rola globalna wymaga jawnego `organization_id => null`.
 - **Bez bieżącej organizacji nic nie działa (fail closed):** domyślnej organizacji nie ma. Przypisanie
   roli odrzuca baza (`organization_id` NOT NULL), a sprawdzenie uprawnienia daje `false`.
-- **Nazwa skrócona** (`short_name`, opcjonalna, do `Organization::SHORT_NAME_MAX_LENGTH` znaków): druga linia
+- **Nazwa skrócona** (`short_name`, opcjonalna, do `Organization::SHORT_NAME_MAX_LENGTH` = 100 znaków; do 2026-11-02 — 40): druga linia
   pod imieniem i nazwiskiem w menu aplikacji; `Organization::shortName()` daje ją, a bez niej pełną nazwę.
 - **Dane firmy** (opcjonalne, długości w `Organization::DETAIL_LENGTHS`): `nip` (10 cyfr, `Rules\Nip`, nieunikalny —
   oddział może mieć NIP firmy), `regon`, `krs`, `phone` (telefon stacjonarny) i `mobile_phone` (komórkowy) — oba

@@ -61,7 +61,8 @@ final class Organization extends DataModel
 
     public const string IS_DEPARTMENT = 'is_department';
 
-    public const int SHORT_NAME_MAX_LENGTH = 40;
+    /** Najdłuższa nazwa skrócona (kolumna `short_name`, walidacja OrganizationForm i maxlength pola). */
+    public const int SHORT_NAME_MAX_LENGTH = 100;
 
     public const string NIP = 'nip';
 
