@@ -2121,7 +2121,18 @@ a.ss-folder__tab {
 
 .ss-folder__count .ss-badge {
     padding-block: 0;
+    font-family: var(--ss-font-mono);
     font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/**
+ * .ss-number — liczby, godziny i identyfikatory (np. NIP, REGON, KRS, liczniki, przedziały „08:00–16:00”) krojem mono
+ * z cyframi tej samej szerokości: czytelniejsze i wyrównane w kolumnach.
+ */
+.ss-number {
+    font-family: var(--ss-font-mono);
+    font-variant-numeric: tabular-nums;
 }
 
 :root[data-theme^="contrast"] .ss-folders {
