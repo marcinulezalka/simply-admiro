@@ -45,9 +45,8 @@ repozytorium, więc nie trzeba dołączać ich treści.
 | ikony liniowe Core (rysunki SVG, nazwy plików Core) | [Lucide](https://lucide.dev) 1.2.140 (`@iconify-json/lucide`) | Lucide Icons and Contributors; część ikon z Feather (Cole Bemis) | ISC, ikony z Feather MIT | `public/assets/img/icons/*.svg`, treść licencji w `public/assets/img/icons/LICENSE-lucide.txt` |
 | ikona wpisu domyślnego `home-dot` (rysunek SVG) | [Hugeicons](https://hugeicons.com) `hugeicons:home-06` (Iconify, `api.iconify.design`) | Hugeicons | MIT | `public/assets/img/icons/home-dot.svg`, treść licencji w `public/assets/img/icons/LICENSE-hugeicons.txt` |
 | ikona przełącznika kontekstu `context` (rysunek SVG) | [Streamline](https://www.streamlinehq.com) Plump free icons `streamline-plump:change-background-transparent` (Iconify, `api.iconify.design`) | Streamline | CC BY 4.0 | `public/assets/img/icons/context.svg`, atrybucja w `public/assets/img/icons/LICENSE-streamline.txt` |
-| ikona zakładki „Pola dodatkowe” `node-plus` (rysunek SVG) | [Bootstrap Icons](https://icons.getbootstrap.com) `bi:node-plus` | The Bootstrap Authors | MIT | `public/assets/img/icons/node-plus.svg`, treść licencji w `public/assets/img/icons/LICENSE-bootstrap-icons.txt` |
 
-Ikony mają wspólny nagłówek Core (`aria-hidden`, kreska 1,75, zaokrąglone końce i łączenia — także ikona z Hugeicons; ikony ze Streamline zachowują własny rysunek 48 × 48 z kreską 3 albo wypełnieniem, a `lock-screen` z Qlementine i `node-plus` z Bootstrap Icons — rysunek 16 × 16 z wypełnieniem), a nazwa pliku Core
+Ikony mają wspólny nagłówek Core (`aria-hidden`, kreska 1,75, zaokrąglone końce i łączenia — także ikona z Hugeicons; ikony ze Streamline zachowują własny rysunek 48 × 48 z kreską 3 albo wypełnieniem, a `lock-screen` z Qlementine — rysunek 16 × 16 z wypełnieniem), a nazwa pliku Core
 (np. `home`, `refresh`, `settings`) wskazuje odpowiednik z Lucide (`house`, `refresh-cw`, `sliders-horizontal`), więc widoki się nie zmieniają; `user-filled` to rysunek Lucide `user` z wypełnieniem.
 
 Każdy fragment cudzego kodu wklejony do projektu trzeba tu wpisać: źródło, autor,
