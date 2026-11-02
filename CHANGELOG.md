@@ -64,6 +64,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Wiersze teczek w układzie listy i siatki pokazują główną akcję wiersza (`data-ss-row-action` w `.ss-record-row__side`, np. ikonę „Edytuj”); pozostałe akcje nadal tylko w drzewie.
 - Nazwa skrócona organizacji mieści do 100 znaków (wcześniej 40): kolumna `short_name` poszerzona migracją, walidacja `OrganizationForm` i pole formularza według `Organization::SHORT_NAME_MAX_LENGTH`.
 - Podgląd kart `x-admiro::organization.fields` (tryb tylko do odczytu i karty `editable` przed „Edytuj”) prezentuje dane bez etykiet: nazwa, pod nią w jednym wierszu tylko wypełnione NIP, REGON i KRS, adres w dwóch wierszach z krajem, telefony z prefiksem i e-maile; bez danych — „Brak danych”.
 - Toasty po akcji pokazują się w prawym dolnym rogu ekranu (na wąskim ekranie nadal wyśrodkowane), a potem w zakładce komunikatów systemowych panelu powiadomień.

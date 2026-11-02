@@ -10647,8 +10647,8 @@ button.ss-command__option {
 }
 
 /* Wiersze teczki w układzie listy (lista ze skryptem przełącznika): zwarte wpisy jeden pod drugim w jednej ramce — tylko
-   część główna (ikona, nazwa, druga linia); fakty, akcje i rozwijana edycja tylko w drzewie (wiersz z otwartą edycją
-   zostaje pełny). */
+   część główna (ikona, nazwa, druga linia) i główna akcja wiersza; fakty, pozostałe akcje i rozwijana edycja tylko
+   w drzewie (wiersz z otwartą edycją zostaje pełny). */
 .ss-record-rows[data-ss-layout="list"] {
     gap: 0;
     overflow: hidden;
@@ -10674,7 +10674,17 @@ button.ss-command__option {
     display: none;
 }
 
-/* Wiersze teczki w układzie siatki: każdy wpis jako teczka (karta z zakładką u góry), fakty jeden pod drugim, bez akcji;
+/* Główna akcja wiersza (`data-ss-row-action` na bezpośrednim dziecku .ss-record-row__side, np. ikona „Edytuj”) zostaje
+   widoczna także w liście i siatce; pozostałe akcje — tylko w drzewie albo przy otwartej edycji. */
+.ss-record-rows:is([data-ss-layout="list"], [data-ss-layout="grid"]) > .ss-record-row:not(:has(> .ss-record-row__details[open])) > .ss-record-row__side:has(> [data-ss-row-action]) {
+    display: flex;
+}
+
+.ss-record-rows:is([data-ss-layout="list"], [data-ss-layout="grid"]) > .ss-record-row:not(:has(> .ss-record-row__details[open])) > .ss-record-row__side > :not([data-ss-row-action]) {
+    display: none;
+}
+
+/* Wiersze teczki w układzie siatki: każdy wpis jako teczka (karta z zakładką u góry), fakty jeden pod drugim, z akcji tylko główna;
    pusty stan i komunikaty na całą szerokość. */
 .ss-record-rows[data-ss-layout="grid"] {
     display: grid;
