@@ -107,7 +107,7 @@ return [
         'postal_code' => 'Postal code',
         'city' => 'City',
         'country_code' => 'Country',
-        'color' => 'Colour',
+        'color' => 'Label',
         'phone' => 'Landline phone',
         'mobile_phone' => 'Mobile phone',
         'email' => 'E-mail',

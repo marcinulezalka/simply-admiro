@@ -76,6 +76,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Kolor organizacji w karcie „Dane organizacji” nazywa się „Etykieta”: w podglądzie ikona etykiety w tym kolorze (nowa ikona `tag`) zamiast kropki z kodem koloru, w polu edycji ikona etykiety.
 - „Edytuj” kart `x-admiro::folder-card` w trybie podglądu to sam ołówek (`.ss-icon-button`); nazwa zostaje dla czytników ekranu i w podpowiedzi.
 - Zakładka „Pola dodatkowe” kart `x-admiro::folder-card` to sama ikona `circle-fading-plus` (Lucide); nazwa zostaje dla czytników ekranu i w podpowiedzi.
 - Wiersze teczek w układzie listy i siatki pokazują główną akcję wiersza (`data-ss-row-action` w `.ss-record-row__side`, np. ikonę „Edytuj”); pozostałe akcje nadal tylko w drzewie.

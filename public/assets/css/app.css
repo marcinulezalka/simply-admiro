@@ -7026,6 +7026,13 @@ a.ss-notification:focus-visible {
     vertical-align: -0.05em;
 }
 
+/* .ss-color-tag — ikona etykiety w kolorze rekordu (np. etykieta organizacji w podglądzie karty): kolor w atrybutach
+   fill i stroke SVG, bo CSP nie pozwala na style inline; nie przyjmuje wyciszonego koloru ikon podglądu. */
+.ss-preview__icon.ss-color-tag {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
 /* Próbnik koloru w polu formularza: pole w wysokości innych pól, bez wewnętrznego odstępu przeglądarki. */
 .ss-input[type="color"] {
     padding-block: 0.25rem;
