@@ -76,6 +76,7 @@ Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
 
 ### Changed
 
+- Nadawanie ról w organizacji podrzędnej: kto jest członkiem organizacji (np. placówki), nadaje role w jej departamentach i podorganizacjach bez własnych ról w nich — bez eskalacji (liczą się jego uprawnienia w organizacji nadrzędnej) i tylko kontom z tego poddrzewa, które dostają przy nadaniu członkostwo w organizacji.
 - Kolor organizacji w karcie „Dane organizacji” nazywa się „Etykieta”: w podglądzie ikona etykiety w tym kolorze (nowa ikona `tag`) zamiast kropki z kodem koloru, w polu edycji ikona etykiety.
 - „Edytuj” kart `x-admiro::folder-card` w trybie podglądu to sam ołówek (`.ss-icon-button`); nazwa zostaje dla czytników ekranu i w podpowiedzi.
 - Zakładka „Pola dodatkowe” kart `x-admiro::folder-card` to sama ikona `circle-fading-plus` (Lucide); nazwa zostaje dla czytników ekranu i w podpowiedzi.
