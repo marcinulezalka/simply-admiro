@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Simplysmart\Admiro\Permissions;
 
+use Generator;
 use Illuminate\Contracts\Events\Dispatcher;
 use Simplysmart\Admiro\Auth\AccessRevocationReason;
 use Simplysmart\Admiro\Auth\AccountKey;
@@ -136,14 +137,14 @@ final readonly class ZoneRoleAssignment
     }
 
     /**
-     * Organizacja, z której nadający czerpie uprawnienia: ta sama, gdy jest jej członkiem, a inaczej najbliższa
-     * organizacja nadrzędna z jego członkostwem; null — poza drzewem nadającego.
+     * Organizacja, z której konto czerpie uprawnienia: ta sama, gdy jest jej członkiem, a inaczej najbliższa
+     * organizacja nadrzędna z jego członkostwem; null — poza drzewem konta.
      */
-    private function authorityOf(ZoneAccount $assigner, Organization $organization): ?Organization
+    private function authorityOf(ZoneAccount $account, Organization $organization): ?Organization
     {
-        $memberships = $this->memberships->ids($assigner);
+        $memberships = $this->memberships->ids($account);
 
-        for ($current = $organization, $depth = 0; $current !== null && $depth < self::MAX_DEPTH; $current = $current->parent, $depth++) {
+        foreach (self::chain($organization) as $current) {
             if (in_array($current->id, $memberships, true)) {
                 return $current;
             }
@@ -157,13 +158,25 @@ final readonly class ZoneRoleAssignment
      */
     private function within(Organization $organization, Organization $authority): bool
     {
-        for ($current = $organization, $depth = 0; $current !== null && $depth < self::MAX_DEPTH; $current = $current->parent, $depth++) {
+        foreach (self::chain($organization) as $current) {
             if ($current->id === $authority->id) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Organizacja i jej organizacje nadrzędne w górę drzewa (najwyżej MAX_DEPTH poziomów — ochrona przed cyklem).
+     *
+     * @return Generator<int, Organization>
+     */
+    private static function chain(Organization $organization): Generator
+    {
+        for ($current = $organization, $depth = 0; $current !== null && $depth < self::MAX_DEPTH; $current = $current->parent, $depth++) {
+            yield $current;
+        }
     }
 
     private function actor(ZoneAccount $assigner): AccountActor

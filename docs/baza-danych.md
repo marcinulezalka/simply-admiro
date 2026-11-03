@@ -512,10 +512,13 @@ własne repozytorium i `PermissionFiles::add($ścieżka)` w jej providerze):
 ### Nadawanie ról i właściciele stref
 
 - `Permissions\ZoneRoleAssignment::assign()` / `revoke()` chronią przed eskalacją: nadający jest kontem tej
-  samej strefy, oba konta są członkami organizacji (strefa bez `teams`: tylko organizacja operatora,
-  członkostwo dopisywane przy nadaniu), a każde uprawnienie roli nadający ma sam w tej organizacji
-  (`Permissions\PermissionCoverage`, z odmowami) albo rolę deleguje mu któraś z jego ról w tej organizacji
-  (`Permissions\RoleDelegation`, `assigns`; role z innych organizacji się nie liczą). Bez sprawdzania eskalacji role nadaje tylko system
+  samej strefy i członkiem organizacji albo jednej z organizacji nad nią (uprawnienia spływają w dół drzewa —
+  np. członek placówki nadaje role w jej departamentach i podorganizacjach), a każde uprawnienie roli ma sam
+  w tej organizacji, w której jest członkiem — najbliższej w górę drzewa (`Permissions\PermissionCoverage`,
+  z odmowami) — albo rolę deleguje mu któraś z jego ról w niej (`Permissions\RoleDelegation`, `assigns`; role
+  z organizacji spoza tej gałęzi się nie liczą). Rolę dostaje tylko konto z poddrzewa nadającego (członek
+  organizacji albo organizacji nad nią w zasięgu nadającego), z członkostwem dopisywanym przy nadaniu; odebrać
+  rolę można tylko członkowi organizacji (strefa bez `teams`: tylko organizacja operatora). Bez sprawdzania eskalacji role nadaje tylko system
   (`Permissions\SystemRoleGrant`: konsola, zakładanie właścicieli). Odebranie roli unieważnia sesje konta. Każda zmiana trafia do dziennika
   `sign_in` (`ZoneRoleChanged` z aktorem).
 - Właściciela strefy zakłada się przez kontrakt `Contracts\ZoneOwnerProvisioner` z rejestru
